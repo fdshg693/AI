@@ -1,6 +1,6 @@
 set windows-shell := ["powershell.exe", "-NoLogo", "-NoProfile", "-Command"]
 
-azure_location := env_var_or_default("AZURE_LOCATION", "japaneast")
+azure_location := env_var_or_default("AZURE_LOCATION", "eastasia")
 azure_resource_group := env_var_or_default("AZURE_RESOURCE_GROUP", "rg-ai-skill-catalog")
 azure_static_site := env_var_or_default("AZURE_STATIC_SITE_NAME", "ai-skill-catalog")
 github_repository := env_var_or_default("GITHUB_REPOSITORY", "fdshg693/AI")
