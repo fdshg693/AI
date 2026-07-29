@@ -1,0 +1,88 @@
+block_large_read.py:
+  enabled: false
+  description: 閾値を超えた、巨大ファイルを読み込む際に警告を表示するフックの設定
+  event: PreToolUse
+  matcher: Read
+  hook:
+    type: command
+    command: python
+    args:
+    - ${CLAUDE_PROJECT_DIR}/.claude/hooks/block_large_read.py
+inject_env_vars.py:
+  enabled: true
+  description: Bash/PowerShell実行前に、.claude/hooks/config/inject_env_vars.yaml で定義した環境変数をexportとしてコマンドに注入するフックの設定
+  event: PreToolUse
+  matcher: ^(Bash|PowerShell)$
+  hook:
+    type: command
+    command: python
+    args:
+    - ${CLAUDE_PROJECT_DIR}/.claude/hooks/inject_env_vars.py
+recommend_skills.py:
+  enabled: false
+  description: ユーザープロンプト送信のたびに、.claude/hooks/config/recommend_skills.yaml で定義したroots配下のSKILL.mdを収集し、aim_cli（tools/aim）へのライブラリ呼び出しで
+    プロンプトとの関連性をAI判定して、関連しそうなスキルのパス・名前・理由をadditionalContext として提示するフックの設定
+  event: UserPromptSubmit
+  matcher: null
+  hook:
+    type: command
+    command: uv
+    args:
+    - run
+    - --project
+    - ${CLAUDE_PROJECT_DIR}
+    - ${CLAUDE_PROJECT_DIR}/.claude/hooks/recommend_skills.py
+    timeout: 90
+stop_alert.py:
+  enabled: false
+  description: Claudeの応答完了（Stop）時にWindowsでアラート音を鳴らすフックの設定
+  event: Stop
+  matcher: null
+  hook:
+    type: command
+    command: python
+    args:
+    - ${CLAUDE_PROJECT_DIR}/.claude/hooks/stop_alert.py
+    timeout: 15
+summarize_read.py:
+  enabled: false
+  description: Read結果が大きい場合にaim CLI（tools/aim, OpenRouter経由）で要約し、要約後のテキストに差し替えるフックの設定
+  event: PostToolUse
+  matcher: ^Read$
+  hook:
+    type: command
+    command: python
+    args:
+    - ${CLAUDE_PROJECT_DIR}/.claude/hooks/summarize_read.py
+summarize_webfetch.py:
+  enabled: false
+  description: WebFetch結果が大きい場合に、全文をログ保存した上でaim CLI（tools/aim, OpenRouter経由）で要約し、「要約
+    + 全文ログのパス」に差し替えるフックの設定
+  event: PostToolUse
+  matcher: ^WebFetch$
+  hook:
+    type: command
+    command: python
+    args:
+    - ${CLAUDE_PROJECT_DIR}/.claude/hooks/summarize_webfetch.py
+task_tracker_session.py:
+  enabled: true
+  description: /task-tracker <task-name> 呼び出し時に、タスク専用ディレクトリを作成しセッションIDをsessions.mdへ記録する
+  event: UserPromptExpansion
+  matcher: ^task-tracker$
+  hook:
+    type: command
+    command: python
+    args:
+    - ${CLAUDE_PROJECT_DIR}/.claude/hooks/task_tracker_session.py
+translate_prompt.py:
+  enabled: false
+  description: ユーザーがプロンプトを送信するたびに、そのプロンプトをaim CLI（tools/aim, OpenRouter経由）で英語に翻訳し、additionalContextとして付加するフックの設定
+  event: UserPromptSubmit
+  matcher: null
+  hook:
+    type: command
+    command: python
+    args:
+    - ${CLAUDE_PROJECT_DIR}/.claude/hooks/translate_prompt.py
+    timeout: 60

@@ -1,0 +1,18 @@
+set windows-shell := ["powershell.exe", "-NoLogo", "-NoProfile", "-Command"]
+
+# Recipes run with this directory (.claude/scripts) as cwd, so paths below are relative to it.
+
+# List available recipes
+default:
+    @just --list
+
+# Scan .claude/hooks/*.py contracts and upsert them into hooks.yml (enabled flags are preserved)
+sync:
+    uv run hooks_manager.py sync
+
+# Write hooks.yml's enabled entries into .claude/settings.json's "hooks" key
+reflect:
+    uv run hooks_manager.py reflect
+
+# Run sync then reflect: pick up new/changed hook contracts and apply the currently-enabled ones
+update: sync reflect

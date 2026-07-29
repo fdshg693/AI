@@ -1,0 +1,16 @@
+---
+paths:
+  - ".claude/plans/**"
+---
+
+## `.claude/plans` 運用ルール
+
+機能実装前のプランを置く場所。新規プランを**書く前**にも、既存プランを**読み込んで実装を進める前**にも、必ず [.claude/plans/README.md](../plans/README.md) を読むこと。
+
+要点（詳細は README.md 参照）:
+
+- 複雑なタスクでは、詳細プランを書く前に `.claude/rough/` で自由形式のラフプランを書いてもよい（任意）。方針が固まったら本フォーマットで `.claude/plans/` に整理する。詳細は [.claude/rough/README.md](../rough/README.md) 参照。
+- プランに実装詳細（コードスニペット、具体的なプロパティ/メソッド本体）を書かない。書くのは「やること」「触るファイル」「決定事項・落とし穴」「`.claude/rules` 更新ポイント」の4点のみ（[[roles]] の指示どおり、`.claude/rules` 更新箇所は各ステップに必ず含める）。
+- 書き方は [.claude/plans/references/](../plans/references/) の3ファイルをテンプレートとして流用する（`00-overview-example.md` / `01-step-example.md` / `02-single-file-example.md`）。
+- `.claude/plans/my-tools/` は旧方針（コードまで書き切るスタイル）の記録であり、新規プランのテンプレートにしない。
+- ステップ分割の目安（触るファイル3〜4個以内かつレイヤーをまたぐ新規追加なしなら単一ファイル、それ以外は `00-overview.md` + ステップ分割）も README.md に従う。

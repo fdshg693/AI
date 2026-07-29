@@ -1,0 +1,11 @@
+# 動作確認用のサンプル設定。dest は temp/ (gitignore済み) 配下なので、
+# `skill-deploy apply` をそのまま実行してもリポジトリ外には何も書き込まれない。
+#
+# 実際の配置先を追加したい場合は、この形式を真似て config/ 配下に好きな名前で
+# *.yaml を追加すればよい（1ファイルに targets を複数書いてもよいし、ファイルを分けてもよい）。
+targets:
+  - name: example-my-tools
+    dest: temp/skill-deploy-example/claude-skills
+    items:
+      - "@my-tools-skills"
+      - claude-plugins/my-tools/skills/ms-learn

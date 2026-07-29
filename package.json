@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "scripts": {
+    "format": "prettier --write \"**/*.md\"",
+    "format:check": "prettier --check \"**/*.md\"",
+    "format:staged": "prettier --write",
+    "skills-site:build": "pnpm --filter ai-skill-catalog-site run build",
+    "skills-site:validate": "pnpm --filter ai-skill-catalog-site run validate",
+    "skills-site:test": "pnpm --filter ai-skill-catalog-site run test",
+    "skills-site:check": "pnpm run skills-site:build && pnpm run skills-site:validate && pnpm run skills-site:test",
+    "skills-site:dev": "pnpm --filter ai-skill-catalog-site run dev"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.0"
+  },
+  "packageManager": "pnpm@11.15.0"
+}

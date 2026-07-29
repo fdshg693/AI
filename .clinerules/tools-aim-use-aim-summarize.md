@@ -1,0 +1,126 @@
+---
+paths:
+  - "tools/aim-use/aim-summarize/**"
+---
+
+# aim-summarize — リポジトリファイル要約ツール
+
+**関連スキル: `claude-plugins\my-tools\skills\aim-summarize`**
+
+`aim` パッケージ（`tools/aim`、`aim_cli` モジュール）をライブラリとして直接インポートし、OpenRouterへの要約リクエストを非同期（`asyncio`）で並行実行する、リポジトリ内ファイル単位の要約をSQLite DBに保存するCLIツール。設計の背景・決定事項は [PLAN.md](PLAN.md) を参照。
+
+CLIオプション・設定ファイル形式・挙動を変更した場合は、上記スキルの `SKILL.md` も同じ変更の中で更新すること（スキル側は自動追随しない）。
+
+## インストール
+
+`OPENROUTER_API_KEY` の設定が済んでいることが前提（[tools/aim/README.md](../../aim/README.md) のセットアップ手順を参照）。`aim-cli` パッケージはグローバルインストール不要（本ツールの依存パッケージとして自動的に解決される）。
+
+グローバルCLIとして使う場合は `uv tool install --editable`（`pip install -e` の代替）でエディタブルインストールする。
+
+```bash
+uv tool install --editable tools/aim-use/aim-summarize
+```
+
+インストール後は `aim-summarize` コマンドが PATH 上でどこからでも使える。
+
+## セットアップ（対象リポジトリ側）
+
+1. 対象リポジトリのルートに `.aim-use/config.toml` を作成する（`config.toml.example` をコピー）
+
+   ```bash
+   mkdir -p .aim-use
+   cp <このリポジトリへのパス>/tools/aim-use/aim-summarize/config.toml.example .aim-use/config.toml
+   ```
+
+2. 対象リポジトリの `.gitignore` に以下を追記する
+
+   ```
+   .aim-use/summaries.db
+   ```
+
+`aim-summarize` はカレントディレクトリから親方向に `.aim-use/config.toml` を探索してリポジトリルートを特定する（`git` が `.git` を探索するのと同様の挙動）。
+
+## 使い方
+
+```bash
+# 要約DBを構築・更新する（新規/変更ファイルのみAI呼び出しが発生する）
+aim-summarize generate
+
+# 特定のパス配下のみ対象にする
+aim-summarize generate src/foo/ src/bar.py
+
+# ハッシュが一致していても全件再生成する
+aim-summarize generate --force
+
+# 実際には生成せず、対象件数・一覧のみ確認する
+aim-summarize generate --dry-run
+
+# DBから要約を取得する（AI呼び出しは発生しない）
+aim-summarize get
+aim-summarize get src/foo/ src/bar.py
+aim-summarize get --format json
+```
+
+### `generate`
+
+- `.gitignore` を常に尊重し（`git ls-files` を利用）、`config.toml` の `include`/`exclude` 正規表現で対象ファイルを絞り込む
+- ファイルサイズが `max_file_size_bytes` を超過、またはバイナリ/デコード不能と判定されたファイルは自動的にスキップし、`skip_records` に理由付きで記録する
+- ファイル内容のsha256ハッシュが前回と一致する場合は再生成をスキップする（`--force` で無視可能）
+- OpenRouter API呼び出しが失敗した場合は1回だけリトライし、それでも失敗したらスキップして記録し、他のファイルの処理は継続する
+- 並列実行数は `config.toml` の `jobs`（2〜10）に従う。CLI引数での上書きは不可。内部的には `asyncio` の同時実行数制御（`Semaphore`）であり、OSスレッドは使用しない
+- ディスク上から消えたファイルのDBレコード（`file_summaries` / `skip_records` の両方）は毎回の実行時に自動削除される
+- 完了時に生成件数・維持件数・スキップ件数（理由別）・孤立レコード削除件数のサマリーを表示する
+
+### `get`
+
+- DBから読むだけで、AI呼び出しは発生しない
+- パス省略時はDB全件、ディレクトリを指定した場合はその配下の全ファイルを展開して出力する
+- 要約が存在しないパスを指定した場合は「要約未生成」として出力に明示し、非ゼロ終了はしない
+- `--format markdown`（デフォルト）または `--format json` で出力する
+
+## 設定ファイル（`.aim-use/config.toml`）
+
+```toml
+model = "gpt-120b"
+jobs = 4
+max_file_size_bytes = 204800
+
+[[include]]
+pattern = ".*\\.py$"
+
+[[include]]
+pattern = ".*\\.md$"
+
+[[exclude]]
+pattern = "^tests/fixtures/"
+```
+
+- パスはリポジトリルートからの相対パス（POSIX区切り `/`）に対して正規表現マッチする
+- `include` を1件も指定しない場合は「バイナリでないテキストファイル全て」が対象になる
+- `exclude` は `include` より優先される
+- `model` には `tools/aim` の `aim --list-models` で表示される略記のいずれかを指定する
+
+## 既知の制約
+
+- `.gitignore` の解釈は `git ls-files --cached --others --exclude-standard` に委譲している。対象リポジトリが git 管理下でない、または `git` コマンドが利用できない環境では、警告を出したうえで `.gitignore` を無視して全ファイルを走査する
+- ファイルのテキスト判定は UTF-8 デコード可否とNULバイトの有無によるヒューリスティック。UTF-8以外のテキストエンコーディング（Shift_JISなど）は `binary_or_encoding_error` としてスキップされる
+
+## ファイル構成
+
+```
+tools/aim-use/aim-summarize/
+├── README.md            # 本ファイル
+├── PLAN.md              # 実装プラン
+├── pyproject.toml        # パッケージ定義 + console script (aim-summarize)
+├── .gitignore
+├── config.toml.example   # 対象リポジトリにコピーする設定ファイルのサンプル
+└── aim_summarize/
+    ├── __init__.py
+    ├── cli.py             # argparse: generate / get サブコマンド
+    ├── config.py          # .aim-use/config.toml の読み込み・バリデーション
+    ├── scanner.py          # 対象ファイル列挙（.gitignore尊重 + 正規表現 + バイナリ判定）
+    ├── hasher.py            # sha256計算
+    ├── db.py                 # SQLite CRUD（file_summaries / skip_records）
+    ├── summarizer.py          # aim ライブラリ呼び出し（非同期）+ プロンプト組み立て
+    └── formatter.py           # markdown / json 整形
+```

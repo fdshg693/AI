@@ -1,0 +1,7 @@
+packages:
+  - "skills-site"
+  - "skills-site/api"
+  - "tools/cline-wrapper"
+allowBuilds:
+  esbuild: true
+  protobufjs: true

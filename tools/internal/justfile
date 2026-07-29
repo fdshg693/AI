@@ -1,0 +1,66 @@
+set windows-shell := ["powershell.exe", "-NoLogo", "-NoProfile", "-Command"]
+
+# List available recipes
+default:
+    @just --list
+
+# --- plugin_meta/generate: plugin/marketplace/catalog meta-info generators ---
+
+# Regenerate .claude-plugin/marketplace.json
+marketplace:
+    uv run python -m plugin_meta.generate.generate_marketplace
+
+# Regenerate .agents/plugins/marketplace.json
+codex-marketplace:
+    uv run python -m plugin_meta.generate.generate_codex_marketplace
+
+# Regenerate copilot-plugins/meta/plugin.json and .github/plugin/marketplace.json
+copilot-marketplace:
+    uv run python -m plugin_meta.generate.generate_copilot_marketplace
+
+# Regenerate .claude-plugin/skill-catalog.json
+skill-catalog:
+    uv run python -m plugin_meta.generate.generate_skill_catalog
+
+# Regenerate CATALOG.md under every skills/ folder in the repo
+skills-catalog-md:
+    uv run python -m plugin_meta.generate.generate_skills_catalog_md
+
+# Generate Cline conditional rules from AGENTS.md files
+cline-rules:
+    uv run python -m plugin_meta.generate.generate_cline_rules
+
+# Generate GitHub Copilot path-specific instructions from AGENTS.md files
+copilot-instructions:
+    uv run python -m plugin_meta.generate.generate_copilot_instructions
+
+# Regenerate README.md's AIツールごとの設定・プラグインルート section
+readme-tools-section:
+    uv run python -m plugin_meta.generate.generate_readme_tools_section
+
+# Regenerate all generated marketplace, skill catalog, and instruction files
+generate: marketplace codex-marketplace copilot-marketplace skill-catalog skills-catalog-md cline-rules copilot-instructions readme-tools-section
+
+# --- skill/set, skill/check: SKILL.md frontmatter itself ---
+
+# Ensure every SKILL.md has a non-empty meta.version (defaults missing ones to 1.0.0)
+skill-versions:
+    uv run python -m skill.set.set_skill_versions
+
+# Ensure every SKILL.md has a non-empty meta.description (defaults missing ones to "no description")
+skill-descriptions:
+    uv run python -m skill.set.set_skill_descriptions
+
+# Fill missing skill-meta fields using aim-ask (explicit execution only; calls OpenRouter)
+skill-meta-fields-fill:
+    uv run python -m skill.set.skill_meta_field_fill
+
+# Fail if a staged SKILL.md's content changed without a meta.version bump
+skill-version-bump-check *paths:
+    uv run python -m skill.check.check_skill_version_bump {{ paths }}
+
+# Bump meta.version (last numeric segment, e.g. 1.2.3 -> 1.2.4) on SKILL.md
+# files flagged by skill-version-bump-check. Pass path args to bump specific
+# files unconditionally instead of auto-detecting staged ones.
+skill-version-bump *paths:
+    uv run python -m skill.set.bump_skill_versions {{ paths }}

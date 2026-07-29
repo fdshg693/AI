@@ -1,0 +1,76 @@
+pre-commit:
+  jobs:
+    - name: regenerate marketplace.json
+      glob:
+        - "**/.claude-plugin/plugin.json"
+        - "ai-tools.yaml"
+      run: just --justfile tools/internal/justfile marketplace
+      stage_fixed: true
+    - name: regenerate Codex marketplace.json
+      glob:
+        - "**/.codex-plugin/plugin.json"
+        - "ai-tools.yaml"
+      run: just --justfile tools/internal/justfile codex-marketplace
+      stage_fixed: true
+    - name: regenerate Copilot plugin.json and marketplace.json
+      glob:
+        - "copilot-plugins/meta/**/SKILL.md"
+        - "ai-tools.yaml"
+      run: just --justfile tools/internal/justfile copilot-marketplace
+      stage_fixed: true
+    - name: regenerate skill-catalog.json
+      glob:
+        - "**/skills/**"
+        - ".claude-plugin/marketplace.json"
+        - "ai-tools.yaml"
+      run: just --justfile tools/internal/justfile skill-catalog
+      stage_fixed: true
+    - name: regenerate skills CATALOG.md
+      glob:
+        - "**/skills/**"
+        - "ai-tools.yaml"
+      run: just --justfile tools/internal/justfile skills-catalog-md
+      stage_fixed: true
+    - name: regenerate Cline rules
+      glob:
+        - "**/AGENTS.md"
+        - "ai-tools.yaml"
+      run: just --justfile tools/internal/justfile cline-rules
+      stage_fixed: true
+    - name: Regenerate Github Copilot instructions
+      glob:
+        - "**/AGENTS.md"
+        - "ai-tools.yaml"
+      run: just --justfile tools/internal/justfile copilot-instructions
+      stage_fixed: true
+    - name: regenerate README AIツール節
+      glob: "ai-tools.yaml"
+      run: just --justfile tools/internal/justfile readme-tools-section
+      stage_fixed: true
+    - name: compile gh-aw workflows
+      glob: ".github/workflows/*.md"
+      run: just --justfile .github/workflows/justfile compile
+      stage_fixed: true
+    - name: ensure SKILL.md meta.version defaults
+      glob: "**/SKILL.md"
+      run: just --justfile tools/internal/justfile skill-versions
+      stage_fixed: true
+    - name: ensure SKILL.md meta.description defaults
+      glob: "**/SKILL.md"
+      run: just --justfile tools/internal/justfile skill-descriptions
+      stage_fixed: true
+    - name: check SKILL.md meta.version bump
+      glob: "**/SKILL.md"
+      run: just --justfile tools/internal/justfile skill-version-bump-check {staged_files}
+    - name: format Markdown with Prettier
+      glob:
+        - "*.md"
+        - "**/*.md"
+      run: pnpm run format:staged -- {staged_files}
+      stage_fixed: true
+    - name: format Python with ruff
+      glob:
+        - "*.py"
+        - "**/*.py"
+      run: uv run ruff format {staged_files}
+      stage_fixed: true

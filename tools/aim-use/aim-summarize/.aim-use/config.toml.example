@@ -1,0 +1,14 @@
+# このファイルを対象リポジトリのルートに `.aim-use/config.toml` としてコピーして使う。
+
+model = "gpt-120b"
+jobs = 4                      # 並列実行数（2〜10の範囲のみ許可。範囲外は起動時エラー）
+max_file_size_bytes = 204800  # 要約対象とするファイルサイズの上限（超過分はスキップ）
+
+[[include]]
+pattern = ".*\\.py$"
+
+[[include]]
+pattern = ".*\\.md$"
+
+[[exclude]]
+pattern = "^tests/fixtures/"

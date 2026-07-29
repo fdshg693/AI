@@ -1,0 +1,10 @@
+# `@set-name` で参照できる名前付きセットを定義する特別な設定ファイル。
+# ここで定義したセットは、他の config/*.yaml の `items:` から `@set-name` として参照できる。
+# セットの中で別のセットを `@other-set` として参照することもできる（循環参照はエラーになる）。
+sets:
+  my-tools-skills:
+    - claude-plugins/my-tools/skills/*
+
+  coding-core:
+    - claude-plugins/coding/skills/testing
+    - claude-plugins/coding/skills/systematic-debugging

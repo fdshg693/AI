@@ -1,0 +1,32 @@
+set windows-shell := ["powershell.exe", "-NoLogo", "-NoProfile", "-Command"]
+
+# Recipes run with this directory (tools/install) as cwd, so paths below are relative to it.
+
+# GitHub URL of this repo, used by the *-git recipes below (no local clone required).
+# TODO: replace with the real remote URL once this repo has one.
+repo_url := "https://github.com/fdshg693/AI.git"
+
+# List available recipes
+default:
+    @just --list
+
+# Install aim CLI (tools/aim) as an editable global tool via uv, from a local clone. See tools/aim/README.md for API key setup.
+aim-local:
+    uv tool install --editable ../aim
+
+# Install aim CLI directly from GitHub, no local clone required. Not editable: re-run this to pick up updates.
+aim-git:
+    uv tool install "git+{{repo_url}}#subdirectory=tools/aim"
+
+# Install the tav-cli wrappers as the `tav` CLI, editable, via uv, from a local clone. See integrations/CLI_TOOLS.md.
+tavily-local:
+    uv tool install --editable ../tav-cli
+
+# Install the tav-cli wrappers directly from GitHub, no local clone required. Not editable: re-run this to pick up updates.
+tavily-git:
+    uv tool install "git+{{repo_url}}#subdirectory=tools/tav-cli"
+
+# Install the cline-personal-info plugin (tools/cline-wrapper, cline-plugins/meta) globally for Cline SDK/CLI. 
+# Shells out to Git Bash to dodge a PowerShell/cmd "uv_spawn 'npm'" ENOENT bug — see integrations\CLINE.md.
+cline-personal-info:
+    & "C:/Program Files/Git/bin/bash.exe" -c "cline plugin install ../../cline-plugins/personal-info --force"

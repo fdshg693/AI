@@ -1,0 +1,65 @@
+# SSOT for the definitions of meta: subfields in SKILL.md frontmatter.
+# This file is documentation-only (no validation of field values happens
+# anywhere), but skills-site's build script
+# (skills-site/scripts/meta-field-registry.mjs) reads it to render field
+# labels/descriptions on skill detail pages.
+
+# 関連ファイル
+# tools\internal\skill_meta_field_fill.py
+# repo-meta\skills\skill-meta-fields\SKILL.md
+
+fields:
+  version:
+    description: "スキルのバージョン（既存）"
+    format: "semver文字列"
+    default: "1.0.0"
+    example: "1.2.3"
+
+  description:
+    description: "人間向け管理メモ（既存、AIの自動起動判断には使われない）"
+    format: "自由文字列"
+    default: "no description"
+    example: "スキルカタログの生成に使う補足メモ"
+
+  status:
+    description: "完成度・成熟度"
+    format: "draft | experimental | stable | deprecated のいずれか"
+    enum: ["draft", "experimental", "stable", "deprecated"]
+    default: "draft"
+    example: "stable"
+
+  requires_skills:
+    description: "動作前提となる他スキル"
+    format: "スキル名のカンマ区切り"
+    default: "none"
+    example: "aim-cli, aim-ask"
+
+  requires_hooks:
+    description: "紐づくフック（.claude/settings.jsonのhooks等）の要否"
+    format: "概要のカンマ区切りまたは一言"
+    default: "none"
+    example: "PreToolUse: Bash差し戻し"
+
+  requires_install:
+    description: "事前にインストールが要る外部ツール"
+    format: "インストール手段のカンマ区切り"
+    default: "none"
+    example: "uv tool install --editable tools/aim-use/aim-ask"
+
+  dependencies:
+    description: "スキル内スクリプトが使うライブラリ依存"
+    format: "パッケージ名のカンマ区切り"
+    default: "none"
+    example: "pyyaml"
+
+  requires_env:
+    description: "必要な環境変数・.env設定"
+    format: "変数名のカンマ区切り"
+    default: "none"
+    example: "OPENROUTER_API_KEY"
+
+  requires_repo_tools:
+    description: "このリポジトリの自作ツールへの依存"
+    format: "リポジトリルートからのパスのカンマ区切り"
+    default: "none"
+    example: "tools/aim-use/aim-ask"

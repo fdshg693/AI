@@ -1,0 +1,12 @@
+*settings.json
+*settings.local.json
+*.env
+
+# task-tracker: このマシン固有のセッションIDと作業スクラッチのため非公開
+tasks/
+
+# skill_usage_tracker.py / skill_enquete_stop.py: セッション単位のスキル使用状況
+# トラッキング（一時的なブックキーピングであり、コミット対象の成果物ではない）
+hooks/state/
+
+skills/skill-maintenance/state/
