@@ -79,3 +79,13 @@ pre-commit:
         - "**/*.py"
       run: uv run ruff format {staged_files}
       stage_fixed: true
+    - name: scan staged files for secrets
+      glob:
+        - "*"
+        - "**/*"
+      run: pnpm exec secretlint --secretlintrc .secretlintrc.json {staged_files}
+
+commit-msg:
+  commands:
+    lint-commit-message:
+      run: pnpm exec commitlint --edit {1}

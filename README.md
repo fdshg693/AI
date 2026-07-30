@@ -70,11 +70,13 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 
 ## その他
 
-- `lefthook.yml` — コミット時などに走る Git hooks の設定。
+- `lefthook.yml` — コミット時などに走る Git hooks の設定（`pre-commit` での各種再生成・整形・secretlint、`commit-msg` での commitlint）。
 - `mise.toml` — [mise](https://mise.jdx.dev/) によるツールバージョン管理（node / pnpm / terraform / uv をこのリポジトリ用にpin）。
 - `pyproject.toml` — uv workspace のルート定義（`tools/aim` 等、Python パッケージ群をまとめて管理）。
 - `pnpm-workspace.yaml` / `package.json` / `pnpm-lock.yaml` — pnpm workspace のルート定義（`skills-site`, `tools/cline-wrapper`）とロックファイル。
 - `.prettierrc.json` / `.prettierignore` — フォーマット設定。
+- `commitlint.config.js` — コミットメッセージのlint設定（[Conventional Commits](https://www.conventionalcommits.org/)、`@commitlint/config-conventional`）。
+- `.secretlintrc.json` — ステージ済みファイルのシークレット検知設定（[secretlint](https://github.com/secretlint/secretlint) `@secretlint/secretlint-rule-preset-recommend`）。
 - `AGENTS.md` / `CLAUDE.md` — 各 AI ツール向けのリポジトリ全体指示ファイル（README と同等の構成概観を記載）。
 
   Azure Static Web Appsへのリソース作成は [skills-site/infra/](skills-site/infra/) のBicepで管理し、通常の公開更新はmainへのpushからGitHub Actionsで行う。ローカルの検証・Azure操作はリポジトリ直下のjustfileを使う。
