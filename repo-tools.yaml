@@ -45,3 +45,6 @@ tools:
   my-agents:
     path: tools/my-agents
     install: "uv tool install --editable tools/my-agents"
+  icw:
+    path: tools/interactive-cli-wrapper
+    install: "uv tool install --editable tools/interactive-cli-wrapper"

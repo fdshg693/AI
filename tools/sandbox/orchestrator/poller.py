@@ -74,7 +74,20 @@ class Config:
                 sys.exit(f"error: 環境変数 {name} が未設定です")
             return value
 
-        allowed_raw = os.environ.get(
+        def default_env(name: str, default: str) -> str:
+            """環境変数が未設定、または空文字・空白のみの場合もデフォルトへフォールバックする。
+
+            ``os.environ.get(name, default)`` は変数が未設定のときのみデフォルトを返し、
+            空文字列が設定されている場合は空文字列をそのまま返してしまう。本ヘルパは
+            「未設定」と「空・空白のみ」を同列に扱い、いずれでもデフォルトへフォールバック
+            させる（例: 数値系変数が空のまま ``int("")`` で ``ValueError`` を投げる問題の予防）。
+            """
+            value = os.environ.get(name)
+            if value is None or not value.strip():
+                return default
+            return value
+
+        allowed_raw = default_env(
             "SANDBOX_ALLOWED_AUTHOR_ASSOCIATIONS", DEFAULT_ALLOWED_AUTHOR_ASSOCIATIONS
         )
         allowed_author_associations = frozenset(
@@ -87,20 +100,18 @@ class Config:
             github_app_installation_id=require("GITHUB_APP_INSTALLATION_ID"),
             anthropic_api_key=require("ANTHROPIC_API_KEY"),
             image=require("SANDBOX_IMAGE"),
-            owner=os.environ.get("GITHUB_OWNER", DEFAULT_OWNER),
-            repo=os.environ.get("GITHUB_REPO", DEFAULT_REPO),
-            base_branch=os.environ.get("SANDBOX_BASE_BRANCH", "main"),
-            model=os.environ.get("SANDBOX_MODEL", "sonnet"),
-            max_turns=int(os.environ.get("SANDBOX_MAX_TURNS", "40")),
-            poll_interval_seconds=int(os.environ.get("SANDBOX_POLL_INTERVAL_SECONDS", "60")),
-            max_issues_per_cycle=int(os.environ.get("SANDBOX_MAX_ISSUES_PER_CYCLE", "1")),
-            container_memory=os.environ.get("SANDBOX_CONTAINER_MEMORY", "2g"),
-            container_cpus=os.environ.get("SANDBOX_CONTAINER_CPUS", "2"),
-            container_pids_limit=int(os.environ.get("SANDBOX_CONTAINER_PIDS_LIMIT", "512")),
-            container_timeout_seconds=int(
-                os.environ.get("SANDBOX_CONTAINER_TIMEOUT_SECONDS", "1200")
-            ),
-            state_db_path=os.environ.get("SANDBOX_STATE_DB_PATH", state.DEFAULT_DB_PATH),
+            owner=default_env("GITHUB_OWNER", DEFAULT_OWNER),
+            repo=default_env("GITHUB_REPO", DEFAULT_REPO),
+            base_branch=default_env("SANDBOX_BASE_BRANCH", "main"),
+            model=default_env("SANDBOX_MODEL", "sonnet"),
+            max_turns=int(default_env("SANDBOX_MAX_TURNS", "40")),
+            poll_interval_seconds=int(default_env("SANDBOX_POLL_INTERVAL_SECONDS", "60")),
+            max_issues_per_cycle=int(default_env("SANDBOX_MAX_ISSUES_PER_CYCLE", "1")),
+            container_memory=default_env("SANDBOX_CONTAINER_MEMORY", "2g"),
+            container_cpus=default_env("SANDBOX_CONTAINER_CPUS", "2"),
+            container_pids_limit=int(default_env("SANDBOX_CONTAINER_PIDS_LIMIT", "512")),
+            container_timeout_seconds=int(default_env("SANDBOX_CONTAINER_TIMEOUT_SECONDS", "1200")),
+            state_db_path=default_env("SANDBOX_STATE_DB_PATH", state.DEFAULT_DB_PATH),
             allowed_author_associations=allowed_author_associations,
         )
 

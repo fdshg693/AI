@@ -19,3 +19,5 @@ logs/
 tools/sandbox/orchestrator/data/
 
 *.egg-info/
+
+*.pem

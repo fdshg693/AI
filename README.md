@@ -48,6 +48,7 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 - [tools/](tools/) — リポジトリ管理・運用を支える便利ツール群。主なサブフォルダ:
   - `aim/`, `aim-use/` — モデル呼び出し CLI とその周辺ツール
   - `claude-wrapper/`, `cline-wrapper/`, `codex-wrapper/`, `cursor-wrapper/` — 各 AI ツール向けラッパー
+  - `interactive-cli-wrapper/` — 対話的（TTY前提でREPLとして動く）CLIをPTY越しに駆動する汎用ラッパー
   - `get-settings/` — 設定取得補助
   - `infra/` — インフラ利用ツール（AI ログ管理等）
   - `install/` — 各ツールのインストール手順（`justfile` 経由で実行）

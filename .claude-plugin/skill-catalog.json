@@ -178,6 +178,11 @@
       "description": "リポジトリ内のファイルをファイル単位でAI要約し、SQLite DB（.aim-use/summaries.db）に永続化する`aim-summarize` CLIツールの使い方を説明する。ファイル要約を生成・更新したい、変更されたファイルだけ再要約したい、DBから要約を取得したい場合に使う。"
     },
     {
+      "path": "claude-plugins/my-tools/skills/interactive-cli-wrapper",
+      "name": "interactive-cli-wrapper",
+      "description": "Drive an interactive (TTY-only, REPL-style) CLI process from an AI agent one Bash-tool call per turn — start it as a background session, send one line of input, wait for the turn to settle, get the accumulated output back. Use when a CLI has no non-interactive/print flag and must be operated as a live REPL (e.g. Cursor CLI's `agent` run without `-p`). Not for one-shot non-interactive delegation to Cursor CLI (use cursor-cli-use for `agent -p`) and not for CLIs that already support a scriptable non-interactive mode."
+    },
+    {
       "path": "claude-plugins/my-tools/skills/ms-digest",
       "name": "ms-digest",
       "description": "Microsoft Learn/Azure公式ドキュメントを`mslearn`で検索した結果ファイルのうち、自分で1件ずつ読む代わりに`aim-ask`で並列にAI抽出させたいものをまとめて処理し、関連する内容だけを報告させるCLI連携スキル。(a) 結果件数が多くタイトルだけでは関連性を判断しづらい場合(目安5件以上)に全件を渡して関連するものだけ絞り込ませたいとき、(b) `index.md`から読みたいファイルを選んだ後、その中に文字数が大きいファイルが複数あり個別Readせずまとめて抽出させたいとき、のいずれかで使う。1ファイルだけを抽出したい場合は`aim-ask`を直接使えばよい。"
