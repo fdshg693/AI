@@ -51,6 +51,7 @@ AIコーディングツールの設定・ツールに関する個人の調査・
   - `get-settings/` — 設定取得補助
   - `infra/` — インフラ利用ツール（AI ログ管理等）
   - `install/` — 各ツールのインストール手順（`justfile` 経由で実行）
+  - `sandbox/` — ISSUE駆動Dockerサンドボックスエージェント（GitHub ISSUEの`@sandbox`メンションをポーリングで検知しClaude Agent SDKに作業させる仕組み）
   - `internal/` — マーケットプレイス/skill カタログ生成等の内部ツール群
 - [integrations/](integrations/) — このレポジトリに存在するツール等を自分の環境に取り込むためのガイド（`CLAUDE_CODE.md`, `CLINE.md`, `CODEX.md`, `CLI_TOOLS.md`）
 - [templates/](templates/) — ルールやスキル等をまとめて導入する際のテンプレート例（`cline_best/`, `planner/` 等）

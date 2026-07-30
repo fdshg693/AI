@@ -16,4 +16,6 @@ node_modules/
 logs/
 *.log
 
+tools/sandbox/orchestrator/data/
+
 *.egg-info/

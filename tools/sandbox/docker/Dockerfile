@@ -1,7 +1,7 @@
 # Debian bookworm を使う（Ubuntu 24.04系は避ける）。
 # Ubuntu 24.04+ は既定のAppArmorポリシーでbubblewrapのユーザー名前空間作成を
 # 制限しており、追加のホスト設定なしではClaude Code組み込みサンドボックスが
-# 動かない可能性があるため（詳細: .claude/plans/sandbox-agent/01-research.md）。
+# 動かない可能性があるため。
 FROM python:3.12-slim-bookworm
 
 # git: リポジトリのclone/push用。

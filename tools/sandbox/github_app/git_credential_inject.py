@@ -2,13 +2,11 @@
 """installation access token をgitのHTTPS認証に使えるよう、remote URLへ埋め込む。
 
 `https://x-access-token:<TOKEN>@github.com/owner/repo.git` 形式へ書き換える
-（GitHub App installation tokenのgit認証形式。参照:
-.claude/plans/sandbox-agent/01-research.md「GitHub App installation access token」節）。
+（GitHub App installation tokenのgit認証形式）。
 
 トークンをコマンドライン引数として渡すとプロセス一覧（`ps`等）に平文で映る
 リスクがあるため、標準入力から読み取る。コンテナは1 ISSUE = 1使い捨て・
-非rootの単一ユーザーで動かす前提のため、このリスクは許容範囲としている
-（決定事項: .claude/plans/sandbox-agent/03-github-app-auth.md）。
+非rootの単一ユーザーで動かす前提のため、このリスクは許容範囲としている。
 
 使い方:
     echo "$TOKEN" | python git_credential_inject.py <repo-dir> <owner/repo>
