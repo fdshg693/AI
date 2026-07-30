@@ -15,6 +15,9 @@ jobs:
   triage-issue:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # リポジトリのOWNER/COLLABORATORが作成したissueのみ起動する（誰でも作れるissueで
+    # 無制限にAPI課金・プロンプトインジェクションを許さないための制限）
+    if: contains(fromJSON('["OWNER", "COLLABORATOR"]'), github.event.issue.author_association)
     permissions:
       contents: read
       issues: write
@@ -32,9 +35,8 @@ jobs:
           # このレポジトリ自身のマーケットプレイスを登録する
           plugin_marketplaces: "${{ github.server_url }}/${{ github.repository }}.git"
           # プラグインを登録する
-          plugins: "seiwan-marketplace@github-action"          
+          plugins: "seiwan-marketplace@github-action"
           prompt: "/github-action:issue-triage REPO: ${{ github.repository }} ISSUE_NUMBER: ${{ github.event.issue.number }}"
-          
-          allowed_non_write_users: "*" # Required for issue triage workflow, if users without repo write access create issues
+
           github_token: ${{ secrets.GITHUB_TOKEN }}
           claude_args: "--model claude-sonnet-5 --max-turns 10"

@@ -3,7 +3,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { SOURCE_REGISTRY } from "./source-registry.mjs";
 import { SITE_OVERRIDES } from "./site-overrides.mjs";
-import { discoverSkills, zipFileName } from "./publication-core.mjs";
+import { discoverSkills, skillBundleFolder, zipFileName } from "./publication-core.mjs";
+import {
+  AI_INDEX_SCHEMA_VERSION,
+  EMBEDDING_DIMENSIONS,
+  EMBEDDING_MODEL,
+} from "./build-skill-embeddings.mjs";
 
 const SCRIPT_DIRECTORY = path.dirname(fileURLToPath(import.meta.url));
 const SITE_ROOT = path.resolve(SCRIPT_DIRECTORY, "..");
@@ -12,7 +17,7 @@ const GENERATED_ROOT = path.join(SITE_ROOT, "generated");
 const DOWNLOAD_ROOT = path.join(SITE_ROOT, "public", "downloads");
 const AI_INDEX_PATH = path.join(SITE_ROOT, "api", "data", "ai-index.json");
 const SEARCH_INDEX_PATH = path.join(SITE_ROOT, "api", "data", "search-index.json");
-const AI_INDEX_FIELDS = ["description", "name", "path", "plugin", "status", "tool"];
+const AI_INDEX_FIELDS = ["description", "embedding", "embeddingHash", "name", "path", "plugin", "status", "tool"];
 
 function exists(target) {
   try {
@@ -41,7 +46,7 @@ function fileMap(files, label) {
   return result;
 }
 
-function zipEntries(zipPath) {
+export function zipEntries(zipPath) {
   const data = fs.readFileSync(zipPath);
   const entries = [];
   let offset = 0;
@@ -107,7 +112,8 @@ export async function validatePublication({
     if (names.some((name) => path.basename(name).toLowerCase() === ".env")) {
       throw new Error(`ZIP contains forbidden .env file: ${id}`);
     }
-    const expectedZipEntries = new Set([...expectedFiles.keys()].map((file) => `${id}/${file}`));
+    const bundleFolder = skillBundleFolder(source.name, id);
+    const expectedZipEntries = new Set([...expectedFiles.keys()].map((file) => `${bundleFolder}/${file}`));
     if (names.length !== expectedZipEntries.size || names.some((name) => !expectedZipEntries.has(name))) {
       throw new Error(`ZIP contains an unsafe path: ${id}`);
     }
@@ -119,7 +125,12 @@ export async function validatePublication({
   } catch (error) {
     throw new Error(`Generated AI index is missing or invalid: ${error.message}`);
   }
-  if (aiIndex.schemaVersion !== 1 || !Array.isArray(aiIndex.skills)) {
+  if (
+    aiIndex.schemaVersion !== AI_INDEX_SCHEMA_VERSION ||
+    aiIndex.embeddingModel !== EMBEDDING_MODEL ||
+    aiIndex.embeddingDimensions !== EMBEDDING_DIMENSIONS ||
+    !Array.isArray(aiIndex.skills)
+  ) {
     throw new Error("Generated AI index has an unsupported shape");
   }
   const aiIndexByPath = new Map(aiIndex.skills.map((skill) => [skill.path, skill]));
@@ -141,6 +152,19 @@ export async function validatePublication({
       indexed.status?.key !== publishedCatalog.status?.key
     ) {
       throw new Error(`Generated AI index entry does not match catalog: ${id}`);
+    }
+    if (
+      typeof indexed.embeddingHash !== "string" ||
+      !/^[0-9a-f]{64}$/.test(indexed.embeddingHash)
+    ) {
+      throw new Error(`Generated AI index entry has an invalid embeddingHash: ${id}`);
+    }
+    if (
+      !Array.isArray(indexed.embedding) ||
+      indexed.embedding.length !== EMBEDDING_DIMENSIONS ||
+      indexed.embedding.some((value) => typeof value !== "number" || !Number.isFinite(value))
+    ) {
+      throw new Error(`Generated AI index entry has an invalid embedding: ${id}`);
     }
   }
 

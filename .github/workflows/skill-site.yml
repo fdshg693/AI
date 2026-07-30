@@ -7,8 +7,6 @@ on:
     paths:
       - 'skills-site/**'
       - '.github/workflows/skill-site.yml'
-      - '.claude/rules/skill-publication.md'
-      - '.claude/rules/skills-site-interactive.md'
       - 'claude-plugins/**/skills/**'
       - 'codex-plugins/**/skills/**'
       - 'copilot-plugins/**/skills/**'
@@ -26,8 +24,6 @@ on:
     paths:
       - 'skills-site/**'
       - '.github/workflows/skill-site.yml'
-      - '.claude/rules/skill-publication.md'
-      - '.claude/rules/skills-site-interactive.md'
       - 'claude-plugins/**/skills/**'
       - 'codex-plugins/**/skills/**'
       - 'copilot-plugins/**/skills/**'
@@ -85,7 +81,37 @@ jobs:
       - name: Install workspace dependencies
         run: pnpm install --frozen-lockfile
       - name: Build static site
-        run: pnpm --filter ai-skill-catalog-site run build
+        env:
+          # OPENROUTER_API_KEY は catalog:build のskill embeddings生成
+          # (openai/text-embedding-3-small, via OpenRouter) に必須。
+          #
+          # なぜ check-secrets ジョブに混ぜず、ここで個別にチェックするか:
+          # check-secrets は `if: (push || workflow_dispatch) && ref == main` 限定で PR では
+          # 実行されない（AZURE_STATIC_WEB_APPS_API_TOKEN はデプロイ専用シークレットのため main
+          # へのpush/workflow_dispatch時だけ検証すれば足りる）。一方この verify ジョブは
+          # push/PR/workflow_dispatch すべてで走る。もしこのチェックを check-secrets に混ぜると、
+          # PRではジョブごとskipされてチェックが素通りしてしまい、下記のfork PR用ガードが効かなくなる。
+          #
+          # Fork PRの挙動（意図的な失敗）:
+          # GitHub Actionsの仕様上、forkからのPRはリポジトリのシークレットを読めず空文字になる
+          # （pull_request_targetを使わない限り）。そのためfork PRでは必ずこのチェックで落ちる。
+          # これはバグではなく意図した安全装置: skills-site/generated/ 等の生成物はgitignore対象で
+          # embedding計算にOPENROUTER_API_KEYが要るため、キーが読めない環境でembedding抜きの
+          # ビルドを黙って通過させてしまうと、不完全な成果物がデプロイされるリスクがある。
+          # 同一リポジトリ内ブランチからのPRやpush/workflow_dispatchは通常通りシークレットを読めるので、
+          # このチェックは通過して普通にビルドされる。
+          #
+          # 早期チェックする理由:
+          # ここでチェックせず`pnpm run build`だけ実行すると、embedding生成スクリプトの内部で
+          # 分かりにくいスタックトレースとして失敗する。事前に明示チェックして::error::を出すことで、
+          # CIログを見た人が「OPENROUTER_API_KEY未設定が原因」だと一目で分かるようにしている。
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          if [ -z "$OPENROUTER_API_KEY" ]; then
+            echo "::error::OPENROUTER_API_KEY が設定されていません。リポジトリの Settings > Secrets and variables > Actions で OPENROUTER_API_KEY シークレットを設定してください（catalog:build の埋め込み計算に必要）。"
+            exit 1
+          fi
+          pnpm --filter ai-skill-catalog-site run build
       - name: Validate public output
         run: pnpm --filter ai-skill-catalog-site run validate
       - name: Run publication tests

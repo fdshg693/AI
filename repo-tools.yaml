@@ -1,0 +1,47 @@
+# SSOT for CLI tools under tools/ that at least one SKILL.md declares as an
+# install-time prerequisite (meta.requires_repo_tools / meta.requires_install),
+# e.g. the tools consumed by claude-plugins/my-tools/skills/*.
+#
+# tools/internal/skill/check/check_skill_repo_tools.py cross-checks every
+# non-excluded SKILL.md's requires_repo_tools/requires_install against the
+# `path` values here, so a renamed/removed tool folder or a typo'd path fails
+# loudly instead of silently degrading to a plain-text (non-linked) mention on
+# skills-site (see skills-site/scripts/build-catalog.mjs's
+# resolveRequiresRepoTools).
+#
+# skills-site also reads this file (skills-site/scripts/repo-tools-registry.mjs)
+# to render the public "installable tools" list (name + GitHub folder link
+# only, no install instructions).
+#
+# Excluded from the check: repo-meta/** (its SKILL.md files reuse
+# requires_repo_tools to mean "files this meta-skill documents", not "CLI
+# dependency" — see repo-meta/skills/tool-companion-skills/SKILL.md) and
+# tools/internal/** (internal repo-maintenance scripts, never something a
+# skill's user installs).
+#
+# Only list tools that at least one skill currently references — an
+# unreferenced tool under tools/ (e.g. tools/schedule) does not need an entry
+# yet.
+
+tools:
+  aim:
+    path: tools/aim
+    install: "uv tool install --editable tools/aim"
+  aim-ask:
+    path: tools/aim-use/aim-ask
+    install: "uv tool install --editable tools/aim-use/aim-ask"
+  aim-summarize:
+    path: tools/aim-use/aim-summarize
+    install: "uv tool install --editable tools/aim-use/aim-summarize"
+  mslearn:
+    path: tools/mslearn
+    install: "uv tool install --editable tools/mslearn"
+  tav:
+    path: tools/tav-cli
+    install: "uv tool install --editable tools/tav-cli"
+  ctx7:
+    path: tools/ctx7
+    install: "uv tool install --editable tools/ctx7"
+  my-agents:
+    path: tools/my-agents
+    install: "uv tool install --editable tools/my-agents"

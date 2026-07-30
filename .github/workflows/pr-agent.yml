@@ -12,7 +12,9 @@ on:
   issue_comment:
 jobs:
   pr_agent_job:
-    if: github.event.issue.pull_request
+    # PRのOWNER/COLLABORATORによるコメントのみ起動する（誰でも書けるコメントで
+    # contents:write権限込みのエージェントを無制限に動かさないための制限）
+    if: github.event.issue.pull_request && contains(fromJSON('["OWNER", "COLLABORATOR"]'), github.event.comment.author_association)
     permissions:
       issues: write
       pull-requests: write

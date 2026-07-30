@@ -1,12 +1,16 @@
 /** Client helpers for the AISuggest React island (server `/api/suggest` path). */
 
 export const REQUEST_TIMEOUT_MS = 45_000;
-export const DEFAULT_MODEL = "minimax/minimax-m3";
-export const MODEL_STORAGE = "skills-site:openrouter-model";
 
-/** Mirrors src/lib/catalog.js#skillHref's segment-encoding. */
+/** Mirrors src/lib/catalog.js#skillRoutePath's segment-encoding (leading-dot escape for Azure SWA). */
+function encodeSkillPathSegment(segment) {
+  const encoded = encodeURIComponent(segment);
+  return encoded.startsWith(".") ? `dot-${encoded.slice(1)}` : encoded;
+}
+
+/** Mirrors src/lib/catalog.js#skillHref. */
 export function skillHref(path, basePath = "") {
-  return `${basePath}/skills/${path.split("/").map(encodeURIComponent).join("/")}`;
+  return `${basePath}/skills/${path.split("/").map(encodeSkillPathSegment).join("/")}`;
 }
 
 export function apiErrorMessage(code, status) {

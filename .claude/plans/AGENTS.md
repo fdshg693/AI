@@ -1,8 +1,3 @@
----
-paths:
-  - ".claude/plans/**"
----
-
 ## `.claude/plans` 運用ルール
 
 機能実装前のプランを置く場所。新規プランを**書く前**にも、既存プランを**読み込んで実装を進める前**にも、必ず [.claude/plans/README.md](../plans/README.md) を読むこと。
@@ -10,7 +5,8 @@ paths:
 要点（詳細は README.md 参照）:
 
 - 複雑なタスクでは、詳細プランを書く前に `.claude/rough/` で自由形式のラフプランを書いてもよい（任意）。方針が固まったら本フォーマットで `.claude/plans/` に整理する。詳細は [.claude/rough/README.md](../rough/README.md) 参照。
-- プランに実装詳細（コードスニペット、具体的なプロパティ/メソッド本体）を書かない。書くのは「やること」「触るファイル」「決定事項・落とし穴」「`.claude/rules` 更新ポイント」の4点のみ（[[roles]] の指示どおり、`.claude/rules` 更新箇所は各ステップに必ず含める）。
-- 書き方は [.claude/plans/references/](../plans/references/) の3ファイルをテンプレートとして流用する（`00-overview-example.md` / `01-step-example.md` / `02-single-file-example.md`）。
-- `.claude/plans/my-tools/` は旧方針（コードまで書き切るスタイル）の記録であり、新規プランのテンプレートにしない。
+- プランに実装詳細（コードスニペット、具体的なプロパティ/メソッド本体）を書かない。書くのは「やること」「触るファイル」「決定事項・落とし穴」「ルール更新ポイント」の4点のみ（[[roles]] の指示どおり、ルール更新箇所は各ステップに必ず含める。ルールの格納先はレポジトリにより異なる: `.claude/rules/`・`AGENTS.md`・`CLAUDE.md`・`.clinerules` 等、対象レポジトリの既存慣習に合わせる）。
+- 書き方は [.claude/plans/references/](../plans/references/) をテンプレートとして流用する。プラン実行中の進捗記録（✅マーク・計画との差分・progressフォルダへの導線）は [references/progress/](../plans/references/progress/) 配下を参照。
 - ステップ分割の目安（触るファイル3〜4個以内かつレイヤーをまたぐ新規追加なしなら単一ファイル、それ以外は `00-overview.md` + ステップ分割）も README.md に従う。
+- このレポジトリでは、 `.claude/rules` は採用せず、 `AGENTS.md` を使ったルール管理を行う
+  - `.github/instructions`・`.clinerules` などのAIツールのルールファイルは、`lefthook.yml`による自動同期が走るので気にしなくていい

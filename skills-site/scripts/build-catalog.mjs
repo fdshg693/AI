@@ -3,9 +3,18 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { SOURCE_REGISTRY } from "./source-registry.mjs";
 import { SITE_OVERRIDES } from "./site-overrides.mjs";
-import { discoverSkills, removeInternalFields, zipFileName } from "./publication-core.mjs";
+import { discoverSkills, removeInternalFields, skillBundleFolder, zipFileName } from "./publication-core.mjs";
 import { META_FIELD_REGISTRY } from "./meta-field-registry.mjs";
+import { REPO_TOOLS_REGISTRY } from "./repo-tools-registry.mjs";
 import { buildSearchIndex } from "./build-search-index.mjs";
+import {
+  AI_INDEX_SCHEMA_VERSION,
+  EMBEDDING_DIMENSIONS,
+  EMBEDDING_MODEL,
+  attachSkillEmbeddings,
+  loadLocalEnv,
+  loadPreviousAiIndex,
+} from "./build-skill-embeddings.mjs";
 
 const SCRIPT_DIRECTORY = path.dirname(fileURLToPath(import.meta.url));
 const SITE_ROOT = path.resolve(SCRIPT_DIRECTORY, "..");
@@ -147,10 +156,11 @@ export function createZip(entries) {
 }
 
 async function writeSkillZip(skill, destination) {
+  const folder = skillBundleFolder(skill.name, skill.path);
   const entries = [];
   for (const file of skill.files) {
     entries.push({
-      name: `${skill.path}/${file.path}`,
+      name: `${folder}/${file.path}`,
       data: await fs.promises.readFile(path.join(skill.skillDirectory, file.path)),
     });
   }
@@ -164,19 +174,27 @@ async function writeSkillZip(skill, destination) {
  * catalog.json's so the two can evolve separately. Must derive from the same
  * resolved-meta skill list used to build catalog.json so the two artifacts
  * never diverge. Written under `api/data/` (not public/) so it is not
- * exposed as a static asset.
+ * exposed as a static asset. Each skill includes a build-time embedding
+ * (`openai/text-embedding-3-small`) for suggest top-K filtering.
+ *
+ * @param {Array} skillsWithResolvedMeta
+ * @param {{ attachEmbeddings?: typeof attachSkillEmbeddings, previousIndex?: object | null }} [options]
  */
-function buildAiIndex(skillsWithResolvedMeta) {
+async function buildAiIndex(skillsWithResolvedMeta, { attachEmbeddings = attachSkillEmbeddings, previousIndex = null } = {}) {
+  const slimSkills = skillsWithResolvedMeta.map((skill) => ({
+    path: skill.path,
+    name: skill.name,
+    description: skill.description,
+    tool: skill.tool,
+    plugin: skill.plugin,
+    status: { key: skill.status.key },
+  }));
+  const skillsWithEmbeddings = await attachEmbeddings(slimSkills, { previousIndex });
   return {
-    schemaVersion: 1,
-    skills: skillsWithResolvedMeta.map((skill) => ({
-      path: skill.path,
-      name: skill.name,
-      description: skill.description,
-      tool: skill.tool,
-      plugin: skill.plugin,
-      status: { key: skill.status.key },
-    })),
+    schemaVersion: AI_INDEX_SCHEMA_VERSION,
+    embeddingModel: EMBEDDING_MODEL,
+    embeddingDimensions: EMBEDDING_DIMENSIONS,
+    skills: skillsWithEmbeddings,
   };
 }
 
@@ -188,7 +206,9 @@ export async function buildPublication({
   downloadRoot = DOWNLOAD_ROOT,
   aiIndexPath = AI_INDEX_PATH,
   searchIndexPath = SEARCH_INDEX_PATH,
+  attachEmbeddings = attachSkillEmbeddings,
 } = {}) {
+  loadLocalEnv();
   const { skills, warnings } = await discoverSkills({ repoRoot, registry, overrides });
   await fs.promises.rm(generatedRoot, { recursive: true, force: true });
   await fs.promises.rm(downloadRoot, { recursive: true, force: true });
@@ -214,10 +234,17 @@ export async function buildPublication({
   // at read time; Astro/Vite relocates bundled modules during prerendering,
   // which breaks that resolution. Routing the already-loaded data through
   // the generated JSON keeps meta_field.yaml as the single read site.
-  const catalog = { schemaVersion: 1, skills: publicSkills, metaFieldRegistry: META_FIELD_REGISTRY };
+  const catalog = {
+    schemaVersion: 1,
+    skills: publicSkills,
+    metaFieldRegistry: META_FIELD_REGISTRY,
+    repoTools: REPO_TOOLS_REGISTRY,
+  };
   await fs.promises.writeFile(path.join(generatedRoot, "catalog.json"), `${JSON.stringify(catalog, null, 2)}\n`, "utf8");
 
-  const aiIndex = buildAiIndex(skillsWithResolvedMeta);
+  // Read previous index before overwrite so unchanged skills can reuse vectors.
+  const previousIndex = await loadPreviousAiIndex(aiIndexPath);
+  const aiIndex = await buildAiIndex(skillsWithResolvedMeta, { attachEmbeddings, previousIndex });
   await fs.promises.mkdir(path.dirname(aiIndexPath), { recursive: true });
   await fs.promises.writeFile(aiIndexPath, `${JSON.stringify(aiIndex, null, 2)}\n`, "utf8");
 

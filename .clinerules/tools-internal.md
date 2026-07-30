@@ -13,8 +13,8 @@ paths:
 
 - `skill/` — `SKILL.md`そのもの（frontmatterの`meta:`ブロック）を扱うスクリプト。マーケットプレイス登録の有無に関わらずリポジトリ全体を走査する
   - `set/` — フィールドを補完・変更する（`set_skill_versions.py`, `set_skill_descriptions.py`, `bump_skill_versions.py`, `skill_meta_field_fill.py`）
-  - `check/` — lefthook等から呼ばれる検査のみのスクリプト（`check_skill_version_bump.py`）
-  - `util/` — 上記が共有するヘルパー（frontmatter読み書き、`meta_field.yaml`ローダ等）
+  - `check/` — lefthook等から呼ばれる検査のみのスクリプト（`check_skill_version_bump.py`, `check_skill_repo_tools.py`）
+  - `util/` — 上記が共有するヘルパー（frontmatter読み書き、`meta_field.yaml`ローダ、`repo-tools.yaml`ローダ等）
 - `plugin_meta/` — `ai-tools.yaml`（SSOT）を起点に、プラグイン・マーケットプレイス・スキルカタログなどの集約メタ情報を生成するスクリプト
   - `generate/` — `marketplace.json`/`skill-catalog.json`/`CATALOG.md`/Cline rules/Copilot instructions/READMEセクションなどを再生成する（すべて`generate_*.py`、丸ごと再生成でマージではない）
   - `util/` — `ai-tools.yaml`ローダ（`ai_tools_config.py`）

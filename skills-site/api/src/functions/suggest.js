@@ -1,11 +1,14 @@
 import "../lib/load-local-env.js";
 import { app } from "@azure/functions";
 import { loadAiIndex } from "../lib/ai-index.js";
+import { topKByEmbedding } from "../lib/embedding-similarity.js";
+import { fetchEmbeddings } from "../lib/embeddings.js";
 import { checkRateLimit, clientKey } from "../lib/rate-limit.js";
 import {
   DEFAULT_MODEL,
   OPENROUTER_TIMEOUT_MS,
   OPENROUTER_URL,
+  SUGGEST_TOP_K,
   buildMessages,
   extractText,
   matchSuggestions,
@@ -15,7 +18,6 @@ import {
 const SUGGEST_RATE = { max: 10, windowMs: 60_000 };
 const CACHE_TTL_MS = 5 * 60_000;
 const MAX_QUERY_LENGTH = 2000;
-const MAX_MODEL_LENGTH = 200;
 
 /** @type {Map<string, { expires: number, body: unknown }>} */
 const responseCache = new Map();
@@ -36,17 +38,30 @@ function errorResponse(status, code, headers = {}) {
   return json(status, { error: code }, headers);
 }
 
-async function callOpenRouter({ apiKey, model, messages, signal }) {
+async function callOpenRouter({ apiKey, messages, signal }) {
   const response = await fetch(OPENROUTER_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${apiKey}`,
     },
-    body: JSON.stringify({ model, messages, temperature: 0.2 }),
+    body: JSON.stringify({ model: DEFAULT_MODEL, messages, temperature: 0.2 }),
     signal,
   });
   return response;
+}
+
+function publicSuggestions(matched) {
+  return matched.map(({ skill, reason }) => ({
+    skill: {
+      path: skill.path,
+      name: skill.name,
+      description: skill.description,
+      tool: skill.tool,
+      plugin: skill.plugin,
+    },
+    reason,
+  }));
 }
 
 app.http("suggest", {
@@ -74,14 +89,9 @@ app.http("suggest", {
     if (!query || query.length > MAX_QUERY_LENGTH) {
       return errorResponse(400, "bad_request");
     }
+    // Client-supplied model is ignored; chat model is fixed server-side.
 
-    const modelRaw = typeof payload?.model === "string" ? payload.model.trim() : "";
-    if (modelRaw.length > MAX_MODEL_LENGTH) {
-      return errorResponse(400, "bad_request");
-    }
-    const model = modelRaw || DEFAULT_MODEL;
-
-    const cacheKey = `${model}\n${query}`;
+    const cacheKey = query;
     const cached = responseCache.get(cacheKey);
     if (cached && cached.expires > Date.now()) {
       return json(200, cached.body);
@@ -98,10 +108,27 @@ app.http("suggest", {
     const timeout = setTimeout(() => controller.abort(), OPENROUTER_TIMEOUT_MS);
 
     try {
+      let queryEmbedding;
+      try {
+        const [embedding] = await fetchEmbeddings([query], {
+          apiKey,
+          signal: controller.signal,
+        });
+        queryEmbedding = embedding;
+      } catch (error) {
+        if (error instanceof Error && error.name === "AbortError") throw error;
+        if (error?.status === 429) return errorResponse(429, "rate_limited");
+        return errorResponse(502, "upstream_error");
+      }
+
+      const candidates = topKByEmbedding(queryEmbedding, skills, SUGGEST_TOP_K);
+      if (candidates.length === 0) {
+        return errorResponse(503, "unavailable");
+      }
+
       const response = await callOpenRouter({
         apiKey,
-        model,
-        messages: buildMessages(query, skills),
+        messages: buildMessages(query, candidates),
         signal: controller.signal,
       });
 
@@ -114,12 +141,12 @@ app.http("suggest", {
       const content = extractText(data?.choices?.[0]?.message?.content);
       let matched;
       try {
-        matched = matchSuggestions(parseSuggestions(content), skills);
+        matched = matchSuggestions(parseSuggestions(content), candidates);
       } catch {
         return errorResponse(502, "upstream_error");
       }
 
-      const body = { suggestions: matched };
+      const body = { suggestions: publicSuggestions(matched) };
       responseCache.set(cacheKey, { expires: Date.now() + CACHE_TTL_MS, body });
       return json(200, body);
     } catch (error) {

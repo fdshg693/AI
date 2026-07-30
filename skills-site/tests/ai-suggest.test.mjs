@@ -3,13 +3,11 @@ import fs from "node:fs";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
+import { apiErrorMessage, skillHref } from "../src/lib/ai-suggest.mjs";
+import { cosineSimilarity, topKByEmbedding } from "../api/src/lib/embedding-similarity.js";
 import {
   DEFAULT_MODEL,
-  MODEL_STORAGE,
-  apiErrorMessage,
-  skillHref,
-} from "../src/lib/ai-suggest.mjs";
-import {
+  SUGGEST_TOP_K,
   buildMessages,
   extractText,
   matchSuggestions,
@@ -24,9 +22,16 @@ const aiSuggestReact = fs.readFileSync(
 );
 
 const AI_INDEX = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   skills: [
-    { path: "tool/plugin/skills/a/SKILL.md", name: "skill-a", description: "desc a", tool: "Claude Code", plugin: "meta" },
+    {
+      path: "tool/plugin/skills/a/SKILL.md",
+      name: "skill-a",
+      description: "desc a",
+      tool: "Claude Code",
+      plugin: "meta",
+      embedding: [1, 0, 0],
+    },
   ],
 };
 
@@ -38,13 +43,17 @@ test("skillHref mirrors catalog segment-encoding", () => {
   );
 });
 
+test("skillHref escapes a leading dot so the route isn't dropped by Azure SWA's dotfile filtering", () => {
+  assert.equal(skillHref(".claude/skills/a/SKILL.md"), "/skills/dot-claude/skills/a/SKILL.md");
+});
+
 test("parseSuggestions accepts bare JSON and fenced JSON", () => {
   const payload = [{ path: "a", reason: "r" }];
   assert.deepEqual(parseSuggestions(JSON.stringify(payload)), payload);
   assert.deepEqual(parseSuggestions("```json\n" + JSON.stringify(payload) + "\n```"), payload);
 });
 
-test("matchSuggestions keeps only paths present in the index", () => {
+test("matchSuggestions keeps only paths present in the index and strips embeddings", () => {
   const matched = matchSuggestions(
     [
       { path: "tool/plugin/skills/a/SKILL.md", reason: "関連するため" },
@@ -55,14 +64,16 @@ test("matchSuggestions keeps only paths present in the index", () => {
   assert.equal(matched.length, 1);
   assert.equal(matched[0].skill.name, "skill-a");
   assert.equal(matched[0].reason, "関連するため");
+  assert.equal(matched[0].skill.embedding, undefined);
 });
 
-test("buildMessages embeds the catalog and asks for JSON-only output", () => {
+test("buildMessages embeds the catalog without vectors and asks for JSON-only output", () => {
   const messages = buildMessages("テストについて", AI_INDEX.skills);
   assert.equal(messages.length, 2);
   assert.match(messages[0].content, /JSON配列のみ/);
   assert.match(messages[1].content, /スキル一覧:/);
   assert.match(messages[1].content, /質問: テストについて/);
+  assert.doesNotMatch(messages[1].content, /"embedding"/);
 });
 
 test("extractText flattens string and multipart content", () => {
@@ -76,9 +87,29 @@ test("apiErrorMessage maps server error codes", () => {
   assert.match(apiErrorMessage("unavailable", 503), /利用できません/);
 });
 
-test("model storage constant stays stable", () => {
-  assert.equal(MODEL_STORAGE, "skills-site:openrouter-model");
+test("chat model is fixed server-side", () => {
   assert.equal(DEFAULT_MODEL, "minimax/minimax-m3");
+  assert.equal(SUGGEST_TOP_K, 10);
+});
+
+test("cosineSimilarity ranks identical and orthogonal vectors", () => {
+  assert.equal(cosineSimilarity([1, 0], [1, 0]), 1);
+  assert.equal(cosineSimilarity([1, 0], [0, 1]), 0);
+  assert.ok(Number.isNaN(cosineSimilarity([1], [1, 0])));
+});
+
+test("topKByEmbedding returns the highest-scoring skills", () => {
+  const skills = [
+    { path: "a", embedding: [1, 0, 0] },
+    { path: "b", embedding: [0.9, 0.1, 0] },
+    { path: "c", embedding: [0, 1, 0] },
+    { path: "d", embedding: [0.5, 0.5, 0] },
+  ];
+  const top = topKByEmbedding([1, 0, 0], skills, 2);
+  assert.deepEqual(
+    top.map((skill) => skill.path),
+    ["a", "b"],
+  );
 });
 
 test("AISuggest.astro mounts the React island with client:load and no BYOK props", () => {
@@ -89,14 +120,18 @@ test("AISuggest.astro mounts the React island with client:load and no BYOK props
   assert.doesNotMatch(aiSuggestAstro, /ai-suggest\.js/);
 });
 
-test("AISuggest React component calls /api/suggest and has no API key UI", () => {
+test("AISuggest React component calls /api/suggest without model selection UI", () => {
   assert.match(aiSuggestReact, /data-ai-submit/);
   assert.match(aiSuggestReact, /\/api\/suggest|apiHref/);
   assert.doesNotMatch(aiSuggestReact, /data-ai-key-save/);
   assert.doesNotMatch(aiSuggestReact, /data-ai-key-verify/);
   assert.doesNotMatch(aiSuggestReact, /KEY_STORAGE/);
+  assert.doesNotMatch(aiSuggestReact, /MODEL_STORAGE/);
+  assert.doesNotMatch(aiSuggestReact, /data-ai-model-input/);
+  assert.doesNotMatch(aiSuggestReact, /詳細設定/);
+  assert.doesNotMatch(aiSuggestReact, /localStorage/);
+  assert.doesNotMatch(aiSuggestReact, /model:/);
   assert.doesNotMatch(aiSuggestReact, /OPENROUTER_URL/);
-  assert.doesNotMatch(aiSuggestReact, /localStorage\.setItem\(KEY_STORAGE/);
 });
 
 test("public ai-suggest.js is removed after server migration", () => {

@@ -197,10 +197,35 @@ export async function discoverSkills({ repoRoot, registry, overrides = {} }) {
   return { skills, warnings };
 }
 
+// Azure Static Web Apps silently drops files/folders whose name starts with
+// "." during deployment upload, so a ZIP filename can't start with a literal
+// dot. Mirrored in src/lib/catalog.js#skillRoutePath.
+function encodeSkillPathSegment(segment) {
+  const encoded = encodeURIComponent(segment);
+  return encoded.startsWith(".") ? `dot-${encoded.slice(1)}` : encoded;
+}
+
 export function zipFileName(repoPath) {
-  const slug = repoPath.split("/").map((part) => encodeURIComponent(part)).join("--");
+  const slug = repoPath.split("/").map(encodeSkillPathSegment).join("--");
   const digest = crypto.createHash("sha256").update(repoPath).digest("hex").slice(0, 12);
   return `${slug}--${digest}.zip`;
+}
+
+/**
+ * Top-level folder name used inside a skill's download ZIP. Uses the skill's
+ * frontmatter `name` (the canonical skill name) so extracting the archive drops
+ * a single `{skill-name}/` folder straight into the working directory with all
+ * bundled files inside — instead of mirroring the deep repo-relative path of
+ * SKILL.md (which previously produced a nested chain ending in a folder
+ * literally named "SKILL.md"). Guarded so a name can never introduce a path
+ * separator or be empty, which would either nest deeper or escape the folder.
+ */
+export function skillBundleFolder(name, displayPath) {
+  const folder = String(name ?? "").trim();
+  if (!folder || folder.includes("/") || folder.includes("\\") || folder.includes("\0")) {
+    throw new Error(`${displayPath}: skill name '${name}' is not a valid bundle folder name`);
+  }
+  return folder;
 }
 
 export function removeInternalFields(skill) {

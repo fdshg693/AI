@@ -62,6 +62,11 @@ pre-commit:
     - name: check SKILL.md meta.version bump
       glob: "**/SKILL.md"
       run: just --justfile tools/internal/justfile skill-version-bump-check {staged_files}
+    - name: check SKILL.md repo-tools consistency
+      glob:
+        - "**/SKILL.md"
+        - "repo-tools.yaml"
+      run: just --justfile tools/internal/justfile skill-repo-tools-check
     - name: format Markdown with Prettier
       glob:
         - "*.md"

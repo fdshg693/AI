@@ -64,6 +64,10 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 
 - [skills-site/](skills-site/) — 登録済みAIコーディングツールのスキルを横断収集し、Astroの静的サイトとして公開する。公開対象の追加、frontmatter、生成・検証手順は [skills-site/README.md](skills-site/README.md) を参照。サイトはスキルの本文・メタデータ・配布ZIPだけを公開し、リポジトリ全体を公開するものではない。
 
+## ライセンス・コントリビューション
+
+[MIT License](LICENSE)。誰でも自由に Fork・改変・再配布できる。ただし `.github/workflows/` 配下の issue/PR 自動化（Claude / Codex / PR-Agent / gh-aw）はリポジトリの OWNER/COLLABORATOR のみが起動できる設定になっており、第三者には開放していない。詳細は [CONTRIBUTING.md](CONTRIBUTING.md) を参照。
+
 ## その他
 
 - `lefthook.yml` — コミット時などに走る Git hooks の設定。
