@@ -13,6 +13,8 @@ members = [
     "tools/aim-use/aim-ask",
     "tools/claude-wrapper",
     "tools/cursor-wrapper",
+    "tools/interactive-cli-wrapper",
+    "tools/sandbox/orchestrator",
     "tools/my-agents",
     "tools/tav-cli",
     "tools/mslearn",

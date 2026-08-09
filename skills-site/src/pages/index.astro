@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import AISuggest from "../components/AISuggest.astro";
 import SkillCard from "../components/SkillCard.astro";
 import SkillFilter from "../components/SkillFilter.astro";
+import RepoToolsList from "../components/RepoToolsList.astro";
 import { skills, sortedUnique } from "../lib/catalog.js";
 import { STATUS_ORDER, statusFilterLabel } from "../lib/status.js";
 
@@ -49,5 +50,12 @@ for (const plugin of Object.keys(pluginToolMap)) {
       {skills.map((skill) => <SkillCard skill={skill} />)}
     </div>
     <p class="empty-state" data-filter-empty hidden>条件に一致するスキルはありません。</p>
+  </section>
+  <section class="container catalog-section" aria-labelledby="repo-tools-heading">
+    <div class="section-heading">
+      <div><p class="eyebrow">TOOLS</p><h2 id="repo-tools-heading">インストール可能なツール</h2></div>
+      <p class="section-note">一部のスキルが前提とするCLIツールです（インストール方法は各ツールのGitHubフォルダを参照）</p>
+    </div>
+    <RepoToolsList />
   </section>
 </BaseLayout>

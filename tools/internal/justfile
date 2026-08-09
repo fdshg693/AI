@@ -59,6 +59,11 @@ skill-meta-fields-fill:
 skill-version-bump-check *paths:
     uv run python -m skill.check.check_skill_version_bump {{ paths }}
 
+# Fail if a SKILL.md's requires_repo_tools/requires_install references a
+# tools/ path that isn't registered (or is stale) in repo-tools.yaml
+skill-repo-tools-check:
+    uv run python -m skill.check.check_skill_repo_tools
+
 # Bump meta.version (last numeric segment, e.g. 1.2.3 -> 1.2.4) on SKILL.md
 # files flagged by skill-version-bump-check. Pass path args to bump specific
 # files unconditionally instead of auto-detecting staged ones.

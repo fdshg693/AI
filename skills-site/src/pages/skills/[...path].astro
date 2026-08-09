@@ -3,11 +3,11 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import FileTree from "../../components/FileTree.astro";
 import StatusBadge from "../../components/StatusBadge.astro";
 import MetaFieldPanel from "../../components/MetaFieldPanel.astro";
-import { downloadHref, metaFieldDefault, sitePath, skills } from "../../lib/catalog.js";
+import { downloadHref, metaFieldDefault, sitePath, skillRoutePath, skills } from "../../lib/catalog.js";
 import { renderMarkdown } from "../../lib/markdown.js";
 
 export function getStaticPaths() {
-  return skills.map((skill) => ({ params: { path: skill.path }, props: { skill } }));
+  return skills.map((skill) => ({ params: { path: skillRoutePath(skill.path) }, props: { skill } }));
 }
 
 const { skill } = Astro.props;

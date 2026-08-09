@@ -70,6 +70,30 @@ meta:
   version: 1.0.0
 ---
 
+- interactive-cli-wrapper
+---
+name: interactive-cli-wrapper
+description: Drive an interactive (TTY-only, REPL-style) CLI process from an AI agent one Bash-tool call per turn — start it as a background session, send one line of input, wait for the turn to settle, get the accumulated output back. Use when a CLI has no non-interactive/print flag and must be operated as a live REPL (e.g. Cursor CLI's `agent` run without `-p`). Not for one-shot non-interactive delegation to Cursor CLI (use cursor-cli-use for `agent -p`) and not for CLIs that already support a scriptable non-interactive mode.
+allowed-tools: Bash(icw *), Bash(agent *)
+disable-model-invocation: true
+# 前提条件: `icw`コマンドがPATH上にインストール済み（`uv tool install --editable tools/interactive-cli-wrapper`）であること。
+# このスキルはインストール・セットアップは一切行わない。実体は tools/interactive-cli-wrapper/ を参照。
+# disable-model-invocation: 対話CLI(特にagentのような課金・副作用のあるエージェントCLI)を
+# バックグラウンドセッションとして起動・駆動する副作用があるため、cursor-cli-useと同様に
+# ユーザーの明示呼び出し（/interactive-cli-wrapper）に限定する
+# このスキルの意図・スコープは同階層のREADME.md参照（人間のメンテナ向け）
+meta:
+  requires_repo_tools: icw
+  requires_env: none
+  dependencies: pywinpty, pyte
+  requires_install: uv tool install --editable tools/interactive-cli-wrapper
+  requires_hooks: none
+  requires_skills: none
+  status: stable
+  description: no description
+  version: 1.1.0
+---
+
 - ms-digest
 ---
 name: ms-digest

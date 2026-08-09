@@ -12,18 +12,16 @@
 2. 以下を設定する。
    - **GitHub App name**: 任意（例: `ai-sandbox-agent`）。組織/ユーザー内で一意な名前が必要。
    - **Homepage URL**: 任意（例: リポジトリのURL）。
-   - **Webhook**: `Active` のチェックを外す（ポーリング運用のためWebhook不要。
-     [00-overview.md](../../../.claude/plans/sandbox-agent/00-overview.md) の方針通り）。
-3. **Repository permissions** で以下を設定する（最小権限。理由は
-   [03-github-app-auth.md](../../../.claude/plans/sandbox-agent/03-github-app-auth.md)
-   の決定事項を参照。git pushには Contents:Write が必須なため Read のみでは不足する）。
+   - **Webhook**: `Active` のチェックを外す（ポーリング運用のためWebhook不要）。
+3. **Repository permissions** で以下を設定する（最小権限。git pushには
+   Contents:Write が必須なため Read のみでは不足する）。
    - **Contents**: `Read and write`
    - **Issues**: `Read and write`
    - **Pull requests**: `Read and write`
    - **Metadata**: `Read-only`（自動で必須付与される）
    - 他の権限はすべて `No access` のままにする。
 4. **Where can this GitHub App be installed?** は `Only on this account` を選択する
-   （対象リポジトリを固定運用する前提のため。[00-overview.md](../../../.claude/plans/sandbox-agent/00-overview.md) 参照）。
+   （対象リポジトリを固定運用する前提のため）。
 5. `Create GitHub App` をクリックする。
 
 ## 2. App IDの確認
@@ -40,7 +38,7 @@
    **リポジトリにコミットしない**（`.gitignore` 対象パスに置くこと）。
 3. コンテナ起動時にこのファイルをマウントし、そのマウント先パスを
    `.env` の `GITHUB_APP_PRIVATE_KEY_PATH` に設定する
-   （マウント方法自体は[04-orchestrator.md](../../../.claude/plans/sandbox-agent/04-orchestrator.md)側の実装で決める）。
+   （マウント方法自体は`orchestrator/run_agent.py`側の実装を参照）。
 
 ## 4. リポジトリへのインストール・Installation IDの確認
 
@@ -63,5 +61,5 @@
 
 このAppには Contents:Write を付与しているため、技術的には直接pushが可能。
 mainブランチへの直接pushを防ぐのはApp権限ではなく**リポジトリ側のブランチ保護ルール**の
-役割であり、[05-ops-and-docs.md](../../../.claude/plans/sandbox-agent/05-ops-and-docs.md)
-で設定する。本ステップの時点ではまだブランチ保護は未設定であることに注意。
+役割であり、[branch-protection.md](branch-protection.md)で設定する。本ステップの時点では
+まだブランチ保護は未設定であることに注意。

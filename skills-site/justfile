@@ -54,3 +54,13 @@ azure-set-github-secret:
 # Print the Static Web App's default hostname
 azure-url:
     az staticwebapp show --resource-group "{{azure_resource_group}}" --name "{{azure_static_site}}" --query defaultHostname --output tsv
+
+# Set OPENROUTER_API_KEY as an SWA Application setting from the local environment (mise loads skills-site/.env); the value is never printed
+azure-set-openrouter-key:
+    if (-not $env:OPENROUTER_API_KEY) { Write-Error "OPENROUTER_API_KEY is not set - add it to skills-site/.env (mise must be activated in this shell) or export it before running this recipe"; exit 1 }
+    az staticwebapp appsettings set --resource-group "{{azure_resource_group}}" --name "{{azure_static_site}}" --setting-names "OPENROUTER_API_KEY=$env:OPENROUTER_API_KEY" --output none
+    Write-Host "OPENROUTER_API_KEY set on {{azure_static_site}}"
+
+# Check whether OPENROUTER_API_KEY is set as an SWA Application setting (the value itself is never printed)
+azure-openrouter-key-status:
+    az staticwebapp appsettings list --resource-group "{{azure_resource_group}}" --name "{{azure_static_site}}" --query "contains(keys(properties), 'OPENROUTER_API_KEY')" --output tsv

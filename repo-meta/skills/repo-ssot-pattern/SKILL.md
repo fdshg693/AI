@@ -1,9 +1,9 @@
 ---
-# 既存SSOT: ai-tools.yaml（ai-tools-configスキル）, meta_field.yaml（skill-meta-fieldsスキル）
+# 既存SSOT: ai-tools.yaml（ai-tools-configスキル）, meta_field.yaml（skill-meta-fieldsスキル）, repo-tools.yaml
 name: repo-ssot-pattern
 description: Explains this repository's habit of designating one explicitly-edited file as the single source of truth for a cross-cutting concern (which AI-tool plugins exist, what a SKILL.md meta field means) and regenerating every derived file from it via a script, rather than letting the same fact live in multiple hand-maintained places. Use when introducing a new fact that needs to stay consistent across several files, wondering which file is authoritative when two disagree, or deciding whether to hand-edit a file marked "DO NOT EDIT MANUALLY".
 meta:
-  requires_repo_tools: ai-tools.yaml, meta_field.yaml, tools/internal/plugin_meta/util/ai_tools_config.py
+  requires_repo_tools: ai-tools.yaml, meta_field.yaml, repo-tools.yaml, tools/internal/plugin_meta/util/ai_tools_config.py
   requires_env: none
   dependencies: none
   requires_install: none
@@ -11,19 +11,20 @@ meta:
   requires_skills: ai-tools-config, skill-meta-fields, lefthook-automation
   status: stable
   description: no description
-  version: 1.0.0
+  version: 1.1.0
 ---
 
 # SSOT+生成によるドリフト防止パターン
 
 このリポジトリは、複数ファイルにまたがって一致していてほしい事実（どのAIツールがどのプラグインを持つか、`SKILL.md`の`meta:`各フィールドの意味）を、**1つの手編集ファイルをSSOTとし、そこから派生ファイルをスクリプトで再生成する**という形で扱う。同じ事実を複数箇所に手で書き写さない。
 
-## 現在の2つのSSOT
+## 現在の3つのSSOT
 
-| SSOT                                          | 扱う事実                                                                                         | 詳細スキル                                         |
-| --------------------------------------------- | ------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
-| [`ai-tools.yaml`](../../../ai-tools.yaml)     | どのツールがどのプラグインを持つか、各ツールのマーケットプレイス/スキルカタログ/README節の生成元 | [ai-tools-config](../ai-tools-config/SKILL.md)     |
-| [`meta_field.yaml`](../../../meta_field.yaml) | `SKILL.md`frontmatterの`meta:`各サブフィールドの意味・書式・デフォルト値                         | [skill-meta-fields](../skill-meta-fields/SKILL.md) |
+| SSOT                                          | 扱う事実                                                                                         | 詳細スキル                                                                                                               |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| [`ai-tools.yaml`](../../../ai-tools.yaml)     | どのツールがどのプラグインを持つか、各ツールのマーケットプレイス/スキルカタログ/README節の生成元 | [ai-tools-config](../ai-tools-config/SKILL.md)                                                                           |
+| [`meta_field.yaml`](../../../meta_field.yaml) | `SKILL.md`frontmatterの`meta:`各サブフィールドの意味・書式・デフォルト値                         | [skill-meta-fields](../skill-meta-fields/SKILL.md)                                                                       |
+| [`repo-tools.yaml`](../../../repo-tools.yaml) | スキルがCLIインストール前提として依存する`tools/`配下ツールの名前とパスの対応                    | (未作成。`tools/internal/skill/util/repo_tools_registry.py`と`tools/internal/skill/check/check_skill_repo_tools.py`参照) |
 
 ## 共通の形
 

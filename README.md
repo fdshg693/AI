@@ -48,9 +48,11 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 - [tools/](tools/) — リポジトリ管理・運用を支える便利ツール群。主なサブフォルダ:
   - `aim/`, `aim-use/` — モデル呼び出し CLI とその周辺ツール
   - `claude-wrapper/`, `cline-wrapper/`, `codex-wrapper/`, `cursor-wrapper/` — 各 AI ツール向けラッパー
+  - `interactive-cli-wrapper/` — 対話的（TTY前提でREPLとして動く）CLIをPTY越しに駆動する汎用ラッパー
   - `get-settings/` — 設定取得補助
   - `infra/` — インフラ利用ツール（AI ログ管理等）
   - `install/` — 各ツールのインストール手順（`justfile` 経由で実行）
+  - `sandbox/` — ISSUE駆動Dockerサンドボックスエージェント（GitHub ISSUEの`@sandbox`メンションをポーリングで検知しClaude Agent SDKに作業させる仕組み）
   - `internal/` — マーケットプレイス/skill カタログ生成等の内部ツール群
 - [integrations/](integrations/) — このレポジトリに存在するツール等を自分の環境に取り込むためのガイド（`CLAUDE_CODE.md`, `CLINE.md`, `CODEX.md`, `CLI_TOOLS.md`）
 - [templates/](templates/) — ルールやスキル等をまとめて導入する際のテンプレート例（`cline_best/`, `planner/` 等）
@@ -64,13 +66,19 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 
 - [skills-site/](skills-site/) — 登録済みAIコーディングツールのスキルを横断収集し、Astroの静的サイトとして公開する。公開対象の追加、frontmatter、生成・検証手順は [skills-site/README.md](skills-site/README.md) を参照。サイトはスキルの本文・メタデータ・配布ZIPだけを公開し、リポジトリ全体を公開するものではない。
 
+## ライセンス・コントリビューション
+
+[MIT License](LICENSE)。誰でも自由に Fork・改変・再配布できる。ただし `.github/workflows/` 配下の issue/PR 自動化（Claude / Codex / PR-Agent / gh-aw）はリポジトリの OWNER/COLLABORATOR のみが起動できる設定になっており、第三者には開放していない。詳細は [CONTRIBUTING.md](CONTRIBUTING.md) を参照。
+
 ## その他
 
-- `lefthook.yml` — コミット時などに走る Git hooks の設定。
+- `lefthook.yml` — コミット時などに走る Git hooks の設定（`pre-commit` での各種再生成・整形・secretlint、`commit-msg` での commitlint）。
 - `mise.toml` — [mise](https://mise.jdx.dev/) によるツールバージョン管理（node / pnpm / terraform / uv をこのリポジトリ用にpin）。
 - `pyproject.toml` — uv workspace のルート定義（`tools/aim` 等、Python パッケージ群をまとめて管理）。
 - `pnpm-workspace.yaml` / `package.json` / `pnpm-lock.yaml` — pnpm workspace のルート定義（`skills-site`, `tools/cline-wrapper`）とロックファイル。
 - `.prettierrc.json` / `.prettierignore` — フォーマット設定。
+- `commitlint.config.js` — コミットメッセージのlint設定（[Conventional Commits](https://www.conventionalcommits.org/)、`@commitlint/config-conventional`）。
+- `.secretlintrc.json` — ステージ済みファイルのシークレット検知設定（[secretlint](https://github.com/secretlint/secretlint) `@secretlint/secretlint-rule-preset-recommend`）。
 - `AGENTS.md` / `CLAUDE.md` — 各 AI ツール向けのリポジトリ全体指示ファイル（README と同等の構成概観を記載）。
 
   Azure Static Web Appsへのリソース作成は [skills-site/infra/](skills-site/infra/) のBicepで管理し、通常の公開更新はmainへのpushからGitHub Actionsで行う。ローカルの検証・Azure操作はリポジトリ直下のjustfileを使う。

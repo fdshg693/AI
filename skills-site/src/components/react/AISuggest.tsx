@@ -1,11 +1,5 @@
-import { useEffect, useState } from "react";
-import {
-  DEFAULT_MODEL,
-  MODEL_STORAGE,
-  REQUEST_TIMEOUT_MS,
-  apiErrorMessage,
-  skillHref,
-} from "../../lib/ai-suggest.mjs";
+import { useState } from "react";
+import { REQUEST_TIMEOUT_MS, apiErrorMessage, skillHref } from "../../lib/ai-suggest.mjs";
 
 type Skill = {
   path: string;
@@ -26,20 +20,10 @@ type AISuggestProps = {
 };
 
 export default function AISuggest({ basePath = "", apiHref = "/api/suggest" }: AISuggestProps) {
-  const [model, setModel] = useState("");
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("");
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [submitting, setSubmitting] = useState(false);
-
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(MODEL_STORAGE);
-      if (saved) setModel(saved);
-    } catch {
-      // ignore
-    }
-  }, []);
 
   const handleSubmit = async () => {
     const trimmedQuery = query.trim();
@@ -56,23 +40,10 @@ export default function AISuggest({ basePath = "", apiHref = "/api/suggest" }: A
     const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
     try {
-      const trimmedModel = model.trim();
-      try {
-        if (localStorage.getItem(MODEL_STORAGE) !== trimmedModel) {
-          if (trimmedModel) localStorage.setItem(MODEL_STORAGE, trimmedModel);
-          else localStorage.removeItem(MODEL_STORAGE);
-        }
-      } catch {
-        // localStorage may be unavailable; model still goes in the request body
-      }
-
       const response = await fetch(apiHref, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          query: trimmedQuery,
-          model: trimmedModel || undefined,
-        }),
+        body: JSON.stringify({ query: trimmedQuery }),
         signal: controller.signal,
       });
 
@@ -139,20 +110,6 @@ export default function AISuggest({ basePath = "", apiHref = "/api/suggest" }: A
             AIに提案してもらう
           </button>
         </div>
-        <details className="ai-suggest-advanced">
-          <summary>詳細設定</summary>
-          <label>
-            <span>モデル（任意、OpenRouterのモデルID）</span>
-            <input
-              type="text"
-              data-ai-model-input
-              autoComplete="off"
-              placeholder={DEFAULT_MODEL}
-              value={model}
-              onChange={(event) => setModel(event.target.value)}
-            />
-          </label>
-        </details>
         <p className="ai-suggest-status" data-ai-status aria-live="polite">
           {status}
         </p>

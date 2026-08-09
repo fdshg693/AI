@@ -6,8 +6,7 @@ JWT（RS256、有効期限は最大10分のところ9分で発行）でアプリ
 installation access token を取得する。
 
 コンテナ起動のたびに新規取得する想定で、ディスクへの永続キャッシュは行わない
-（1 ISSUE = 1 使い捨てコンテナ運用のため。決定事項は
-.claude/plans/sandbox-agent/03-github-app-auth.md 参照）。
+（1 ISSUE = 1 使い捨てコンテナ運用のため）。
 
 環境変数:
     GITHUB_APP_ID                  GitHub App ID

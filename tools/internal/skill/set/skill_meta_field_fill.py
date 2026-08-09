@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Sequence
 
 from skill.util.meta_field_registry import get_enum
+from skill.util.repo_tools_registry import load_repo_tools
 from skill.util.skill_frontmatter import SkillFrontmatter, find_skill_md_files, read_frontmatter
 from skill.util.skill_meta_field import ensure_meta_field
 
@@ -41,7 +42,26 @@ META_FIELDS = (
 STATUS_ENUM = get_enum("status")
 
 
-def _build_classification_prompt(status_enum: Sequence[str]) -> str:
+def _build_known_tools_note(tools: dict[str, dict[str, str]]) -> str:
+    """Render repo-tools.yaml's tool->path mapping for the classification prompt.
+
+    Keeps AI-filled requires_repo_tools/requires_install spellings aligned with
+    repo-tools.yaml (the SSOT checked by skill.check.check_skill_repo_tools)
+    instead of drifting into ad-hoc forms per skill.
+    """
+    if not tools:
+        return ""
+    lines = "\n".join(f"- {name}: {info['path']}" for name, info in sorted(tools.items()))
+    return f"""
+このリポジトリの既知のインストール済み外部CLIツール一覧（tools/配下、repo-tools.yamlより。
+「ツール名: パス」の形式）。このスキルがこれらのいずれかに依存する場合、
+requires_repo_toolsにはこの一覧の「ツール名」を、requires_installにはこの一覧の
+「パス」を含めてください（未知のツールに依存する場合はこの制約に従わなくてよい）。
+{lines}
+"""
+
+
+def _build_classification_prompt(status_enum: Sequence[str], known_tools_note: str = "") -> str:
     status_choices = "/".join(status_enum)
     return f"""\
 このディレクトリ全体（ディレクトリツリーと全ファイル内容）を調査し、SKILL.mdのmeta:に追加する7フィールドを判定してください。
@@ -49,7 +69,7 @@ def _build_classification_prompt(status_enum: Sequence[str]) -> str:
 該当しない場合の値は必ず none としてください。値は1行のスカラー文字列にし、複数ある場合はカンマ区切りにしてください。
 statusの値は {status_choices} のいずれか1つにしてください。
 Markdownのコードブロック、箇条書き、説明文、前置き、後置きは不要です。
-
+{known_tools_note}
 status: <{status_choices}>
 requires_skills: <値またはnone>
 requires_hooks: <値またはnone>
@@ -60,7 +80,9 @@ requires_repo_tools: <値またはnone>
 """
 
 
-CLASSIFICATION_PROMPT = _build_classification_prompt(STATUS_ENUM)
+CLASSIFICATION_PROMPT = _build_classification_prompt(
+    STATUS_ENUM, _build_known_tools_note(load_repo_tools())
+)
 
 
 class SkillMetaFieldError(Exception):

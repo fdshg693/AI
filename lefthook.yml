@@ -62,6 +62,11 @@ pre-commit:
     - name: check SKILL.md meta.version bump
       glob: "**/SKILL.md"
       run: just --justfile tools/internal/justfile skill-version-bump-check {staged_files}
+    - name: check SKILL.md repo-tools consistency
+      glob:
+        - "**/SKILL.md"
+        - "repo-tools.yaml"
+      run: just --justfile tools/internal/justfile skill-repo-tools-check
     - name: format Markdown with Prettier
       glob:
         - "*.md"
@@ -74,3 +79,13 @@ pre-commit:
         - "**/*.py"
       run: uv run ruff format {staged_files}
       stage_fixed: true
+    - name: scan staged files for secrets
+      glob:
+        - "*"
+        - "**/*"
+      run: pnpm exec secretlint --secretlintrc .secretlintrc.json {staged_files}
+
+commit-msg:
+  commands:
+    lint-commit-message:
+      run: pnpm exec commitlint --edit {1}
