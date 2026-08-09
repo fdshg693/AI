@@ -1,6 +1,6 @@
 # 郵便番号からの住所自動入力機能 ラフプラン（サンプル）
 
-> これは `.claude/rough/references/` 配下のサンプルです。[.claude/plans/references/00-overview-example.md](../../plans/references/00-overview-example.md) と同じ架空の機能を題材に、詳細プランを書く前段階の「まだ固まっていない考え」をどう書き殴ってよいかを示しています。実装対象ではありません。
+> これは `.claude/plans/{project-name}/rough/` 配下に置くラフプランのサンプルです（本サンプルは `references/` を仮のプロジェクトフォルダに見立て、[00-overview-example.md](../00-overview-example.md) と同じ架空の機能を題材に、詳細プランを書く前段階の「まだ固まっていない考え」をどう書き殴ってよいかを示しています）。実装対象ではありません。
 
 ## 何がしたいか（ざっくり）
 
@@ -25,5 +25,5 @@
 ## 書き方のポイント
 
 - ラフプランは「まだ結論が出ていないこと」をそのまま書いてよい。箇条書きの粒度も揃える必要はなく、疑問形のまま残してもよい。
-- 上記の調査観点・迷っている点は、実際に調査した結果 [01-research-step-example.md](../../plans/references/01-research-step-example.md) の「調査結果」に、採用した決定は [00-overview-example.md](../../plans/references/00-overview-example.md) の「主要な決定事項」に、それぞれ整理された形で反映されている。ラフプランはこの2ファイルの「下書き」にあたる。
-- ラフプランの時点では `.claude/rules` 更新ポイントのような、詳細プランで必須の項目を埋める必要はない。決定していないことを無理に決めない。
+- 上記の調査観点・迷っている点は、実際に調査した結果 [01-research-step-example.md](../01-research-step-example.md) の「調査結果」に、採用した決定は [00-overview-example.md](../00-overview-example.md) の「主要な決定事項」に、それぞれ整理された形で反映されている。ラフプランはこの2ファイルの「下書き」にあたる。
+- ラフプランの時点では「ルール更新ポイント」のような、詳細プランで必須の項目を埋める必要はない。決定していないことを無理に決めない。
