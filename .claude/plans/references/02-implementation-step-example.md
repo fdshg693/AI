@@ -1,10 +1,15 @@
+---
+type: Plan Step
+status: implementing-done
+---
+
 # Step 2: APIクライアント実装 + フォーム組み込み（サンプル）
 
 > [01-research-step-example.md](01-research-step-example.md) の続き。「読むべきファイル・推奨Grep」の書き方、および新規ルールファイル作成時のフロントマターの書き方のサンプルです。実装対象ではありません。
 >
-> このファイルは**実行済みの状態**も示している — 先頭の「進捗」行と「計画との差分」節は、プラン実行中に追記する導線のサンプル。新規プランを書くときは省いて、実行後に追記する。
+> このファイルは**実行済みの状態**も示している — frontmatterの`status: implementing-done`と「計画との差分」節は、プラン実行中に更新・追記する導線のサンプル。新規プランを書くときは`status: planning-research`または`planning-breakdown`から始め、「計画との差分」節は実行後に必要な場合だけ追記する。
 >
-> **進捗**: ✅ 完了。実装中の差分・判断・後続タスクへの引継ぎ → [progress/02-implementation-notes-example.md](progress/02-implementation-notes-example.md)
+> 実装中の差分・判断・後続タスクへの引継ぎ → [progress/02-implementation-notes-example.md](progress/02-implementation-notes-example.md)
 
 ## やること
 
@@ -86,3 +91,4 @@ paths:
 - 既存ルールファイルに1行追記するだけの場合（[03-single-file-example.md](03-single-file-example.md) 参照）は、対象パスに変化が無ければフロントマターの変更は不要。新規作成のときだけフロントマターの設計が必要になる。
 - **「計画との差分」節は、実行時に計画どおりにいかなかった変更のサマリを1〜2行で残し、理由は progress に置く。** 差分の理由を本体に長く書くと「計画時点の決定」と「実行時の変更」の区別がつかなくなる。プラン実行前はこの節は空（または節自体無し）でよく、実行中に差分が発生したときだけ追記する（[progress/02-implementation-notes-example.md](progress/02-implementation-notes-example.md) 参照）。
 - 決定事項の理由には、Step1の調査結果を根拠として引用してよい。調査結果の全文はコピーせず、リンクで参照する。
+- **frontmatterの`status`は、着手直後は`implementing-started`、複数の「触るファイル」に手を付けたら`implementing-in-progress`、全ファイルの変更が終わったら`implementing-done`と更新する。** 旧来の本文「進捗」行（✅完了／実施中／未着手）はfrontmatterに統合したため本文には書かない。

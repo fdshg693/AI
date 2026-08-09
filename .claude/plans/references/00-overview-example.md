@@ -1,8 +1,13 @@
+---
+type: Plan
+status: implementing-done
+---
+
 # 郵便番号からの住所自動入力機能 実装プラン - 概要（サンプル）
 
 > これは `.claude/plans/references/` 配下のサンプルです。架空の機能を題材に、複数ステップに分割するプランの書き方を示しています。実装対象ではありません。
 >
-> このファイルは**実行済みの状態**も示している — 「実装ステップ」の✅マークと progress フォルダへのリンクは、プラン実行中に追記する進捗導線のサンプル。新規プランを書くときはこれらを省いて、実行開始後に追記していく（[references/progress/README.md](progress/README.md) 参照）。
+> このファイルは**実行済みの状態**も示している — frontmatterの`status: implementing-done`、「実装ステップ」の✅マーク、progress フォルダへのリンクは、プラン実行中に更新・追記する進捗導線のサンプル。新規プランを書くときは`status`を`planning-research`か`planning-breakdown`から始め、✅マークやprogressリンクは実行開始後に追記していく（[references/progress/README.md](progress/README.md) 参照）。
 
 ## 要件
 
@@ -57,3 +62,4 @@
 - **実装ステップの数は機能の複雑さなりに。** 小さい機能は調査ステップも不要で、1ファイルに収める（[03-single-file-example.md](03-single-file-example.md) 参照）。無理に `00-overview.md` + 複数ステップの型に当てはめない。
 - **決定事項は「決定」と「理由」を1行ずつ。** 判断の根拠となる規約は `[[リンク]]` で指すだけにする。理由の全文はリンク先のルールファイル（`.claude/rules/`・`AGENTS.md`・`CLAUDE.md` 等、レポジトリの格納先）に書かれているべきもので、プラン側で重複させない。
 - **ファイル一覧は「新規」「変更」の2分類のみ。** 「読むべきファイル・推奨Grep」のような、実装者向けの詳細な手引きは各ステップファイル側に書き、概要ファイルには持ち込まない。
+- **概要ファイルのfrontmatter `status` は機能全体の代表ステータス。** 個々のステップの詳細な状態は各ステップファイル側のfrontmatterを見る（自動集計はしない。手動で揃える）。値の意味は[README.md](../README.md)の「プランのfrontmatter（OKF準拠）」節を参照。

@@ -1,6 +1,13 @@
+---
+type: Rough Plan
+status: promoted
+---
+
 # 郵便番号からの住所自動入力機能 ラフプラン（サンプル）
 
 > これは `.claude/plans/{project-name}/rough/` 配下に置くラフプランのサンプルです（本サンプルは `references/` を仮のプロジェクトフォルダに見立て、[00-overview-example.md](../00-overview-example.md) と同じ架空の機能を題材に、詳細プランを書く前段階の「まだ固まっていない考え」をどう書き殴ってよいかを示しています）。実装対象ではありません。
+>
+> このファイルは**詳細プランへ移行済みの状態**も示している — frontmatterの`status: promoted`は、[00-overview-example.md](../00-overview-example.md)・[01-research-step-example.md](../01-research-step-example.md)へ内容が整理された後の状態のサンプル。新規ラフプランを書くときは`status: drafting`から始め、書き終えたら`ready-for-plan`、詳細プランに着手したら`promoted`に更新して以降は触らない。
 
 ## 何がしたいか（ざっくり）
 
@@ -27,3 +34,4 @@
 - ラフプランは「まだ結論が出ていないこと」をそのまま書いてよい。箇条書きの粒度も揃える必要はなく、疑問形のまま残してもよい。
 - 上記の調査観点・迷っている点は、実際に調査した結果 [01-research-step-example.md](../01-research-step-example.md) の「調査結果」に、採用した決定は [00-overview-example.md](../00-overview-example.md) の「主要な決定事項」に、それぞれ整理された形で反映されている。ラフプランはこの2ファイルの「下書き」にあたる。
 - ラフプランの時点では「ルール更新ポイント」のような、詳細プランで必須の項目を埋める必要はない。決定していないことを無理に決めない。
+- **frontmatterの`status`は3値のみ（`drafting`／`ready-for-plan`／`promoted`）。** 詳細プラン側の6値（`planning-research`等）とは別物。`promoted`に上げたらラフプランの役割は終わりで、それ以降の進捗はラフプラン側ではなく詳細プラン側のfrontmatterで管理する（`status`を細かく追跡し直さない）。
