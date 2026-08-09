@@ -27,8 +27,8 @@ text one path away for verification. Pass --no-summarize to always get the
 full text only.
 
 Real examples that follow this exact pattern, for reference:
-- .claude/skills/claude-code-docs/extract_doc_section.py (code.claude.com)
-- .claude/skills/openrouter-docs/extract_doc_section.py (openrouter.ai) --
+- claude-plugins/meta/skills/claude-code-docs/extract_doc_section.py (code.claude.com)
+- claude-plugins/topics/skills/openrouter-docs/extract_doc_section.py (openrouter.ai) --
   also shows how to disambiguate collisions where the URL's last path
   segment repeats across pages (e.g. many .../README source URLs): key
   and name output files by the *full* path, not just the last segment.

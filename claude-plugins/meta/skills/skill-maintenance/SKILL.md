@@ -2,7 +2,7 @@
 # Claude CLI と Claude Code の取得スクリプト、および同ディレクトリ配下の他スキルに依存する。
 # 取得とファイル変更を伴うため、ユーザーが明示的に呼び出した場合だけ使う。
 name: skill-maintenance
-description: Maintains the Claude-related skills under `.claude/skills` by refreshing the Claude CLI help snapshot and Claude Code documentation snapshot, inspecting semantic changes, and updating affected skills. Use when explicitly checking whether those skills are stale after a Claude CLI or Claude Code documentation update.
+description: Maintains the Claude-related skills under `claude-plugins/meta/skills` by refreshing the Claude CLI help snapshot and Claude Code documentation snapshot, inspecting semantic changes, and updating affected skills. Use when explicitly checking whether those skills are stale after a Claude CLI or Claude Code documentation update.
 disable-model-invocation: true
 allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/scripts/*.py *)
 meta:
@@ -21,7 +21,7 @@ meta:
 
 # スキルメンテナンス
 
-`.claude/skills` 配下の Claude 関連スキルを、現在の Claude CLI と Claude Code 公式ドキュメントに追随させる。対象のスナップショットを更新し、意味のある差分に関係するスキルだけを修正する。
+`claude-plugins/meta/skills` 配下の Claude 関連スキルを、現在の Claude CLI と Claude Code 公式ドキュメントに追随させる。対象のスナップショットを更新し、意味のある差分に関係するスキルだけを修正する。
 
 ## 手順
 
@@ -38,7 +38,7 @@ meta:
    - `${CLAUDE_SKILL_DIR}/../claude-cli-docs/generate_claude_help_yaml.py`
    - `${CLAUDE_SKILL_DIR}/../claude-code-docs/download_claude_code_reference.py`
 
-   比較対象の「変更前」は実行直前の `output/` の内容ではなく、`.claude/skills/skill-maintenance/state/` に保存されている「前回このスクリプトを実行した時点」のスナップショットである。`output/` が別経路（生成スクリプトの直接実行、手動編集、git checkout 等）で更新されていても、このスナップショットは本スクリプトの実行時にしか書き換わらないため影響を受けない。そのぶん、別経路での更新が既に反映済みの変更を再度差分として拾う可能性があるが、これは許容する。スナップショットは毎回の実行後に最新内容へ更新される（`state/` 配下は git 管理対象外）。
+   比較対象の「変更前」は実行直前の `output/` の内容ではなく、`claude-plugins/meta/skills/skill-maintenance/state/` に保存されている「前回このスクリプトを実行した時点」のスナップショットである。`output/` が別経路（生成スクリプトの直接実行、手動編集、git checkout 等）で更新されていても、このスナップショットは本スクリプトの実行時にしか書き換わらないため影響を受けない。そのぶん、別経路での更新が既に反映済みの変更を再度差分として拾う可能性があるが、これは許容する。スナップショットは毎回の実行後に最新内容へ更新される（`state/` 配下は git 管理対象外）。
 
    取得時刻だけの差分は除外し、ソースごとの完全な unified diff を `temp/skill-maintenance/diff/` フォルダ配下に対象ごとの個別ファイルとして書き出す（例: `claude-cli-help.diff`, `claude-code-reference.diff`, `claude-code-full-reference.diff`）。動的コンテキストの出力には、書き出されたファイル一覧と差分の有無だけが表示される。**この差分ファイルは自分で直接読まない。** 差分は巨大になりやすく、そのままコンテキストに載せると以降の作業を圧迫する。
 
@@ -57,7 +57,7 @@ meta:
 
 4. **影響を受けるスキルを特定する**
 
-   サブエージェントの要約（差分ファイルそのものではない）に現れたフラグ、サブコマンド、設定名、機能名、ドキュメント URL/slug を手がかりに、`.claude/skills` 配下の `SKILL.md` と参照ファイルを検索する。
+   サブエージェントの要約（差分ファイルそのものではない）に現れたフラグ、サブコマンド、設定名、機能名、ドキュメント URL/slug を手がかりに、`claude-plugins/meta/skills` 配下の `SKILL.md` と参照ファイルを検索する。
 
    - CLI の差分は `claude-cli-docs` と `claude-cli-use`、および `claude` コマンドの仕様を直接記述するスキルを確認する。
    - Claude Code ドキュメントの差分は、該当 URL/slug や機能名を参照するスキルを確認する。
@@ -85,4 +85,4 @@ meta:
 - 既存スキルを一括で書き換えず、差分から影響範囲を説明できるものだけ更新する。
 - `temp/skill-maintenance/diff/` の各ファイルは自分で全文を読まず、必ずサブエージェントの要約を経由する。要約で判断できない場合だけ、該当箇所に絞って読む。
 - `temp/skill-maintenance/` は作業用の差分置き場であり、コミット対象にしない。
-- `.claude/skills/skill-maintenance/state/` は前回実行時点のスナップショットを保持するための内部状態であり、手編集・コミット対象にしない（`.gitignore` 済み）。
+- `claude-plugins/meta/skills/skill-maintenance/state/` は前回実行時点のスナップショットを保持するための内部状態であり、手編集・コミット対象にしない（`.gitignore` 済み）。

@@ -19,7 +19,7 @@
 
 この設計を選んだ理由（[web-patterns-reference.md](web-patterns-reference.md) 1.1節・1.5節も参照）:
 
-- 単発の`.claude/skills/`配下のスキルでは、共有`scripts/`モジュールを1つ上の階層に作るより、スキル単体にスクリプトを1本コピーする方がシンプルで、依存関係も追跡しやすい
+- 単発の`claude-plugins/*/skills/`配下のスキルでは、共有`scripts/`モジュールを1つ上の階層に作るより、スキル単体にスクリプトを1本コピーする方がシンプルで、依存関係も追跡しやすい
 - 複数スキルで本当にロジックを共有したい場合（プラグイン内など）は、`claude-plugins/ai-code-tool/scripts/llms_txt_downloader.py`のような共通モジュールを置くパターンもあるが、それは例外的な対応であり本スキルの既定ではない
 
 そのため、**このスキル自身の`scripts/`を更新しても、既にコピーして使っている個別スキル(`vscode-docs`等)には自動反映されない**。個別スキル側のコピーが古い設計のままになっていないかは、`skill-maintenance`スキルのような横断メンテナンス作業で気づいた時に見直す。
@@ -68,8 +68,8 @@ writing-skill-web/
 `scripts/*.py`は「コピーして使う」テンプレートだが、テンプレート自身のロジック(frontmatter+freshness契約、URLバッチチェック、excerptのverbatim組み立て+バリデーション、セクション抽出の境界判定など)はコピー先が変わっても共通なので、[tests/](tests/README.md)でこのスキル内に一度だけ検証している。
 
 - テスト対象はあくまで`writing-skill-web`同梱の`scripts/*.py`自身であり、これらをコピーして作る個別スキル(`vscode-docs`等)に`tests/`を複製する運用ではない(理由・実行方法は[tests/README.md](tests/README.md)参照)
-- リポジトリルートの`pyproject.toml`の`[tool.uv.workspace]`にこのディレクトリ(`.claude/skills/writing-skill-web`)を登録しており、`uv sync`で`requests`/`typer`が解決される。このスキル直下の`pyproject.toml`はこの登録のためだけに存在し、`scripts/`を配布可能なパッケージにする意図はない
-- 実行: `uv sync && uv run pytest .claude/skills/writing-skill-web/tests`(引数無しの`uv run pytest`では収集されない理由は[tests/README.md](tests/README.md)参照)
+- リポジトリルートの`pyproject.toml`の`[tool.uv.workspace]`にこのディレクトリ(`claude-plugins/meta/skills/writing-skill-web`)を登録しており、`uv sync`で`requests`/`typer`が解決される。このスキル直下の`pyproject.toml`はこの登録のためだけに存在し、`scripts/`を配布可能なパッケージにする意図はない
+- 実行: `uv sync && uv run pytest claude-plugins/meta/skills/writing-skill-web/tests`(引数無しの`uv run pytest`だけでは収集されない場合がある理由は[tests/README.md](tests/README.md)参照)
 
 ## 保守時の注意
 

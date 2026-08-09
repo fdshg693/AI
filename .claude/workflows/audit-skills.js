@@ -1,8 +1,8 @@
-// audit-skills — SKILL.md をベストプラクティス(.claude/skills/writing-skill/bestpractices.md)に
+// audit-skills — SKILL.md をベストプラクティス(claude-plugins/meta/skills/writing-skill/bestpractices.md)に
 // 照らして監査し、優先度別の日本語Markdownレポートを返すワークフロー。
 //
 // 【デフォルトの対象】
-// 引数なしで `/audit-skills` を実行すると、`.claude/skills/claude-cli-docs/SKILL.md` の
+// 引数なしで `/audit-skills` を実行すると、`claude-plugins/meta/skills/claude-cli-docs/SKILL.md` の
 // 1件だけを監査します。これは「間違えて引数なしで実行してもすぐ終わる・agentを1〜2体しか
 // 起動しない」ようにするための安全な既定値であり、リポジトリ全体の監査がデフォルトでは
 // ありません。全件監査したい場合は必ず対象を明示してください。
@@ -12,16 +12,16 @@
 // 各要素は「SKILL.mdファイルへの直接パス」でも「配下を再帰的に探すディレクトリ」でも構いません。
 //
 //   例1: 特定の1ファイルだけ監査
-//     /audit-skills .claude/skills/writing-skill/SKILL.md
+//     /audit-skills claude-plugins/meta/skills/writing-skill/SKILL.md
 //
 //   例2: ディレクトリ配下を再帰的に監査(directory内の全SKILL.mdが対象になる)
 //     /audit-skills claude-plugins/coding/skills
 //
 //   例3: 複数対象をまとめて指定(ファイル・ディレクトリを混在可)
-//     /audit-skills ["claude-plugins/coding/skills", ".claude/skills/writing-workflows/SKILL.md"]
+//     /audit-skills ["claude-plugins/coding/skills", "claude-plugins/meta/skills/writing-workflows/SKILL.md"]
 //
-//   例4: リポジトリ全体(.claude/skills と claude-plugins 配下すべて)を監査
-//     /audit-skills [".claude/skills", "claude-plugins"]
+//   例4: リポジトリ全体(claude-plugins 配下すべて)を監査
+//     /audit-skills ["claude-plugins"]
 //     → 40件超のSKILL.mdが対象になり得るため、agentが十数体〜数十体起動しトークン消費も
 //       大きくなります。まず1ディレクトリなど小さい範囲で試してから範囲を広げてください。
 //
@@ -37,15 +37,15 @@
 export const meta = {
   name: 'audit-skills',
   description:
-    "Audit SKILL.md files in this repo against .claude/skills/writing-skill/bestpractices.md, fan out per batch, and return a priority-sorted Japanese report. Pass a root path (or array of paths, repo-relative; file or directory) via args to scope the audit; defaults to the single file '.claude/skills/claude-cli-docs/SKILL.md' so an accidental no-args run finishes fast.",
+    "Audit SKILL.md files in this repo against claude-plugins/meta/skills/writing-skill/bestpractices.md, fan out per batch, and return a priority-sorted Japanese report. Pass a root path (or array of paths, repo-relative; file or directory) via args to scope the audit; defaults to the single file 'claude-plugins/meta/skills/claude-cli-docs/SKILL.md' so an accidental no-args run finishes fast.",
   phases: ['対象探索', 'バッチ監査', 'レポート集約'],
 }
 
-const BESTPRACTICES = '.claude/skills/writing-skill/bestpractices.md'
-const WRITING = '.claude/skills/writing-skill/writing.md'
+const BESTPRACTICES = 'claude-plugins/meta/skills/writing-skill/bestpractices.md'
+const WRITING = 'claude-plugins/meta/skills/writing-skill/writing.md'
 const BATCH_SIZE = 4
 
-const roots = args ? (Array.isArray(args) ? args : [args]) : ['.claude/skills/claude-cli-docs/SKILL.md']
+const roots = args ? (Array.isArray(args) ? args : [args]) : ['claude-plugins/meta/skills/claude-cli-docs/SKILL.md']
 
 const found = await agent(
   `次のパスから SKILL.md ファイルを列挙してください: ${roots.join(', ')}\n` +

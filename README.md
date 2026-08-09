@@ -16,7 +16,7 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 同一ツールでも「ツールが読む設定（`.` 始まり）」と「プラグイン実体（`*-plugins/`）」が分かれていることがある。
 
 - **Claude Code**
-  - [.claude/](.claude/) — このリポジトリ自体を Claude Code で開発するための設定（rules, skills, hooks, scripts, workflows 等）
+  - [.claude/](.claude/) — このリポジトリ自体を Claude Code で開発するための設定（rules, hooks, scripts, workflows 等）
   - [claude-plugins/](claude-plugins/) — Claude Code 用プラグイン本体
   - [.claude-plugin/](.claude-plugin/) — 上記プラグイン群をまとめるマーケットプレイス定義（`marketplace.json`）と skill カタログ（`skill-catalog.json`）
 
@@ -45,7 +45,7 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 ### リポジトリ運用・開発支援
 
 - [repo-meta/](repo-meta/) — このリポジトリ自体のメンテ用 Claude Code プラグイン（生成ファイルの再生成手順など）。配布用スキルではなくレポジトリ固有のため、マーケットプレイスやスキル公開サイトには含めず `ai-tools.yaml` にも記載しない。詳細は [repo-meta/README.md](repo-meta/README.md) 参照。
-- [docs/](docs/) — AIツールを問わずリポジトリ全体で参照する知識（メンテナンス規約・設計判断・運用知識、他ツール環境への導入手順）を [OKF (Open Knowledge Format)](.claude/skills/okf-spec/) の概念ドキュメントとしてまとめたバンドル。詳細は [docs/index.md](docs/index.md) 参照。
+- [docs/](docs/) — AIツールを問わずリポジトリ全体で参照する知識（メンテナンス規約・設計判断・運用知識、他ツール環境への導入手順）を [OKF (Open Knowledge Format)](claude-plugins/coding/skills/okf-spec/) の概念ドキュメントとしてまとめたバンドル。詳細は [docs/index.md](docs/index.md) 参照。
 - [tools/](tools/) — リポジトリ管理・運用を支える便利ツール群。主なサブフォルダ:
   - `aim/`, `aim-use/` — モデル呼び出し CLI とその周辺ツール
   - `claude-wrapper/`, `cline-wrapper/`, `codex-wrapper/`, `cursor-wrapper/` — 各 AI ツール向けラッパー

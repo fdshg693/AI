@@ -188,7 +188,7 @@ Agent SDKはClaude Code CLIをそのまま子プロセスとして起動して�
 ### 起動手順
 
 ```
-cd .claude/skills/claude-code-debugging/otel-stack
+cd claude-plugins/meta/skills/claude-code-debugging/otel-stack
 cp .env.example .env   # GRAFANA_ADMIN_PASSWORD に任意のパスワードを設定
 docker compose up -d
 ```

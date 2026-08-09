@@ -31,7 +31,7 @@ from pathlib import Path
 
 FETCHED_AT_RE = re.compile(r"^\s*fetched_at:\s*.*$", re.MULTILINE)
 DIFF_DIR_RELATIVE = Path("temp/skill-maintenance/diff")
-STATE_DIR_RELATIVE = Path(".claude/skills/skill-maintenance/state")
+STATE_DIR_RELATIVE = Path("claude-plugins/meta/skills/skill-maintenance/state")
 
 
 @dataclass(frozen=True)
@@ -51,11 +51,11 @@ class RunResult:
 def find_repo_root(script_path: Path) -> Path:
     """Resolve the repo root from this script's fixed location.
 
-    This script always lives at <repo_root>/.claude/skills/skill-maintenance/scripts/,
+    This script always lives at <repo_root>/claude-plugins/meta/skills/skill-maintenance/scripts/,
     so the root is derived by a fixed number of parent hops rather than searching
     for a .git directory (this repo isn't always a git checkout).
     """
-    return script_path.parents[4]
+    return script_path.parents[5]
 
 
 def slugify(label: str) -> str:
@@ -133,18 +133,20 @@ def main() -> int:
     targets = [
         Target(
             "Claude CLI help",
-            repo_root / ".claude/skills/claude-cli-docs/generate_claude_help_yaml.py",
-            repo_root / ".claude/skills/claude-cli-docs/output/help_result.yaml",
+            repo_root / "claude-plugins/meta/skills/claude-cli-docs/generate_claude_help_yaml.py",
+            repo_root / "claude-plugins/meta/skills/claude-cli-docs/output/help_result.yaml",
         ),
         Target(
             "Claude Code reference",
-            repo_root / ".claude/skills/claude-code-docs/download_claude_code_reference.py",
-            repo_root / ".claude/skills/claude-code-docs/output/llms.txt",
+            repo_root
+            / "claude-plugins/meta/skills/claude-code-docs/download_claude_code_reference.py",
+            repo_root / "claude-plugins/meta/skills/claude-code-docs/output/llms.txt",
         ),
         Target(
             "Claude Code full reference",
-            repo_root / ".claude/skills/claude-code-docs/download_claude_code_reference.py",
-            repo_root / ".claude/skills/claude-code-docs/output/llms-full.txt",
+            repo_root
+            / "claude-plugins/meta/skills/claude-code-docs/download_claude_code_reference.py",
+            repo_root / "claude-plugins/meta/skills/claude-code-docs/output/llms-full.txt",
         ),
     ]
 

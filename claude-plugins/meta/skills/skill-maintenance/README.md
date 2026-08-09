@@ -2,7 +2,7 @@
 
 ## 位置付け
 
-`skill-maintenance` は、通常の専門スキルとは異なる保守専用のメタスキルである。回答や成果物を作るためのスキルではなく、同じ `.claude/skills` 配下にある他のスキルが、現在の Claude CLI と Claude Code の仕様に追随できているかを点検し、必要なスキルだけを更新する。
+`skill-maintenance` は、通常の専門スキルとは異なる保守専用のメタスキルである。回答や成果物を作るためのスキルではなく、同じ `claude-plugins/meta/skills` 配下にある他のスキルが、現在の Claude CLI と Claude Code の仕様に追随できているかを点検し、必要なスキルだけを更新する。
 
 いわば「スキルをメンテナンスするスキル」であり、保守対象には自分自身を含めない。自分自身の設計変更は、通常の開発作業として人間がレビューする。
 
@@ -19,11 +19,11 @@
 
 ## 保守対象と情報源
 
-| 対象                                  | 情報源                                               | 生成物                                               |
-| ------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------- |
-| Claude CLI のオプション・サブコマンド | `claude-cli-docs/generate_claude_help_yaml.py`       | `claude-cli-docs/output/help_result.yaml`            |
-| Claude Code 公式ドキュメント          | `claude-code-docs/download_claude_code_reference.py` | `claude-code-docs/output/llms.txt` / `llms-full.txt` |
-| 影響を受けるスキル                    | 上記生成物の意味のある差分                           | `.claude/skills` 配下の関連 `SKILL.md`・参照ファイル |
+| 対象                                  | 情報源                                               | 生成物                                                           |
+| ------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------- |
+| Claude CLI のオプション・サブコマンド | `claude-cli-docs/generate_claude_help_yaml.py`       | `claude-cli-docs/output/help_result.yaml`                        |
+| Claude Code 公式ドキュメント          | `claude-code-docs/download_claude_code_reference.py` | `claude-code-docs/output/llms.txt` / `llms-full.txt`             |
+| 影響を受けるスキル                    | 上記生成物の意味のある差分                           | `claude-plugins/meta/skills` 配下の関連 `SKILL.md`・参照ファイル |
 
 生成物の `fetched_at` は取得時刻であり、更新要否の根拠にしない。内容差分の取得は [scripts/refresh_and_diff.py](scripts/refresh_and_diff.py) が Python の unified diff として行い、対象ごとに `temp/skill-maintenance/diff/` 配下の個別ファイルへ書き出す。
 

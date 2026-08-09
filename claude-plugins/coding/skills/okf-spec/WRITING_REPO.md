@@ -21,7 +21,7 @@ docs/
     ai-tools-yaml-ssot.md
 ```
 
-- サブディレクトリの切り方は[README.md](../../../README.md)の「AIツールごとの設定・プラグインルート」の分類（Claude Code / Cline / Codex / Copilot / Cursor / Antigravity / tools / repo-meta）に揃えるのが最も迷いが少ない
+- サブディレクトリの切り方は[README.md](../../../../README.md)の「AIツールごとの設定・プラグインルート」の分類（Claude Code / Cline / Codex / Copilot / Cursor / Antigravity / tools / repo-meta）に揃えるのが最も迷いが少ない
 - `decisions/` は、AGENTS.mdやSKILL.mdのようなSSOT・手順書には書ききれない「なぜその設計にしたか」を残す置き場として想定する
 
 ## frontmatterキーのサンプル（このリポジトリでの値の付け方）
@@ -45,7 +45,7 @@ docs/
 | `reference_agent/claude-sonnet-5` | Claude Codeセッションが自律生成した          |
 | `process:lefthook-pre-commit`     | `lefthook.yml`の自動フックが機械的に確認した |
 
-`tags`は[README.md](../../../README.md)のフォルダ分類に揃える: `claude-code` / `cline` / `codex` / `copilot` / `cursor` / `antigravity` / `tools` / `repo-meta` / `skills-site`。
+`tags`は[README.md](../../../../README.md)のフォルダ分類に揃える: `claude-code` / `cline` / `codex` / `copilot` / `cursor` / `antigravity` / `tools` / `repo-meta` / `skills-site`。
 
 `resource`および`sources[].resource`は、このリポジトリ内のファイルを指す場合はリポジトリルートからの相対パス（例: `tools/aim/README.md`）をそのまま使う。外部ツールの公式ドキュメント等を指す場合は通常のURLを使う。
 

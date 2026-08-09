@@ -17,7 +17,7 @@
 ## 全体構成
 
 ```
-.claude/skills/task-tracker/
+claude-plugins/coding/skills/task-tracker/
 ├── SKILL.md                       # エントリポイント（disable-model-invocation: true）
 ├── PLAN.md                        # 本ファイル
 ├── memo/
@@ -89,10 +89,10 @@
 
 ## 読むべきファイル・実行推奨Grep（実装直前に再確認）
 
-- 既存hookの書式踏襲: [.claude/hooks/block_large_read.py](../../hooks/block_large_read.py), [.claude/hooks/_hook_log.py](../../hooks/_hook_log.py)
-- hooks_manager運用ルール: [.claude/scripts/AGENTS.md](../../scripts/AGENTS.md), [.claude/scripts/hooks_manager.py](../../scripts/hooks_manager.py)
-- `UserPromptExpansion` の最新入出力スキーマ: `.claude/skills/claude-code-docs/output/llms-full.txt` 内 `### UserPromptExpansion` セクション（バージョン差異があり得るので実装直前に再取得推奨。`claude-code-docs`スキル経由で最新化できる）
-- セッショントランスクリプトの所在・形式: [.claude/skills/claude-code-debugging/logs-and-settings.md](../claude-code-debugging/logs-and-settings.md)、参考実装 [.claude/skills/claude-code-debugging/scripts/extract_log.py](../claude-code-debugging/scripts/extract_log.py)
+- 既存hookの書式踏襲: [.claude/hooks/block_large_read.py](../../../../.claude/hooks/block_large_read.py), [.claude/hooks/_hook_log.py](../../../../.claude/hooks/_hook_log.py)
+- hooks_manager運用ルール: [.claude/scripts/AGENTS.md](../../../../.claude/scripts/AGENTS.md), [.claude/scripts/hooks_manager.py](../../../../.claude/scripts/hooks_manager.py)
+- `UserPromptExpansion` の最新入出力スキーマ: `claude-plugins/meta/skills/claude-code-docs/output/llms-full.txt` 内 `### UserPromptExpansion` セクション（バージョン差異があり得るので実装直前に再取得推奨。`claude-code-docs`スキル経由で最新化できる）
+- セッショントランスクリプトの所在・形式: [claude-plugins/meta/skills/claude-code-debugging/logs-and-settings.md](../../../meta/skills/claude-code-debugging/logs-and-settings.md)、参考実装 [claude-plugins/meta/skills/claude-code-debugging/scripts/extract_log.py](../../../meta/skills/claude-code-debugging/scripts/extract_log.py)
 
 ## 決定事項・注意点
 

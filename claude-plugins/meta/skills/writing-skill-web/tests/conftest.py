@@ -20,7 +20,7 @@ SCRIPTS_DIR = TESTS_DIR.parent / "scripts"
 
 # Explicit sys.path insertion (rather than relying solely on the workspace's
 # editable install) so these tests also run standalone, e.g.
-# `python -m pytest .claude/skills/writing-skill-web/tests` without a prior
+# `python -m pytest claude-plugins/meta/skills/writing-skill-web/tests` without a prior
 # `uv sync` -- same approach as claude-plugins/my-tools/skills/tav-cli/tests.
 sys.path.insert(0, str(SCRIPTS_DIR))
 

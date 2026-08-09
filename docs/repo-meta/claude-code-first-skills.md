@@ -1,7 +1,7 @@
 ---
 type: Design Decision
 title: Claude Code中心のスキル方針
-description: Explains this repository's policy that most SKILL.md content is written for Claude Code specifically (exploiting its frontmatter mechanisms like allowed-tools, disable-model-invocation, dynamic `!command` context injection, and this repo's own meta block) and only appears for another AI tool as a meta-skill about using that tool itself, not a ported copy. Use when deciding whether a skill belongs under .claude/skills or a claude-plugins/ plugin only, whether to port an existing Claude Code skill to cline-plugins/codex-plugins/copilot-plugins/cursor-plugins, or why those folders look sparser than claude-plugins.
+description: Explains this repository's policy that most SKILL.md content is written for Claude Code specifically (exploiting its frontmatter mechanisms like allowed-tools, disable-model-invocation, dynamic `!command` context injection, and this repo's own meta block) and only appears for another AI tool as a meta-skill about using that tool itself, not a ported copy. Use when deciding whether a skill belongs under claude-plugins/meta or a specialized claude-plugins/ plugin only, whether to port an existing Claude Code skill to cline-plugins/codex-plugins/copilot-plugins/cursor-plugins, or why those folders look sparser than claude-plugins.
 tags: [claude-code, cline, codex, copilot, cursor, antigravity, repo-meta]
 generated: { by: reference_agent/cline-glm-5.2, at: 2026-08-09T14:39:30Z }
 status: stable
@@ -13,7 +13,7 @@ status: stable
 
 ## 実態の比較
 
-- `.claude/skills/` + `claude-plugins/*/skills/` — このリポジトリの大半のタスク特化スキルの本体（`writing-hooks`、`ai-tools-config`、`claude-mechanisms`、`proposing-flow`等）
+- `claude-plugins/*/skills/` — このリポジトリの大半のタスク特化スキルの本体（`writing-hooks`、`ai-tools-config`、`claude-mechanisms`、`proposing-flow`等）
 - `.cline/skills/`、`codex-plugins/meta/skills/`、`copilot-plugins/meta/` — ほぼ`<tool>-cli-docs`・`<tool>-docs`・`<tool>-sdk-docs`・`<tool>-skill-writer`/`plugin-writer`/`rule-writer`のような、**そのツール自体を使うためのメタスキル**のみ
 
 ## なぜポートしないか

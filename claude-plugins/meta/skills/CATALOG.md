@@ -171,56 +171,12 @@ meta:
   version: 1.0.0
 ---
 
-- okf-spec
----
-# 同梱ファイル: SUMMARY.md（spec要約、通常はここで足りる）/ FINDING.md（OKFバンドルの探し方）/ WRITING_GENERAL.md（OKF概念の一般的な書き方）/ WRITING_REPO.md（このリポジトリ向けの配置・frontmatter推奨案）
-# output/SPEC.md は download_okf_spec.py が定期取得する原文（1000行超）。直接Readせず、本文の手順（Grep/サブエージェント）を使う
-name: okf-spec
-description: Use when finding, reading, authoring, or answering questions about Open Knowledge Format (OKF) bundles or concept documents — a markdown+YAML-frontmatter convention (GoogleCloudPlatform/knowledge-catalog) for knowledge that AI agents write and consume. Grounds answers in a periodically re-fetched snapshot of the official spec instead of training-data memory, which may be stale or predate v0.2's provenance/trust/lifecycle/attestation fields.
-allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/download_okf_spec.py *)
-meta:
-  requires_repo_tools: none
-  requires_env: none
-  dependencies: requests
-  requires_install: none
-  requires_hooks: none
-  requires_skills: writing-skill-web
-  status: stable
-  description: no description
-  version: 1.0.1
----
-
-- proposing-flow
----
-# 前提: 通常のスキルとしてメインエージェント自身のコンテキストで実行される（context:forkは使わない）。
-#   メインエージェントは会話履歴に既にアクセスできるため、このスキルは「何を調べるか」ではなく
-#   「Agent toolでflow-proposerサブエージェントをどう呼ぶか」だけを指示する。
-#   実際の調査・判定・提案ロジックは.claude/agents/flow-proposer.mdに実装されている。
-# 依存: 実行主体はflow-proposerサブエージェント（.claude/agents/flow-proposer.md）。Agent toolで
-#   subagent_type: flow-proposerを指定して呼び出す。関連スキルとしてclaude-mechanisms（機構選定の
-#   判断軸）、writing-workflows（実行段階で実際にDynamic Workflowを組む場合の設計）があるが、
-#   このスキル自体はどちらにも依存しない。
-name: proposing-flow
-description: 実装依頼（「〜を実装して」等）を受けた直後、または実装作業を進める中で理解が深まった時点で、調査・実装・テストの各ステップとその実行主体（メインエージェント/サブエージェント）の提案を得るために使う。呼び出されたメインエージェント自身が、実装依頼の全文と自分が既に会話の中で把握している理解・調査結果をまとめ、Agent toolでflow-proposerサブエージェントに渡してフロー提案を受け取る、という手順を指示するだけの薄いスキルである。実際の調査・判定ロジックは`.claude/agents/flow-proposer.md`側にある。ユーザーの明示的な呼び出しに限らず、実装系の依頼を受けたAIエージェント自身が着手前に自律的に呼び出してもよい。巨大なタスクをメインエージェントだけで抱え込む、逆に些細な作業を過剰に分割する、といった不適切なワークフロー選定を防ぎたい場面で使う。
-argument-hint: "実装依頼の全文（省略時は直近の会話から読み取る）"
-meta:
-  requires_repo_tools: none
-  requires_env: none
-  dependencies: none
-  requires_install: none
-  requires_hooks: none
-  requires_skills: none
-  status: draft
-  description: メインエージェント自身にflow-proposerサブエージェントの呼び方を指示する薄いスキル
-  version: 1.2.0
----
-
 - skill-maintenance
 ---
 # Claude CLI と Claude Code の取得スクリプト、および同ディレクトリ配下の他スキルに依存する。
 # 取得とファイル変更を伴うため、ユーザーが明示的に呼び出した場合だけ使う。
 name: skill-maintenance
-description: Maintains the Claude-related skills under `.claude/skills` by refreshing the Claude CLI help snapshot and Claude Code documentation snapshot, inspecting semantic changes, and updating affected skills. Use when explicitly checking whether those skills are stale after a Claude CLI or Claude Code documentation update.
+description: Maintains the Claude-related skills under `claude-plugins/meta/skills` by refreshing the Claude CLI help snapshot and Claude Code documentation snapshot, inspecting semantic changes, and updating affected skills. Use when explicitly checking whether those skills are stale after a Claude CLI or Claude Code documentation update.
 disable-model-invocation: true
 allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/scripts/*.py *)
 meta:
@@ -233,24 +189,6 @@ meta:
   status: experimental
   description: no description
   version: 1.0.2
----
-
-- task-tracker
----
-name: task-tracker
-description: 複数タスクを行き来しながら開発する際に、タスクごとの現状(CURRENT.md)とセッションIDを`.claude/tasks/{task-name}/`に自動追跡する。新規タスクの開始・既存タスクの再開の両方を `/task-tracker <task-name>` の1コマンドで扱う。
-disable-model-invocation: true
-argument-hint: "<task-name>"
-meta:
-  requires_repo_tools: just, hooks_manager
-  requires_env: none
-  dependencies: python3
-  requires_install: none
-  requires_hooks: UserPromptExpansion
-  requires_skills: none
-  status: draft
-  description: no description
-  version: 1.0.1
 ---
 
 - writing-hooks

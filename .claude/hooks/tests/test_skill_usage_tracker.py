@@ -145,11 +145,11 @@ def test_load_roots_reads_config_and_appends_home_skills(tmp_path, monkeypatch):
     assert roots[-1] == Path.home() / ".claude" / "skills"
 
 
-def test_load_roots_no_config_defaults_to_dotclaude_skills_and_home(tmp_path, monkeypatch):
+def test_load_roots_no_config_defaults_to_home_only(tmp_path, monkeypatch):
     monkeypatch.setenv("HOME", str(tmp_path / "home"))
     monkeypatch.setenv("USERPROFILE", str(tmp_path / "home"))
     roots = hook.load_roots(tmp_path)
-    assert roots == [tmp_path / ".claude" / "skills", Path.home() / ".claude" / "skills"]
+    assert roots == [Path.home() / ".claude" / "skills"]
 
 
 # ---------------------------------------------------------------------------
@@ -234,11 +234,19 @@ def test_e2e_read_non_skill_md_is_noop(tmp_path):
     assert not _state_file(project_dir, "sess-3").exists()
 
 
+def _write_roots_config(project_dir, roots):
+    config_dir = project_dir / ".claude" / "hooks" / "config"
+    config_dir.mkdir(parents=True, exist_ok=True)
+    body = "roots:\n" + "".join(f"  - {r}\n" for r in roots)
+    (config_dir / "skill_usage_tracker.yaml").write_text(body, encoding="utf-8")
+
+
 def test_e2e_skill_tool_invocation_resolves_name_and_records(tmp_path):
     project_dir = tmp_path / "project"
     home_dir = tmp_path / "home"
-    skill_dir = project_dir / ".claude" / "skills" / "on-disk-name"
+    skill_dir = project_dir / "claude-plugins" / "meta" / "skills" / "on-disk-name"
     _write_skill(skill_dir, name="my-skill", auto_enquete=True)
+    _write_roots_config(project_dir, ["claude-plugins/meta/skills"])
 
     payload = {
         "hook_event_name": "PostToolUse",
@@ -256,8 +264,9 @@ def test_e2e_skill_tool_invocation_resolves_name_and_records(tmp_path):
 def test_e2e_skill_tool_invocation_with_plugin_prefix(tmp_path):
     project_dir = tmp_path / "project"
     home_dir = tmp_path / "home"
-    skill_dir = project_dir / ".claude" / "skills" / "prefixed-skill"
+    skill_dir = project_dir / "claude-plugins" / "meta" / "skills" / "prefixed-skill"
     _write_skill(skill_dir, name="prefixed-skill", auto_enquete=True)
+    _write_roots_config(project_dir, ["claude-plugins/meta/skills"])
 
     payload = {
         "hook_event_name": "PostToolUse",

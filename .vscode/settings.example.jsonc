@@ -4,7 +4,6 @@
     // 以下では、 `.github/skills` のみを有効化している
     "chat.agentSkillsLocations": {
         ".agents/skills": false,
-        ".claude/skills": false,
         "~/.agents/skills": false,
         "~/.copilot/skills": false,
         "~/.claude/skills": false,

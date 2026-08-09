@@ -183,7 +183,7 @@ Source: <URL>
    ```
 
    - URLパスの末尾セグメントがサイト内で衝突する場合(実例: `openrouter.ai`は`client-sdks/go/sdks/chat/README`と`client-sdks/python/sdks/chat/README`のように`README`が81件重複する)、`slug_from_url`はURLパス全体を`/`→`__`に置換したものをキー・出力ファイル名に使う。末尾セグメントだけをキーにすると別ページを取得してしまうので、コピー後もこのロジックは変更しない
-   - 実例: `.claude/skills/claude-code-docs/extract_doc_section.py`(`code.claude.com`、パターンが素直に成立するケース)、`.claude/skills/openrouter-docs/extract_doc_section.py`(`openrouter.ai`、上記の末尾衝突への対処込み)
+   - 実例: `claude-plugins/meta/skills/claude-code-docs/extract_doc_section.py`(`code.claude.com`、パターンが素直に成立するケース)、`claude-plugins/topics/skills/openrouter-docs/extract_doc_section.py`(`openrouter.ai`、上記の末尾衝突への対処込み)
 
 ### 1.8 巨大なセクションのAI要約(閾値超え時のみ)
 

@@ -55,15 +55,14 @@ ENABLE_HOOK_LOG = False
 
 SCRIPT_NAME = os.path.splitext(os.path.basename(__file__))[0]
 CONFIG_RELATIVE = Path(".claude") / "hooks" / "config" / f"{SCRIPT_NAME}.yaml"
-DEFAULT_ROOTS = (".claude/skills",)
+DEFAULT_ROOTS = ()
 
 
 def load_roots(project_dir):
-    """`.claude/skills` (always included) + repo-relative roots from
-    config/skill_usage_tracker.yaml, plus the user-scoped `~/.claude/skills`
-    dir (always included, not configurable here since it lives outside the
-    repo). Config-file roots only ever add to this, never replace it, so the
-    tracker works out of the box even with no config file present."""
+    """Repo-relative roots from config/skill_usage_tracker.yaml, plus the
+    user-scoped `~/.claude/skills` dir (always included, not configurable
+    here since it lives outside the repo). Config-file roots only ever add
+    to this, never replace it."""
     config_path = project_dir / CONFIG_RELATIVE
     raw_roots = list(DEFAULT_ROOTS)
     if config_path.is_file():

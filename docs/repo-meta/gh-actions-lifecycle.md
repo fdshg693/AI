@@ -20,7 +20,7 @@ status: stable
 
 ## 1. skills-siteのリリース・デプロイパイプライン（`skill-site.yml`）
 
-トリガーは`skills-site/**`、このワークフロー自身、各プラグインの`skills/**`、`.claude/skills/**`等への push（main）/ pull_request / `workflow_dispatch`。
+トリガーは`skills-site/**`、このワークフロー自身、各プラグインの`skills/**`等への push（main）/ pull_request / `workflow_dispatch`。
 
 - **`check-secrets`**: `push`かつ`main`、または`workflow_dispatch`のときだけ、`AZURE_STATIC_WEB_APPS_API_TOKEN`の存在を確認して無ければ即失敗させる（デプロイ専用シークレットなのでPRでは走らない）。
 - **`verify`**: push/PR/workflow_dispatchすべてで実行。`OPENROUTER_API_KEY`（catalog buildのskill embeddings計算に必須）を明示チェックしてから`build`→`validate`→`test`を実行し、`dist`と`api`をartifactとしてアップロードする。forkからのPRはリポジトリのシークレットを読めないため、この`OPENROUTER_API_KEY`チェックで**意図的に**落ちる（バグではなく、埋め込み抜きの不完全なビルドをそのまま通過させない安全装置）。

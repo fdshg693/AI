@@ -16,14 +16,14 @@
 
 ## 実行方法
 
-リポジトリルートの`pyproject.toml`の`[tool.uv.workspace]`に`.claude/skills/writing-skill-web`が登録されているため、`uv sync`で依存関係(`requests`・`typer`)が解決される。
+リポジトリルートの`pyproject.toml`の`[tool.uv.workspace]`に`claude-plugins/meta/skills/writing-skill-web`が登録されているため、`uv sync`で依存関係(`requests`・`typer`)が解決される。
 
 ```bash
 uv sync
-uv run pytest .claude/skills/writing-skill-web/tests
+uv run pytest claude-plugins/meta/skills/writing-skill-web/tests
 ```
 
-**引数無しの`uv run pytest`だけではこのテストは収集されない。** pytestは既定で`.`始まりのディレクトリ(`.claude`含む)を`norecursedirs`で再帰対象から除外するため、リポジトリルート直下の`uv run pytest`はこのテストを暗黙に拾わない。これは他の`.claude/skills/`配下に将来テストを足した場合も同じなので、都度このディレクトリを明示パスで指定して実行すること(この既定を変えるためだけに`norecursedirs`をリポジトリ全体で緩めると、`.venv`等の巨大な無関係ディレクトリまで収集対象に入ってしまうため、あえて変更していない)。
+**引数無しの`uv run pytest`では他のworkspace memberのテストと混ざって収集される可能性があるため、このディレクトリを明示パスで指定して実行すること。**
 
 ## ファイル構成
 

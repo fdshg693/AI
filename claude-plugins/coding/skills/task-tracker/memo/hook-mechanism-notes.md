@@ -30,11 +30,11 @@ metadata:
   - `command_args`は生の文字列（シェル的なクォート展開などはされていない）。複数語のタスク名を許すなら`shlex`的なパースが必要だが、タスク名はkebab-case想定なので単純に最初の空白区切りトークンを取れば十分
   - `expansion_type`は`slash_command`（skill/custom command）か`mcp_prompt`。念のため`slash_command`であることも確認しておくとより安全
 - decision control: `UserPromptExpansion`は展開自体をブロックできる（今回は使わない。不正なタスク名でもブロックせず`additionalContext`で警告するだけに留める設計）
-- 出典: `.claude/skills/claude-code-docs/output/llms-full.txt` 内 `### UserPromptExpansion`（2026-07-26時点のドキュメントキャッシュ。バージョンで変わり得るので実装直前に`claude-code-docs`スキル経由で最新化推奨）
+- 出典: `claude-plugins/meta/skills/claude-code-docs/output/llms-full.txt` 内 `### UserPromptExpansion`（2026-07-26時点のドキュメントキャッシュ。バージョンで変わり得るので実装直前に`claude-code-docs`スキル経由で最新化推奨）
 
 ## セッショントランスクリプトの所在（`dump_sessions.py`用）
 
-出典: [.claude/skills/claude-code-debugging/logs-and-settings.md](../../claude-code-debugging/logs-and-settings.md)
+出典: [claude-plugins/meta/skills/claude-code-debugging/logs-and-settings.md](../../../meta/skills/claude-code-debugging/logs-and-settings.md)
 
 - `~/.claude/projects/<project>/<session-id>.jsonl` — セッショントランスクリプト本体。1行1JSON
   - `<project>`は作業ディレクトリの絶対パスの非英数字を`-`に置換したもの
@@ -44,7 +44,7 @@ metadata:
 
 ## 参考実装（コードは直接依存しないが読み方の参考にする）
 
-[.claude/skills/claude-code-debugging/scripts/extract_log.py](../../claude-code-debugging/scripts/extract_log.py) の `cmd_transcript` 関数:
+[claude-plugins/meta/skills/claude-code-debugging/scripts/extract_log.py](../../../meta/skills/claude-code-debugging/scripts/extract_log.py) の `cmd_transcript` 関数:
 
 - jsonlを1行ずつ`json.loads`、パース失敗行は`warning`を出しつつスキップ（例外で全体を落とさない）
 - `message.content[]`の中の`type == "tool_use"`エントリから`tool_name`一覧を抽出

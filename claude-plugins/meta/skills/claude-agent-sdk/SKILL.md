@@ -31,14 +31,14 @@ Claude Codeをライブラリとして組み込むPythonアプリケーション
 1. `claude-code-docs` スキルを使い、公式ドキュメントの取得スクリプトを実行する。通常は次のコマンドでキャッシュを更新・確認できる。
 
    ```text
-   python ${CLAUDE_PROJECT_DIR}/.claude/skills/claude-code-docs/download_claude_code_reference.py
+   python ${CLAUDE_PROJECT_DIR}/claude-plugins/meta/skills/claude-code-docs/download_claude_code_reference.py
    ```
 
-2. `${CLAUDE_PROJECT_DIR}/.claude/skills/claude-code-docs/output/llms.txt` で `agent-sdk/` のページを探す。
+2. `${CLAUDE_PROJECT_DIR}/claude-plugins/meta/skills/claude-code-docs/output/llms.txt` で `agent-sdk/` のページを探す。
 3. 本文が必要なページだけを、既存スキルの抽出スクリプトで取り出す。
 
    ```text
-   python ${CLAUDE_PROJECT_DIR}/.claude/skills/claude-code-docs/extract_doc_section.py agent-sdk/python agent-sdk/quickstart
+   python ${CLAUDE_PROJECT_DIR}/claude-plugins/meta/skills/claude-code-docs/extract_doc_section.py agent-sdk/python agent-sdk/quickstart
    ```
 
 4. 回答・実装判断に使ったページの `Source:` URLを示す。キャッシュに該当情報がなければ、その不足を明示して公式サイトの該当ページを確認する。

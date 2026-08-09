@@ -10,7 +10,7 @@ This follows the same freshness-check contract as
 claude-plugins/ai-code-tool/scripts/llms_txt_downloader.py (shared by the
 vscode-docs / github-copilot-docs skills), but is written as a standalone,
 copy-and-adapt script rather than an importable shared module: a plain
-`.claude/skills/<name>/` directory is not a plugin and has no shared
+`claude-plugins/*/skills/<name>/` skill directory has no shared
 `scripts/` folder one level up to import from.
 
 Usage:

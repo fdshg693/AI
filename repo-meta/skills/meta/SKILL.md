@@ -35,7 +35,7 @@ meta:
    - スキルをClaude Code以外（Cline/Codex/Copilot等）へポートすべきか → `claude-code-first-skills`
    - GitHub Actionsのリリース・デプロイ・issue/PR自動化の仕組み → `gh-actions-lifecycle`
    - 新しいメンテナンスガイダンスをdocs/repo-meta/の新規docにするか既存docに統合するかの判断 → `skill-improving-meta-skills`
-3. 一覧のどれにも合致しなければ、無理に既存ドキュメントへ寄せない。新規ドキュメントとして追加すべきかの判断・配置基準は[skill-improving-meta-skills](../../../docs/repo-meta/skill-improving-meta-skills.md)と[writing-skill](../../../.claude/skills/writing-skill/SKILL.md)を使う。
+3. 一覧のどれにも合致しなければ、無理に既存ドキュメントへ寄せない。新規ドキュメントとして追加すべきかの判断・配置基準は[skill-improving-meta-skills](../../../docs/repo-meta/skill-improving-meta-skills.md)と[writing-skill](../../../claude-plugins/meta/skills/writing-skill/SKILL.md)を使う。
 
 ## 一覧が期待と違うとき
 
@@ -44,7 +44,7 @@ meta:
 ## 関連
 
 - [skill-improving-meta-skills](../../../docs/repo-meta/skill-improving-meta-skills.md) — docs/repo-meta/配下の運用判断、新規doc追加の判断基準
-- [writing-skill](../../../.claude/skills/writing-skill/SKILL.md) — 新規スキルのフロントマター・チェックリスト
+- [writing-skill](../../../claude-plugins/meta/skills/writing-skill/SKILL.md) — 新規スキルのフロントマター・チェックリスト
 
 ## このスキルの位置づけ
 

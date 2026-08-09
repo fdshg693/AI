@@ -25,13 +25,13 @@ AskUserQuestionで確認したところ、実際には `/task-tracker <task-name
 
 ### なぜ変更したか
 
-このリポジトリには既に **hookを一元管理する仕組み**（[.claude/hooks/AGENTS.md](../../../hooks/AGENTS.md), [.claude/scripts/AGENTS.md](../../../scripts/AGENTS.md)）があり、「`.claude/hooks/*.py`にdocstring契約を書く → `hooks_manager.py sync` → `hooks.yml`で`enabled`管理 → `reflect`で`settings.json`に反映」という運用が確立している。この運用は「`settings.json`を手書きしない」ことを明確に目的としており、プロジェクト全体のフックがこの1箇所から見渡せることに価値がある。
+このリポジトリには既に **hookを一元管理する仕組み**（[.claude/hooks/AGENTS.md](../../../../../.claude/hooks/AGENTS.md), [.claude/scripts/AGENTS.md](../../../../../.claude/scripts/AGENTS.md)）があり、「`.claude/hooks/*.py`にdocstring契約を書く → `hooks_manager.py sync` → `hooks.yml`で`enabled`管理 → `reflect`で`settings.json`に反映」という運用が確立している。この運用は「`settings.json`を手書きしない」ことを明確に目的としており、プロジェクト全体のフックがこの1箇所から見渡せることに価値がある。
 
 skill frontmatterに直接`hooks`を書くと、この一元管理の外側に別のフック定義経路ができてしまい、「このリポジトリのフックは今何が有効か」を`hooks.yml`だけを見ても把握できなくなる（`/hooks`コマンドや`--debug hooks`では見えるが、hooks_manager側の可視性が失われる）。
 
 ### 技術的な懸念（副次的な理由）
 
-skill frontmatterの`hooks`は「そのコンポーネントが動いている間のみ有効」という説明があり（[.claude/skills/writing-hooks/hooks.md](../../writing-hooks/hooks.md)の「定義場所とスコープ」表）、`UserPromptExpansion`は「`/task-tracker ...`と入力された直後、SKILL.md本文がまだcontextに入る前」に発火するイベントである。「スキルが実際に動き出す前のタイミングで、そのスキル自身が定義したフックが確実に発火するか」は詳細ドキュメント上は確認しきれなかった（frontmatterのメタデータ自体はスキャン時に読まれるはずなので恐らく動くと推測されるが未検証）。
+skill frontmatterの`hooks`は「そのコンポーネントが動いている間のみ有効」という説明があり（[claude-plugins/meta/skills/writing-hooks/hooks.md](../../../meta/skills/writing-hooks/hooks.md)の「定義場所とスコープ」表）、`UserPromptExpansion`は「`/task-tracker ...`と入力された直後、SKILL.md本文がまだcontextに入る前」に発火するイベントである。「スキルが実際に動き出す前のタイミングで、そのスキル自身が定義したフックが確実に発火するか」は詳細ドキュメント上は確認しきれなかった（frontmatterのメタデータ自体はスキャン時に読まれるはずなので恐らく動くと推測されるが未検証）。
 
 `.claude/hooks/`経由で`settings.json`に登録すれば、この発火タイミングの不確実性を考える必要がなくなる（セッション開始時から確実に登録されている）。
 
@@ -51,6 +51,6 @@ skill frontmatterの`hooks`は「そのコンポーネントが動いている�
 
 ## 4. `dump_sessions.py`を自己完結にする理由
 
-`.claude/skills/claude-code-debugging/scripts/extract_log.py`に既に`transcript`サブコマンドがあり、機能的にはほぼ流用可能。しかし [writing-skill/writing.md](../../writing-skill/writing.md) のベストプラクティスに「既存スキルで代用できないか確認する」はあるが、**別スキルの実装ファイルに実行時依存する**のはスキルの自己完結性を損なう（`claude-code-debugging`スキルが将来リネーム・移動・削除された場合に`task-tracker`が壊れる）。
+`claude-plugins/meta/skills/claude-code-debugging/scripts/extract_log.py`に既に`transcript`サブコマンドがあり、機能的にはほぼ流用可能。しかし [writing-skill/writing.md](../../writing-skill/writing.md) のベストプラクティスに「既存スキルで代用できないか確認する」はあるが、**別スキルの実装ファイルに実行時依存する**のはスキルの自己完結性を損なう（`claude-code-debugging`スキルが将来リネーム・移動・削除された場合に`task-tracker`が壊れる）。
 
 そのため、trascript jsonlの読み方（`~/.claude/projects/<project>/<session_id>.jsonl`、ドライブレター大小文字ゆれ対応等）という**知見だけ**を参考にし、コードは独立して持つ。
