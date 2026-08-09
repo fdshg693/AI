@@ -8,10 +8,10 @@ _PACKAGE_DIR = Path(__file__).resolve().parent
 
 
 def default_repo_root() -> Path:
-    """``integrations/scripts/skill_deploy/`` から3階層上 = リポジトリルート。"""
-    return _PACKAGE_DIR.parents[2]
+    """``tools/integration/scripts/skill_deploy/`` から4階層上 = リポジトリルート。"""
+    return _PACKAGE_DIR.parents[3]
 
 
 def default_config_dir() -> Path:
-    """``integrations/scripts/config/``。"""
+    """``tools/integration/scripts/config/``。"""
     return _PACKAGE_DIR.parent / "config"

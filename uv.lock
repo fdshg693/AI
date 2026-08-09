@@ -2173,7 +2173,7 @@ wheels = [
 [[package]]
 name = "skill-deploy"
 version = "0.1.0"
-source = { editable = "integrations/scripts" }
+source = { editable = "tools/integration/scripts" }
 dependencies = [
     { name = "pyyaml" },
 ]

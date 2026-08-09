@@ -6,11 +6,11 @@ CLIツール。「スキル」専用ではなく、フォルダ単位・ファ�
 ## インストール
 
 ```bash
-uv tool install --editable integrations/scripts
+uv tool install --editable tools/integration/scripts
 ```
 
 インストール後は `skill-deploy` コマンドが PATH 上でどこからでも使える。リポジトリを clone した
-まま試すだけなら `uv run --project integrations/scripts skill-deploy ...` でも実行できる。
+まま試すだけなら `uv run --project tools/integration/scripts skill-deploy ...` でも実行できる。
 
 ## 使い方
 
@@ -96,5 +96,5 @@ targets:
 ## テスト
 
 ```bash
-uv sync && uv run pytest integrations/scripts
+uv sync && uv run pytest tools/integration/scripts
 ```

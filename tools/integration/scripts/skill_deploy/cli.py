@@ -126,7 +126,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--config-dir",
         type=Path,
         default=None,
-        help="設定ファイル(config/*.yaml)を置くディレクトリ。省略時は integrations/scripts/config",
+        help="設定ファイル(config/*.yaml)を置くディレクトリ。省略時は tools/integration/scripts/config",
     )
     parser.add_argument(
         "--repo-root",

@@ -13,9 +13,9 @@ just tavily-local  # tav-cli の tav CLI をエディタブルインストール
 just cline-personal-info  # cline-personal-info plugin (tools/cline-wrapper, cline-plugins/meta) を Cline にインストール
 ```
 
-APIキー設定など、インストール後のセットアップは各ツールの README を参照（例: `tools/aim/README.md`、`tools/tav-cli/README.md`、`integrations\CLINE.md`）。
+APIキー設定など、インストール後のセットアップは各ツールの README を参照（例: `tools/aim/README.md`、`tools/tav-cli/README.md`、`docs/integrations/cline.md`）。
 
-`cline-personal-info` は内部で Git Bash 経由に `cline plugin install` を叩く。PowerShell/cmd から `cline plugin install` を直に打つと `error: ENOENT: no such file or directory, uv_spawn 'npm'` で失敗するため（詳細は `integrations\CLINE.md`）。
+`cline-personal-info` は内部で Git Bash 経由に `cline plugin install` を叩く。PowerShell/cmd から `cline plugin install` を直に打つと `error: ENOENT: no such file or directory, uv_spawn 'npm'` で失敗するため（詳細は `docs/integrations/cline.md`）。
 
 ## タグ+Releaseによるバージョン管理
 

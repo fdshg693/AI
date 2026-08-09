@@ -1,3 +1,12 @@
+---
+type: Setup Guide
+title: このリポジトリのCLIツールのインストール方法
+description: Explains how to install this repository's own CLI tools (aim, tav-cli) that some skills/scripts assume are already present, via tools/install/justfile's *-local (editable, for a cloned checkout) and *-git (uv tool install from a git URL, no clone needed) recipe pairs. Use when a skill or script fails because a prerequisite CLI (aim, tav) isn't installed, or when deciding whether to install editable-local vs git-remote.
+tags: [tools]
+generated: { by: reference_agent/claude-sonnet-5, at: 2026-08-09T15:58:38Z }
+status: stable
+---
+
 # CLI ツールインストール
 
 幾つかのスキルやスクリプトで前提となっている、CLIツールのインストール方法を記載する
@@ -23,3 +32,7 @@
 ```bash
 tav search "Microsoft Fabric overview" --topic msfabric_overview
 ```
+
+## 関連
+
+- [claude-code](claude-code.md) — `my-tools` プラグインなど、ここでインストールしたCLIを前提にするAIツール側の導入手順

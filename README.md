@@ -45,16 +45,17 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 ### リポジトリ運用・開発支援
 
 - [repo-meta/](repo-meta/) — このリポジトリ自体のメンテ用 Claude Code プラグイン（生成ファイルの再生成手順など）。配布用スキルではなくレポジトリ固有のため、マーケットプレイスやスキル公開サイトには含めず `ai-tools.yaml` にも記載しない。詳細は [repo-meta/README.md](repo-meta/README.md) 参照。
+- [docs/](docs/) — AIツールを問わずリポジトリ全体で参照する知識（メンテナンス規約・設計判断・運用知識、他ツール環境への導入手順）を [OKF (Open Knowledge Format)](.claude/skills/okf-spec/) の概念ドキュメントとしてまとめたバンドル。詳細は [docs/index.md](docs/index.md) 参照。
 - [tools/](tools/) — リポジトリ管理・運用を支える便利ツール群。主なサブフォルダ:
   - `aim/`, `aim-use/` — モデル呼び出し CLI とその周辺ツール
   - `claude-wrapper/`, `cline-wrapper/`, `codex-wrapper/`, `cursor-wrapper/` — 各 AI ツール向けラッパー
   - `interactive-cli-wrapper/` — 対話的（TTY前提でREPLとして動く）CLIをPTY越しに駆動する汎用ラッパー
+  - `integration/` — このレポジトリの成果物（プラグイン・スキル）を自分の環境へコピー配置する `skill-deploy` CLI。導入手順は [docs/integrations/](docs/integrations/) 参照
   - `get-settings/` — 設定取得補助
   - `infra/` — インフラ利用ツール（AI ログ管理等）
   - `install/` — 各ツールのインストール手順（`justfile` 経由で実行）
   - `sandbox/` — ISSUE駆動Dockerサンドボックスエージェント（GitHub ISSUEの`@sandbox`メンションをポーリングで検知しClaude Agent SDKに作業させる仕組み）
   - `internal/` — マーケットプレイス/skill カタログ生成等の内部ツール群
-- [integrations/](integrations/) — このレポジトリに存在するツール等を自分の環境に取り込むためのガイド（`CLAUDE_CODE.md`, `CLINE.md`, `CODEX.md`, `CLI_TOOLS.md`）
 - [templates/](templates/) — ルールやスキル等をまとめて導入する際のテンプレート例（`cline_best/`, `planner/` 等）
 - [.vscode/](.vscode/) — VSCode における AI コーディングツール設定例
 

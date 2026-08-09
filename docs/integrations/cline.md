@@ -1,3 +1,12 @@
+---
+type: AI Tool
+title: Cline SDK を使った、カスタマイズした Cline 利用 CLI ツール
+description: Explains how to install this repository's cline-plugins/meta AgentPlugin globally into Cline (just cline-personal-info), and documents three Windows-specific known issues encountered along the way — PATH vs Path case-sensitivity breaking npm spawn from PowerShell/cmd, hub-daemon EADDRINUSE port conflicts, and @cline/cli-windows-x64's missing @cline/shared and jiti dependencies causing "load failed" plugins — with their workarounds. Use when `cline plugin install` fails on Windows, or when deciding whether a Cline plugin issue is this repo's code vs an upstream Cline packaging bug.
+tags: [cline]
+generated: { by: reference_agent/claude-sonnet-5, at: 2026-08-09T15:58:38Z }
+status: stable
+---
+
 # Cline SDK を使った、カスタマイズした Cline 利用 CLI ツール
 
 ## 関連ファイル

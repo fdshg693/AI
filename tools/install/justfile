@@ -18,7 +18,7 @@ aim-local:
 aim-git:
     uv tool install "git+{{repo_url}}#subdirectory=tools/aim"
 
-# Install the tav-cli wrappers as the `tav` CLI, editable, via uv, from a local clone. See integrations/CLI_TOOLS.md.
+# Install the tav-cli wrappers as the `tav` CLI, editable, via uv, from a local clone. See docs/integrations/cli-tools.md.
 tavily-local:
     uv tool install --editable ../tav-cli
 
@@ -27,6 +27,6 @@ tavily-git:
     uv tool install "git+{{repo_url}}#subdirectory=tools/tav-cli"
 
 # Install the cline-personal-info plugin (tools/cline-wrapper, cline-plugins/meta) globally for Cline SDK/CLI. 
-# Shells out to Git Bash to dodge a PowerShell/cmd "uv_spawn 'npm'" ENOENT bug — see integrations\CLINE.md.
+# Shells out to Git Bash to dodge a PowerShell/cmd "uv_spawn 'npm'" ENOENT bug — see docs/integrations/cline.md.
 cline-personal-info:
     & "C:/Program Files/Git/bin/bash.exe" -c "cline plugin install ../../cline-plugins/personal-info --force"

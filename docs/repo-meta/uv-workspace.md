@@ -1,7 +1,7 @@
 ---
 type: Repo Convention
 title: uvワークスペースによるPythonライブラリ管理
-description: Explains how this repository manages its scattered Python packages (under tools/, tools/aim-use/, .claude/skills/, integrations/) as one uv virtual workspace defined by the root pyproject.toml, including global CLI installs vs the shared dev venv. Use when adding a new Python package to the repo, wondering why `uv sync`/`uv run pytest` don't see a package, or deciding whether a directory needs its own pyproject.toml at all.
+description: Explains how this repository manages its scattered Python packages (under tools/, tools/aim-use/, tools/integration/, .claude/skills/) as one uv virtual workspace defined by the root pyproject.toml, including global CLI installs vs the shared dev venv. Use when adding a new Python package to the repo, wondering why `uv sync`/`uv run pytest` don't see a package, or deciding whether a directory needs its own pyproject.toml at all.
 tags: [tools, repo-meta]
 generated: { by: reference_agent/cline-glm-5.2, at: 2026-08-09T14:39:30Z }
 status: stable
@@ -35,7 +35,7 @@ status: stable
 
 ## メンバーの対象は`tools/`だけではない
 
-現在のメンバーは`tools/aim`、`tools/aim-use/aim-ask`、`tools/aim-use/aim-summarize`、`tools/tav-cli`等の`tools/`配下に加え、`.claude/skills/writing-skill-web`（同梱スクリプトが本格的な依存を持つスキル）や`integrations/scripts`（`skill-deploy`パッケージ）も含む。「独自の`pyproject.toml`を持ち、単発スクリプト以上の実体を持つディレクトリ」であれば`tools/`外でもメンバー候補になる。
+現在のメンバーは`tools/aim`、`tools/aim-use/aim-ask`、`tools/aim-use/aim-summarize`、`tools/tav-cli`、`tools/integration/scripts`（`skill-deploy`パッケージ）等の`tools/`配下に加え、`.claude/skills/writing-skill-web`（同梱スクリプトが本格的な依存を持つスキル）も含む。「独自の`pyproject.toml`を持ち、単発スクリプト以上の実体を持つディレクトリ」であれば`tools/`外でもメンバー候補になる。
 
 ## pytestの`--import-mode=importlib`
 

@@ -1,3 +1,12 @@
+---
+type: AI Tool
+title: Codex プラグインのインストール
+description: Explains how to install this repository's codex-plugins/meta plugin via the .agents/plugins/marketplace.json local marketplace (seiwan-codex-marketplace) — from the ChatGPT desktop app, or from Codex CLI with or without cloning (including sparse checkout), plus update/removal commands and troubleshooting when the plugin doesn't appear. Use when installing or updating this repo's Codex plugin into an external environment.
+tags: [codex]
+generated: { by: reference_agent/claude-sonnet-5, at: 2026-08-09T15:58:38Z }
+status: stable
+---
+
 # Codex プラグインのインストール
 
 このレポジトリでは、`.agents/plugins/marketplace.json` を Codex のローカルマーケットプレイスとして利用している。

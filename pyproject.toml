@@ -22,7 +22,7 @@ members = [
     "tools/internal/ai-usage",
     "tools/schedule",
     ".claude/skills/writing-skill-web",
-    "integrations/scripts",
+    "tools/integration/scripts",
 ]
 
 [dependency-groups]
