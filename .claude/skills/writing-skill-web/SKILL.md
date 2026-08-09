@@ -49,7 +49,7 @@ meta:
 対象ドキュメントを事前にダウンロードしてファイルに保存し、Claudeはそのファイルを読んで回答する。`llms.txt`/`llms-full.txt`のような索引・全文ダンプを公開しているサイト向け。
 
 - 同梱スクリプトはすべて[scripts/webref_cli.py](scripts/webref_cli.py)(Typer製の統一CLI)経由で実行する。新しいスキルにコピーした各スクリプトを個別に`python download_xxx.py`のように都度呼び分けるのではなく、`python webref_cli.py <subcommand>`という1つの入口に統一する(詳細は本節末尾)
-- スキル起動時に**必ず**ダウンロードスクリプトを実行させる(判断をClaudeに委ねず、`` !`python webref_cli.py download` ``の動的コンテキスト注入で確実に実行する)
+- スキル起動時に**必ず**ダウンロードスクリプトを実行させる(判断をClaudeに委ねず、`!`記号の直後にバッククォートでコマンドを囲む動的コンテキスト注入の記法、例えば`python webref_cli.py download`をそう囲んだ形、で確実に実行する)
 - ダウンロード結果には`fetched_at`(取得時刻)を記録し、一定期間(既定24時間)以内なら再取得をスキップする。強制更新用に`--force`を用意する
 - `llms-full.txt`(全文)が無いサイトも多い。索引(`llms.txt`)しか無い場合は、本文取得にWebFetchを都度使う指示を本文に書く(`vscode-docs`/`github-copilot-docs`スキルの実例を参照)
 - 索引(`llms.txt`)から、スキルの目的に関連するエントリだけを集めた**AI生成の抜粋(excerpt)ファイル**を用意する。**索引が200行以上なら必ず**生成し、200行をはるかに下回っていても、目的のパスが索引のごく一部しか占めないなら積極的に生成する。生成には同梱の [scripts/generate_llms_excerpt.py](scripts/generate_llms_excerpt.py) と [scripts/prompt_generate_excerpt.template.md](scripts/prompt_generate_excerpt.template.md) を新しいスキルにコピーして使う(aim CLIによるAIモデル単発呼び出し)。プロンプトには**構造化された出力を強制する指示を必ず入れる**(自由文の要約は不可。同梱ひな形は「URLを元索引から文字単位でコピーして1行1件」を強制し、`- [Title](URL)`エントリの組み立てはスクリプト側が元索引からverbatimで行うため、後段のスクリプトバリデーションが可能になる)。生成後は同梱の [scripts/check_llms_excerpt.py](scripts/check_llms_excerpt.py) のコピーで形式と元索引との一致(URL実在・タイトル一致)を検証し、問題が見つかったら**AIモデルを再度呼び出さず**、抜粋ファイルを自分で直接編集して修正→再チェックする(手順詳細は [web-patterns-reference.md](web-patterns-reference.md) 1.6節)
@@ -86,7 +86,7 @@ python "${CLAUDE_SKILL_DIR}/webref_cli.py" extract-section some/known/page
 - [ ] (静的の場合)コピーした各スクリプトを`scripts/webref_cli.py`経由の1つの入口(`download`/`check-urls`/`generate-excerpt`/`check-excerpt`/`inspect-markers`/`extract-section`/`grep-sections`サブコマンド)にまとめた。個別スクリプトを`python xxx.py`で都度呼び分ける本文にしていない
 - [ ] (静的の場合)`fetched_at`によるfreshnessチェックと`--force`を実装した。毎回無条件で再ダウンロードしていない
 - [ ] (静的の場合)候補パス(`llms.txt`/`llms-full.txt`等)の存在確認は`scripts/check_urls.py`に複数URLをまとめて渡している。WebFetch等で1件ずつ確認していない
-- [ ] (静的の場合)ダウンロードは`` !`command` ``の動的コンテキスト注入で起動時に確実に実行させている(Claudeの判断任せにしていない)
+- [ ] (静的の場合)ダウンロードは`!`記号+バッククォート囲みコマンドの動的コンテキスト注入で起動時に確実に実行させている(Claudeの判断任せにしていない)
 - [ ] (静的の場合)`llms-full.txt`が無いサイトなら、本文取得にWebFetchが必要である旨を本文に明記した
 - [ ] (静的の場合、`llms-full.txt`がある場合)`scripts/inspect_section_markers.py`で`(# タイトル / Source: URL)`パターンかどうかを確認し、成立するなら`scripts/extract_doc_section.py`をコピーしてセクション抽出スクリプトを同梱した(全文を毎回Grepしていない)
 - [ ] (上記が成立する場合)`extract_doc_section.py`の閾値ベース要約(`--summarize-threshold`超えで`aim` CLI要約)をそのまま活かし、要約時も全文ファイルのパスを必ず併記するようにしている(要約だけ返して全文への経路を失っていない)

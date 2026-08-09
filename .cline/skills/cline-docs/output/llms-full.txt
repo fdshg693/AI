@@ -1,6 +1,6 @@
 ---
 source: https://docs.cline.bot/llms-full.txt
-fetched_at: 2026-07-18T18:55:58.002484+00:00
+fetched_at: 2026-08-09T09:34:10.675355+00:00
 ---
 
 # Authentication
@@ -1429,29 +1429,29 @@ Commands:
 
 ## Global Options
 
-| Option                         | Description                                                                               |
-| ------------------------------ | ----------------------------------------------------------------------------------------- |
-| `-V, --version`                | Output the version number                                                                 |
-| `-p, --plan`                   | Run in plan mode                                                                          |
-| `--json`                       | Output messages as JSON instead of styled text                                            |
-| `--auto-approve <boolean>`     | Set tool auto-approval for all tools (default: `true`)                                    |
-| `-t, --timeout <seconds>`      | Optional timeout in seconds (default: `0` for no timeout)                                 |
-| `-m, --model <model-id>`       | Model to use for the session with the selected provider                                   |
-| `-v, --verbose`                | Show verbose output                                                                       |
-| `-c, --cwd <path>`             | Working directory                                                                         |
-| `--config <path>`              | Configuration directory (default: `~/.cline/data/settings`)                               |
-| `--data-dir <path>`            | Use isolated local state at this directory path (default: `~/.cline`)                     |
-| `--thinking <level>`           | Set reasoning effort: `none\|low\|medium\|high\|xhigh` (default `medium`)                 |
-| `--retries <count>`            | Maximum consecutive mistakes (retries) before halting                                     |
-| `--hooks-dir <path>`           | Directory path to additional hooks for runtime hook injection (default: `~/.cline/hooks`) |
-| `--acp`                        | Run in Agent Client Protocol (ACP) mode for editor integration                            |
-| `-i, --tui`                    | Open the terminal user interface (TUI) for interactive sessions                           |
-| `--id <session-id>`            | Resume an existing session by ID                                                          |
-| `-k, --key <api-key>`          | API key override for this run                                                             |
-| `-P, --provider <id>`          | Provider id (default: `cline`)                                                            |
-| `-s, --system <system-prompt>` | Override the default system prompt                                                        |
-| `-z, --zen`                    | Start a session that runs in the background hub                                           |
-| `-h, --help`                   | Display help for command                                                                  |
+| Option                         | Description                                                                                                                   |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| `-V, --version`                | Output the version number                                                                                                     |
+| `-p, --plan`                   | Run in plan mode                                                                                                              |
+| `--json`                       | Output messages as JSON instead of styled text                                                                                |
+| `--auto-approve <boolean>`     | Set tool auto-approval for all tools (default: `true`; in [ACP mode](/usage/acp#auto-approving-tools) the default is `false`) |
+| `-t, --timeout <seconds>`      | Optional timeout in seconds (default: `0` for no timeout)                                                                     |
+| `-m, --model <model-id>`       | Model to use for the session with the selected provider                                                                       |
+| `-v, --verbose`                | Show verbose output                                                                                                           |
+| `-c, --cwd <path>`             | Working directory                                                                                                             |
+| `--config <path>`              | Configuration directory (default: `~/.cline/data/settings`)                                                                   |
+| `--data-dir <path>`            | Use isolated local state at this directory path (default: `~/.cline`)                                                         |
+| `--thinking <level>`           | Set reasoning effort: `none\|low\|medium\|high\|xhigh` (default `medium`)                                                     |
+| `--retries <count>`            | Maximum consecutive mistakes (retries) before halting                                                                         |
+| `--hooks-dir <path>`           | Directory path to additional hooks for runtime hook injection (default: `~/.cline/hooks`)                                     |
+| `--acp`                        | Run in Agent Client Protocol (ACP) mode for [editor integration](/usage/acp)                                                  |
+| `-i, --tui`                    | Open the terminal user interface (TUI) for interactive sessions                                                               |
+| `--id <session-id>`            | Resume an existing session by ID                                                                                              |
+| `-k, --key <api-key>`          | API key override for this run                                                                                                 |
+| `-P, --provider <id>`          | Provider id (default: `cline`)                                                                                                |
+| `-s, --system <system-prompt>` | Override the default system prompt                                                                                            |
+| `-z, --zen`                    | Start a session that runs in the background hub                                                                               |
+| `-h, --help`                   | Display help for command                                                                                                      |
 
 ## Commands
 
@@ -3393,7 +3393,7 @@ Choose the model access path that fits your workflow:
   </Card>
 
   <Card title="ClinePass" icon="credit-card" href="/getting-started/clinepass">
-    Flat \$9.99/month subscription for selected open coding models with 2-5x API rate limits.
+    Flat \$9.99/month subscription that offers 2-5x the usage on popular open coding models compared to standard API rate.
   </Card>
 
   <Card title="Bring Your Own Key" icon="key" href="/getting-started/authorizing-with-cline#byok-cloud--local">
@@ -3441,7 +3441,7 @@ The SDK is Cline's agent core—use it to build your own applications, automatio
 
 ## Other IDE Supports
 
-Cline works across all major editors: **VS Code**, **Cursor**, **Windsurf**, **JetBrains** (IntelliJ, PyCharm, WebStorm), **Antigravity**, and **Zed**, **Neovim** via ACP mode.
+Cline works across all major editors: **VS Code**, **Cursor**, **Windsurf**, **JetBrains** (IntelliJ, PyCharm, WebStorm), **Antigravity**, and **Zed**, **Neovim** via [ACP mode](/usage/acp).
 
 ## Enterprise Solutions
 
@@ -4239,10 +4239,42 @@ Then work with a file in that path and check if you see the activation notificat
 * Check for syntax errors (unquoted special characters, improper indentation)
 
 
-# .clineignore
+# .clineignore (deprecate soon)
 Source: https://docs.cline.bot/customization/clineignore
 
-Control which files and directories Cline can access in your project.
+Control which files and directories Cline can access in your project. This feature will be deprecated soon.
+
+<Warning>
+  **`.clineignore` will be deprecated soon.**
+
+  `.clineignore` filters what Cline loads automatically, but it is not a security or access-control boundary — ignored files can still be read via explicit `@` mentions or shell commands. We're moving away from it as a supported feature.
+</Warning>
+
+## Restricting File Access with a Plugin
+
+While `.clineignore` is being phased out, you can get a stronger, enforced restriction on **file reads and edits** with the [Block Ignored File Access](https://docs.cline.bot/sdk/plugin-examples#block-ignored-file-access) Cline plugin example. Unlike `.clineignore`, it uses a `beforeTool` runtime hook to actively **block** tool calls: when `read_files`, `editor`, or `apply_patch` targets a file ignored by your workspace's `.gitignore` file.
+
+Install it into your project with:
+
+```bash theme={"system"}
+cline plugin install https://github.com/cline/cline/blob/main/sdk/examples/plugins/gitignore-read-files-guard.ts --cwd .
+```
+
+<Note>
+  This plugin covers only part of what `.clineignore` did:
+
+  * It **guards file reads/edits** (`read_files`, `editor`, `apply_patch`) — it does **not** filter `search_files`/`list_files` results or guard shell commands, so it is not a full context-reduction tool.
+  * It reads your **`.gitignore`** (not a separate `.clineignore`) and requires a Git repository.
+  * Plugins run on the Cline **SDK, CLI, and Kanban**. Support in the VS Code and JetBrains extensions arrives as they migrate onto the SDK.
+
+  See [Plugins](/customization/plugins) for installation details and scopes.
+</Note>
+
+***
+
+<Info>
+  The rest of this page is the original `.clineignore` reference, retained for existing users while the feature is phased out.
+</Info>
 
 The `.clineignore` file tells Cline which files and directories to skip when analyzing your codebase. It works like `.gitignore`: create a file named `.clineignore` in your project root, add patterns for files you want excluded, and Cline will ignore them.
 
@@ -4332,7 +4364,7 @@ When Cline scans your project to build context, it checks each file path against
 * Automatic context gathering during conversations
 * Search results when Cline looks for relevant code
 
-You can still reference ignored files explicitly using [@ mentions](/core-workflows/working-with-files). If you type `@/node_modules/some-package/index.js`, Cline will read that specific file even though `node_modules/` is in your `.clineignore`. The ignore rules control automatic loading, not explicit access.
+As noted above, explicit [@ mentions](/core-workflows/working-with-files) still bypass these rules — for example, `@/node_modules/some-package/index.js` reads that file even though `node_modules/` is ignored. Ignore rules control automatic loading, not explicit access.
 
 <Note>
   `.clineignore` is separate from `.gitignore`. Files tracked by Git but irrelevant to Cline (like large test fixtures or data files) should go in `.clineignore` even if they're not in `.gitignore`.
@@ -4340,7 +4372,6 @@ You can still reference ignored files explicitly using [@ mentions](/core-workfl
 
 ## Tips
 
-* Add `.clineignore` early in your project. It's easier to start with broad exclusions and narrow them than to debug why context is bloated later.
 * Check your token usage in the task header after adding a `.clineignore`. The difference is often dramatic.
 * If Cline seems to be missing context about a file, check whether it's being excluded by your ignore patterns.
 * For monorepos or multi-root workspaces, each workspace root can have its own `.clineignore`. See [Multi-Root Workspaces](/features/multiroot-workspace) for details.
@@ -4355,7 +4386,7 @@ You can still reference ignored files explicitly using [@ mentions](/core-workfl
 # Hooks
 Source: https://docs.cline.bot/customization/hooks
 
-See details under SDK Hooks page.
+See details under SDK Plugins page.
 
 See details under [SDK Plugins](/sdk/plugins).
 
@@ -10041,21 +10072,6 @@ Both limitations are restored when you return to a single-folder workspace.
 
 * Break large tasks into workspace-specific operations when possible
 * Use [Plan mode](/core-workflows/plan-and-act) to let Cline understand structure first
-* Add a `.clineignore` file to reduce noise, speed up scanning, and keep Cline focused on source code:
-
-```text theme={"system"}
-# Dependencies
-**/node_modules/
-
-# Build outputs
-**/dist/
-**/build/
-
-# VCS metadata
-**/.git/
-```
-
-For more patterns and gotchas, see the [.clineignore File Guide](/customization/clineignore).
 
 
 # Subagents
@@ -10146,7 +10162,7 @@ Authenticate with Cline and choose your first AI model
 Cline connects to AI models through a **provider**. You have three common paths:
 
 * **Cline (usage-billing)** (recommended): sign in with Google/GitHub/email, no API key setup.
-* **ClinePass**: a \$9.99/month subscription provider with access to selected open coding models and 2-5x API rate limits.
+* **ClinePass**: a \$9.99/month subscription provider that offers 2-5x the usage on popular open coding models compared to standard API rate.
 * **Bring Your Own Key (BYOK)**: use your own provider credentials (cloud or local runtimes).
 
 ## Menu
@@ -10190,7 +10206,7 @@ Add credits in Cline settings or at [app.cline.bot/dashboard](https://app.cline.
 ### ClinePass
 
 * Flat **\$9.99/month** subscription
-* 2-5x API rate limits for longer agent sessions
+* 2-5x the usage on popular open coding models compared to standard API rate
 * Curated open coding models including GLM, Kimi, DeepSeek, and MiMo
 
 Subscribe from the [ClinePass dashboard](https://app.cline.bot/dashboard/subscription?personal=true), then select **ClinePass** as your provider in Cline. See the [ClinePass guide](/getting-started/clinepass) for included models and reference pricing.
@@ -10251,7 +10267,7 @@ Cline (usage-billing) is the simplest way to get started with pay-as-you-go mode
 
 Instead of managing separate API keys across multiple vendors, you sign in once, add **Cline credits**, and select from available models directly in Cline.
 
-If you want a flat monthly subscription for selected open coding models with higher rate limits, use [ClinePass](/getting-started/clinepass) instead. ClinePass is a separate provider in Cline.
+If you want a flat monthly subscription that offers 2-5x the usage on selected open coding models compared to standard API rate, use [ClinePass](/getting-started/clinepass) instead. ClinePass is a separate provider in Cline.
 
 ## Why use Cline (usage-billing)
 
@@ -10285,14 +10301,14 @@ Cline (usage-billing) is the pay-as-you-go provider in Cline. Add Cline credits,
 # ClinePass
 Source: https://docs.cline.bot/getting-started/clinepass
 
-A low-cost monthly subscription that gives you reliable access to popular open coding models with 2-5x API rate limits.
+A low-cost monthly subscription that offers 2-5x the usage on popular open coding models compared to standard API rate.
 
-ClinePass is a low-cost monthly subscription — **\$9.99/month** — that gives you reliable access to popular open coding models with **2-5x the API rate limits** of standard access.
+ClinePass is a low-cost monthly subscription — **\$9.99/month** — that offers **2-5x the usage** on popular open coding models compared to standard API rate.
 
 It's completely optional. You don't need ClinePass to use Cline, and you can always use any other provider alongside it.
 
 <Card title="Subscribe to ClinePass" icon="credit-card" href="https://app.cline.bot/dashboard/subscription?personal=true">
-  Get started for \$9.99/month and unlock 2-5x API rate limits.
+  Get started for \$9.99/month and unlock 2-5x the usage on popular open coding models compared to standard API rate.
 </Card>
 
 ## How it works
@@ -10320,11 +10336,11 @@ However, getting reliable access can be difficult. Providers vary in quality and
 ClinePass solves this by:
 
 * Curating a select group of open models tested and benchmarked for coding agent use
-* Offering **2-5x the API rate limits** so you can run long, complex agent tasks without interruption
+* Offering **2-5x the usage** on popular open coding models compared to standard API rate, so you can run long, complex agent tasks without interruption
 * Providing stable access through Cline's infrastructure
 
 <Note>
-  ClinePass is a separate provider from Cline (usage-billing). You can use both independently — subscribe to ClinePass for 2-5x API rate limits, or use Cline (usage-billing) for pay-as-you-go access.
+  ClinePass is a separate provider from Cline (usage-billing). You can use both independently — subscribe to ClinePass for 2-5x the usage on popular open coding models compared to standard API rate, or use Cline (usage-billing) for pay-as-you-go access.
 </Note>
 
 ## Models
@@ -10334,6 +10350,7 @@ ClinePass includes the following models, tested and benchmarked for coding agent
 | Model             | Model ID                       |
 | ----------------- | ------------------------------ |
 | GLM-5.2           | `cline-pass/glm-5.2`           |
+| Kimi K3           | `cline-pass/kimi-k3`           |
 | Kimi K2.7 Code    | `cline-pass/kimi-k2.7-code`    |
 | Kimi K2.6         | `cline-pass/kimi-k2.6`         |
 | DeepSeek V4 Pro   | `cline-pass/deepseek-v4-pro`   |
@@ -10371,19 +10388,20 @@ curl -X POST https://api.cline.bot/api/v1/chat/completions \
 
 ClinePass is a flat monthly subscription, so you are not charged the individual API prices below. These reference prices show the underlying per-1M-token rates for each model and can help you understand how usage is measured against your ClinePass quota (2-5x quota compares to paying standard api rate).
 
-| Model                        | Input  | Output | Cached Read | Cached Write |
-| ---------------------------- | ------ | ------ | ----------- | ------------ |
-| GLM-5.2                      | \$1.40 | \$4.40 | \$0.26      | -            |
-| Kimi K2.7 Code               | \$0.95 | \$4.00 | \$0.19      | -            |
-| Kimi K2.6                    | \$0.95 | \$4.00 | \$0.16      | -            |
-| DeepSeek V4 Pro              | \$1.74 | \$3.48 | \$0.0145    | -            |
-| DeepSeek V4 Flash            | \$0.14 | \$0.28 | \$0.0028    | -            |
-| MiMo-V2.5                    | \$0.14 | \$0.28 | \$0.0028    | -            |
-| MiMo-V2.5-Pro                | \$1.74 | \$3.48 | \$0.0145    | -            |
-| MiniMax M3                   | \$0.30 | \$1.20 | \$0.06      | -            |
-| Qwen3.7 Max                  | \$2.50 | \$7.50 | \$0.50      | \$3.125      |
-| Qwen3.7 Plus (≤ 256K tokens) | \$0.40 | \$1.60 | \$0.04      | \$0.50       |
-| Qwen3.7 Plus (> 256K tokens) | \$1.20 | \$4.80 | \$0.12      | \$1.50       |
+| Model                        | Input  | Output  | Cached Read | Cached Write |
+| ---------------------------- | ------ | ------- | ----------- | ------------ |
+| GLM-5.2                      | \$1.40 | \$4.40  | \$0.26      | -            |
+| Kimi K3                      | \$3.00 | \$15.00 | \$0.30      | -            |
+| Kimi K2.7 Code               | \$0.95 | \$4.00  | \$0.19      | -            |
+| Kimi K2.6                    | \$0.95 | \$4.00  | \$0.16      | -            |
+| DeepSeek V4 Pro              | \$1.74 | \$3.48  | \$0.0145    | -            |
+| DeepSeek V4 Flash            | \$0.14 | \$0.28  | \$0.0028    | -            |
+| MiMo-V2.5                    | \$0.14 | \$0.28  | \$0.0028    | -            |
+| MiMo-V2.5-Pro                | \$1.74 | \$3.48  | \$0.0145    | -            |
+| MiniMax M3                   | \$0.30 | \$1.20  | \$0.06      | -            |
+| Qwen3.7 Max                  | \$2.50 | \$7.50  | \$0.50      | \$3.125      |
+| Qwen3.7 Plus (≤ 256K tokens) | \$0.40 | \$1.60  | \$0.04      | \$0.50       |
+| Qwen3.7 Plus (> 256K tokens) | \$1.20 | \$4.80  | \$0.12      | \$1.50       |
 
 ## Usage
 
@@ -10557,7 +10575,7 @@ Rules:
 * [Skills](/customization/skills)
 * [Hooks](/customization/hooks)
 * [Plugins](/customization/plugins)
-* [.clineignore](/customization/clineignore)
+* [.clineignore](/customization/clineignore) (deprecated)
 
 ## Security Notes
 
@@ -10566,6 +10584,91 @@ Rules:
 </Warning>
 
 Hooks and plugins can execute code. Review them like any other executable artifact before adding them globally or to a project.
+
+
+# Cline Free Models
+Source: https://docs.cline.bot/getting-started/free-models
+
+Limited-time free model promotions for users with a Cline account.
+
+Cline periodically offers **free model promotions** that let you try select models at no cost, up to a limited usage quota. It's a simple way to explore Cline and experiment with different models before choosing a paid option.
+
+<Note>
+  Free model promotions are offered on a rotating, limited-time basis. The specific free models available may change over time.
+</Note>
+
+## How it works
+
+Free models are available to any user with a Cline account.
+
+After you use your free model quota, you can continue coding with Cline by switching to either:
+
+* **[ClinePass](/getting-started/clinepass)** — a flat \$9.99/month subscription with 2-5x API rate limits on popular open coding models
+* **[Cline (usage-billing)](/getting-started/cline-provider)** — pay-as-you-go access with Cline credits across 100+ models
+
+Both options let you keep working after your free quota is exhausted.
+
+## Where to find free models
+
+You can find free models under **both** Cline providers:
+
+### Cline (usage-billing)
+
+In the Cline (usage-billing) provider, look for models tagged **FREE** in the model selector.
+
+* **IDE Extension**: Go to IDE extension settings, set **API Provider** to **Cline**, and look for free-tagged models.
+
+<Frame>
+  <img alt="Free models listed under the Cline provider in VS Code" />
+</Frame>
+
+* **CLI**: Go to `/settings`, select **Cline** as your provider, and browse available free models.
+
+<Frame>
+  <img alt="Free models listed under the Cline provider in the Cline CLI" />
+</Frame>
+
+### ClinePass
+
+During promotional periods, free models are also available through the ClinePass provider.
+
+* **IDE Extension**: Go to IDE extension settings, set **API Provider** to **ClinePass**, and sign in.
+
+<Frame>
+  <img alt="Free models listed under the ClinePass provider in VS Code" />
+</Frame>
+
+* **CLI**: Go to `/settings`, select **ClinePass** as your provider.
+
+<Frame>
+  <img alt="Free models listed under the ClinePass provider in the Cline CLI" />
+</Frame>
+
+## Important notes
+
+### API access
+
+Free model usage is **not supported through the Cline API**. Free models are only available in the Cline IDE Extension and CLI.
+
+### Model improvements
+
+Free model usage may be used to help improve model performance and quality.
+
+## After your free quota
+
+When your free quota runs out, you have several options:
+
+| Option                                                   | Best for                                                                               |
+| -------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| [ClinePass](/getting-started/clinepass) (\$9.99/mo)      | Frequent users who want reliable access to curated open models with higher rate limits |
+| [Cline (usage-billing)](/getting-started/cline-provider) | Flexible, pay-as-you-go access across 100+ models                                      |
+| [Bring your own API key](/provider-config/anthropic)     | Users who already have API keys from other providers                                   |
+
+## Related
+
+* [ClinePass](/getting-started/clinepass)
+* [Cline (usage-billing)](/getting-started/cline-provider)
+* [Authorization](/getting-started/authorizing-with-cline)
 
 
 # Installing Cline
@@ -10577,7 +10680,7 @@ Choose your installation path: IDE Extension, CLI, SDK, or Kanban
 
 * [IDE Extension](#ide-extension) — VS Code, Cursor, JetBrains, Windsurf, VSCodium, Antigravity
 * [CLI](#cli) — terminal workflows
-* [Kanban](#kanban) (preview) — easily manage through multiple agents through a kanban board
+* [Kanban](#kanban) (preview) — easily manage multiple agents through a kanban board
 * [SDK](#sdk) — build with `@cline/sdk`
 
 ## IDE Extension
@@ -11669,7 +11772,7 @@ Google Gemini is Google's family of multimodal AI models, offering some of the l
 # MiniMax
 Source: https://docs.cline.bot/provider-config/minimax
 
-Learn how to configure and use MiniMax provider with Cline..
+Learn how to configure and use MiniMax provider with Cline.
 
 MiniMax provides AI models with large context windows and competitive pricing, featuring the MiniMax-M2 series.
 
@@ -12194,6 +12297,38 @@ xAI provides Grok models through its API platform.
 1. Sign in to xAI platform.
 2. Generate an API key.
 3. In Cline, choose **xAI (Grok)** and paste the key.
+
+
+# Poolside
+Source: https://docs.cline.bot/provider-config/poolside
+
+Learn how to configure and use Poolside models with Cline.
+
+Poolside provides coding-focused AI models through an OpenAI-compatible API.
+
+**Website:** [https://poolside.ai/](https://poolside.ai/)
+
+### Get API Credentials
+
+1. **Sign Up/Sign In:** Go to the [Poolside Platform](https://platform.poolside.ai/) and create an account or sign in.
+2. **Navigate to API Keys:** Open the **API Keys** tab.
+3. **Create a Key:** Click **New key** to create an API key.
+4. **Copy the Key:** Copy the API key immediately and store it securely.
+
+### Configuration in Cline
+
+> See [Authorization & Model Selection](/getting-started/authorizing-with-cline#menu).
+
+1. **Open Cline Settings:** Click the settings icon (⚙️) in the Cline panel.
+2. **Select Provider:** Choose "Poolside" from the "API Provider" dropdown.
+3. **Enter API Key:** Paste your Poolside API key into the "Poolside API Key" field.
+4. **Select Provider Model:** Choose your desired model from the "Model" dropdown.
+
+### Tips and Notes
+
+* **Model Access:** Choose from the Poolside models in the "Model" dropdown. Availability depends on your Poolside account.
+* **OpenAI-Compatible API:** Cline connects to Poolside's OpenAI-compatible endpoint and configures the base URL automatically when you select Poolside.
+* **OpenRouter Access:** Poolside models may also be available through [OpenRouter](/provider-config/openrouter). To use them there, select OpenRouter and use an OpenRouter API key.
 
 
 # Alibaba Qwen
@@ -16184,6 +16319,145 @@ export no_proxy=localhost,127.0.0.1,.company.local,192.168.0.0/16
 ```
 
 
+# ACP
+Source: https://docs.cline.bot/usage/acp
+
+Use Cline as the coding agent in Zed, JetBrains IDEs, Neovim, Emacs, and any other ACP-capable client.
+
+Cline CLI speaks the [Agent Client Protocol (ACP)](https://agentclientprotocol.com), an open standard that lets editors and other tools drive terminal-based coding agents. Any ACP-capable client can use Cline as its coding agent without a dedicated extension — the same agent you use in the terminal, embedded in the tool you're already working in.
+
+## Prerequisites
+
+* Cline CLI installed (install via `npm i -g cline`)
+* Credentials are optional up front — most clients let you sign in when the first session starts, and credentials saved by `cline auth` are reused automatically
+
+## How it works
+
+ACP mode is started with the `--acp` flag:
+
+```bash theme={"system"}
+cline --acp
+```
+
+You don't run this yourself — the client launches the command and talks to Cline over stdio. Configure the client to run it, then start a thread from its agent UI.
+
+<Tip>
+  If a client can't spawn the agent, it may not inherit your shell's `PATH`. Use the absolute path from `which cline` as the command.
+</Tip>
+
+## Clients
+
+ACP is supported by a growing ecosystem of editors, IDEs, and other tools. Setup for the most popular clients is below; the [ACP client directory](https://agentclientprotocol.com/get-started/clients) maintains the full list.
+
+### Zed
+
+Add Cline as a custom agent in Zed's `settings.json`:
+
+```json theme={"system"}
+{
+  "agent_servers": {
+    "Cline": {
+      "type": "custom",
+      "command": "cline",
+      "args": ["--acp"],
+      "env": {}
+    }
+  }
+}
+```
+
+Open the Agent Panel, start a new thread, and select **Cline**.
+
+### JetBrains IDEs
+
+AI Assistant in JetBrains IDEs (IntelliJ IDEA, PyCharm, WebStorm, and others) supports [ACP agents](https://www.jetbrains.com/help/ai-assistant/acp.html). In the AI Chat tool window, select **Add Custom Agent** — this creates `~/.jetbrains/acp.json` — then add Cline:
+
+```json theme={"system"}
+{
+  "agent_servers": {
+    "Cline": {
+      "command": "cline",
+      "args": ["--acp"],
+      "env": {}
+    }
+  }
+}
+```
+
+Cline then appears in the AI Chat agent selector.
+
+### Neovim
+
+The [CodeCompanion](https://codecompanion.olimorris.dev/configuration/adapters-acp) plugin ships a built-in `cline_cli` ACP adapter that runs `cline --acp`. Set it as your chat adapter:
+
+```lua theme={"system"}
+require("codecompanion").setup({
+  strategies = {
+    chat = { adapter = "cline_cli" },
+  },
+})
+```
+
+Other Neovim ACP clients, such as [avante.nvim](https://github.com/yetone/avante.nvim) and [agentic.nvim](https://github.com/carlos-algms/agentic.nvim), can also launch Cline via `cline --acp`.
+
+### Emacs
+
+[agent-shell](https://github.com/xenodium/agent-shell) drives ACP agents from a native Emacs buffer. Configure a custom agent that runs `cline --acp` per the agent-shell docs.
+
+### Other clients
+
+Anything that speaks ACP can run Cline the same way — point it at `cline --acp`. The [client directory](https://agentclientprotocol.com/get-started/clients) includes note-taking apps like Obsidian, notebooks like marimo, mobile clients, and chat bridges for Slack, Discord, and Telegram.
+
+## What works over ACP
+
+* **Sign-in from the client** — if no credentials are found, the client prompts you to sign in with Cline, ClinePass, or a ChatGPT subscription. Credentials saved by `cline auth` are reused automatically.
+* **Plan/Act modes** — switch between [Plan and Act](/core-workflows/plan-and-act) from the client's mode selector.
+* **Model and provider selection** — pick any model from the active provider's catalog, or switch providers, from the client's model picker.
+* **Permission prompts** — file edits and commands are approved through the client's permission UI. Nothing is auto-approved by default, but you can [auto-approve all tools](#auto-approving-tools) per session or at launch.
+* **Session resume** — conversations are persisted, so clients that support session loading can restore a thread after a restart.
+* **Images** — prompts can include images for vision-capable models.
+* **Organization switching** — Cline team accounts can switch between personal and organization billing.
+
+## Auto-approving tools
+
+By default every file edit and command goes through the client's permission UI. To let Cline run tools without asking:
+
+* **Per session** — sessions expose an **Auto-approve tools** toggle in the client's session settings (clients that support ACP config options, like Zed, render it alongside the model and mode pickers). Flipping it takes effect on the next tool call.
+* **At launch** — pass `--auto-approve true` in the client's agent config to start every session with auto-approval on:
+
+```json theme={"system"}
+{
+  "agent_servers": {
+    "Cline": {
+      "type": "custom",
+      "command": "cline",
+      "args": ["--acp", "--auto-approve", "true"],
+      "env": {}
+    }
+  }
+}
+```
+
+<Warning>
+  With auto-approval on, Cline edits files and runs commands without asking. Only enable it in workspaces where you're comfortable with unattended changes.
+</Warning>
+
+## Environment variables
+
+Set these under `env` in the client's agent server config to preconfigure the agent:
+
+| Variable         | Effect                                                       |
+| ---------------- | ------------------------------------------------------------ |
+| `CLINE_API_KEY`  | Authenticate with an API key instead of interactive sign-in  |
+| `CLINE_PROVIDER` | Pin the provider (disables provider switching in the client) |
+| `CLINE_MODEL`    | Default model for new sessions                               |
+
+## Next Steps
+
+* [CLI Overview](/usage/cli-overview)
+* [CLI Reference](/cli/cli-reference)
+
+
 # CLI Overview
 Source: https://docs.cline.bot/usage/cli-overview
 
@@ -16346,6 +16620,7 @@ When using `--json`, each line is a JSON message object.
 ## Next Steps
 
 * [CLI Reference](/cli/cli-reference)
+* [ACP](/usage/acp) — use Cline as the coding agent in Zed, JetBrains IDEs, Neovim, and other ACP clients
 
 
 # IDE
@@ -16415,6 +16690,48 @@ The Cline panel is a chat interface where you communicate with Cline. You need t
     * A **text input box** at the bottom where you type messages
     * A **chat area** above it where Cline's responses will appear
     * A **settings gear icon** in the top-right corner of the panel
+  </Tab>
+</Tabs>
+
+### Move Cline to the Right Sidebar
+
+This step is optional, but recommended. By default, Cline opens in the left sidebar, replacing your file explorer. Moving Cline to the right sidebar lets you keep your project files visible on the left while chatting with Cline on the right, so you can watch your workspace change as Cline works. (JetBrains already opens Cline on the right, so no setup is needed there.)
+
+<Tabs>
+  <Tab title="VS Code / Windsurf">
+    <Steps>
+      <Step title="Open the secondary sidebar">
+        Click the button in the top-right of the editor that toggles the right side panel (typically used for GitHub Copilot chat), or use the `Option/Alt + Cmd/Ctrl + B` shortcut.
+      </Step>
+
+      <Step title="Drag the Cline icon">
+        Drag the Cline icon from the Activity Bar on the left over to the top of the right panel.
+      </Step>
+    </Steps>
+
+    <Frame>
+      <img alt="Moving Cline to the right sidebar in VS Code" />
+    </Frame>
+  </Tab>
+
+  <Tab title="Cursor">
+    <Steps>
+      <Step title="Switch to a vertical Activity Bar">
+        Cursor uses a horizontal activity bar by default ([details](https://cursor.com/docs/configuration/migrations/vscode#activity-bar-orientation)). To switch to vertical, open Settings (`Cmd/Ctrl + Shift + P` → "Preferences: Open Settings (UI)"), search for `workbench.activityBar.orientation`, set it to `vertical`, and restart Cursor.
+      </Step>
+
+      <Step title="Open the AI Pane">
+        Click the Cursor cube icon in the top-right that opens Cursor's agent panel on the right.
+      </Step>
+
+      <Step title="Drag Cline into the AI Pane">
+        Drag the Cline icon from the Activity Bar directly into the AI Pane sidebar.
+      </Step>
+    </Steps>
+
+    <Frame>
+      <img alt="Moving Cline to the right sidebar in Cursor" />
+    </Frame>
   </Tab>
 </Tabs>
 
@@ -16620,7 +16937,7 @@ These same patterns work for any project, from simple scripts to full applicatio
 
 ## Need Help?
 
-* **Start a fresh conversation**: Type `/new` in the chat input to begin a new task
+* **Start a fresh conversation**: Type `/newtask` in the chat input to begin a new task
 * **Report issues**: Use `/reportbug` to help us improve
 * **Get support**: Join our [Discord community](https://discord.gg/cline)
 

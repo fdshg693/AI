@@ -171,6 +171,25 @@ meta:
   version: 1.0.0
 ---
 
+- okf-spec
+---
+# 同梱ファイル: SUMMARY.md（spec要約、通常はここで足りる）/ FINDING.md（OKFバンドルの探し方）/ WRITING_GENERAL.md（OKF概念の一般的な書き方）/ WRITING_REPO.md（このリポジトリ向けの配置・frontmatter推奨案）
+# output/SPEC.md は download_okf_spec.py が定期取得する原文（1000行超）。直接Readせず、本文の手順（Grep/サブエージェント）を使う
+name: okf-spec
+description: Use when finding, reading, authoring, or answering questions about Open Knowledge Format (OKF) bundles or concept documents — a markdown+YAML-frontmatter convention (GoogleCloudPlatform/knowledge-catalog) for knowledge that AI agents write and consume. Grounds answers in a periodically re-fetched snapshot of the official spec instead of training-data memory, which may be stale or predate v0.2's provenance/trust/lifecycle/attestation fields.
+allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/download_okf_spec.py *)
+meta:
+  requires_repo_tools: none
+  requires_env: none
+  dependencies: requests
+  requires_install: none
+  requires_hooks: none
+  requires_skills: writing-skill-web
+  status: stable
+  description: no description
+  version: 1.0.1
+---
+
 - proposing-flow
 ---
 # 前提: 通常のスキルとしてメインエージェント自身のコンテキストで実行される（context:forkは使わない）。

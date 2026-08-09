@@ -12,3 +12,6 @@ __pycache__/
 .pytest_cache/
 
 node_modules/
+
+# サブフォルダのAGENTS.md などを Clineが認識しない可能性が高い為、.clinerulesに寄せることにする
+AGENTS.md
