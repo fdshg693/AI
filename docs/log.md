@@ -1,0 +1,5 @@
+# Directory Update Log
+
+## 2026-08-09
+
+- **Creation**: `docs/` OKFバンドルを新設し、`repo-meta/skills/` 配下の13個のメタスキル（aim-automation, ai-tools-config, claude-code-first-skills, gh-actions-lifecycle, justfile-conventions, lefthook-automation, repo-ssot-pattern, skill-improving-meta-skills, skill-md-commits, skill-meta-fields, tool-companion-skills, tools-directory-layout, uv-workspace）を `docs/repo-meta/` 配下のOKF概念ドキュメントへ一括移行した。`repo-meta/skills/meta/` はスキルとして残し、`docs/repo-meta/` 配下のdocを取得・提示する役割に書き換えた。

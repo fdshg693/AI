@@ -1,25 +1,17 @@
 ---
-# 前提: `just`, `uv`（mise管理）がPATHから実行できること。generate_*.pyは `tools/internal/plugin_meta/generate/` にあり、`tools/internal`をcwdとして `python -m plugin_meta.generate.generate_*` として実行される想定（justfileがcwdを合わせる）
-# 依存: 新規スキル自体の作成手順はwriting-skillスキルを使う。このスキルはあくまで「生成物の配置・再生成方法」を扱う
-name: ai-tools-config
+type: Design Decision
+title: リポジトリのAIツール設定・生成ファイル規約
 description: Explains how this repository's AI-tool plugin/marketplace/skill-catalog files (marketplace.json, skill-catalog.json, CATALOG.md, Cline rules, Copilot instructions, README's tool section) are generated from ai-tools.yaml and regenerated. Use when adding/removing a Claude/Codex/Copilot/Cline plugin, when a generated file (marked "DO NOT EDIT MANUALLY") looks stale or wrong, or when asked how this repo's marketplace/catalog files are kept in sync.
-meta:
-  requires_repo_tools: none
-  requires_env: none
-  dependencies: none
-  requires_install: just,uv
-  requires_hooks: none
-  requires_skills: writing-skill
-  status: stable
-  description: no description
-  version: 1.0.0
+tags: [repo-meta]
+generated: { by: reference_agent/cline-glm-5.2, at: 2026-08-09T14:39:30Z }
+status: stable
 ---
 
 # リポジトリのAIツール設定・生成ファイル規約
 
 このリポジトリ自身（AIコーディングツールの設定・プラグイン群）をメンテナンスするための規約。**ユーザーのプロジェクトではなく、このリポジトリ自体の構造**を対象とする。
 
-> **このプラグイン自身の位置づけ**: `repo-meta/` はリポジトリ直下に置かれ、`claude-plugins/` 配下のプラグイン群とは異なり**意図的に`ai-tools.yaml`へ登録しない**。`ai-tools.yaml`に登録されたプラグインは`.claude-plugin/marketplace.json`（他人がこのリポジトリをmarketplaceとして追加すればインストール可能）とskills-siteの公開カタログの両方に載る。skills-siteは`ai-tools.yaml`登録ルート配下しかスキャンしないため、`ai-tools.yaml`へ登録しない限りエラーにも公開対象にもならない。`repo-meta`はこのリポジトリ以外では意味を持たない内容（`tools/internal/`のパス等が前提）のため、どちらにも載せない。新しいスキルをこの下に追加する場合も、`ai-tools.yaml`へは登録しないこと。逆に、`ai-tools.yaml`には登録しつつskills-siteだけから外したい場合は`skills-site/site-overrides.yaml`を使う（`.claude/rules/skill-publication.md`参照）。
+> **このドキュメントの位置づけ**: `repo-meta/` はリポジトリ直下に置かれ、`claude-plugins/` 配下のプラグイン群とは異なり**意図的に`ai-tools.yaml`へ登録しない**。`ai-tools.yaml`に登録されたプラグインは`.claude-plugin/marketplace.json`（他人がこのリポジトリをmarketplaceとして追加すればインストール可能）とskills-siteの公開カタログの両方に載る。skills-siteは`ai-tools.yaml`登録ルート配下しかスキャンしないため、`ai-tools.yaml`へ登録しない限りエラーにも公開対象にもならない。`repo-meta`はこのリポジトリ以外では意味を持たない内容（`tools/internal/`のパス等が前提）のため、どちらにも載せない。新しいドキュメントをこの下に追加する場合も、`ai-tools.yaml`へは登録しないこと。逆に、`ai-tools.yaml`には登録しつつskills-siteだけから外したい場合は`skills-site/site-overrides.yaml`を使う（`.claude/rules/skill-publication.md`参照）。
 
 ## SSOT: `ai-tools.yaml`
 
@@ -82,7 +74,11 @@ Codex/Copilotプラグインを追加する場合も同様に、まず該当ツ�
 - `skills_layout` は `subdir`（`<plugin>/skills/`配下にSKILL.md）と `direct`（`<plugin>`直下にSKILL.md、Copilot/Cursorが該当）の2種類。プラグインの実態に合わせて正しく指定する
 - Copilotの `generate_copilot_marketplace.py` はスキル一覧を `copilot-plugins/meta` 配下のフォルダ名から自動検出する（`ai-tools.yaml`には列挙しない）。他ツールとは挙動が異なる点に注意
 
-## 関連ルール
+## 関連
 
+- [repo-ssot-pattern](/repo-meta/repo-ssot-pattern.md) — `ai-tools.yaml`というSSOTが従う設計パターン全体
+- [lefthook-automation](/repo-meta/lefthook-automation.md) — 生成物の再生成をコミット時に自動実行する仕組み
+- [skill-md-commits](/repo-meta/skill-md-commits.md) — `SKILL.md`コミット時のpre-commitフック（catalog再生成を含む）
+- [claude-code-first-skills](/repo-meta/claude-code-first-skills.md) — `skills_layout`の意味、他ツールへのポート方針
 - `.claude/rules/ai-tools-config.md` — このSSOT運用のルール本文（AIエージェント向け、パス限定なし）
 - `.claude/rules/skill-publication.md` — `skills-site`側の公開規約（`ai-tools.yaml`からの導出、ZIP生成時の除外規則等）

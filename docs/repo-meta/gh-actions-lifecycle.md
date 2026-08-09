@@ -1,24 +1,17 @@
 ---
-# 対象: .github/workflows/ 配下の全ワークフロー（skill-site.yml, gh-aw の *.md/*.lock.yml, agentics-maintenance.yml, claude/codex/pr-agentの各issue/PR bot）
-name: gh-actions-lifecycle
+type: Design Decision
+title: GitHub Actions駆動のリリース・デプロイ・自動化ライフサイクル
 description: Explains how this repository's release/deploy and issue/PR automation entirely run on GitHub Actions under .github/workflows/ — the skills-site build-verify-deploy-tag pipeline to Azure Static Web Apps, the gh-aw agentic workflows (Markdown source compiled to *.lock.yml, plus the auto-generated maintenance workflow), and the Claude/Codex/PR-Agent issue and PR bots. Use when a GitHub Actions run fails, when asked how a deploy/release actually happens in this repo, when adding or editing anything under .github/workflows/, or when deciding which secret a given workflow needs.
-meta:
-  requires_repo_tools: .github/workflows/skill-site.yml, .github/workflows/gaw-issue-triage.md, .github/workflows/justfile, .github/workflows/agentics-maintenance.yml, .github/workflows/claude-issue-triage.yml, .github/workflows/codex-issue-triage.yml, .github/workflows/pr-agent.yml
-  requires_env: none
-  dependencies: none
-  requires_install: gh, gh-aw, just
-  requires_hooks: none
-  requires_skills: none
-  status: stable
-  description: no description
-  version: 1.0.2
+tags: [repo-meta]
+generated: { by: reference_agent/cline-glm-5.2, at: 2026-08-09T14:39:30Z }
+status: stable
 ---
 
 # GitHub Actions駆動のリリース・デプロイ・自動化ライフサイクル
 
 このリポジトリには専用のリリースツールやデプロイCLIは無く、`.github/workflows/`配下のGitHub Actionsだけでリリース・デプロイと、issue/PRの自動応答が完結する。ブランチ運用はmain 1本＋PRマージ（`git log`で確認できる`Merge pull request`コミットが実態）で、専用のリリースブランチやタグ運用も自動化側（後述のdeployタグ）に任せている。
 
-このリポジトリは[MIT License](../../../LICENSE)で、誰でも自由にFork・改変・再配布してよい。一方でここで説明するGitHub Actions駆動の自動化（issue/PR bot、skills-siteのデプロイ）は第三者には開放していない設定になっている（後述の`author_association`ガードとFork PRでのシークレット非公開）。コントリビュート方法とこの制限の位置づけは[CONTRIBUTING.md](../../../CONTRIBUTING.md)を参照。
+このリポジトリは[MIT License](../../LICENSE)で、誰でも自由にFork・改変・再配布してよい。一方でここで説明するGitHub Actions駆動の自動化（issue/PR bot、skills-siteのデプロイ）は第三者には開放していない設定になっている（後述の`author_association`ガードとFork PRでのシークレット非公開）。コントリビュート方法とこの制限の位置づけは[CONTRIBUTING.md](../../CONTRIBUTING.md)を参照。
 
 大きく2系統に分かれる。
 
@@ -35,7 +28,7 @@ meta:
 
 ロールバック専用の操作は無い。過去の`deploy-*`タグから戻したいcommitを特定し、そのcommitへの再push、または該当commitをmainへcherry-pick/revertして通常のpushフローに乗せる。
 
-このパイプラインの詳細（各シークレットの正確な用途、`OPENROUTER_API_KEY`がビルド時のGitHub SecretsとランタイムのAzure SWA Application settingで**別々に**必要な理由、障害時の切り分け手順）は[skills-site/AGENTS.md](../../../skills-site/AGENTS.md)が正。ここでは全体像だけを扱い、重複させない。
+このパイプラインの詳細（各シークレットの正確な用途、`OPENROUTER_API_KEY`がビルド時のGitHub SecretsとランタイムのAzure SWA Application settingで**別々に**必要な理由、障害時の切り分け手順）は[skills-site/AGENTS.md](../../skills-site/AGENTS.md)が正。ここでは全体像だけを扱い、重複させない。
 
 ## 2. issue/PR自動化（Claude / Codex / PR-Agent / gh-aw）
 
@@ -49,7 +42,7 @@ meta:
 
 ### gh-awの`.md`→`.lock.yml`という生成関係
 
-`.github/workflows/gaw-issue-triage.md`のfrontmatter（`on.slash_command`, `safe-outputs`等）が実体で、`gaw-issue-triage.lock.yml`は[gh-aw](https://github.github.com/gh-aw/)がコンパイルした**生成物**（`repo-ssot-pattern`と同じ「SSOT→生成」の形）。`.lock.yml`を直接編集しても次のコンパイルで上書きされるため、`.md`側を直してから再コンパイルする。
+`.github/workflows/gaw-issue-triage.md`のfrontmatter（`on.slash_command`, `safe-outputs`等）が実体で、`gaw-issue-triage.lock.yml`は[gh-aw](https://github.github.com/gh-aw/)がコンパイルした**生成物**（[repo-ssot-pattern](/repo-meta/repo-ssot-pattern.md)と同じ「SSOT→生成」の形）。`.lock.yml`を直接編集しても次のコンパイルで上書きされるため、`.md`側を直してから再コンパイルする。
 
 ```bash
 just --justfile .github/workflows/justfile compile-one gaw-issue-triage
@@ -68,12 +61,12 @@ just --justfile .github/workflows/justfile compile        # 全ワークフロ�
 
 - **fork PRの`verify`失敗は意図した安全装置**。「CIが壊れている」と早合点して`OPENROUTER_API_KEY`チェックを削除・回避しない。
 - **`*.lock.yml`を手編集しない**。gh-awの`.md`ソースを直して`gh aw compile --strict`（または上記justfileレシピ）で再生成する。
-- **`OPENROUTER_API_KEY`は2箇所で別々に管理**される。GitHub Actions Secrets（`verify`のビルド時埋め込み計算用）と、Azure SWAのApplication setting（本番`/api/suggest`のランタイム用）は同じ名前でも別設定であり、片方を更新してももう片方には反映されない（詳細は[skills-site/AGENTS.md](../../../skills-site/AGENTS.md)）。
+- **`OPENROUTER_API_KEY`は2箇所で別々に管理**される。GitHub Actions Secrets（`verify`のビルド時埋め込み計算用）と、Azure SWAのApplication setting（本番`/api/suggest`のランタイム用）は同じ名前でも別設定であり、片方を更新してももう片方には反映されない（詳細は[skills-site/AGENTS.md](../../skills-site/AGENTS.md)）。
 - **`AZURE_STATIC_WEB_APPS_API_TOKEN`はデプロイトークン**であり、Application settingsの注入はできない。ランタイム用の環境変数を追加したい場合はAzure側で別途設定する。
 
 ## 関連
 
-- [CONTRIBUTING.md](../../../CONTRIBUTING.md) — MITライセンスでのFork可否と、GitHub Actions自動化を第三者に開放しない方針の説明
-- [skills-site/AGENTS.md](../../../skills-site/AGENTS.md) — skills-siteのビルド・検証・デプロイ・障害時対応の詳細（このスキルが要約する一次情報源）
-- [repo-ssot-pattern](../repo-ssot-pattern/SKILL.md) — 「1つのSSOT＋生成スクリプト」という設計思想（gh-awの`.md`→`.lock.yml`も同じ形）
-- [ai-tools-config](../ai-tools-config/SKILL.md) — このリポジトリの別のCI/自動化対象（マーケットプレイス・スキルカタログの生成とlefthook連携）
+- [CONTRIBUTING.md](../../CONTRIBUTING.md) — MITライセンスでのFork可否と、GitHub Actions自動化を第三者に開放しない方針の説明
+- [skills-site/AGENTS.md](../../skills-site/AGENTS.md) — skills-siteのビルド・検証・デプロイ・障害時対応の詳細（このドキュメントが要約する一次情報源）
+- [repo-ssot-pattern](/repo-meta/repo-ssot-pattern.md) — 「1つのSSOT＋生成スクリプト」という設計思想（gh-awの`.md`→`.lock.yml`も同じ形）
+- [ai-tools-config](/repo-meta/ai-tools-config.md) — このリポジトリの別のCI/自動化対象（マーケットプレイス・スキルカタログの生成とlefthook連携）

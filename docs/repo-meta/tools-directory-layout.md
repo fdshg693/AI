@@ -1,17 +1,10 @@
 ---
-# 依存: Pythonパッケージとしてのワークスペース登録はuv-workspaceスキル、使い方スキル併設はtool-companion-skillsスキル参照
-name: tools-directory-layout
+type: Repo Convention
+title: tools/配下のディレクトリ構成規約
 description: Explains the directory conventions this repo uses for convenience scripts under tools/ — one directory per tool (or a grouping subfolder for related tools, e.g. tools/aim-use/), its own README/AGENTS.md/CLAUDE.md import chain, and turning it into a globally installable CLI via a pyproject.toml console_scripts entry. Use when adding a new script/tool to tools/, deciding whether it needs its own subfolder or a real package, or wiring up its CLAUDE.md.
-meta:
-  requires_repo_tools: tools/aim/AGENTS.md, tools/aim/CLAUDE.md, tools/aim/pyproject.toml, tools/schedule, tools/tav-cli
-  requires_env: none
-  dependencies: none
-  requires_install: uv
-  requires_hooks: none
-  requires_skills: uv-workspace, tool-companion-skills, justfile-conventions
-  status: stable
-  description: no description
-  version: 1.0.0
+tags: [tools, repo-meta]
+generated: { by: reference_agent/cline-glm-5.2, at: 2026-08-09T14:39:30Z }
+status: stable
 ---
 
 # tools/配下のディレクトリ構成規約
@@ -22,7 +15,7 @@ meta:
 
 - 基本は`tools/`直下に1ツール1ディレクトリ（`tools/aim`、`tools/ctx7`、`tools/mslearn`、`tools/my-agents`等）
 - 関連する複数ツールをまとめたい場合は1段グループ化する（`tools/aim-use/aim-ask`・`tools/aim-use/aim-summarize`は共に`tools/aim`を利用するラッパー群、`tools/internal/ai-usage`はこのリポジトリ内部専用ツール群の1つ）
-- Pythonパッケージ化が不要なディレクトリもある（`tools/infra`はBicep+スクリプト、`tools/install`はjustfileのみ、`tools/sandbox`は実験用）。すべてを無理に`uv`ワークスペースへ載せる必要はない（判断基準は[uv-workspace](../uv-workspace/SKILL.md)参照）
+- Pythonパッケージ化が不要なディレクトリもある（`tools/infra`はBicep+スクリプト、`tools/install`はjustfileのみ、`tools/sandbox`は実験用）。すべてを無理に`uv`ワークスペースへ載せる必要はない（判断基準は[uv-workspace](/repo-meta/uv-workspace.md)参照）
 
 ## 各ツールディレクトリの最低限の構成
 
@@ -41,18 +34,18 @@ meta:
 
 ## グローバルCLI化
 
-ツール自身の`pyproject.toml`に`[project.scripts]`でエントリポイントを定義する（`aim = "aim_cli:main"`、`tav = "tav_cli:main"`）。インストールコマンド（`uv tool install --editable tools/<name>`）はツールのREADME.mdに明記し、複数ツールをまとめてインストールしたい場合は`tools/install/justfile`にレシピを足す（[justfile-conventions](../justfile-conventions/SKILL.md)参照）。パッケージ化・ワークスペース登録の詳細は[uv-workspace](../uv-workspace/SKILL.md)を参照。
+ツール自身の`pyproject.toml`に`[project.scripts]`でエントリポイントを定義する（`aim = "aim_cli:main"`、`tav = "tav_cli:main"`）。インストールコマンド（`uv tool install --editable tools/<name>`）はツールのREADME.mdに明記し、複数ツールをまとめてインストールしたい場合は`tools/install/justfile`にレシピを足す（[justfile-conventions](/repo-meta/justfile-conventions.md)参照）。パッケージ化・ワークスペース登録の詳細は[uv-workspace](/repo-meta/uv-workspace.md)を参照。
 
 ## 使い方スキルを併設するかの判断
 
-ツールを作った時点で、CLIとしての使い方に迷いが生じそうなら（フラグの意味、enum値の選び方、ログの意味論など）、対応する使い方スキルを検討する。判断基準・置き場所は[tool-companion-skills](../tool-companion-skills/SKILL.md)を参照。
+ツールを作った時点で、CLIとしての使い方に迷いが生じそうなら（フラグの意味、enum値の選び方、ログの意味論など）、対応する使い方スキルを検討する。判断基準・置き場所は[tool-companion-skills](/repo-meta/tool-companion-skills.md)を参照。
 
 ## 関連
 
-- [uv-workspace](../uv-workspace/SKILL.md) — Pythonパッケージとしてのワークスペース管理（`uv sync`/`uv tool install`の使い分け）
-- [tool-companion-skills](../tool-companion-skills/SKILL.md) — ツールに使い方スキルを併設する方針と置き場所
-- [justfile-conventions](../justfile-conventions/SKILL.md) — インストール・実行コマンドをjustfileレシピとして揃える規約
+- [uv-workspace](/repo-meta/uv-workspace.md) — Pythonパッケージとしてのワークスペース管理（`uv sync`/`uv tool install`の使い分け）
+- [tool-companion-skills](/repo-meta/tool-companion-skills.md) — ツールに使い方スキルを併設する方針と置き場所
+- [justfile-conventions](/repo-meta/justfile-conventions.md) — インストール・実行コマンドをjustfileレシピとして揃える規約
 
-## このスキルの位置づけ
+## このドキュメントの位置づけ
 
-`repo-meta/`はこのリポジトリ自身のメンテナンス用であり、ユーザー向けプラグインではない。既存方針に従い、このスキルを`ai-tools.yaml`へ登録しないこと。詳細は[ai-tools-config](../ai-tools-config/SKILL.md)参照。
+`repo-meta/`はこのリポジトリ自身のメンテナンス用であり、ユーザー向けプラグインではない。既存方針に従い、この内容を`ai-tools.yaml`へ登録しないこと。詳細は[ai-tools-config](/repo-meta/ai-tools-config.md)参照。

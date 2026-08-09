@@ -6,7 +6,7 @@
 
 # 関連ファイル
 # tools\internal\skill_meta_field_fill.py
-# repo-meta\skills\skill-meta-fields\SKILL.md
+# docs\repo-meta\skill-meta-fields.md
 
 fields:
   version:

@@ -1,17 +1,10 @@
 ---
-# 比較対象: .claude/skills + claude-plugins/*/skills（本体）と .cline/skills, codex-plugins/meta/skills, copilot-plugins/meta（メタスキルのみ）
-name: claude-code-first-skills
+type: Design Decision
+title: Claude Code中心のスキル方針
 description: Explains this repository's policy that most SKILL.md content is written for Claude Code specifically (exploiting its frontmatter mechanisms like allowed-tools, disable-model-invocation, dynamic `!command` context injection, and this repo's own meta block) and only appears for another AI tool as a meta-skill about using that tool itself, not a ported copy. Use when deciding whether a skill belongs under .claude/skills or a claude-plugins/ plugin only, whether to port an existing Claude Code skill to cline-plugins/codex-plugins/copilot-plugins/cursor-plugins, or why those folders look sparser than claude-plugins.
-meta:
-  requires_repo_tools: ai-tools.yaml, .clinerules, .github/instructions, cline-plugins, codex-plugins/meta, copilot-plugins/meta
-  requires_env: none
-  dependencies: none
-  requires_install: none
-  requires_hooks: none
-  requires_skills: ai-tools-config
-  status: stable
-  description: no description
-  version: 1.0.0
+tags: [claude-code, cline, codex, copilot, cursor, antigravity, repo-meta]
+generated: { by: reference_agent/cline-glm-5.2, at: 2026-08-09T14:39:30Z }
+status: stable
 ---
 
 # Claude Code中心のスキル方針
@@ -30,13 +23,13 @@ Claude CodeのSKILL.mdフロントマターには他ツールの機構では1:1�
 - `disable-model-invocation`（モデルによる自動起動を止め、明示呼び出し専用にする）
 - `allowed-tools`（そのスキル実行中に使えるツールを絞る）
 - `` !`command` `` 形式の動的コンテキスト注入（スキル読み込み時にコマンドを実行し結果を埋め込む）
-- `meta:`ブロック（Claude Code自体の機能ではなく、このリポジトリ独自の運用。詳細は[skill-meta-fields](../skill-meta-fields/SKILL.md)）
+- `meta:`ブロック（Claude Code自体の機能ではなく、このリポジトリ独自の運用。詳細は[skill-meta-fields](/repo-meta/skill-meta-fields.md)）
 
 これらの仕組みを前提にしたスキルをそのまま他ツールへコピーしても、その挙動（明示呼び出し限定、ツール制限、事前注入）は再現されず、静かに壊れる。
 
 ## 横断が必要な内容は「生成」で扱う
 
-このリポジトリでは、複数ツールに同じ内容を持たせたい場合もスキルを手でポートするのではなく、共通のソースから生成する。`.clinerules/agents-*.md`と`.github/instructions/*.instructions.md`は各プラグインの`AGENTS.md`から生成される（SKILL.mdの内容からではない。詳細は[ai-tools-config](../ai-tools-config/SKILL.md)）。
+このリポジトリでは、複数ツールに同じ内容を持たせたい場合もスキルを手でポートするのではなく、共通のソースから生成する。`.clinerules/agents-*.md`と`.github/instructions/*.instructions.md`は各プラグインの`AGENTS.md`から生成される（SKILL.mdの内容からではない。詳細は[ai-tools-config](/repo-meta/ai-tools-config.md)）。
 
 ## 判断の目安
 
@@ -45,14 +38,14 @@ Claude CodeのSKILL.mdフロントマターには他ツールの機構では1:1�
 1. 対象が**そのツール自体の使い方**（CLIオプション、SDK、プラグインの書き方等）についてのガイドなら、`<tool>-*`のメタスキルとして追加する
 2. 対象がClaude-Code特有の仕組みに依存したワークフロースキルなら、基本的にポートしない。どうしても必要なら、Claude Code専用の仕組みを取り除き、そのツール自身の流儀で書き直す
 
-`ai-tools.yaml`の`skills_layout`（`subdir`/`direct`）はあくまで各ツールが実際に使うSKILL.md配置形式の違いを表すフィールドであり、Claude Code側のレイアウトをコピーしたものではない（[ai-tools-config](../ai-tools-config/SKILL.md)参照）。
+`ai-tools.yaml`の`skills_layout`（`subdir`/`direct`）はあくまで各ツールが実際に使うSKILL.md配置形式の違いを表すフィールドであり、Claude Code側のレイアウトをコピーしたものではない（[ai-tools-config](/repo-meta/ai-tools-config.md)参照）。
 
 ## 関連
 
-- [ai-tools-config](../ai-tools-config/SKILL.md) — `AGENTS.md`からのCline/Copilot向け生成、`skills_layout`の意味
-- [tool-companion-skills](../tool-companion-skills/SKILL.md) — 便利ツールへの使い方スキル併設もデフォルトはClaude Code向け
-- [skill-improving-meta-skills](../skill-improving-meta-skills/SKILL.md) — 各ツールが持つ「スキルを書くためのスキル」自体もツールごとに独立している
+- [ai-tools-config](/repo-meta/ai-tools-config.md) — `AGENTS.md`からのCline/Copilot向け生成、`skills_layout`の意味
+- [tool-companion-skills](/repo-meta/tool-companion-skills.md) — 便利ツールへの使い方スキル併設もデフォルトはClaude Code向け
+- [skill-improving-meta-skills](/repo-meta/skill-improving-meta-skills.md) — 各ツールが持つ「スキルを書くためのスキル」自体もツールごとに独立している
 
-## このスキルの位置づけ
+## このドキュメントの位置づけ
 
-`repo-meta/`はこのリポジトリ自身のメンテナンス用であり、ユーザー向けプラグインではない。既存方針に従い、このスキルを`ai-tools.yaml`へ登録しないこと。詳細は[ai-tools-config](../ai-tools-config/SKILL.md)参照。
+`repo-meta/`はこのリポジトリ自身のメンテナンス用であり、ユーザー向けプラグインではない。既存方針に従い、この内容を`ai-tools.yaml`へ登録しないこと。詳細は[ai-tools-config](/repo-meta/ai-tools-config.md)参照。

@@ -9,7 +9,7 @@
 
 同様に、skills-siteのビルド・デプロイパイプライン（`skill-site.yml`）はFork PRでは `OPENROUTER_API_KEY` 等のリポジトリシークレットを読めないため、`verify` ジョブが意図的に失敗する。これも安全装置であり、Fork PRのCIが赤くなること自体はバグではない。
 
-これらの自動化・CIパイプラインの詳細は [repo-meta/skills/gh-actions-lifecycle/SKILL.md](repo-meta/skills/gh-actions-lifecycle/SKILL.md) を参照。
+これらの自動化・CIパイプラインの詳細は [docs/repo-meta/gh-actions-lifecycle.md](docs/repo-meta/gh-actions-lifecycle.md) を参照。
 
 ## PRを送る場合
 

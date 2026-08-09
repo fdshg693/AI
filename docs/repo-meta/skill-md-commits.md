@@ -1,29 +1,22 @@
 ---
-# 前提: `just`, `uv`（mise管理）がPATHから実行できること
-name: skill-md-commits
+type: Repo Convention
+title: SKILL.md変更のコミット手順とpre-commitフックの挙動
 description: Explains what this repository's lefthook pre-commit hook does whenever a commit touches any SKILL.md (regenerating skill-catalog.json/CATALOG.md, backfilling meta.version/meta.description defaults, blocking on a missing meta.version bump), and how to get such a commit through cleanly. Use when a commit touching SKILL.md files fails in lefthook, when the pre-commit hook produces a much larger diff than expected, or when asked how to bump meta.version across many skills at once.
-meta:
-  requires_repo_tools: tools/internal/justfile, lefthook.yml, tools/internal/skill/set/bump_skill_versions.py, tools/internal/skill/util/skill_frontmatter.py, tools/internal/skill/check/check_skill_version_bump.py
-  requires_env: none
-  dependencies: none
-  requires_install: just, uv, lefthook, mise
-  requires_hooks: lefthook
-  requires_skills: ai-tools-config, skill-meta-fields
-  status: stable
-  description: no description
-  version: 1.0.1
+tags: [repo-meta]
+generated: { by: reference_agent/cline-glm-5.2, at: 2026-08-09T14:39:30Z }
+status: stable
 ---
 
 # SKILL.md変更のコミット手順とpre-commitフックの挙動
 
-`**/SKILL.md`にマッチするファイルをステージしてコミットすると、`lefthook.yml`の`pre-commit`フックが複数のステップを自動実行する。挙動を知らずにコミットすると、想定より大きい差分が生まれたり、コミット自体が失敗したりする。このスキルはその挙動と対処法をまとめる。
+`**/SKILL.md`にマッチするファイルをステージしてコミットすると、`lefthook.yml`の`pre-commit`フックが複数のステップを自動実行する。挙動を知らずにコミットすると、想定より大きい差分が生まれたり、コミット自体が失敗したりする。このドキュメントはその挙動と対処法をまとめる。
 
 ## pre-commitフックが自動でやること
 
 `SKILL.md`をステージした状態で`git commit`すると、次が順に走る（`lefthook.yml`参照）。
 
 1. **生成物の再生成**（`stage_fixed: true`、成功すれば自動でステージに追加される）
-   - `skill-catalog.json` / 各プラグインの `CATALOG.md`（詳細は[ai-tools-config](../ai-tools-config/SKILL.md)）
+   - `skill-catalog.json` / 各プラグインの `CATALOG.md`（詳細は[ai-tools-config](/repo-meta/ai-tools-config.md)）
    - `copilot-plugins/meta/**/SKILL.md`が対象なら`plugin.json`/`marketplace.json`も
 2. **meta.version / meta.description のデフォルト値バックフィル**（`stage_fixed: true`）
    - `just skill-versions` / `just skill-descriptions` が**リポジトリ全体**の`SKILL.md`を走査し、値が空のフィールドに`1.0.0`/`no description`を補完する。ステージされていない他のスキルにも波及するため、コミット後の差分が「自分が触った分」より大きくなるのは想定内。
@@ -64,10 +57,10 @@ git commit -m "..."
 
 ## 関連
 
-- [ai-tools-config](../ai-tools-config/SKILL.md) — マーケットプレイス・スキルカタログ生成の詳細
-- [skill-meta-fields](../skill-meta-fields/SKILL.md) — `meta:`ブロックの新7フィールド運用
+- [ai-tools-config](/repo-meta/ai-tools-config.md) — マーケットプレイス・スキルカタログ生成の詳細
+- [skill-meta-fields](/repo-meta/skill-meta-fields.md) — `meta:`ブロックの新7フィールド運用
 - `.claude/rules/skill-meta-fields.md` — `meta.version`SSOT・バンプ運用のルール本文
 
-## このスキルの位置づけ
+## このドキュメントの位置づけ
 
-`repo-meta/`はこのリポジトリ自身のメンテナンス用であり、ユーザー向けプラグインではない。既存方針に従い、このスキルを`ai-tools.yaml`へ登録しないこと。
+`repo-meta/`はこのリポジトリ自身のメンテナンス用であり、ユーザー向けプラグインではない。既存方針に従い、この内容を`ai-tools.yaml`へ登録しないこと。

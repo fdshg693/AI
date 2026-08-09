@@ -1,19 +1,10 @@
 ---
-# AI呼び出しとファイル変更を伴うため、ユーザーが明示的に呼び出した場合だけ使う。
-name: skill-meta-fields
+type: Repo Convention
+title: SKILL.md metaフィールドのメンテナンス
 description: Maintains the meta fields in this repository's SKILL.md frontmatter by using an aim-ask script to inspect skill directories and fill missing values. Use when a skill is added or its dependencies, hooks, installation requirements, environment requirements, or repository-tool usage changes.
-disable-model-invocation: true
-allowed-tools: Bash(uv run --directory tools/internal python -m skill.set.skill_meta_field_fill *) Bash(just --justfile tools/internal/justfile skill-meta-fields-fill)
-meta:
-  requires_repo_tools: tools/internal/skill/set/skill_meta_field_fill.py, tools/internal/justfile
-  requires_env: OPENROUTER_API_KEY
-  dependencies: none
-  requires_install: uv, just, aim-ask
-  requires_hooks: none
-  requires_skills: none
-  status: experimental
-  description: no description
-  version: 1.0.2
+tags: [repo-meta]
+generated: { by: reference_agent/cline-glm-5.2, at: 2026-08-09T14:39:30Z }
+status: stable
 ---
 
 # SKILL.md metaフィールドのメンテナンス
@@ -22,7 +13,7 @@ meta:
 
 ## フィールドの参照先
 
-フィールドの意味、値の形式、既定値、例は、リポジトリ直下の[`meta_field.yaml`](../../../meta_field.yaml)を正とする。ここでは一覧と用途だけを要約し、詳細な定義を重複させない。
+フィールドの意味、値の形式、既定値、例は、リポジトリ直下の[`meta_field.yaml`](../../meta_field.yaml)を正とする。ここでは一覧と用途だけを要約し、詳細な定義を重複させない。
 
 | フィールド            | 用途の要約                         |
 | --------------------- | ---------------------------------- |
@@ -67,8 +58,10 @@ uv run --directory tools/internal python -m skill.set.skill_meta_field_fill repo
 
 ## 関連
 
-- [skill-md-commits](../skill-md-commits/SKILL.md) — `SKILL.md`をコミットする際のpre-commitフックの挙動（生成物再生成・defaultsバックフィル・meta.versionバンプチェック）と落とし穴
+- [skill-md-commits](/repo-meta/skill-md-commits.md) — `SKILL.md`をコミットする際のpre-commitフックの挙動（生成物再生成・defaultsバックフィル・meta.versionバンプチェック）と落とし穴
+- [aim-automation](/repo-meta/aim-automation.md) — このリポジトリ自身がaim-askを使っている例
+- [repo-ssot-pattern](/repo-meta/repo-ssot-pattern.md) — `meta_field.yaml`というSSOTが従う設計パターン
 
-## このスキルの位置づけ
+## このドキュメントの位置づけ
 
-`repo-meta/`はこのリポジトリ自身のメンテナンス用であり、ユーザー向けプラグインではない。既存方針に従い、このスキルを`ai-tools.yaml`へ登録しないこと。登録しなければマーケットプレイスおよび`skills-site`の公開対象にもならない。新しいスキルをこの配下に追加する場合も同様に扱う。
+`repo-meta/`はこのリポジトリ自身のメンテナンス用であり、ユーザー向けプラグインではない。既存方針に従い、この内容を`ai-tools.yaml`へ登録しないこと。登録しなければマーケットプレイスおよび`skills-site`の公開対象にもならない。新しいドキュメントをこの配下に追加する場合も同様に扱う。
