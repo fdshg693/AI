@@ -48,3 +48,6 @@ tools:
   icw:
     path: tools/interactive-cli-wrapper
     install: "uv tool install --editable tools/interactive-cli-wrapper"
+  linear-cli:
+    path: tools/linear-cli
+    install: "cd tools/linear-cli && pnpm add -g ."

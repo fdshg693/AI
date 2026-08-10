@@ -13,11 +13,11 @@ status: stable
 
 ## 現在の3つのSSOT
 
-| SSOT                                       | 扱う事実                                                                                         | 詳細ドキュメント                                                                                                         |
-| ------------------------------------------ | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| [`ai-tools.yaml`](../../ai-tools.yaml)     | どのツールがどのプラグインを持つか、各ツールのマーケットプレイス/スキルカタログ/README節の生成元 | [ai-tools-config](/repo-meta/ai-tools-config.md)                                                                         |
-| [`meta_field.yaml`](../../meta_field.yaml) | `SKILL.md`frontmatterの`meta:`各サブフィールドの意味・書式・デフォルト値                         | [skill-meta-fields](/repo-meta/skill-meta-fields.md)                                                                     |
-| [`repo-tools.yaml`](../../repo-tools.yaml) | スキルがCLIインストール前提として依存する`tools/`配下ツールの名前とパスの対応                    | (未作成。`tools/internal/skill/util/repo_tools_registry.py`と`tools/internal/skill/check/check_skill_repo_tools.py`参照) |
+| SSOT                                       | 扱う事実                                                                                         | 詳細ドキュメント                                     |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------- |
+| [`ai-tools.yaml`](../../ai-tools.yaml)     | どのツールがどのプラグインを持つか、各ツールのマーケットプレイス/スキルカタログ/README節の生成元 | [ai-tools-config](/repo-meta/ai-tools-config.md)     |
+| [`meta_field.yaml`](../../meta_field.yaml) | `SKILL.md`frontmatterの`meta:`各サブフィールドの意味・書式・デフォルト値                         | [skill-meta-fields](/repo-meta/skill-meta-fields.md) |
+| [`repo-tools.yaml`](../../repo-tools.yaml) | スキルがCLIインストール前提として依存する`tools/`配下ツールの名前とパスの対応                    | [repo-tools-config](/repo-meta/repo-tools-config.md) |
 
 ## 共通の形
 
