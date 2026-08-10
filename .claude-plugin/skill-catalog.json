@@ -296,6 +296,11 @@
       "path": "claude-plugins/topics/skills/openrouter-docs",
       "name": "openrouter-docs",
       "description": "Use when answering questions about OpenRouter (openrouter.ai) — the unified API for routing requests across many LLM providers/models, its Agent SDK, Client SDKs (TypeScript/Python/Go), REST API reference, model routing/variants (:nitro, :online, :thinking, etc.), plugins, guardrails, presets, workspaces, pricing/BYOK, or integrating OpenRouter with coding agents (Claude Code, Cursor, Codex CLI, etc.). Grounds answers in the latest official docs (openrouter.ai/docs) instead of training-data memory, which may be stale."
+    },
+    {
+      "path": "claude-plugins/topics/skills/writing-mermaid-diagrams",
+      "name": "writing-mermaid-diagrams",
+      "description": "Use when writing or editing Mermaid diagrams (flowchart, sequence, class, state, ER, etc.) in Markdown files, SKILL.md docs, PR descriptions, or Claude Artifacts. Covers two failure modes that plain Mermaid knowledge misses — diagrams that render differently (or break) across VS Code preview / Mermaid Live Editor / GitHub / Claude Artifacts, and diagrams that are technically valid but hard to read (crossing edges, unlabeled arrows, oversized graphs) or hard to maintain (unstable node IDs, no comments)."
     }
   ]
 }
