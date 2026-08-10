@@ -41,6 +41,30 @@ meta:
   version: 1.0.1
 ---
 
+- parallel-agent-worktree
+---
+name: parallel-agent-worktree
+description: 複数のClaude Codeセッション（同一ローカル環境上で並行して動くエージェント）が、Linearの未着手issueをタスクキューとして使い、それぞれ別のgit worktreeで衝突なく1タスクずつ分担して作業を進めるためのスキル。Linear issueの検索→claim→worktree作業→完了報告までの一連の流れを自然言語指示で進めたい場合に使う。専用のトラッキングissue1件で「どの環境がどのworktreeを使用中か」を追跡し、空き状況を判定可能にする。専用オーケストレーター（常駐プロセス等）は前提とせず、1タスクのcommit・push完了をもって処理は完結する（次のタスクへ自動で継続しない）。
+# 前提条件（このスキル自体はインストール・セットアップを一切行わない）:
+#   - `linear-cli` コマンドがPATH上で使え、LINEAR_API_KEYが設定済みであること
+#     （セットアップは claude-plugins/my-tools/skills/linear-cli/SKILL.md 参照）
+#   - `EnterWorktree`/`ExitWorktree` がハーネス組み込みツールとして利用可能であること
+#
+# 依存スキル: claude-plugins/my-tools/skills/linear-cli（issue検索・作成・ステータス更新・コメント追加/一覧取得/削除）
+# このスキルはlinear-cliとハーネス組み込みworktreeツールを繋ぐ薄いオーケストレーション層で、
+# 自前のソースコードは持たない。
+meta:
+  requires_repo_tools: none
+  requires_env: LINEAR_API_KEY
+  dependencies: linear-cli
+  requires_install: none
+  requires_hooks: none
+  requires_skills: linear-cli
+  status: experimental
+  description: no description
+  version: 2.0.0
+---
+
 - pr-check
 ---
 name: pr-check
