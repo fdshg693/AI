@@ -1,0 +1,11 @@
+{
+  "name": "skill-search",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "skill-search": "src/cli.mjs"
+  }
+}

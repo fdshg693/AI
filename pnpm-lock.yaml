@@ -82,6 +82,8 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
 
+  tools/skill-search: {}
+
 packages:
 
   '@ai-sdk/amazon-bedrock@4.0.141':
