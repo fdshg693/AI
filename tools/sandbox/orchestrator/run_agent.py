@@ -34,15 +34,21 @@ Claude（bypassPermissions・フルBashアクセス）にGitHub tokenを一切�
 import asyncio
 import base64
 import json
+import logging
 import os
 import subprocess
 import sys
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
+
+import logging_setup
 
 ORCHESTRATOR_DIR = Path(__file__).resolve().parent
 CONTAINER_SETTINGS_PATH = Path("/opt/sandbox-agent/claude-settings/settings.json")
 RESULT_MARKER = "SANDBOX_RESULT: "
+
+logger = logging.getLogger(__name__)
 
 SYSTEM_PROMPT_TEMPLATE = """\
 あなたはGitHub ISSUE対応の自律コーディングエージェントです。
@@ -84,8 +90,10 @@ def _redact(arg: str) -> str:
 
 
 def _run(cmd: list[str], cwd: str | None = None, check: bool = True) -> subprocess.CompletedProcess:
-    print(f"  $ {' '.join(_redact(arg) for arg in cmd)}")
-    return subprocess.run(cmd, cwd=cwd, check=check, capture_output=True, text=True)
+    logger.debug(f"$ {' '.join(_redact(arg) for arg in cmd)}")
+    return subprocess.run(
+        cmd, cwd=cwd, check=check, capture_output=True, encoding="utf-8", errors="replace"
+    )
 
 
 def _basic_auth_header(token: str) -> str:
@@ -99,6 +107,33 @@ class RunResult:
     branch: str
     issue_number: int
     detail: str
+    log_file: str
+
+
+def _issue_log_path(config, issue_number: int) -> Path:
+    log_dir = logging_setup.resolve_log_dir(
+        getattr(config, "log_dir", logging_setup.DEFAULT_LOG_DIR)
+    )
+    issues_dir = log_dir / "issues"
+    issues_dir.mkdir(parents=True, exist_ok=True)
+    started_at = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    return issues_dir / f"issue-{issue_number}-{started_at}.log"
+
+
+def _write_issue_log(path: Path, stdout: str, stderr: str, note: str | None = None) -> None:
+    """コンテナの標準出力/標準エラーを丸ごとISSUE単位のログファイルへ永続化する。
+
+    使い捨てコンテナは`--rm`で消えるため、コンテナ内失敗時（タイムアウト含む）の
+    調査手がかりはホスト側が受け取ったこの出力しか残らない。
+    """
+    sections = []
+    if note:
+        sections.append(f"# {note}")
+    sections.append("# --- stdout ---")
+    sections.append(stdout)
+    sections.append("# --- stderr ---")
+    sections.append(stderr)
+    path.write_text("\n".join(sections), encoding="utf-8")
 
 
 def run_container(issue: dict, token: str, anthropic_api_key: str, config) -> RunResult:
@@ -106,10 +141,11 @@ def run_container(issue: dict, token: str, anthropic_api_key: str, config) -> Ru
 
     `config`は`image`/`owner`/`repo`/`base_branch`/`model`/`max_turns`/
     `container_memory`/`container_cpus`/`container_pids_limit`/
-    `container_timeout_seconds`属性を持つオブジェクト（`poller.Config`を想定、
-    循環importを避けるため型としては要求しない）。
+    `container_timeout_seconds`/`log_dir`属性を持つオブジェクト（`poller.Config`を
+    想定、循環importを避けるため型としては要求しない）。
     """
     branch = f"sandbox/issue-{issue['number']}"
+    log_path = _issue_log_path(config, issue["number"])
 
     # GITHUB_TOKEN/ANTHROPIC_API_KEYは`docker run -e KEY`（値なし）で渡す。
     # `-e KEY=value`だと値がホスト側の`docker`プロセスの起動引数に残り、
@@ -123,6 +159,15 @@ def run_container(issue: dict, token: str, anthropic_api_key: str, config) -> Ru
         "docker",
         "run",
         "--rm",
+        # Dockerのデフォルトseccompプロファイルは非特権プロセスによる
+        # unshare(CLONE_NEWUSER)（ユーザー名前空間作成）自体をブロックするため、
+        # コンテナ内のbubblewrap（Claude Code組み込みBashサンドボックス）が
+        # 「bwrap: No permissions to create new namespace」で起動できない。
+        # このオプションはDocker自体のseccomp制限を外すが、コンテナ内Bashは
+        # 引き続きClaude Codeのsandbox.network.allowedDomains等で制御される
+        # （AGENTS.md「運用上の注意点」参照）。
+        "--security-opt",
+        "seccomp=unconfined",
         "--memory",
         config.container_memory,
         "--cpus",
@@ -157,38 +202,55 @@ def run_container(issue: dict, token: str, anthropic_api_key: str, config) -> Ru
         "--container-mode",
     ]
 
-    print(f"issue #{issue['number']}: starting container (branch={branch})")
+    logger.info(f"starting container (branch={branch}, log_file={log_path})")
     try:
         completed = subprocess.run(
             cmd,
             env=container_env,
             capture_output=True,
-            text=True,
+            encoding="utf-8",
+            errors="replace",
             timeout=config.container_timeout_seconds,
         )
-    except subprocess.TimeoutExpired:
+    except subprocess.TimeoutExpired as exc:
+        _write_issue_log(
+            log_path,
+            exc.stdout or "",
+            exc.stderr or "",
+            note=f"コンテナ実行が{config.container_timeout_seconds}秒でタイムアウトしました（以下は打ち切り時点までの部分出力）",
+        )
         return RunResult(
             success=False,
             branch=branch,
             issue_number=issue["number"],
             detail=f"コンテナ実行が{config.container_timeout_seconds}秒でタイムアウトしました",
+            log_file=str(log_path),
         )
 
-    sys.stdout.write(completed.stdout)
-    sys.stderr.write(completed.stderr)
+    stdout = completed.stdout or ""
+    stderr = completed.stderr or ""
+    sys.stdout.write(stdout)
+    sys.stderr.write(stderr)
+    _write_issue_log(log_path, stdout, stderr)
 
     # ここで信頼するのは第一にコンテナのexit code。SANDBOX_RESULT行はエラー内容の
     # 補足情報として使うのみ（ISSUE本文経由のプロンプトインジェクションで、Claudeの
     # 応答出力に偽のSANDBOX_RESULT行を混入されるリスクがあるため、成否判定そのものを
     # この行の内容に委ねない。最後に出現する行は必ずこのスクリプト自身がfinally節で
     # 出力したものになる — Claude側の出力はquery()終了より前にしか起きないため）。
-    parsed = _extract_result_json(completed.stdout)
+    parsed = _extract_result_json(stdout)
     success = completed.returncode == 0
     detail = (parsed or {}).get("detail", "")
     if not success and not detail:
         detail = f"コンテナが異常終了しました（exit code={completed.returncode}）"
 
-    return RunResult(success=success, branch=branch, issue_number=issue["number"], detail=detail)
+    return RunResult(
+        success=success,
+        branch=branch,
+        issue_number=issue["number"],
+        detail=detail,
+        log_file=str(log_path),
+    )
 
 
 def _extract_result_json(stdout: str) -> dict | None:
@@ -291,19 +353,25 @@ async def _run_agent_query(
         if isinstance(message, AssistantMessage):
             for block in message.content:
                 if isinstance(block, TextBlock):
-                    print(f"  agent: {block.text}")
+                    logger.info(f"agent: {block.text}")
                     last_text = block.text
                 elif isinstance(block, ToolUseBlock):
-                    print(f"  [tool] {block.name}")
+                    logger.info(f"[tool] {block.name}")
         elif isinstance(message, ResultMessage):
             subtype = message.subtype
-            print(
-                f"  result: subtype={subtype} turns={message.num_turns} cost=${message.total_cost_usd}"
+            logger.info(
+                f"result: subtype={subtype} turns={message.num_turns} cost=${message.total_cost_usd}"
             )
     return subtype, last_text
 
 
 def container_main() -> None:
+    # コンテナは使い捨て（`--rm`）で、独自のファイルログを持っても消えるだけなので
+    # コンソール（標準出力）のみの軽量初期化にする（log_dir=None）。標準出力は
+    # ホスト側run_container()が丸ごとキャプチャしてISSUE単位のログファイルへ
+    # 永続化する。
+    logging_setup.setup_logging(level=os.environ.get("SANDBOX_LOG_LEVEL", "INFO"))
+
     issue_number = os.environ["SANDBOX_ISSUE_NUMBER"]
     issue_title = os.environ.get("SANDBOX_ISSUE_TITLE", "")
     issue_body = os.environ.get("SANDBOX_ISSUE_BODY", "")
@@ -311,6 +379,10 @@ def container_main() -> None:
     branch = os.environ["SANDBOX_BRANCH"]
     model = os.environ.get("SANDBOX_MODEL", "sonnet")
     max_turns = int(os.environ.get("SANDBOX_MAX_TURNS", "40"))
+
+    # コンテナは1回の実行で1ISSUEだけを扱いプロセスはそのまま終了するため、
+    # with文で明示的にリセットせずプロセス全体へ効かせる。
+    logging_setup.current_issue_number.set(int(issue_number))
 
     # tokenを読んだら即座に環境変数から取り除く。以降Claudeが起動するBash
     # サブプロセスの継承環境にtokenが乗らないようにするための最重要ステップ

@@ -68,3 +68,28 @@ uv run python poller.py
 cd tools/sandbox/orchestrator
 uv run python state.py --reset <issue_number>
 ```
+
+### ログの確認方法
+
+ログは`SANDBOX_LOG_DIR`（既定`orchestrator/data/logs/`、gitignore対象）配下に2種類ある。
+
+- `orchestrator.log` — `poller.py`本体の構造化ログ（JSON Lines、日次ローテーション、
+  `SANDBOX_LOG_RETENTION_DAYS`世代分保持）。コンソールには同内容が人間可読テキストで
+  同時出力される。
+- `issues/issue-<issue_number>-<開始時刻>.log` — ISSUEごとのコンテナ実行ログ
+  （`docker run`の標準出力/標準エラーを丸ごと保存。タイムアウトで打ち切られた場合も
+  その時点までの部分出力が残る）。使い捨てコンテナ内には残らないため、失敗調査は
+  必ずこのファイルを見る。
+
+該当ISSUEのログファイルパスは`state.py --show`で試行記録ごと確認できる:
+
+```bash
+cd tools/sandbox/orchestrator
+uv run python state.py --show <issue_number>
+```
+
+リアルタイムで追いたい場合は該当ファイルを`tail -f`する:
+
+```bash
+tail -f tools/sandbox/orchestrator/data/logs/issues/issue-123-*.log
+```

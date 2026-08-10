@@ -23,6 +23,7 @@ PRの有無）による判定も、state.dbが消失・リセットされた場�
     （必要な環境変数は`.env.example`参照。事前に`.env`を読み込むかexportしておく）
 """
 
+import logging
 import os
 import sys
 import time
@@ -30,6 +31,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import github_client
+import logging_setup
 import run_agent
 import state
 
@@ -43,6 +45,8 @@ DEFAULT_OWNER = "fdshg693"
 DEFAULT_REPO = "AI"
 MENTION = "@sandbox"
 DEFAULT_ALLOWED_AUTHOR_ASSOCIATIONS = "OWNER,COLLABORATOR"
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -65,6 +69,9 @@ class Config:
     container_timeout_seconds: int
     state_db_path: str
     allowed_author_associations: frozenset[str]
+    log_level: str
+    log_dir: str
+    log_retention_days: int
 
     @classmethod
     def from_env(cls) -> "Config":
@@ -113,6 +120,9 @@ class Config:
             container_timeout_seconds=int(default_env("SANDBOX_CONTAINER_TIMEOUT_SECONDS", "1200")),
             state_db_path=default_env("SANDBOX_STATE_DB_PATH", state.DEFAULT_DB_PATH),
             allowed_author_associations=allowed_author_associations,
+            log_level=default_env("SANDBOX_LOG_LEVEL", "INFO"),
+            log_dir=default_env("SANDBOX_LOG_DIR", logging_setup.DEFAULT_LOG_DIR),
+            log_retention_days=int(default_env("SANDBOX_LOG_RETENTION_DAYS", "14")),
         )
 
 
@@ -156,70 +166,78 @@ def is_mention_authorized(token: str, config: Config, issue_number: int) -> bool
 def poll_once(config: Config, store: state.AttemptStore) -> None:
     token = fetch_fresh_token(config)
     issues = github_client.search_mentioning_issues(token, config.owner, config.repo, MENTION)
-    print(f"found {len(issues)} issue(s) mentioning {MENTION}")
+    logger.info(f"found {len(issues)} issue(s) mentioning {MENTION}")
 
     processed = 0
     for issue in issues:
         if processed >= config.max_issues_per_cycle:
-            print(
+            logger.info(
                 f"reached max_issues_per_cycle={config.max_issues_per_cycle}, deferring the rest to next poll"
             )
             break
 
         issue_number = issue["number"]
-        branch = f"sandbox/issue-{issue_number}"
-        if github_client.has_existing_pr_for_branch(token, config.owner, config.repo, branch):
-            continue
+        with logging_setup.issue_context(issue_number):
+            branch = f"sandbox/issue-{issue_number}"
+            if github_client.has_existing_pr_for_branch(token, config.owner, config.repo, branch):
+                continue
 
-        if not is_mention_authorized(token, config, issue_number):
-            print(
-                f"issue #{issue_number}: {MENTION}を書いたユーザーが許可対象外のためスキップ"
-                f"（許可: {sorted(config.allowed_author_associations)}）"
+            if not is_mention_authorized(token, config, issue_number):
+                logger.info(
+                    f"{MENTION}を書いたユーザーが許可対象外のためスキップ"
+                    f"（許可: {sorted(config.allowed_author_associations)}）"
+                )
+                continue
+
+            if not store.record_attempt_start(issue_number):
+                logger.info("試行済みのためスキップ（1 ISSUE = 1回までの制限）")
+                continue
+
+            result = run_agent.run_container(issue, token, config.anthropic_api_key, config)
+            processed += 1
+
+            # コンテナ実行に時間がかかっている間にtokenが失効している可能性があるため、
+            # PR作成/コメント投稿の前に取り直す。
+            token = fetch_fresh_token(config)
+
+            store.record_attempt_result(
+                issue_number, success=result.success, detail=result.detail, log_file=result.log_file
             )
-            continue
 
-        if not store.record_attempt_start(issue_number):
-            print(f"issue #{issue_number}: 試行済みのためスキップ（1 ISSUE = 1回までの制限）")
-            continue
-
-        result = run_agent.run_container(issue, token, config.anthropic_api_key, config)
-        processed += 1
-
-        # コンテナ実行に時間がかかっている間にtokenが失効している可能性があるため、
-        # PR作成/コメント投稿の前に取り直す。
-        token = fetch_fresh_token(config)
-
-        store.record_attempt_result(issue_number, success=result.success, detail=result.detail)
-
-        if result.success:
-            pr = github_client.create_pull_request(
-                token,
-                config.owner,
-                config.repo,
-                result.branch,
-                config.base_branch,
-                title=f"[sandbox] {issue['title']} (#{issue_number})",
-                body=(
-                    f"ISSUE #{issue_number} への対応として `{MENTION}` エージェントが自動生成しました。\n\n"
-                    f"{result.detail}\n\nCloses #{issue_number}"
-                ),
-            )
-            print(f"issue #{issue_number}: PR作成 {pr.get('html_url')}")
-        else:
-            github_client.create_issue_comment(
-                token,
-                config.owner,
-                config.repo,
-                issue_number,
-                body=f"`{MENTION}` エージェントの実行に失敗しました。\n\n詳細: {result.detail}",
-            )
-            print(f"issue #{issue_number}: 失敗、コメント投稿済み ({result.detail})")
+            if result.success:
+                pr = github_client.create_pull_request(
+                    token,
+                    config.owner,
+                    config.repo,
+                    result.branch,
+                    config.base_branch,
+                    title=f"[sandbox] {issue['title']} (#{issue_number})",
+                    body=(
+                        f"ISSUE #{issue_number} への対応として `{MENTION}` エージェントが自動生成しました。\n\n"
+                        f"{result.detail}\n\nCloses #{issue_number}"
+                    ),
+                )
+                logger.info(f"PR作成 {pr.get('html_url')}")
+            else:
+                github_client.create_issue_comment(
+                    token,
+                    config.owner,
+                    config.repo,
+                    issue_number,
+                    body=f"`{MENTION}` エージェントの実行に失敗しました。\n\n詳細: {result.detail}",
+                )
+                logger.info(f"失敗、コメント投稿済み ({result.detail})")
 
 
 def main() -> None:
     config = Config.from_env()
+    logging_setup.setup_logging(
+        level=config.log_level,
+        log_dir=logging_setup.resolve_log_dir(config.log_dir),
+        retention_days=config.log_retention_days,
+    )
     store = state.AttemptStore(state.resolve_db_path(config.state_db_path))
-    print(
+    logger.info(
         f"polling {config.owner}/{config.repo} for {MENTION} every {config.poll_interval_seconds}s "
         f"(state db: {store.db_path})"
     )
@@ -227,7 +245,7 @@ def main() -> None:
         try:
             poll_once(config, store)
         except Exception as exc:  # noqa: BLE001 -- 1周期の一時的な失敗でワーカー自体を落とさない
-            print(f"poll cycle failed: {exc}")
+            logger.exception(f"poll cycle failed: {exc}")
         time.sleep(config.poll_interval_seconds)
 
 
