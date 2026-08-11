@@ -1,28 +1,26 @@
 # vscode-copilot-docs メンテナンス手順
 
-`output/copilot-excerpt.md` は `plugins/vscode/skills/vscode-docs/output/llms.txt`（VS Code 公式ドキュメントの索引、[vscode-docs](../vscode-docs/SKILL.md) スキルが24時間おきに再取得する）から GitHub Copilot 関連エントリを人手で抜粋した固定ファイルです。現在の `output/copilot-excerpt.md` は、この抜粋作業（LLM下書き→人手レビュー）が何らかの形で既に行われている前提のファイルです。ゼロから作り直したい場合（大幅な再編があり既存のキュレーションがほぼ使えなくなった場合など）は、下記の `generate_copilot_excerpt.py` で下書きを自動生成できます。
+`output/copilot-excerpt.md` は、抽出元 llms.txt（VS Code 公式ドキュメントの索引、[vscode-docs](../../../claude-plugins/others/skills/vscode-docs/SKILL.md) スキルが24時間おきに再取得する）から GitHub Copilot 関連エントリを人手で抜粋した固定ファイルです。抽出元の実際のパスはこのディレクトリの直下にある **[config.yml](config.yml)** の `source` キーで定義されており、コード内にハードコードされていません（過去にリポジトリ再編でこのパスが追従できず参照が壊れた経緯があるため、ディレクトリを見ただけで抽出元が分かるようにしてある）。現在の `output/copilot-excerpt.md` は、この抜粋作業（LLM下書き→人手レビュー）が何らかの形で既に行われている前提のファイルです。ゼロから作り直したい場合（大幅な再編があり既存のキュレーションがほぼ使えなくなった場合など）は、下記の `generate_copilot_excerpt.py` で下書きを自動生成できます。
 
-`check_copilot_excerpt.py` は SKILL.md からは呼び出されません。Claude がドキュメント質問に答えるたびに実行されるものではなく、**ユーザーが定期的に（例: 月1回、または vscode-docs/output/llms.txt を明示的に更新した後に）手動で実行して**、`copilot-excerpt.md` のタイトル・URL が抽出元とずれていないかを確認するためのスクリプトです。
+`check_copilot_excerpt.py` は SKILL.md からは呼び出されません。Claude がドキュメント質問に答えるたびに実行されるものではなく、**ユーザーが定期的に（例: 月1回、または vscode-docs 側の llms.txt を明示的に更新した後に）手動で実行して**、`copilot-excerpt.md` のタイトル・URL が抽出元とずれていないかを確認するためのスクリプトです。
+
+この3スクリプト（`check_copilot_excerpt.py` / `generate_copilot_excerpt.py` / `extract_uncurated_entries.py`）と `verify_agent_relevance.py` は PyYAML（`config.yml` の読み込み用）に依存します。素の `python` コマンドの環境には入っていないことがあるため、必ず **`uv run <スクリプト名>.py`** で実行してください（各ファイル先頭の PEP 723 インラインスクリプトメタデータで依存を宣言しているため、`uv run` 経由なら環境を問わず自動解決される）。`python <スクリプト名>.py` のように直接実行すると `ModuleNotFoundError: No module named 'yaml'` になり得る。
 
 ## なぜ必要か
 
 - `copilot-excerpt.md` は LLM の下書きを人手でレビューして作成したものであり、タイトルの言い換えや誤字混入のリスクがある
-- 抽出元の `vscode-docs/output/llms.txt` は定期的に再取得されるため、ページの改名・削除により `copilot-excerpt.md` が指す URL やタイトルが古くなる（drift する）ことがある
+- 抽出元の llms.txt は定期的に再取得されるため、ページの改名・削除により `copilot-excerpt.md` が指す URL やタイトルが古くなる（drift する）ことがある
 
 ## 実行手順
 
 1. **抽出元を最新化する**（推奨）
 
-   ```
-   python plugins/vscode/skills/vscode-docs/download_vscode_reference.py
-   ```
-
-   24時間以内に取得済みならスキップされる。強制的に再取得したい場合は `--force` を付ける。
+   [vscode-docs](../../../claude-plugins/others/skills/vscode-docs/SKILL.md) スキルの取得スクリプトを実行する（24時間以内に取得済みならスキップされる）。抽出元の正確なパスは [config.yml](config.yml) を参照。
 
 2. **検証スクリプトを実行する**
 
    ```
-   python plugins/vscode/skills/vscode-copilot-docs/check_copilot_excerpt.py
+   uv run check_copilot_excerpt.py
    ```
 
    `copilot-excerpt.md` の各エントリを URL をキーに `llms.txt` と突き合わせ、以下を報告する。
@@ -43,27 +41,27 @@
 ## 補足
 
 - このスクリプトはタイトル・URL・説明文の一致のみを検証する。「本当に GitHub Copilot に関連する内容か」という抽出範囲の妥当性そのものは判断しない
-- `--excerpt` / `--source` オプションで対象ファイルを変更できる（`python check_copilot_excerpt.py --help` 参照）
+- `--excerpt` / `--source` オプションで対象ファイルを変更できる（`uv run check_copilot_excerpt.py --help` 参照）
 
 ## `output/copilot-excerpt.md` を下書きから自動生成する（任意・ゼロから作り直す場合）
 
 `output/copilot-excerpt.md` が存在しない、または大幅に作り直したい場合、`generate_copilot_excerpt.py` で `llms.txt` 全エントリを AI モデル（`aim` CLI、`aim-cli` スキル参照）に判定させ、下書きの MD ファイルを生成できる。
 
 ```
-python plugins/vscode/skills/vscode-copilot-docs/generate_copilot_excerpt.py --out plugins/vscode/skills/vscode-copilot-docs/output/copilot-excerpt.draft.md
+uv run generate_copilot_excerpt.py --out output/copilot-excerpt.draft.md
 ```
 
 - `verify_agent_relevance.py` と同じ設計方針で、**AI にエントリのリライトはさせない**。AI には「含めるエントリの URL 一覧」だけを出力させ、タイトル・説明文は必ず `llms.txt` から一字一句そのまま転記する（AI が言い換えて `check_copilot_excerpt.py` の TITLE MISMATCH を誘発するのを防ぐため）
 - 出力は必ず**未レビューの下書き**である旨を frontmatter とスクリプトの標準出力に明記する。`--out` で `output/copilot-excerpt.md` 以外のパスを指定し、人がレビュー・修正してから正式な `output/copilot-excerpt.md` に置き換えること。既存の `output/copilot-excerpt.md` を誤って上書きしないよう、既に存在するファイルパスを `--out`（省略時のデフォルト）に指定した場合は `--force` を付けない限りエラーで終了する
 - レビュー後は `check_copilot_excerpt.py` を実行してタイトル・URL のずれがないことを確認してから正式ファイルとして採用する
-- `--model` で判定に使うモデルを変更できる（`aim-cli` スキル参照。デフォルトは `minimax-m3`）。プロンプトは同階層の `prompts/prompt_generate_excerpt.md` に切り出してある
+- `--model` で判定に使うモデルを変更できる（`aim-cli` スキル参照。デフォルトは `mini-m3`）。プロンプトは同階層の `prompts/prompt_generate_excerpt.md` に切り出してある
 
 ## 抽出範囲の妥当性を確認する（任意・AIモデルによる二次チェック）
 
 `check_copilot_excerpt.py` は「excerpt に載っているエントリのタイトル・URL が壊れていないか」しか見ない。「excerpt に載っていないエントリを正しく除外できているか」（キーワードヒューリスティックの誤検知・見逃し）を確認したい場合は、`verify_agent_relevance.py` を使う。
 
 ```
-python plugins/vscode/skills/vscode-copilot-docs/verify_agent_relevance.py
+uv run verify_agent_relevance.py
 ```
 
 内部で以下を順に実行する。
@@ -80,4 +78,4 @@ python plugins/vscode/skills/vscode-copilot-docs/verify_agent_relevance.py
 
 このスクリプトは判定結果をファイル出力するところまでがスコープで、`output/copilot-excerpt.md` の更新は行わない。結果ファイルを読んで実際に追記・修正するかどうかは人が判断すること。`output/verification/` は再生成される作業用フォルダなので `.gitignore` されている。
 
-`--model` で `aim` に渡すモデルを変更できる（`aim-cli` スキル参照。デフォルトは `minimax-m3`）。
+`--model` で `aim` に渡すモデルを変更できる（`aim-cli` スキル参照。デフォルトは `mini-m3`）。

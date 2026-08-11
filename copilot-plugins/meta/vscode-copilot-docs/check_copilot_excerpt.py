@@ -1,12 +1,18 @@
+#!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#     "pyyaml",
+# ]
+# ///
 """Check that titles/URLs in the curated Copilot excerpt still match the source llms.txt.
 
-output/copilot-excerpt.md is a hand-curated subset of
-plugins/vscode/skills/vscode-docs/output/llms.txt (see README.md in this directory
-for when/how to run this script). Because vscode-docs/output/llms.txt is
-re-downloaded periodically, and because the excerpt was originally produced by an
-LLM draft, both entries can drift or be wrong: a page may get renamed/removed
-upstream, or the excerpt may have a typo'd title/URL that was never actually in
-the source.
+output/copilot-excerpt.md is a hand-curated subset of the llms.txt pointed to by
+config.yml's `source` key (see README.md in this directory for when/how to run
+this script). Because that source llms.txt is re-downloaded periodically, and
+because the excerpt was originally produced by an LLM draft, both entries can
+drift or be wrong: a page may get renamed/removed upstream, or the excerpt may
+have a typo'd title/URL that was never actually in the source.
 
 This script cross-checks every `- [Title](URL): description` entry in the excerpt
 against the source by URL (the more stable key) and reports:
@@ -19,7 +25,11 @@ It also lists source entries that look Copilot/AI-relevant (by keyword) but are 
 present in the excerpt at all, as candidates a human should consider adding -- this is
 a heuristic hint, not a re-run of the original curation judgment.
 
-Usage: python check_copilot_excerpt.py [--excerpt PATH] [--source PATH]
+This script depends on PyYAML (to read config.yml) and is not guaranteed to be on a
+bare `python`'s import path -- run it via `uv run check_copilot_excerpt.py`, which
+resolves the dependency declared below automatically.
+
+Usage: uv run check_copilot_excerpt.py [--excerpt PATH] [--source PATH]
 Exit code: 1 if any MISSING or TITLE mismatch is found, 0 otherwise.
 """
 
@@ -30,9 +40,49 @@ import re
 import sys
 from pathlib import Path
 
+import yaml
+
 SKILL_DIR = Path(__file__).resolve().parent
+CONFIG_PATH = SKILL_DIR / "config.yml"
 DEFAULT_EXCERPT = SKILL_DIR / "output" / "copilot-excerpt.md"
-DEFAULT_SOURCE = SKILL_DIR.parent / "vscode-docs" / "output" / "llms.txt"
+
+
+def find_repo_root(start: Path) -> Path:
+    """Walk upward from `start` to find the repo root (the directory containing `.git`).
+
+    config.yml's `source` key is repo-root-relative, not relative to this script's own
+    directory -- a file-relative path would break both when the source moves *and* when
+    this skill directory itself moves, which is twice as fragile as anchoring to the
+    (much more stable) repo root.
+    """
+    for candidate in (start, *start.parents):
+        if (candidate / ".git").exists():
+            return candidate
+    print(f"ERROR: could not find repo root (no .git found above {start})", file=sys.stderr)
+    sys.exit(2)
+
+
+REPO_ROOT = find_repo_root(SKILL_DIR)
+
+
+def _load_default_source() -> Path:
+    """Resolve the excerpt source path from config.yml's `source` key (repo-root-relative)."""
+    if not CONFIG_PATH.is_file():
+        print(f"ERROR: config file not found: {CONFIG_PATH}", file=sys.stderr)
+        sys.exit(2)
+    try:
+        data = yaml.safe_load(CONFIG_PATH.read_text(encoding="utf-8"))
+    except yaml.YAMLError as exc:
+        print(f"ERROR: {CONFIG_PATH} is not valid YAML: {exc}", file=sys.stderr)
+        sys.exit(2)
+    source = data.get("source") if isinstance(data, dict) else None
+    if not isinstance(source, str) or not source.strip():
+        print(f"ERROR: {CONFIG_PATH} must define a non-empty string key 'source'", file=sys.stderr)
+        sys.exit(2)
+    return (REPO_ROOT / source).resolve()
+
+
+DEFAULT_SOURCE = _load_default_source()
 
 ENTRY_RE = re.compile(r"^- \[(?P<title>[^\]]+)\]\((?P<url>\S+)\):\s*(?P<desc>.*)$")
 
