@@ -34,6 +34,7 @@ tools/issue-agent/
 │   └── check.ps1                   # tools/scheduleから呼ばれる薄いラッパー。issue_agent.checkを1回だけ実行する
 ├── issue_agent/
 │   ├── config.py                    # 環境変数駆動の設定（Config.from_env()）
+│   ├── environment.py               # .env読込（load_environment()、各エントリポイントのmain()冒頭から呼ぶ）
 │   ├── check.py                     # チェックスクリプト本体（ラベル検索・認可判定・attempt_store管理・worker起動）
 │   ├── worker.py                    # CLIエントリポイント。ISSUE取得→dispatch解決→worktree作成→Claude起動→
 │   │                                 # commit確認→PR実在確認→ISSUEコメント返信→worktree後片付けを一貫して行う
