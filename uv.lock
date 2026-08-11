@@ -19,6 +19,7 @@ members = [
     "ctx7-cli",
     "cursor-wrapper",
     "interactive-cli-wrapper",
+    "issue-agent",
     "mslearn-cli",
     "my-agents",
     "sandbox-orchestrator",
@@ -786,6 +787,21 @@ dependencies = [
 requires-dist = [
     { name = "pyte" },
     { name = "pywinpty" },
+]
+
+[[package]]
+name = "issue-agent"
+version = "0.1.0"
+source = { editable = "tools/issue-agent" }
+dependencies = [
+    { name = "claude-agent-sdk" },
+    { name = "pydantic" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "claude-agent-sdk" },
+    { name = "pydantic", specifier = ">=2" },
 ]
 
 [[package]]

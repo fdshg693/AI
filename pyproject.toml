@@ -15,6 +15,7 @@ members = [
     "tools/cursor-wrapper",
     "tools/interactive-cli-wrapper",
     "tools/sandbox/orchestrator",
+    "tools/issue-agent",
     "tools/my-agents",
     "tools/tav-cli",
     "tools/mslearn",
