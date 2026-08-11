@@ -10,6 +10,7 @@ paths:
 ```bash
 just aim-local   # aim CLI (tools/aim) をエディタブルインストール
 just tavily-local  # tav-cli の tav CLI をエディタブルインストール
+just ona-run-local  # ona-run CLI (tools/ona-run) をエディタブルインストール
 just cline-personal-info  # cline-personal-info plugin (tools/cline-wrapper, cline-plugins/meta) を Cline にインストール
 ```
 

@@ -26,6 +26,10 @@ tavily-local:
 tavily-git:
     uv tool install "git+{{repo_url}}#subdirectory=tools/tav-cli"
 
+# Install the ona-run CLI (tools/ona-run) as an editable global tool via uv, from a local clone. See tools/ona-run/README.md for the `ona` CLI login prerequisite.
+ona-run-local:
+    uv tool install --editable ../ona-run
+
 # Install the cline-personal-info plugin (tools/cline-wrapper, cline-plugins/meta) globally for Cline SDK/CLI. 
 # Shells out to Git Bash to dodge a PowerShell/cmd "uv_spawn 'npm'" ENOENT bug — see docs/integrations/cline.md.
 cline-personal-info:

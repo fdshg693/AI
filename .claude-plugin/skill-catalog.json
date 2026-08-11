@@ -203,6 +203,11 @@
       "description": "YAML定義のLangchainエージェントを実行・一覧表示・新規作成する `my-agents` CLIの使い方を説明する。カスタムエージェントにプロンプトを投げて答えさせたい、既存のエージェント設定YAMLを確認したい、使えるツールを確認した上で新しいエージェント設定YAMLを作りたい場合に使う。"
     },
     {
+      "path": "claude-plugins/my-tools/skills/ona-run",
+      "name": "ona-run",
+      "description": "リポジトリURL（またはOnaプロジェクトID）とタスク内容を指定してOnaの環境（コンテナ）を作成・起動し、その中でAIエージェントCLI等のタスクを実行して完了後に停止する`ona-run` CLIツールの使い方を説明する。`--agent`/`--command`の選び方、`--cleanup`モードの選び方、終了コード・stderrマーカーの意味を判断したい場合に使う。"
+    },
+    {
       "path": "claude-plugins/my-tools/skills/tav-cli",
       "name": "tav-cli",
       "description": "Guides multi-step Tavily research with this project's `tav` command, including web-wide search, multiple URLs, site maps/crawls, and topic-based result accumulation. Use when a task needs more than one known URL or a reusable research workspace; use `tav-lit` to extract one already-known URL."

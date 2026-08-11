@@ -51,3 +51,6 @@ tools:
   linear-cli:
     path: tools/linear-cli
     install: "cd tools/linear-cli && pnpm add -g ."
+  ona-run:
+    path: tools/ona-run
+    install: "uv tool install --editable tools/ona-run"

@@ -22,6 +22,7 @@ members = [
     "issue-agent",
     "mslearn-cli",
     "my-agents",
+    "ona-run-cli",
     "sandbox-orchestrator",
     "skill-deploy",
     "tav-cli",
@@ -1286,6 +1287,11 @@ requires-dist = [
     { name = "typer", specifier = ">=0.12" },
     { name = "tzdata", marker = "sys_platform == 'win32'" },
 ]
+
+[[package]]
+name = "ona-run-cli"
+version = "0.1.0"
+source = { editable = "tools/ona-run" }
 
 [[package]]
 name = "openai"

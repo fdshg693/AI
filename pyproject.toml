@@ -22,6 +22,7 @@ members = [
     "tools/ctx7",
     "tools/internal/ai-usage",
     "tools/schedule",
+    "tools/ona-run",
     "claude-plugins/meta/skills/writing-skill-web",
     "tools/integration/scripts",
 ]
