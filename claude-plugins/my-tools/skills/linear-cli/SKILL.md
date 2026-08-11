@@ -13,7 +13,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.2.0
+  version: 1.2.1
 ---
 
 # linear-cli の使い方
@@ -49,7 +49,7 @@ linear-cli search --label "branch:my-feature-slug" --team ENG
 - `--status`にはteamのワークフロー状態名をそのまま渡す（`Todo`/`Backlog`等。ハードコードされた固定値は無く、team側でカスタム状態名が使われていてもそのまま動く。実際の状態名が分からない場合は`--status`を省略して一覧を見るか、ユーザーに確認する）
 - `--assignee none`で未アサインissueに絞り込む（「未着手タスクの検索」の定型パターンはこの2引数の組み合わせ）
 - `--title`はタイトル完全一致。特定の1件（トラッキングissue等）が既に存在するかを確認する用途に使う（結果0件なら`create`で作成する）
-- `--label`はラベル名で絞り込む（ID解決不要）。例: [parallel-agent-worktree](../../../coding/skills/parallel-agent-worktree/)の`branch:<slug>`ラベルで「同じブランチに未完了issueが残っているか」を確認する
+- `--label`はラベル名で絞り込む（ID解決不要）
 - `--json`を付けない場合はタブ区切りテーブル（`identifier`/`status`/`assignee`/`title`/`url`）が標準出力に出る
 
 ## `create` — issue新規作成
@@ -63,7 +63,7 @@ linear-cli create --title "..." --team ENG --label "branch:my-feature-slug"
 - `--label`は複数指定可（`--label a --label b`）。ラベル名はteam-scopedで既存ラベルからID解決するため、存在しないラベル名を指定するとエラー終了する（ラベルの自動作成はしない。Linear UI側で事前に作成しておく）
 - 用途は限定的（例: [parallel-agent-worktree](../../../coding/skills/parallel-agent-worktree/)がトラッキングissueを「無ければ作る」ため）。汎用のタスク起票コマンドとして多用する設計ではない
 
-## `update` — ステータス更新・担当者割当・ラベル追加/削除（claim/完了報告）
+## `update` — ステータス更新・担当者割当・ラベル追加/削除・description全文置換（claim/完了報告）
 
 ```bash
 # claim: ステータスを作業中へ、担当者を自分に
@@ -77,11 +77,15 @@ linear-cli update ENG-123 --assignee none
 
 # ラベル追加・削除（複数指定可）
 linear-cli update ENG-123 --add-label "branch:my-feature-slug" --remove-label "branch:old-slug"
+
+# descriptionを全文置換（部分編集は不可）
+linear-cli update ENG-123 --description "$(cat new-description.md)"
 ```
 
-- `--status`/`--assignee`/`--add-label`/`--remove-label`の少なくとも1つが必須
+- `--status`/`--assignee`/`--add-label`/`--remove-label`/`--description`の少なくとも1つが必須
 - claim（未着手→作業中）はベストエフォート。このCLIは比較更新・楽観ロックを行わないため、複数エージェントが同時に同じissueを更新しようとしても衝突検知はしない（呼び出し側の運用で許容する前提）。ラベル追加/削除も同じベストエフォート方針（現在のラベル集合を読み取ってから送り直すread-modify-write）
 - ステータス更新に失敗した場合（`--status`の状態名がteamに存在しない等）はエラー終了する。呼び出し側でworktree作成等の後続処理を行っていた場合は、その後始末（例: worktreeのremove）を呼び出し側の責務として行うこと
+- `--description`は既存description全体をまるごと置き換える（部分パッチではない）。Linearのdescription編集はMarkdownとして解釈・再シリアライズされるため、送った文字列がそのまま保存されるとは限らない点に注意（例: 見出し等の直下に`---`を続けるとSetext heading記法と解釈され消える。書式の落とし穴は[parallel-agent-worktree](../../../coding/skills/parallel-agent-worktree/)の`issue-shape.md`参照）
 
 ## `comment` — コメント追加（環境記録・完了報告用）
 

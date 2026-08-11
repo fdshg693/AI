@@ -79,6 +79,7 @@ async function runUpdate(rawArgs) {
       assignee: { type: "string" },
       "add-label": { type: "string", multiple: true },
       "remove-label": { type: "string", multiple: true },
+      description: { type: "string" },
       json: { type: "boolean", default: false },
     },
   });
@@ -86,7 +87,7 @@ async function runUpdate(rawArgs) {
   const [issueId] = positionals;
   if (!issueId) {
     throw new Error(
-      "Usage: linear-cli update <issue-id> [--status <name>] [--assignee <email|none>] [--add-label <name>...] [--remove-label <name>...]",
+      "Usage: linear-cli update <issue-id> [--status <name>] [--assignee <email|none>] [--add-label <name>...] [--remove-label <name>...] [--description <text>]",
     );
   }
 
@@ -96,6 +97,7 @@ async function runUpdate(rawArgs) {
     assignee: values.assignee,
     addLabels: values["add-label"],
     removeLabels: values["remove-label"],
+    description: values.description,
   });
 
   if (values.json) {

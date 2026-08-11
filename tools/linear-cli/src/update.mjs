@@ -1,21 +1,36 @@
 import { resolveLabelIds } from "./labels.mjs";
 
 /**
- * issueのワークフロー状態遷移・担当者割当・ラベル追加/削除。stateはステータス名からteamスコープで
- * workflowStatesクエリにより解決する（状態名をハードコードせず、チーム独自カスタマイズにも追随する）。
- * assignee には "none" を指定すると担当者を外す。
+ * issueのワークフロー状態遷移・担当者割当・ラベル追加/削除・description全文置換。stateはステータス名から
+ * teamスコープでworkflowStatesクエリにより解決する（状態名をハードコードせず、チーム独自カスタマイズにも
+ * 追随する）。assignee には "none" を指定すると担当者を外す。
  * addLabels/removeLabelsは現在の`issue.labelIds`を読み取り→追加/削除を計算→全体を送り直す
  * read-modify-write方式（比較更新・楽観ロックは行わない。既存のclaimと同じベストエフォート方針）。
+ * descriptionは部分編集ではなく全文置換（Linear APIに部分パッチ手段は無い）。
  */
-export async function updateIssue(client, issueId, { status, assignee, addLabels, removeLabels }) {
-  if (!status && assignee === undefined && !addLabels?.length && !removeLabels?.length) {
+export async function updateIssue(
+  client,
+  issueId,
+  { status, assignee, addLabels, removeLabels, description },
+) {
+  if (
+    !status &&
+    assignee === undefined &&
+    !addLabels?.length &&
+    !removeLabels?.length &&
+    description === undefined
+  ) {
     throw new Error(
-      "--status / --assignee / --add-label / --remove-label のいずれかを指定してください。",
+      "--status / --assignee / --add-label / --remove-label / --description のいずれかを指定してください。",
     );
   }
 
   const issue = await client.issue(issueId);
   const input = {};
+
+  if (description !== undefined) {
+    input.description = description;
+  }
 
   if (status) {
     const team = await issue.team;

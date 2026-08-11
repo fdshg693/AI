@@ -99,11 +99,14 @@ linear-cli update ENG-123 --status "In Progress"
 linear-cli update ENG-123 --status Done --assignee someone@example.com
 linear-cli update ENG-123 --assignee none
 linear-cli update ENG-123 --add-label "branch:my-feature-slug" --remove-label "branch:old-slug"
+linear-cli update ENG-123 --description "$(cat new-description.md)"
 ```
 
-`--status`/`--assignee`/`--add-label`/`--remove-label`の少なくとも1つが必須。`--status`の状態名はteamのワークフロー状態一覧から都度解決するため、CLI側に固定の状態名はない（Linearの初期セットに限らず、チーム独自のカスタム状態名でも動く）。claim（未着手→作業中）の競合はこのCLI側では制御しない（比較更新・楽観ロック無し。ベストエフォート）。
+`--status`/`--assignee`/`--add-label`/`--remove-label`/`--description`の少なくとも1つが必須。`--status`の状態名はteamのワークフロー状態一覧から都度解決するため、CLI側に固定の状態名はない（Linearの初期セットに限らず、チーム独自のカスタム状態名でも動く）。claim（未着手→作業中）の競合はこのCLI側では制御しない（比較更新・楽観ロック無し。ベストエフォート）。
 
 `--add-label`/`--remove-label`は複数指定可。現在のラベル集合を読み取り→追加/削除を計算→送り直すread-modify-write方式で、比較更新・楽観ロックは行わない（同一issueへの同時ラベル更新が稀に競合しても許容する）。ラベル名の解決規則は`create`の`--label`と同じ（team-scoped・存在しなければエラー・自動作成なし）。
+
+`--description`は部分編集ではなく全文置換（Linear APIに部分パッチ手段は無いため）。
 
 ### `comment` — issueへのコメント追加
 
