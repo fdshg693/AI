@@ -131,24 +131,6 @@ meta:
   version: 1.0.0
 ---
 
-- split-plan
----
-name: split-plan
-description: 実装プランを独立したステップに分割し、各ステップのコンテキストを最小限に保ちながら段階的に実装できるようにするスキル
-disable-model-invocation: false
-user-invocable: true
-meta:
-  requires_repo_tools: .claude/agents/dry-run.agent.md
-  requires_env: none
-  dependencies: none
-  requires_install: none
-  requires_hooks: none
-  requires_skills: none
-  status: stable
-  description: no description
-  version: 1.0.0
----
-
 - systematic-debugging
 ---
 name: systematic-debugging
@@ -181,27 +163,4 @@ meta:
   status: draft
   description: no description
   version: 1.0.1
----
-
-- writing-plans
----
-# スペックを元に実装プランを作るスキル。
-name: writing-plans
-# 複数ファイルに分けた実装プランを作れるため、後続でタスク分割しやすい
-# スペックから実装プランを作るので、所要時間はスペックの内容次第。曖昧・複雑なスペックほど時間がかかる。
-# セルフレビュー＋サブエージェントレビューを行うオーバーヘッドあり
-description: Use when you have a spec or requirements for a multi-step task, before touching code
-# 前段スキル: brainstorming (必須ではなく、spec等が出来ていればOK)
-# 入力ファイル: docs/specs/<topic>-design.md (必須ではない。brainstorming スキルの後続として使う場合は、brainstorming の出力がこれになるはず)
-# 出力ファイル: docs/writing-plans/<feature-name>.md + docs/writing-plans/<feature-name>/*.md (one file per task)
-meta:
-  requires_repo_tools: none
-  requires_env: none
-  dependencies: none
-  requires_install: none
-  requires_hooks: none
-  requires_skills: brainstorming
-  status: stable
-  description: no description
-  version: 1.0.0
 ---
