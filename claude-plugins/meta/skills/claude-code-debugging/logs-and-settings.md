@@ -44,9 +44,8 @@
 - `-d, --debug [filter]` — カテゴリフィルタ付きデバッグモード。例: `"api,hooks"`（該当カテゴリのみ）、`"!1p,!file"`（除外指定）
   - > **実地検証で相違を確認**: `-d "hooks"`を指定しても「hooksカテゴリのみに絞り込まれる」という挙動は確認できなかった。`claude -p "..." --debug-file <path> -d "hooks"` の出力172行のうち、起動処理・CA証明書ロード・MCP接続・API送受信など無関係な`[DEBUG]`行がほぼ全て出力され、hook関連は3行（`Registered 0 hooks from 0 plugins`等）のみだった。フィルタが実際に何を制御しているか（カテゴリではなく別の軸の可能性）はこの検証だけでは断定できないため、**フィルタで期待通り絞り込めない前提で、絞り込み後も`grep`で二段構えに読む**のが安全
 - `--debug-file <path>` — デバッグログを指定ファイルに書き出す（暗黙的にdebugモードを有効化）。実地検証で動作確認済み（非対話1回実行 `claude -p "..." --model claude-haiku-4-5-20251001 --debug-file <path>` で通常起動と同形式の`[DEBUG]`ログがファイルに書き出された）
-- `claude --debug mcp` — MCPサーバーのstderr出力を確認（接続してもツールが0件、等の切り分けに有効）
+- `claude --debug` — MCPサーバーのstderr出力（接続してもツールが0件、等の切り分けに有効）や、hookのマッチャー判定・終了コード・出力のライブトレースを確認（`--debug mcp`/`--debug hooks`のようなサブモード指定は廃止され、単一の`--debug`がこれらを含む形に統一された）
   - > 実地検証: このプロジェクトには`.mcp.json`も`~/.claude.json`の`mcpServers`キーも存在しなかったが、`--debug-file`の出力には`claude.ai Google Drive/Calendar/Gmail`という**アカウント紐付けのリモートMCP統合**が登場した。プロジェクトローカルのMCP設定が空でも、アカウント側のMCP接続ログは出る点に注意
-- `claude --debug hooks` — hookのマッチャー判定・終了コード・出力をライブトレース
 - `--safe-mode` — 全カスタマイズ（hook/MCP/skills等）を無効化して起動し、問題の切り分けを行う（実地検証詳細は[testing.md](testing.md)）
 - `CLAUDE_CONFIG_DIR=/tmp/claude-clean claude` — クリーンな設定ディレクトリで起動して切り分ける（実地検証詳細は[testing.md](testing.md)）
 - セッション内スラッシュコマンド:

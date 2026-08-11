@@ -87,7 +87,11 @@ Bashコマンドをファイルシステム・ネットワークから隔離す�
 
 - `filesystem.*`はOSレベルのサンドボックス境界（`kubectl`・`terraform`など全サブプロセスに適用）。パスのプレフィックスは`/`=絶対パス、`~/`=ホーム基準、`./`=プロジェクトルート基準。
 - パーミッションルール（`Edit`/`Read`/`WebFetch`の allow/deny）もサンドボックス設定にマージされる。
-- `credentials.envVars`で特定の環境変数（`GITHUB_TOKEN`など）をサンドボックス内コマンドから隠せる。
+- `credentials.envVars`で特定の環境変数（`GITHUB_TOKEN`など）をサンドボックス内コマンドから保護できる。単純な非表示に留まらず、拡張されたcredential-masking機構になっている。
+  - `mode`: 隠す（従来のhide/hidden相当）か、`"mask"`（Linux/WSLでは値をセンチネルファイルに置き換える）かを選べる。
+  - `extract` / `onExtractNoMatch`: パターンでcredential値の一部だけを抽出し、マッチしなかった場合の挙動も制御できる。
+  - JWTを認識した`decode`処理にも対応。
+  - `awsPairs` / `sigv4`でAWS SigV4署名付きリクエストの再署名にも対応。
 
 ## よく使う設定キー
 

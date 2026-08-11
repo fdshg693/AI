@@ -12,7 +12,7 @@ meta:
   requires_skills: claude-code-docs
   status: stable
   description: no description
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 # Python版 Claude Agent SDK
@@ -48,6 +48,7 @@ Claude Codeをライブラリとして組み込むPythonアプリケーション
 | 主題                                         | 公式ページのslug                                                                                         |
 | -------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | 全体像・セットアップ                         | `agent-sdk/overview`, `agent-sdk/quickstart`                                                             |
+| 動作するサンプル・Cookbookレシピ             | `agent-sdk/examples`                                                                                     |
 | Python API・型・例外                         | `agent-sdk/python`                                                                                       |
 | ループ・メッセージの意味                     | `agent-sdk/agent-loop`                                                                                   |
 | 一回限りの処理・継続対話                     | `agent-sdk/sessions`, `agent-sdk/streaming-vs-single-mode`                                               |
@@ -61,6 +62,7 @@ Claude Codeをライブラリとして組み込むPythonアプリケーション
 | セッション保存・復元・ファイル巻き戻し       | `agent-sdk/session-storage`, `agent-sdk/file-checkpointing`                                              |
 | コスト・監視・ホスティング                   | `agent-sdk/cost-tracking`, `agent-sdk/observability`, `agent-sdk/hosting`, `agent-sdk/secure-deployment` |
 | プラグイン・スラッシュコマンド・ユーザー入力 | `agent-sdk/plugins`, `agent-sdk/slash-commands`, `agent-sdk/user-input`                                  |
+| エラーの参照・トラブルシューティング         | `agent-sdk/troubleshooting`                                                                              |
 
 ## 最初に行う設計判断
 
