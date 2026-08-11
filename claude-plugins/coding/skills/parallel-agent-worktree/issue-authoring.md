@@ -1,6 +1,6 @@
 # issue-authoring — タスクをISSUE群に分割・配置する手順（AI向け）
 
-このファイルは、ユーザーから依頼された機能・タスクを[issue-shape.md](issue-shape.md)が定めるISSUE型（ラベル・依存関係・ブランチ）に沿った複数issueへ分割し、`linear-cli create`で実際にLinearへ配置するまでの手順をまとめる。issue-shape.mdの仕様（`branch:<slug>`ラベル、descriptionの構造化ヘッダ、Project=タスクグループ）を前提とするため、未読なら先にそちらを読むこと。
+このファイルは、ユーザーから依頼された機能・タスクを[issue-shape.md](issue-shape.md)が定めるISSUE型（依存関係・ブランチ）に沿った複数issueへ分割し、`linear-cli create`で実際にLinearへ配置するまでの手順をまとめる。issue-shape.mdの仕様（descriptionの構造化ヘッダ、Project=タスクグループ）を前提とするため、未読なら先にそちらを読むこと。
 
 対象は「このスキル専用の型を持つISSUE」に限定する。汎用issue全般の起票手順ではない。
 
@@ -26,7 +26,6 @@
    （後続issueのdepends_onには、直前に作成したissueが返すidentifierを使う）
 
    linear-cli create --title "<タイトル>" --team <team> --project "<グループ名>" \
-   --label "branch:<slug>" \
    --description "$(構造化ヘッダ + 本文)"
 
 6. ユーザーへの報告
@@ -58,24 +57,24 @@
 
 ```bash
 linear-cli create --title "<先行issueのタイトル>" --team ENG --project "<グループ名>" \
-  --label "branch:my-feature-slug" \
   --description "branch: my-feature-slug
 base_branch: main
+
 ---
 （自由記述の本文）"
 # → 返り値のidentifier（例: ENG-201）を控える
 
 linear-cli create --title "<後続issueのタイトル>" --team ENG --project "<グループ名>" \
-  --label "branch:my-feature-slug" \
   --description "depends_on: ENG-201
 branch: my-feature-slug
 base_branch: main
+
 ---
 （自由記述の本文）"
 ```
 
-- 構造化ヘッダの書式（フィールド名・順序・`---`区切り）は[issue-shape.md](issue-shape.md#issue-descriptionの構造化ヘッダ)に厳密に従う
-- `--label`は`linear-cli`拡張後のオプション。ラベル値自体（`branch:<slug>`）はteam側に事前登録されている必要がある（未登録ならLinear UI側で作成する。issue-shape.md参照）
+- 構造化ヘッダの書式（フィールド名・順序・`---`区切り）は[issue-shape.md](issue-shape.md#issue-descriptionの構造化ヘッダ)に厳密に従う。**ヘッダと`---`の間の空行を忘れないこと**（無いとLinear側でSetext heading化され`---`が消える。同ファイル参照）
+- ラベルは付与しない（`branch:<slug>`はdescription構造化ヘッダにのみ書く。理由は[issue-shape.md](issue-shape.md#ブランチのslug)参照）
 
 ## セルフチェック項目（Linear作成前に確認）
 
@@ -93,6 +92,5 @@ base_branch: main
 
 ## 注意点・落とし穴
 
-- `branch:<slug>`ラベルの値とdescriptionヘッダの`branch:`フィールドは値を一致させること。両者の整合性を自動検証する仕組みは無いため、作成時に手作業で揃える
 - 別ブランチのissueへの`depends_on`は通常の使い方ではない（依存issueのマージ後にbase_branchを合わせる、といった運用上の工夫が別途必要になる）。分割時は同一ブランチ内でのみ`depends_on`を使うのが基本
 - `linear-cli`にproject作成コマンドは無い。グループ用のLinear Projectが未作成の場合はユーザーに事前作成を依頼する

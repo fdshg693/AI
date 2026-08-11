@@ -11,12 +11,12 @@
 - 次のタスクグループへ進める操作 = `config.json`の`project`値を次のProject名に書き換えてcommitする操作そのもの。git diffとして残るため、いつ・どのグループへ切り替えたかが監査可能
 - `search`/`create`は既に`--project`引数を持つため、コード変更なしで「アクティブなグループに属するissueだけを見る」絞り込みができる（`--project`未指定時は設定ファイルの既定値が使われる）
 
-## ブランチ共有ラベル: `branch:<slug>`
+## ブランチのslug
 
-- 同じブランチ上で順番に実装するissue群には、共通のラベル`branch:<slug>`を付与する
+- 同じブランチ上で順番に実装するissue群は、description構造化ヘッダの`branch:<slug>`フィールド（後述）を共通の値にする
 - `slug`はgitブランチ名の一部としてそのまま使われるため、**小文字英数字とハイフンのみ**（正規表現でいう`^[a-z0-9-]+$`）に制限する
-- ラベルの用途は「同じブランチに未完了issueが残っているか」を`search --label branch:<slug>`で問い合わせることだけ（Step3で`linear-cli`に追加）。worktree再利用の可否そのものはラベルではなくホスト上の`git worktree list`を正とする（[00-overview.md](../../../../.claude/plans/parallel-agent-worktree-task-groups/00-overview.md)の決定事項）
-- ラベル自体（`branch:<slug>`という値）はteam側に事前登録されている必要がある。ラベル未登録時の自動作成は`linear-cli`のスコープ外（Linear UI側で作成する）
+- 「同じブランチに未完了issueが残っているか」は、Linearラベルではなく`--project`スコープの総当たり（`search --project`→各issueを`show`してヘッダの`branch:`を照合）で判定する（[SKILL.md](SKILL.md)の「完了時のブランチ残issueチェック」節参照）。当初はLinearラベル`branch:<slug>`も併用する設計だったが、ラベル値はslugを切るたび（＝タスクグループを起票するたび）にteam側へ事前登録するLinear UI手動作業を要求し、起票のたびに人手が挟まる運用コストが見合わないため廃止した。ラベルの新設自体は`linear-cli`が意図的にサポートしていない（typoによるラベル乱立防止のための設計。`tools/linear-cli/src/labels.mjs`参照）ため、この情報はもともとdescription構造化ヘッダ側にしかない一次情報であり、ラベル側は単なる重複インデックスに過ぎなかった
+- worktree再利用の可否そのものはラベルやヘッダではなくホスト上の`git worktree list`を正とする（[00-overview.md](../../../../.claude/plans/parallel-agent-worktree-task-groups/00-overview.md)の決定事項）
 
 ## Issue descriptionの構造化ヘッダ
 
@@ -26,15 +26,18 @@
 depends_on: ENG-101, ENG-102
 branch: my-feature-slug
 base_branch: main
+
 ---
 （自由記述の本文。通常のissue descriptionと同じ）
 ```
 
-| フィールド    | 必須     | 説明                                                                                                                                                                                  |
-| ------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `depends_on`  | 省略可   | 先行issueのidentifierをカンマ区切りで列挙。このissueに着手する前に完了しているべきissue群。依存が無ければ行ごと省略する                                                               |
-| `branch`      | **必須** | 作業ブランチのslug。`branch:<slug>`ラベルのslugと同じ値にする。依存の有無にかかわらず全issueに必須（単発issueも「自分専用の1issueだけのブランチ」を持つ、という一貫したモデルにする） |
-| `base_branch` | 省略可   | 依存グループの先頭issueが最初にworktree/ブランチを作る際の起点ブランチ。省略時はリポジトリのdefaultブランチ                                                                           |
+ヘッダの3フィールドと`---`の間には**必ず空行を1行入れる**こと。空行を入れずヘッダの直後に`---`を続けると、Linear側でdescriptionがMarkdownとして解釈・再シリアライズされる際にヘッダ部分がSetext heading（`見出し\n---`という書式）として吸収され、`---`自体が消えてしまう（`linear-cli create`/`update`で実際に検証済みの挙動）。空行を挟めば`---`は独立した thematic break として保存され、ヘッダと本文の区切りが保たれる。
+
+| フィールド    | 必須     | 説明                                                                                                                                       |
+| ------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `depends_on`  | 省略可   | 先行issueのidentifierをカンマ区切りで列挙。このissueに着手する前に完了しているべきissue群。依存が無ければ行ごと省略する                    |
+| `branch`      | **必須** | 作業ブランチのslug。依存の有無にかかわらず全issueに必須（単発issueも「自分専用の1issueだけのブランチ」を持つ、という一貫したモデルにする） |
+| `base_branch` | 省略可   | 依存グループの先頭issueが最初にworktree/ブランチを作る際の起点ブランチ。省略時はリポジトリのdefaultブランチ                                |
 
 Linear純正のissue relations APIは使わない（SDK側の対応状況の裏取りコストに見合わないほど依存先が少ないため）。依存先の確認は、Step3で追加する`show`コマンドでdescriptionを都度読むことで足りる。
 
@@ -55,5 +58,4 @@ host=<PCのホスト名>, worktree=<worktreeの絶対パス>, issue=<identifier>
 ## 注意点・落とし穴
 
 - 複数タスクグループの同時並行進行は非対応。ユーザーが「次のグループへ進めたい」と言うまでは`config.json`の`project`を変更しない
-- `branch:<slug>`ラベルの値とdescriptionヘッダの`branch:`フィールドは値を一致させること。両者の整合性を自動検証する仕組みはこのスキル・CLIどちらにも無い（issue作成時に書き手が揃える運用でカバーする）
 - `depends_on`で参照するidentifierは、実在し・同じ`branch`を共有しているのが通常の使い方（別ブランチのissueへの依存は、その依存issueのマージ後にbase_branchを合わせる、といった運用上の工夫が別途必要になる。このファイルではその詳細までは規定しない）

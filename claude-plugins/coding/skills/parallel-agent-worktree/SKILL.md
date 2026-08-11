@@ -5,8 +5,8 @@ description: 複数のClaude Codeセッション（同一ローカル環境上�
 #   - `linear-cli` コマンドがPATH上で使え、LINEAR_API_KEYが設定済みであること
 #     （セットアップは claude-plugins/my-tools/skills/linear-cli/SKILL.md 参照）
 #   - `EnterWorktree`/`ExitWorktree` がハーネス組み込みツールとして利用可能であること
-#   - 対象issueが issue-shape.md の定めるタスクグループ対応版の型（構造化ヘッダ・
-#     branch:<slug>ラベル）に沿って配置済みであること（起票手順は issue-authoring.md 参照）
+#   - 対象issueが issue-shape.md の定めるタスクグループ対応版の型（構造化ヘッダ）に
+#     沿って配置済みであること（起票手順は issue-authoring.md 参照）
 #
 # 依存スキル: claude-plugins/my-tools/skills/linear-cli（issue検索・作成・ステータス更新・
 # ラベル絞り込み/付与・コメント追加/一覧取得/削除・issue詳細取得）
@@ -22,14 +22,14 @@ meta:
   requires_skills: linear-cli
   status: experimental
   description: no description
-  version: 2.0.1
+  version: 2.0.2
 ---
 
 # parallel-agent-worktree の使い方
 
 同一ローカル環境上で複数のClaude Codeセッションを並行起動し、Linearの未着手issueをタスクキューとして分担するためのスキル。**1セッション=1タスクで完結**させる設計で、複数タスクを続けて処理したい場合はユーザーがセッションを複数起動する（このスキル自体はループしない）。
 
-issueは[issue-shape.md](issue-shape.md)が定める型（タスクグループ=Linear Project、`branch:<slug>`ラベル、descriptionの構造化ヘッダ）に沿って配置されている前提。起票手順は[issue-authoring.md](issue-authoring.md)を参照。
+issueは[issue-shape.md](issue-shape.md)が定める型（タスクグループ=Linear Project、descriptionの構造化ヘッダ）に沿って配置されている前提。起票手順は[issue-authoring.md](issue-authoring.md)を参照。
 
 「どの環境（PC・worktree）が今どのタスクを処理中か」は、専用の**トラッキングissue**1件に集約する。稼働中issue群のコメントを1件ずつ目視で回る必要はなく、トラッキングissueのコメント一覧を見るだけで空き状況が分かる。
 
@@ -83,9 +83,9 @@ issueは[issue-shape.md](issue-shape.md)が定める型（タスクグループ=
    - 変更をコミットし、push する
    - トラッキングissueから自分のエントリを削除し、占有を解放する
      linear-cli comment-delete <4.で記憶したcomment id>
-   - linear-cli search --label "branch:<slug>" で同じブランチに未完了issueが残っているか
-     確認する（「完了時のブランチ残issueチェック」節参照）。残っていればworktreeは
-     push済みでもkeepし、次のissueで同じworktreeを再利用する前提にする
+   - 同じブランチに未完了issueが残っているか確認する（「完了時のブランチ残issueチェック」
+     節参照）。残っていればworktreeはpush済みでもkeepし、次のissueで同じworktreeを
+     再利用する前提にする
    - PRを作成するか・いつマージするかはissueの性質に応じてエージェントが判断する
      （固定ルールにしない）
    - commit・push・占有解放が終わった時点でこのスキルの処理は完了。次のissueへは
@@ -128,7 +128,13 @@ issueは[issue-shape.md](issue-shape.md)が定める型（タスクグループ=
 
 ## 完了時のブランチ残issueチェック
 
-「6. 完了」で行う`linear-cli search --label "branch:<slug>"`の結果から、完了扱いのステータスを除いて何かissueが残っているかをエージェント側で判定する（CLI側にステータス否定フィルタ等の追加拡張はしない。取得した一覧を目視・比較すれば足りる規模のため）。
+「6. 完了」では、Linearラベルではなく現在のタスクグループ（`--project`）内の全issueをdescription構造化ヘッダの`branch:`フィールドで照合して判定する（ラベルを使わない理由は[issue-shape.md](issue-shape.md#ブランチのslug)参照）。
+
+```bash
+linear-cli search --project "<現在のグループ名>" --json
+```
+
+→ 返ってきた各issue（自分自身を除く）について `linear-cli show <identifier>` でdescriptionを読み、構造化ヘッダの`branch:`が自分と同じslugかを確認する。完了扱いのステータスを除いて該当issueが残っているかをエージェント側で判定する（タスクグループ内のissue数は小規模な想定のため、この総当たりで足りる。CLI側にdescription内容でのフィルタは無い）。
 
 - 残っている場合: そのブランチ上でまだ後続issueが実装される見込みがあるため、worktreeはpush済みでも`keep`する（次のissueのセッションが同じworktreeを「ブランチ解決」節のパターン1で再利用できるようにする）
 - 残っていない場合: 従来通り、push済みなら`remove`してよい（「ExitWorktreeを能動的に呼ばない理由」節の判断基準に従う）
@@ -171,6 +177,5 @@ linear-cli comments <トラッキングissueのidentifier>
 - ワークフロー状態名（「未着手」「作業中」「完了」に相当する名前）はチームのLinear設定次第で異なる。ハードコードせず、`linear-cli search` を状態名なしで実行するかユーザーに確認して実際の状態名を把握する（`linear-cli` スキル参照）
 - トラッキングissueのteamは、`.linear-cli/config.json`に既定値が無ければ`--team`を毎回指定する必要がある。不明な場合はユーザーに確認する
 - `linear-cli` のインストール・`LINEAR_API_KEY` 設定はこのスキルでは行わない。未設定エラーが出た場合は `claude-plugins/my-tools/skills/linear-cli/SKILL.md` の案内に従う
-- `branch:<slug>`ラベルとdescriptionヘッダの`branch:`フィールドは値が一致している前提で動く。両者の整合性を自動検証する仕組みは無い（issueの書き手が揃える運用。[issue-shape.md](issue-shape.md)参照）
 - 複数タスクグループの同時並行進行は非対応。`.linear-cli/config.json`の`project`はユーザーが明示指示するまで変更しない（「次タスクグループへの切り替え」節参照）
 - `depends_on`はv1では単純な直列依存のみ想定（fan-in/fan-outは非対応）。想定外の依存構造のissueに遭遇した場合はユーザーに確認する（[issue-authoring.md](issue-authoring.md)の「セルフチェック項目」参照）

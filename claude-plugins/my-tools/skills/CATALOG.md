@@ -110,7 +110,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.2.0
+  version: 1.2.1
 ---
 
 - ms-digest

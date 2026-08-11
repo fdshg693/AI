@@ -31,7 +31,7 @@
 
 ### なぜ「ラベル」でなく「Linear Project + `.linear-cli/config.json`」でタスクグループを表すか
 
-ユーザーからの要望原文は「ラベル」だったが、実装時に意図的に逸脱した。`linear-cli search`/`create`は元々`--project`引数を持っており、コード変更ゼロで「現在アクティブなグループ」の絞り込みができる。加えて`config.json`はリポジトリにコミットされるため、グループ切り替え（次タスクグループへ進める操作）がgit diffとして残り監査可能になる。一方「ブランチ」（同じブランチで直列実装するissue群の単位）はLinearにProject以上に細かいnativeグルーピングが無いため、こちらは独自ラベル`branch:<slug>`で表現する非対称な設計にした。両者の役割分担は[issue-shape.md](issue-shape.md)参照。
+ユーザーからの要望原文は「ラベル」だったが、実装時に意図的に逸脱した。`linear-cli search`/`create`は元々`--project`引数を持っており、コード変更ゼロで「現在アクティブなグループ」の絞り込みができる。加えて`config.json`はリポジトリにコミットされるため、グループ切り替え（次タスクグループへ進める操作）がgit diffとして残り監査可能になる。一方「ブランチ」（同じブランチで直列実装するissue群の単位）はLinearにProject以上に細かいnativeグルーピングが無いため、こちらはdescription構造化ヘッダの`branch:<slug>`フィールドで表現する。当初はこの`branch:`をLinearラベルとしても付与していたが、ラベル値はslugを切るたび（＝タスクグループを起票するたび）にLinear UI側での事前登録という手動作業を要求し、`linear-cli`もtypoによるラベル乱立防止のため自動作成を意図的にサポートしていない（`tools/linear-cli/src/labels.mjs`参照）ことから、起票のたびに人手が挟まる運用コストに見合わないと判断し廃止した。両者の役割分担は[issue-shape.md](issue-shape.md)参照。
 
 ### なぜ`git worktree list`をworktree再利用可否の正とするか
 
@@ -53,11 +53,10 @@ Linear純正のissue relations APIは使わず、`depends_on:`/`branch:`/`base_b
 - **複数タスクグループの同時並行進行** — 逐次進行のみサポート（[issue-shape.md](issue-shape.md)参照）
 - **依存issue完了までのブロッキング待機** — 依存未完了issueは待たずに見送り、別候補へ切り替える（[SKILL.md](SKILL.md)の「依存issueが未完了の場合」節参照）
 - **fan-in/fan-out（分岐・合流する依存関係）** — v1では単純な直列依存のみサポート（[issue-authoring.md](issue-authoring.md)参照）
-- **`branch:<slug>`ラベルとdescriptionヘッダの`branch:`値の整合性の自動検証** — issue作成時に書き手が揃える運用でカバーする
 
 ## メンテナンス上の注意
 
 - `EnterWorktree`/`ExitWorktree`ツールの説明文（挙動・制約）が変わった場合、SKILL.mdの該当節（特に「ExitWorktreeを能動的に呼ばない理由」「ブランチ解決」）を合わせて見直すこと（自動追随しない）
 - `linear-cli`側のサブコマンド・オプションが変わった場合も、このSKILL.mdの記載例が古くならないよう確認すること
 - トラッキングissueのタイトル文字列（`[worktree-tracking] 稼働中worktree一覧`）を変更する場合、SKILL.md本文の全箇所を揃えて更新すること（検索・作成の両方で同じ文字列を使うため、片方だけ変えると新規作成が乱立する）
-- `issue-shape.md`のフィールド名・書式（`depends_on:`/`branch:`/`base_branch:`、`branch:<slug>`ラベルの命名規則）を変更する場合、`issue-authoring.md`とSKILL.mdの記載例（構造化ヘッダの読み方・`--label`の使い方）を合わせて更新すること
+- `issue-shape.md`のフィールド名・書式（`depends_on:`/`branch:`/`base_branch:`）を変更する場合、`issue-authoring.md`とSKILL.mdの記載例（構造化ヘッダの読み方・完了時のブランチ残issueチェックの実装）を合わせて更新すること

@@ -49,8 +49,8 @@ description: 複数のClaude Codeセッション（同一ローカル環境上�
 #   - `linear-cli` コマンドがPATH上で使え、LINEAR_API_KEYが設定済みであること
 #     （セットアップは claude-plugins/my-tools/skills/linear-cli/SKILL.md 参照）
 #   - `EnterWorktree`/`ExitWorktree` がハーネス組み込みツールとして利用可能であること
-#   - 対象issueが issue-shape.md の定めるタスクグループ対応版の型（構造化ヘッダ・
-#     branch:<slug>ラベル）に沿って配置済みであること（起票手順は issue-authoring.md 参照）
+#   - 対象issueが issue-shape.md の定めるタスクグループ対応版の型（構造化ヘッダ）に
+#     沿って配置済みであること（起票手順は issue-authoring.md 参照）
 #
 # 依存スキル: claude-plugins/my-tools/skills/linear-cli（issue検索・作成・ステータス更新・
 # ラベル絞り込み/付与・コメント追加/一覧取得/削除・issue詳細取得）
@@ -66,7 +66,7 @@ meta:
   requires_skills: linear-cli
   status: experimental
   description: no description
-  version: 2.0.1
+  version: 2.0.2
 ---
 
 - pr-check
