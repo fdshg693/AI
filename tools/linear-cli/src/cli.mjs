@@ -8,6 +8,7 @@ import { searchIssues } from "./search.mjs";
 import { updateIssue } from "./update.mjs";
 import { addComment, listComments, deleteComment } from "./comment.mjs";
 import { createIssue } from "./create.mjs";
+import { getIssue } from "./show.mjs";
 
 async function readStdin() {
   if (process.stdin.isTTY) return null;
@@ -41,6 +42,7 @@ async function runSearch(rawArgs) {
       status: { type: "string" },
       assignee: { type: "string" },
       title: { type: "string" },
+      label: { type: "string" },
       limit: { type: "string", default: "50" },
       json: { type: "boolean", default: false },
     },
@@ -57,6 +59,7 @@ async function runSearch(rawArgs) {
     status: values.status,
     assignee: values.assignee,
     title: values.title,
+    label: values.label,
     limit: Number(values.limit),
   });
 
@@ -74,6 +77,8 @@ async function runUpdate(rawArgs) {
     options: {
       status: { type: "string" },
       assignee: { type: "string" },
+      "add-label": { type: "string", multiple: true },
+      "remove-label": { type: "string", multiple: true },
       json: { type: "boolean", default: false },
     },
   });
@@ -81,7 +86,7 @@ async function runUpdate(rawArgs) {
   const [issueId] = positionals;
   if (!issueId) {
     throw new Error(
-      "Usage: linear-cli update <issue-id> [--status <name>] [--assignee <email|none>]",
+      "Usage: linear-cli update <issue-id> [--status <name>] [--assignee <email|none>] [--add-label <name>...] [--remove-label <name>...]",
     );
   }
 
@@ -89,6 +94,8 @@ async function runUpdate(rawArgs) {
   const result = await updateIssue(client, issueId, {
     status: values.status,
     assignee: values.assignee,
+    addLabels: values["add-label"],
+    removeLabels: values["remove-label"],
   });
 
   if (values.json) {
@@ -136,6 +143,7 @@ async function runCreate(rawArgs) {
       team: { type: "string" },
       project: { type: "string" },
       description: { type: "string" },
+      label: { type: "string", multiple: true },
       json: { type: "boolean", default: false },
     },
   });
@@ -150,6 +158,7 @@ async function runCreate(rawArgs) {
     team,
     project,
     description: values.description,
+    labels: values.label,
   });
 
   if (values.json) {
@@ -212,6 +221,37 @@ async function runCommentDelete(rawArgs) {
   }
 }
 
+async function runShow(rawArgs) {
+  const { values, positionals } = parseArgs({
+    args: rawArgs,
+    allowPositionals: true,
+    options: {
+      json: { type: "boolean", default: false },
+    },
+  });
+
+  const [issueId] = positionals;
+  if (!issueId) {
+    throw new Error("Usage: linear-cli show <issue-id>");
+  }
+
+  const client = createClient();
+  const issue = await getIssue(client, issueId);
+
+  if (values.json) {
+    console.log(JSON.stringify(issue, null, 2));
+  } else {
+    console.log(`${issue.identifier}: ${issue.title}`);
+    console.log(`status: ${issue.status ?? ""}`);
+    console.log(`assignee: ${issue.assignee ?? ""}`);
+    console.log(`project: ${issue.project ?? ""}`);
+    console.log(`labels: ${issue.labels.join(", ")}`);
+    console.log(`url: ${issue.url}`);
+    console.log("---");
+    console.log(issue.description ?? "");
+  }
+}
+
 async function main() {
   const [subcommand, ...rest] = process.argv.slice(2);
 
@@ -236,9 +276,12 @@ async function main() {
     case "comment-delete":
       await runCommentDelete(rest);
       break;
+    case "show":
+      await runShow(rest);
+      break;
     default:
       console.error(
-        `Unknown subcommand: ${subcommand ?? "(none)"}\nUsage: linear-cli <search|update|comment|create|comments|comment-delete>`,
+        `Unknown subcommand: ${subcommand ?? "(none)"}\nUsage: linear-cli <search|update|comment|create|comments|comment-delete|show>`,
       );
       process.exitCode = 1;
   }

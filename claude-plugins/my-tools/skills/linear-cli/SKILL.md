@@ -1,6 +1,6 @@
 ---
 name: linear-cli
-description: 未着手issue検索・issue作成・ステータス更新（担当者割当込み）・コメント追加/一覧取得/削除の各操作を提供する`linear-cli` CLIツールの使い方を説明する。Linear上のissueをタスクキューとして検索・claim・完了報告したい場合、およびトラッキング用issueの存在確認・作成・コメントによる占有状況管理をしたい場合に使う。issueの削除・複数team横断の一括操作は対象外。
+description: 未着手issue検索・issue作成・ステータス更新（担当者割当込み）・ラベル絞り込み/付与/更新・コメント追加/一覧取得/削除・issue詳細取得の各操作を提供する`linear-cli` CLIツールの使い方を説明する。Linear上のissueをタスクキューとして検索・claim・完了報告したい場合、トラッキング用issueの存在確認・作成・コメントによる占有状況管理をしたい場合、およびラベルでの絞り込み・issue descriptionの詳細取得をしたい場合に使う。issueの削除・複数team横断の一括操作は対象外。
 # 前提条件: `linear-cli`コマンドがPATH上にインストール済み（`pnpm add -g .`をtools/linear-cli/で実行）であり、
 # LINEAR_API_KEYが設定済みであること。このスキルはインストール・セットアップは一切行わない
 # このスキルの設計意図・前提条件の背景は同階層のREADME.md参照（人間のメンテナ向け）
@@ -13,12 +13,12 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.1.0
+  version: 1.2.0
 ---
 
 # linear-cli の使い方
 
-`linear-cli`はLinearのissueをタスクキューとして扱うための最小CLI。提供する操作はissue検索・作成・ステータス更新/担当者割当・コメント追加/一覧取得/削除で、issueの削除・複数team横断の一括操作は扱わない。
+`linear-cli`はLinearのissueをタスクキューとして扱うための最小CLI。提供する操作はissue検索（ラベル絞り込み込み）・作成（ラベル付与込み）・ステータス更新/担当者割当/ラベル追加・削除・コメント追加/一覧取得/削除・issue詳細取得で、issueの削除・複数team横断の一括操作は扱わない。
 
 ## 前提条件
 
@@ -43,23 +43,27 @@ team/projectの既定値をリポジトリルートの`.linear-cli/config.json`�
 linear-cli search --status Todo --assignee none
 linear-cli search --team ENG --status "In Progress" --json
 linear-cli search --title "[worktree-tracking] 稼働中worktree一覧" --team ENG
+linear-cli search --label "branch:my-feature-slug" --team ENG
 ```
 
 - `--status`にはteamのワークフロー状態名をそのまま渡す（`Todo`/`Backlog`等。ハードコードされた固定値は無く、team側でカスタム状態名が使われていてもそのまま動く。実際の状態名が分からない場合は`--status`を省略して一覧を見るか、ユーザーに確認する）
 - `--assignee none`で未アサインissueに絞り込む（「未着手タスクの検索」の定型パターンはこの2引数の組み合わせ）
 - `--title`はタイトル完全一致。特定の1件（トラッキングissue等）が既に存在するかを確認する用途に使う（結果0件なら`create`で作成する）
+- `--label`はラベル名で絞り込む（ID解決不要）。例: [parallel-agent-worktree](../../../coding/skills/parallel-agent-worktree/)の`branch:<slug>`ラベルで「同じブランチに未完了issueが残っているか」を確認する
 - `--json`を付けない場合はタブ区切りテーブル（`identifier`/`status`/`assignee`/`title`/`url`）が標準出力に出る
 
 ## `create` — issue新規作成
 
 ```bash
 linear-cli create --title "[worktree-tracking] 稼働中worktree一覧" --team ENG
+linear-cli create --title "..." --team ENG --label "branch:my-feature-slug"
 ```
 
 - `--title`/`--team`が必須（`--team`省略時は設定ファイルの既定値）。`--project`・`--description`は任意
+- `--label`は複数指定可（`--label a --label b`）。ラベル名はteam-scopedで既存ラベルからID解決するため、存在しないラベル名を指定するとエラー終了する（ラベルの自動作成はしない。Linear UI側で事前に作成しておく）
 - 用途は限定的（例: [parallel-agent-worktree](../../../coding/skills/parallel-agent-worktree/)がトラッキングissueを「無ければ作る」ため）。汎用のタスク起票コマンドとして多用する設計ではない
 
-## `update` — ステータス更新・担当者割当（claim/完了報告）
+## `update` — ステータス更新・担当者割当・ラベル追加/削除（claim/完了報告）
 
 ```bash
 # claim: ステータスを作業中へ、担当者を自分に
@@ -70,10 +74,13 @@ linear-cli update ENG-123 --status Done
 
 # 担当者を外す
 linear-cli update ENG-123 --assignee none
+
+# ラベル追加・削除（複数指定可）
+linear-cli update ENG-123 --add-label "branch:my-feature-slug" --remove-label "branch:old-slug"
 ```
 
-- `--status`/`--assignee`の少なくとも一方が必須
-- claim（未着手→作業中）はベストエフォート。このCLIは比較更新・楽観ロックを行わないため、複数エージェントが同時に同じissueを更新しようとしても衝突検知はしない（呼び出し側の運用で許容する前提）
+- `--status`/`--assignee`/`--add-label`/`--remove-label`の少なくとも1つが必須
+- claim（未着手→作業中）はベストエフォート。このCLIは比較更新・楽観ロックを行わないため、複数エージェントが同時に同じissueを更新しようとしても衝突検知はしない（呼び出し側の運用で許容する前提）。ラベル追加/削除も同じベストエフォート方針（現在のラベル集合を読み取ってから送り直すread-modify-write）
 - ステータス更新に失敗した場合（`--status`の状態名がteamに存在しない等）はエラー終了する。呼び出し側でworktree作成等の後続処理を行っていた場合は、その後始末（例: worktreeのremove）を呼び出し側の責務として行うこと
 
 ## `comment` — コメント追加（環境記録・完了報告用）
@@ -104,6 +111,16 @@ linear-cli comment-delete <comment-id>
 
 - コメントIDはLinear上でグローバルに一意なため、issue IDの指定は不要
 - `comment`で追加したコメントの`id`（コマンド結果に含まれる）を使って、そのエントリだけを消す。issueや他のコメントには影響しない
+
+## `show` — issue詳細取得（description本文込み）
+
+```bash
+linear-cli show ENG-123
+linear-cli show ENG-123 --json
+```
+
+- 指定issueの`description`/`labels`/`status`/`assignee`/`project`/`url`を返す単一issue専用コマンド
+- `search`は一覧・絞り込み用途でdescription本文を含めないため、description本文（例: [parallel-agent-worktree](../../../coding/skills/parallel-agent-worktree/)の`depends_on:`/`branch:`/`base_branch:`構造化ヘッダ）を読みたい場合はこのコマンドを使う
 
 ## エラー時の挙動
 

@@ -1,14 +1,19 @@
 /**
- * issue検索。team/project/status/assignee/titleの各絞り込みは指定された分だけfilterに載る
+ * issue検索。team/project/status/assignee/title/labelの各絞り込みは指定された分だけfilterに載る
  * （すべて未指定ならフィルタ無しでAPIキーがアクセス可能な全issueを対象にする）。
  * assignee には "none" を指定すると未アサインissueに絞り込む。titleは完全一致。
+ * labelはID解決せずラベル名をそのままfilterへ渡す（state/titleと同じ既存パターン）。
  */
-export async function searchIssues(client, { team, project, status, assignee, title, limit }) {
+export async function searchIssues(
+  client,
+  { team, project, status, assignee, title, label, limit },
+) {
   const filter = {};
   if (team) filter.team = { key: { eq: team } };
   if (project) filter.project = { name: { eq: project } };
   if (status) filter.state = { name: { eq: status } };
   if (title) filter.title = { eq: title };
+  if (label) filter.labels = { name: { eq: label } };
   if (assignee === "none") {
     filter.assignee = { null: true };
   } else if (assignee) {
