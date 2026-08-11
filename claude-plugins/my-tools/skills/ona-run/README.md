@@ -16,6 +16,10 @@
 - Ona公式CLI（`ona`）もインストール・`ona login`で認証済みであること。`ona-run`自体は環境変数を持たず、認証は`ona`CLI側に委譲している
 - 上記が満たされていない環境でこのスキルが呼ばれた場合、Claudeはこのスキルではエラーに対処せず、`tools/ona-run/README.md`のセットアップ手順をユーザーに案内する
 
+## 関連スキル
+
+`--agent`/`--command`のテンプレートでは表現できない、Ona公式CLI（`ona`コマンド）自体の細かい使い方（フラグ、認証、コマンド一覧等）は[ona-cli-docs](../../../topics/skills/ona-cli-docs/SKILL.md)スキルが担当する。こちらは`ona-run`（およびそれがラップする`ona`コマンド呼び出し）自体の設計意図・保守情報に特化する。
+
 ## 情報源と保守
 
 - CLIオプション・終了コード・ログ形式の一次情報は`tools/ona-run/README.md`
