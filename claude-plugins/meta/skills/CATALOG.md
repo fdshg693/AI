@@ -188,7 +188,7 @@ meta:
   requires_skills: claude-cli-docs, claude-code-docs
   status: experimental
   description: no description
-  version: 1.0.2
+  version: 1.0.4
 ---
 
 - writing-hooks

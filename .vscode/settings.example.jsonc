@@ -28,5 +28,15 @@
         ".github/agents": true,
         "~/.copilot/agents": false,
         ".claude/agents": false
-    }
+    },
+    // Pylance対応
+    // uv workspace内のeditable installはPEP 660のfinder方式で解決されるため、
+    // 静的解析のPylanceはワークスペース内メンバー間の相互importを自動解決できない
+    // （interpreterを正しく設定していても reportMissingImports になる）。
+    // 他メンバーから import されるメンバーのルートを明示的に列挙する。
+    "python.analysis.extraPaths": [
+        "tools/aim", // aim-ask, aim-summarize が aim_cli を import
+        "tools/mslearn", // my-agents が mslearn-cli を import
+        "tools/tav-cli" // my-agents が tav-cli を import
+    ]
 }
