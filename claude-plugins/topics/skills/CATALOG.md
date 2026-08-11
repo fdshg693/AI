@@ -18,6 +18,24 @@ meta:
   version: 1.0.2
 ---
 
+- ona-docs
+---
+name: ona-docs
+description: Use when answering questions about Ona (ona.com, formerly Gitpod) — the platform for background agents (autonomous AI software engineers that plan, code, test, and open PRs in isolated cloud environments), Automations (trigger-based workflows), Ona environments/Dev Containers, Veto (kernel-level agent security), multi-SCM support (GitHub/GitLab/Bitbucket/Azure DevOps), IDE integrations, the REST API, or company info (leadership, customers, pricing, comparisons to other coding-agent platforms). Grounds answers in the latest official content from ona.com and ona.com/docs instead of training-data memory, which may be stale or still reference "Gitpod".
+allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *)
+# !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
+meta:
+  requires_repo_tools: none
+  requires_env: none
+  dependencies: requests, typer
+  requires_install: none
+  requires_hooks: none
+  requires_skills: none
+  status: stable
+  description: no description
+  version: 1.0.0
+---
+
 - openrouter-docs
 ---
 name: openrouter-docs

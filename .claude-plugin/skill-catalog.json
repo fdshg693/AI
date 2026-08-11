@@ -293,6 +293,11 @@
       "description": "Use when answering questions about LangChain, LangGraph, LangSmith, or langchain-ai's Python/JavaScript SDKs and integration packages (chat models, agents, tools, retrieval/RAG, checkpointers, MCP adapters, etc.) — API signatures, parameters, return types, which package/class to use, or deprecated-vs-current patterns (e.g. LLMChain/AgentExecutor vs create_agent). Grounds answers in the latest official API reference (reference.langchain.com) instead of training-data memory, which may be stale."
     },
     {
+      "path": "claude-plugins/topics/skills/ona-docs",
+      "name": "ona-docs",
+      "description": "Use when answering questions about Ona (ona.com, formerly Gitpod) — the platform for background agents (autonomous AI software engineers that plan, code, test, and open PRs in isolated cloud environments), Automations (trigger-based workflows), Ona environments/Dev Containers, Veto (kernel-level agent security), multi-SCM support (GitHub/GitLab/Bitbucket/Azure DevOps), IDE integrations, the REST API, or company info (leadership, customers, pricing, comparisons to other coding-agent platforms). Grounds answers in the latest official content from ona.com and ona.com/docs instead of training-data memory, which may be stale or still reference \"Gitpod\"."
+    },
+    {
       "path": "claude-plugins/topics/skills/openrouter-docs",
       "name": "openrouter-docs",
       "description": "Use when answering questions about OpenRouter (openrouter.ai) — the unified API for routing requests across many LLM providers/models, its Agent SDK, Client SDKs (TypeScript/Python/Go), REST API reference, model routing/variants (:nitro, :online, :thinking, etc.), plugins, guardrails, presets, workspaces, pricing/BYOK, or integrating OpenRouter with coding agents (Claude Code, Cursor, Codex CLI, etc.). Grounds answers in the latest official docs (openrouter.ai/docs) instead of training-data memory, which may be stale."
