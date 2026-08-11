@@ -8,6 +8,8 @@ status: implementing-done
 > これは `.claude/plans/references/` 配下のサンプルです。架空の機能を題材に、複数ステップに分割するプランの書き方を示しています。実装対象ではありません。
 >
 > このファイルは**実行済みの状態**も示している — frontmatterの`status: implementing-done`、「実装ステップ」の✅マーク、progress フォルダへのリンクは、プラン実行中に更新・追記する進捗導線のサンプル。新規プランを書くときは`status`を`planning-research`か`planning-breakdown`から始め、✅マークやprogressリンクは実行開始後に追記していく（[references/progress/README.md](progress/README.md) 参照）。
+>
+> 実際のプランなら`implementing-done`後は削除対象だが（[README.md](../README.md)の「完了後の後片付け」節参照）、このファイルはテンプレートのため削除せず残している。
 
 ## 要件
 
