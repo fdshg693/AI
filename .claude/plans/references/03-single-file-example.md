@@ -10,6 +10,8 @@ status: implementing-done
 > このファイルは**実行済みの状態**も示している — frontmatterの`status: implementing-done`は実行後に更新する導線のサンプル。単一ファイル完結の小さい機能は、詳細が溜まりにくく progress フォルダを作らずに済むことが多い（[references/progress/README.md](progress/README.md) 参照）。
 >
 > 差分・後続タスクは無し（小規模で計画どおりに完結）。
+>
+> 実際のプランなら`implementing-done`後は削除対象だが（[README.md](../README.md)の「完了後の後片付け」節参照）、このファイルはテンプレートのため削除せず残している。
 
 ## やること
 
