@@ -796,12 +796,14 @@ source = { editable = "tools/issue-agent" }
 dependencies = [
     { name = "claude-agent-sdk" },
     { name = "pydantic" },
+    { name = "python-dotenv" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "claude-agent-sdk" },
     { name = "pydantic", specifier = ">=2" },
+    { name = "python-dotenv" },
 ]
 
 [[package]]

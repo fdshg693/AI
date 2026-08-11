@@ -22,6 +22,8 @@ import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
+from .environment import load_environment
+
 ISSUE_AGENT_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_DB_PATH = "data/state.db"
 
@@ -95,6 +97,7 @@ class AttemptStore:
 
 
 def main() -> None:
+    load_environment()
     parser = argparse.ArgumentParser(description="ISSUE試行記録ストアの手動操作CLI")
     parser.add_argument(
         "--db-path",

@@ -20,6 +20,7 @@ from pathlib import Path
 
 from . import dispatch, github_ops, worktree
 from .config import Config
+from .environment import load_environment
 
 logger = logging.getLogger(__name__)
 
@@ -149,6 +150,7 @@ def run_worker(config: Config, issue_number: int) -> dict:
 
 
 def main() -> None:
+    load_environment()
     logging.basicConfig(
         level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s", stream=sys.stderr
     )

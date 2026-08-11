@@ -13,7 +13,7 @@ GitHub ISSUEにラベル（`tool:claude-code`必須、`model:<alias>`任意）�
 ### 前提条件（初回のみ）
 
 1. `gh` CLIでログイン済みであること（`gh auth status`で確認）。ログインアカウントは対象リポジトリのcollaboratorである必要がある（ラベル付与者の認可判定の照合先が`gh api repos/{owner}/{repo}/collaborators`のため、`gh`自身のトークンの権限とは別に、認可対象ユーザー側の権限も要件になる）。
-2. `ANTHROPIC_API_KEY`環境変数を設定する（`claude_agent_sdk`が使用）。
+2. `ANTHROPIC_API_KEY`環境変数を設定する（`claude_agent_sdk`が使用）。環境変数として直接exportする代わりに`tools/issue-agent/.env`に書いてもよい（`cp .env.example .env`して値を埋める。`.env`は`issue_agent/environment.py`の`load_environment()`が各エントリポイントの`main()`冒頭で自動読み込みする。`override=False`のため既にexport済みの環境変数が優先される）。
 3. リポジトリルートで`uv sync`する（ルートの`pyproject.toml`のworkspace memberとして本パッケージが含まれる）。
 4. `tools/schedule`にintervalジョブとして登録する（`tools/schedule/config/jobs.yaml`、詳細は[tools/schedule/AGENTS.md](../schedule/AGENTS.md)参照）:
 
@@ -47,6 +47,8 @@ uv run python -m issue_agent.check
 ### 環境変数一覧
 
 すべて任意（未設定時は既定値を使う）。`issue_agent/config.py`の`Config.from_env()`参照。
+`ANTHROPIC_API_KEY`含め、シェルでexportする代わりに`tools/issue-agent/.env`（`.env.example`参照）に
+書いてもよい。
 
 | 環境変数                             | 既定値                                               | 意味                                                                                                                               |
 | ------------------------------------ | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |

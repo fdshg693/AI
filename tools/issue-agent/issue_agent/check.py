@@ -25,6 +25,7 @@ from pathlib import Path
 from . import github_ops
 from .attempt_store import ISSUE_AGENT_ROOT, AttemptStore, resolve_db_path
 from .config import Config
+from .environment import load_environment
 
 logger = logging.getLogger(__name__)
 
@@ -139,6 +140,7 @@ def check_once(store: AttemptStore, config: Config) -> None:
 
 
 def main() -> None:
+    load_environment()
     logging.basicConfig(
         level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s", stream=sys.stdout
     )
