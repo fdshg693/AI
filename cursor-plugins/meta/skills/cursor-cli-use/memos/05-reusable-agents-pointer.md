@@ -4,7 +4,7 @@
 
 ## 別スキル化する際の検討事項
 
-- **候補名**: `cursor-subagents`, `cursor-cli-agents`, `cursor-custom-agents` あたり。Claude Code 側の `writing-subagents`（`.claude/skills/writing-subagents`）と対になる命名にすると探しやすい。
+- **候補名**: `cursor-subagents`, `cursor-cli-agents`, `cursor-custom-agents` あたり。Claude Code 側の `writing-subagents`（`claude-plugins/meta/skills/writing-subagents`）と対になる命名にすると探しやすい。
 - **スコープ**: Cursor で「繰り返し指示」を避ける仕組みは実は3つある（Subagents / Rules / Skills）。ユーザーの要望は「Cursorエージェント作成方法」だが、Subagents だけでなく Rules・Skills との使い分け（決定境界）まで扱わないと、読んだ人が誤った手段を選ぶ恐れがある。別スキルはこの3つの使い分け表を中心に構成するとよい。
 
 ## Subagents（`.cursor/agents/*.md`）— 本命

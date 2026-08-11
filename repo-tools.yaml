@@ -15,7 +15,7 @@
 #
 # Excluded from the check: repo-meta/** (its SKILL.md files reuse
 # requires_repo_tools to mean "files this meta-skill documents", not "CLI
-# dependency" — see repo-meta/skills/tool-companion-skills/SKILL.md) and
+# dependency" — see docs/repo-meta/tool-companion-skills.md) and
 # tools/internal/** (internal repo-maintenance scripts, never something a
 # skill's user installs).
 #
@@ -48,3 +48,6 @@ tools:
   icw:
     path: tools/interactive-cli-wrapper
     install: "uv tool install --editable tools/interactive-cli-wrapper"
+  linear-cli:
+    path: tools/linear-cli
+    install: "cd tools/linear-cli && pnpm add -g ."

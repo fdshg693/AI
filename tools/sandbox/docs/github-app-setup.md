@@ -2,7 +2,7 @@
 
 サンドボックスエージェント用GitHub Appを作成する手順（一度きりの手動セットアップ）。
 コードでは自動化しない。作成後に得られる3つの値（App ID・Installation ID・秘密鍵）は
-[../docker/.env.example](../docker/.env.example) の `GITHUB_APP_ID` /
+[../orchestrator/.env.example](../orchestrator/.env.example) の `GITHUB_APP_ID` /
 `GITHUB_APP_INSTALLATION_ID` / `GITHUB_APP_PRIVATE_KEY_PATH` に対応する。
 
 ## 1. App登録

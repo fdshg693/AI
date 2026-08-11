@@ -94,6 +94,25 @@ meta:
   version: 1.1.0
 ---
 
+- linear-cli
+---
+name: linear-cli
+description: 未着手issue検索・issue作成・ステータス更新（担当者割当込み）・ラベル絞り込み/付与/更新・コメント追加/一覧取得/削除・issue詳細取得の各操作を提供する`linear-cli` CLIツールの使い方を説明する。Linear上のissueをタスクキューとして検索・claim・完了報告したい場合、トラッキング用issueの存在確認・作成・コメントによる占有状況管理をしたい場合、およびラベルでの絞り込み・issue descriptionの詳細取得をしたい場合に使う。issueの削除・複数team横断の一括操作は対象外。
+# 前提条件: `linear-cli`コマンドがPATH上にインストール済み（`pnpm add -g .`をtools/linear-cli/で実行）であり、
+# LINEAR_API_KEYが設定済みであること。このスキルはインストール・セットアップは一切行わない
+# このスキルの設計意図・前提条件の背景は同階層のREADME.md参照（人間のメンテナ向け）
+meta:
+  requires_repo_tools: tools/linear-cli
+  requires_env: LINEAR_API_KEY
+  dependencies: "@linear/sdk"
+  requires_install: "cd tools/linear-cli && pnpm add -g ."
+  requires_hooks: none
+  requires_skills: none
+  status: stable
+  description: no description
+  version: 1.2.1
+---
+
 - ms-digest
 ---
 name: ms-digest

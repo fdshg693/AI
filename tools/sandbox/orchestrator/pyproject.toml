@@ -12,4 +12,4 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-py-modules = ["poller", "run_agent", "github_client", "state"]
+py-modules = ["poller", "run_agent", "github_client", "state", "logging_setup"]

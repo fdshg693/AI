@@ -35,3 +35,28 @@ meta:
   description: no description
   version: 1.0.2
 ---
+
+- writing-mermaid-diagrams
+---
+# 同梱ファイル: renderer-differences.md（表示環境ごとの差異）/ readability-techniques.md（見やすさ・メンテしやすさのテクニック）
+# skill-search（discovering-skills経由）で確認済み: このリポジトリにMermaid固有の既存スキルはなし（2026-08時点）
+# writing-skill-webの判断（静的スナップショット vs 動的検索/取得）: mermaid.js.orgはllms.txt/llms-full.txtを公開していない
+# （https://mermaid.js.org/llms.txt・llms-full.txt とも2026-08-10時点で404）ため静的スナップショットの型は使わず、
+# 動的検索/取得パターンを採用（tav-lit/tav-cliへ委譲。WEB検索クライアントを自前実装しない）
+# requires_env(TAVILY_API_KEY)はtav-lit/tav-cli経由の任意依存。未設定でも本文の静的な記述だけで大半は足りる
+name: writing-mermaid-diagrams
+description: Use when writing or editing Mermaid diagrams (flowchart, sequence, class, state, ER, etc.) in Markdown files, SKILL.md docs, PR descriptions, or Claude Artifacts. Covers two failure modes that plain Mermaid knowledge misses — diagrams that render differently (or break) across VS Code preview / Mermaid Live Editor / GitHub / Claude Artifacts, and diagrams that are technically valid but hard to read (crossing edges, unlabeled arrows, oversized graphs) or hard to maintain (unstable node IDs, no comments).
+meta:
+  requires_repo_tools: none
+  requires_env: TAVILY_API_KEY
+  dependencies: none
+  requires_install: none
+  requires_hooks: none
+  requires_skills: tav-lit, tav-cli
+  status: experimental
+  description: no description
+  version: 1.1.0
+# このスキル自身はMermaid公式ドキュメントのミラーを持たない。理由と仕組みは次の通り。
+
+# - `mermaid.js.org`は`llms.txt`/`llms-full.txt`（AI向けの索引・全文ダンプ）を公開していない（2026-08-10時点で両方404）。そのため`langchain-docs`/`openrouter-docs`スキルが使う「ダウンロードスクリプト同梱＋freshnessチェック」の型（静的スナップショットパターン、詳細は`writing-skill-web`スキル参照）は使わない。
+---

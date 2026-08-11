@@ -2,6 +2,8 @@ packages:
   - "skills-site"
   - "skills-site/api"
   - "tools/cline-wrapper"
+  - "tools/linear-cli"
+  - "tools/skill-search"
 allowBuilds:
   esbuild: true
   protobufjs: true

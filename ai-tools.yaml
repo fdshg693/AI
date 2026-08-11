@@ -20,20 +20,20 @@ tools:
     readme:
       config_dirs:
         - path: .claude
-          description: "このリポジトリ自体を Claude Code で開発するための設定（rules, skills, hooks, scripts, workflows 等）"
+          description: "このリポジトリ自体を Claude Code で開発するための設定（rules, hooks, scripts, workflows 等）"
       plugin_roots:
         - path: claude-plugins
           description: "Claude Code 用プラグイン本体"
         - path: .claude-plugin
           description: "上記プラグイン群をまとめるマーケットプレイス定義（`marketplace.json`）と skill カタログ（`skill-catalog.json`）"
     plugins:
-      - path: .claude
-        kind: plugin
-        skills_layout: subdir
       - path: claude-plugins/cicd
         kind: plugin
         skills_layout: subdir
       - path: claude-plugins/coding
+        kind: plugin
+        skills_layout: subdir
+      - path: claude-plugins/meta
         kind: plugin
         skills_layout: subdir
       - path: claude-plugins/my-tools

@@ -1,8 +1,8 @@
 ---
-# 同梱: scripts/list_sibling_skills.py — 同階層(repo-meta/skills/*)のSKILL.mdをスキャンし、
-# name/descriptionの一覧をこのSKILL.md読み込み時に動的注入する（手書きの一覧は持たない）
+# 同梱: scripts/list_repo_meta_docs.py — docs/repo-meta/*.mdのfrontmatterをスキャンし、
+# title/descriptionの一覧をこのSKILL.md読み込み時に動的注入する（手書きの一覧は持たない）
 name: meta
-description: Points to the single most relevant sibling skill under repo-meta/skills/ for a given repository-maintenance task (SKILL.md quality checklist, meta: frontmatter fields, SSOT+regeneration pattern, tools/ directory layout, lefthook/justfile wiring, aim automation, etc.). Use when starting work under repo-meta/, or hitting a skill/tooling drift, staleness, or consistency question and unsure which existing repo-meta skill already covers it, before writing new one-off guidance.
+description: "Points to the single most relevant concept doc under docs/repo-meta/ for a given repository-maintenance task (SKILL.md quality checklist, meta: frontmatter fields, SSOT+regeneration pattern, tools/ directory layout, lefthook/justfile wiring, aim automation, GitHub Actions lifecycle, etc.). Use when starting work under repo-meta/, or hitting a skill/tooling drift, staleness, or consistency question and unsure which existing doc already covers it, before writing new one-off guidance."
 meta:
   requires_repo_tools: none
   requires_env: none
@@ -12,14 +12,14 @@ meta:
   requires_skills: none
   status: experimental
   description: no description
-  version: 1.0.0
+  version: 1.1.0
 ---
 
-!`python ${CLAUDE_SKILL_DIR}/scripts/list_sibling_skills.py`
+!`python ${CLAUDE_SKILL_DIR}/scripts/list_repo_meta_docs.py`
 
-# repo-meta配下のスキル選択
+# repo-meta配下のメンテナンス資料選択
 
-`repo-meta/skills/`には、このリポジトリ自身のメンテナンスを扱う複数のメタスキルが並んでいる。新しい判断ロジックをその場で書く前に、まず上の一覧（このスキル読み込み時にスクリプトが同階層の各`SKILL.md`から生成した最新の`name`/`description`）から既存スキルが対象を既にカバっていないか確認する。
+`docs/repo-meta/`には、このリポジトリ自身のメンテナンスを扱う複数の概念ドキュメント（OKF）が並んでいる。新しい判断ロジックをその場で書く前に、まず上の一覧（このスキル読み込み時にスクリプトが`docs/repo-meta/*.md`から生成した最新の`title`/`description`）から既存ドキュメントが対象を既にカバっていないか確認する。
 
 ## 選び方
 
@@ -33,17 +33,18 @@ meta:
    - lefthook/justfileのレシピ追加・挙動 → `lefthook-automation` / `justfile-conventions`
    - `aim`系ツールで単純作業を自動化すべきか → `aim-automation`
    - スキルをClaude Code以外（Cline/Codex/Copilot等）へポートすべきか → `claude-code-first-skills`
-   - この「他スキルの面倒を見るスキル」という層自体の存在意義・新規追加の判断 → `skill-improving-meta-skills`
-3. 一覧のどれにも合致しなければ、無理に既存スキルへ寄せない。新規スキルとして追加すべきかの判断・フロントマター規約は[skill-improving-meta-skills](../skill-improving-meta-skills/SKILL.md)と[writing-skill](../../../.claude/skills/writing-skill/SKILL.md)を使う。
+   - GitHub Actionsのリリース・デプロイ・issue/PR自動化の仕組み → `gh-actions-lifecycle`
+   - 新しいメンテナンスガイダンスをdocs/repo-meta/の新規docにするか既存docに統合するかの判断 → `skill-improving-meta-skills`
+3. 一覧のどれにも合致しなければ、無理に既存ドキュメントへ寄せない。新規ドキュメントとして追加すべきかの判断・配置基準は[skill-improving-meta-skills](../../../docs/repo-meta/skill-improving-meta-skills.md)と[writing-skill](../../../claude-plugins/meta/skills/writing-skill/SKILL.md)を使う。
 
 ## 一覧が期待と違うとき
 
-一覧生成スクリプトは`repo-meta/skills/`直下でこのスキルと同階層にある`SKILL.md`だけを対象にする。新しいスキルを追加したのに出てこない場合、そのfrontmatterが`---`で始まり`name`/`description`が（`meta:`のようなネストではなく）トップレベルのキーになっているかを確認する。`[ERROR]`行が出た場合は該当`SKILL.md`のfrontmatterを直接確認する。
+一覧生成スクリプトは`docs/repo-meta/`配下の`*.md`（`index.md`は除く）だけを対象にする。新しいドキュメントを追加したのに出てこない場合、そのfrontmatterが`---`で始まり`title`/`description`がトップレベルのキーになっているかを確認する。`[ERROR]`行が出た場合は該当`.md`のfrontmatterを直接確認する。
 
 ## 関連
 
-- [skill-improving-meta-skills](../skill-improving-meta-skills/SKILL.md) — このメタスキル層自体の存在意義、新規追加の判断基準
-- [writing-skill](../../../.claude/skills/writing-skill/SKILL.md) — 新規スキルのフロントマター・チェックリスト
+- [skill-improving-meta-skills](../../../docs/repo-meta/skill-improving-meta-skills.md) — docs/repo-meta/配下の運用判断、新規doc追加の判断基準
+- [writing-skill](../../../claude-plugins/meta/skills/writing-skill/SKILL.md) — 新規スキルのフロントマター・チェックリスト
 
 ## このスキルの位置づけ
 

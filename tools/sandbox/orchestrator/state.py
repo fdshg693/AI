@@ -51,6 +51,13 @@ class AttemptStore:
             )
             """
         )
+        # `CREATE TABLE IF NOT EXISTS`は既存テーブルへカラムを追加しないため、
+        # 稼働中の既存state.dbに対しては`ALTER TABLE`で後方互換に追加する。
+        # 既にカラムが存在する場合はOperationalErrorを握りつぶしてスキップする。
+        try:
+            self._conn.execute("ALTER TABLE attempts ADD COLUMN log_file TEXT")
+        except sqlite3.OperationalError:
+            pass
         self._conn.commit()
 
     def record_attempt_start(self, issue_number: int) -> bool:
@@ -62,10 +69,12 @@ class AttemptStore:
         self._conn.commit()
         return cursor.rowcount > 0
 
-    def record_attempt_result(self, issue_number: int, success: bool, detail: str) -> None:
+    def record_attempt_result(
+        self, issue_number: int, success: bool, detail: str, log_file: str | None = None
+    ) -> None:
         self._conn.execute(
-            "UPDATE attempts SET finished_at = ?, success = ?, detail = ? WHERE issue_number = ?",
-            (_now_iso(), 1 if success else 0, detail, issue_number),
+            "UPDATE attempts SET finished_at = ?, success = ?, detail = ?, log_file = ? WHERE issue_number = ?",
+            (_now_iso(), 1 if success else 0, detail, log_file, issue_number),
         )
         self._conn.commit()
 
@@ -74,6 +83,19 @@ class AttemptStore:
         cursor = self._conn.execute("DELETE FROM attempts WHERE issue_number = ?", (issue_number,))
         self._conn.commit()
         return cursor.rowcount > 0
+
+    def get_attempt(self, issue_number: int) -> dict | None:
+        """指定ISSUEの試行記録を1件取得する（`--show`CLI用）。見つからなければNone。"""
+        cursor = self._conn.execute(
+            "SELECT issue_number, started_at, finished_at, success, detail, log_file "
+            "FROM attempts WHERE issue_number = ?",
+            (issue_number,),
+        )
+        row = cursor.fetchone()
+        if row is None:
+            return None
+        columns = [column[0] for column in cursor.description]
+        return dict(zip(columns, row))
 
 
 def main() -> None:
@@ -87,16 +109,35 @@ def main() -> None:
         "--reset",
         type=int,
         metavar="ISSUE_NUMBER",
-        required=True,
+        default=None,
         help="指定したISSUE番号の試行記録を削除し、再試行可能にする",
     )
+    parser.add_argument(
+        "--show",
+        type=int,
+        metavar="ISSUE_NUMBER",
+        default=None,
+        help="指定したISSUE番号の試行記録を表示する（log_fileパス含む、読み取り専用）",
+    )
     args = parser.parse_args()
+    if args.reset is None and args.show is None:
+        parser.error("--reset または --show のいずれかを指定してください")
 
     store = AttemptStore(resolve_db_path(args.db_path))
-    if store.reset(args.reset):
-        print(f"issue #{args.reset}: 試行記録を削除しました（次回ポーリングで再試行されます）")
-    else:
-        print(f"issue #{args.reset}: 試行記録は見つかりませんでした")
+
+    if args.show is not None:
+        attempt = store.get_attempt(args.show)
+        if attempt is None:
+            print(f"issue #{args.show}: 試行記録は見つかりませんでした")
+        else:
+            for key, value in attempt.items():
+                print(f"{key}: {value}")
+
+    if args.reset is not None:
+        if store.reset(args.reset):
+            print(f"issue #{args.reset}: 試行記録を削除しました（次回ポーリングで再試行されます）")
+        else:
+            print(f"issue #{args.reset}: 試行記録は見つかりませんでした")
 
 
 if __name__ == "__main__":

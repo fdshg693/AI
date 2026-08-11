@@ -3,7 +3,7 @@ tools/-rooted path that isn't registered (or is stale) in repo-tools.yaml.
 
 repo-meta/** is excluded: its SKILL.md files reuse requires_repo_tools to mean
 "files this meta-skill documents" rather than "CLI dependency" (see
-repo-meta/skills/tool-companion-skills/SKILL.md), so it legitimately
+docs/repo-meta/tool-companion-skills.md), so it legitimately
 references arbitrary repo files (justfile, lefthook.yml, pyproject.toml, ...)
 that have nothing to do with this registry. tools/internal/** is also
 excluded: those are internal repo-maintenance scripts, never something a

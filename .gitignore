@@ -16,6 +16,10 @@ node_modules/
 logs/
 *.log
 
+# discovering-skillsのスキル組み合わせログは例外的にgit管理する
+!repo-meta/skills/discovering-skills/logs/
+!repo-meta/skills/discovering-skills/logs/**
+
 tools/sandbox/orchestrator/data/
 
 *.egg-info/

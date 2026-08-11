@@ -33,7 +33,7 @@ cline plugin install ./cline-plugins/personal-info --cwd .
 > & "C:/Program Files/Git/bin/bash.exe" -c "cline plugin install ./cline-plugins/personal-info --force"
 > ```
 >
-> 詳細は [`integrations/CLINE.md`](../../integrations/CLINE.md) を参照してください。
+> 詳細は [`docs/integrations/cline.md`](../../docs/integrations/cline.md) を参照してください。
 >
 > さらに、すでに別の `cline` hub-daemon（VS Code の Cline 拡張や以前の失敗した install 試行の常駐プロセス）がポート `127.0.0.1:25463` を占有していると、今度は `Failed to start hub server ... EADDRINUSE` で失敗します。この場合は Cline を動かしているエディタ/IDE を閉じて `cline` プロセスが 0 件になったことを確認してから再実行してください。
 

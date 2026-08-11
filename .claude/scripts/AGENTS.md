@@ -117,7 +117,7 @@ hook:
 
 この場合、`hooks.yml` には `example.py#PostToolUse` / `example.py#PostToolUseFailure` のように `<ファイル名>#<event>` をキーとしたエントリが**それぞれ**追加される（`enabled`もエントリごとに個別に管理する）。ブロックが1つだけのスクリプトは従来通りファイル名がそのままキーになる。同一ファイル内で同じeventのブロックを2つ書くとsyncがエラーにする。
 
-マッチャーの評価ルール（完全一致 or 正規表現になる文字種の違いなど）は `.claude/skills/writing-hooks/hooks.md` を参照。
+マッチャーの評価ルール（完全一致 or 正規表現になる文字種の違いなど）は `claude-plugins/meta/skills/writing-hooks/hooks.md` を参照。
 
 ## エラー時の挙動
 

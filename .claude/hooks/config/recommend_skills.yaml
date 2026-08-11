@@ -13,5 +13,4 @@
 # 重複するコピーを含むため roots に含めないこと（含めても name で重複排除はされるが、
 # 無駄なファイル走査が増える）。
 roots:
-  - .claude/skills
   - claude-plugins

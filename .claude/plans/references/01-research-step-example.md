@@ -1,10 +1,15 @@
+---
+type: Plan Step
+status: implementing-done
+---
+
 # Step 1: 外部API仕様の事前調査（サンプル）
 
 > [00-overview-example.md](00-overview-example.md) の続き。外部知識が必要な機能で、調査を独立したステップとして切り出す書き方のサンプルです。実装対象ではありません。
 >
-> このファイルは**実行済みの状態**も示している — 先頭の「進捗」行と「調査結果」節の progress リンクは、プラン実行中に追記する導線のサンプル。新規プランを書くときは省いて、実行後に追記する。
+> このファイルは**実行済みの状態**も示している — frontmatterの`status: implementing-done`と「調査結果」節の progress リンクは、プラン実行中に更新・追記する導線のサンプル。新規プランを書くときは`status: planning-research`または`planning-breakdown`から始め、progressリンクは実行後に追記する。
 >
-> **進捗**: ✅ 完了。詳細な調査結果・後続ステップへの引継ぎ → [progress/01-research-results-example.md](progress/01-research-results-example.md)
+> 詳細な調査結果・後続ステップへの引継ぎ → [progress/01-research-results-example.md](progress/01-research-results-example.md)
 
 ## やること
 
@@ -45,3 +50,4 @@
 - 調査観点（キーワード）は検索前に箇条書きで洗い出しておく。行き当たりばったりにWebFetchを連打すると無駄なページ取得が増え、コンテキストを圧迫する。
 - 軽量なコードベース内調査（既存パターンの有無をgrepで洗い出すだけ、設計判断を伴わない調査）はHaikuサブエージェントに投げてよい。決定事項（採用するかどうかの判断）自体はプランを書く側が行い、委任先には判断させない。
 - このステップ自体はルールを更新しない。知識がまだコードに反映されていないため、ルール更新は実装ステップ（Step2）側で行う。なお「ルール」の格納先はレポジトリによって異なる（`.claude/rules/`・`AGENTS.md`・`CLAUDE.md`・`.clinerules` 等）。各プランでは対象レポジトリの既存格納先に合わせること。
+- **frontmatterの`status`は調査ステップでも同じ6値を使う。** `implementing-*`とあるが、調査ステップでは「コード実装」ではなく「そのステップの作業（Web調査等）の実行」を指す。着手前は`planning-research`（このステップの調査観点自体がまだ固まっていない場合）または`ready`、調査を進めている間は`implementing-started`/`implementing-in-progress`、要約を書き終えたら`implementing-done`にする。

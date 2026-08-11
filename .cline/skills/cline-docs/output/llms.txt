@@ -1,6 +1,6 @@
 ---
 source: https://docs.cline.bot/llms.txt
-fetched_at: 2026-07-18T18:55:57.318525+00:00
+fetched_at: 2026-08-09T09:34:10.012474+00:00
 ---
 
 # Cline
@@ -32,8 +32,8 @@ fetched_at: 2026-07-18T18:55:57.318525+00:00
 - [Using Commands](https://docs.cline.bot/core-workflows/using-commands.md): Built-in slash commands to manage context, plan implementations, and trigger reusable skills.
 - [Adding Context](https://docs.cline.bot/core-workflows/working-with-files.md): Use @ mentions and drag & drop to bring files into your conversations.
 - [Rules](https://docs.cline.bot/customization/cline-rules.md): Define specific instructions and coding standards for Cline.
-- [.clineignore](https://docs.cline.bot/customization/clineignore.md): Control which files and directories Cline can access in your project.
-- [Hooks](https://docs.cline.bot/customization/hooks.md): See details under SDK Hooks page.
+- [.clineignore (deprecate soon)](https://docs.cline.bot/customization/clineignore.md): Control which files and directories Cline can access in your project. This feature will be deprecated soon.
+- [Hooks](https://docs.cline.bot/customization/hooks.md): See details under SDK Plugins page.
 - [Plugins](https://docs.cline.bot/customization/plugins.md): Install and manage plugins that extend Cline with custom tools, hooks, and capabilities.
 - [Skills](https://docs.cline.bot/customization/skills.md): Modular instruction sets that extend Cline's capabilities for specific tasks.
 - [Enterprise API Reference](https://docs.cline.bot/enterprise-solutions/api-reference.md): REST API endpoints for managing users, organizations, billing, plans, and API keys.
@@ -66,8 +66,9 @@ fetched_at: 2026-07-18T18:55:57.318525+00:00
 - [Subagents](https://docs.cline.bot/features/subagents.md): Run parallel research agents to explore your codebase without filling the main agent's context window.
 - [Authorization](https://docs.cline.bot/getting-started/authorizing-with-cline.md): Authenticate with Cline and choose your first AI model
 - [Cline (usage-billing)](https://docs.cline.bot/getting-started/cline-provider.md): Use Cline (usage-billing) for pay-as-you-go model access with built-in authentication and Cline credits.
-- [ClinePass](https://docs.cline.bot/getting-started/clinepass.md): A low-cost monthly subscription that gives you reliable access to popular open coding models with 2-5x API rate limits.
+- [ClinePass](https://docs.cline.bot/getting-started/clinepass.md): A low-cost monthly subscription that offers 2-5x the usage on popular open coding models compared to standard API rate.
 - [Config](https://docs.cline.bot/getting-started/config.md): Understand where Cline stores configuration and how global and project config work together.
+- [Cline Free Models](https://docs.cline.bot/getting-started/free-models.md): Limited-time free model promotions for users with a Cline account.
 - [Installing Cline](https://docs.cline.bot/getting-started/installing-cline.md): Choose your installation path: IDE Extension, CLI, SDK, or Kanban
 - [Core Workflow](https://docs.cline.bot/kanban/core-workflow.md): The end-to-end workflow for using Cline Kanban: create tasks, run agents, review changes, and ship
 - [Remote Access](https://docs.cline.bot/kanban/remote-access.md): Access Kanban from other devices on your network or from anywhere using tunnels, VPNs, and cloud services
@@ -78,11 +79,12 @@ fetched_at: 2026-07-18T18:55:57.318525+00:00
 - [IAM Credentials](https://docs.cline.bot/provider-config/aws-bedrock/iam-credentials.md): Set up AWS Bedrock with Cline using IAM Access Key and Secret Key credentials. Best for enterprise environments with established IAM policies.
 - [DeepSeek](https://docs.cline.bot/provider-config/deepseek.md): Learn how to configure and use DeepSeek provider.
 - [Google Gemini](https://docs.cline.bot/provider-config/google-gemini.md): Learn how to configure and use Google Gemini with Cline.
-- [MiniMax](https://docs.cline.bot/provider-config/minimax.md): Learn how to configure and use MiniMax provider with Cline..
+- [MiniMax](https://docs.cline.bot/provider-config/minimax.md): Learn how to configure and use MiniMax provider with Cline.
 - [OpenAI (Codex)](https://docs.cline.bot/provider-config/openai.md): Configure OpenAI with API key or OpenAI Codex OAuth in Cline.
 - [OpenAI Compatible](https://docs.cline.bot/provider-config/openai-compatible.md): Learn how to configure Cline with various AI model providers that offer OpenAI-compatible APIs.
 - [OpenRouter](https://docs.cline.bot/provider-config/openrouter.md): Learn how to use OpenRouter with Cline to access a wide variety of language provider through a single API.
 - [Other 30+ Providers](https://docs.cline.bot/provider-config/other-30-plus-providers.md): Reference list for additional supported providers with shared configuration flow.
+- [Poolside](https://docs.cline.bot/provider-config/poolside.md): Learn how to configure and use Poolside models with Cline.
 - [Alibaba Qwen](https://docs.cline.bot/provider-config/qwen.md): Learn how to configure and use Alibaba Cloud's Qwen provider with Cline.
 - [Z AI (Zhipu AI)](https://docs.cline.bot/provider-config/zai.md): Learn how to configure and use Z AI's GLM models with Cline. Experience advanced hybrid reasoning, agentic capabilities, and open-source excellence with regional optimization.
 - [Local models](https://docs.cline.bot/running-models-locally/overview.md): Run Cline with local models using Ollama, LM Studio or Atomic Chat.
@@ -112,6 +114,7 @@ fetched_at: 2026-07-18T18:55:57.318525+00:00
 - [Tools](https://docs.cline.bot/sdk/tools.md): Tools let agents read, write, search, call APIs, and run domain-specific actions.
 - [Tools](https://docs.cline.bot/tools-reference/all-cline-tools.md): Reference for Cline's built-in tool system, aligned with SDK tool architecture.
 - [Networking and Proxies](https://docs.cline.bot/troubleshooting/networking-and-proxies.md): Configure Cline to work behind firewalls and proxies
+- [ACP](https://docs.cline.bot/usage/acp.md): Use Cline as the coding agent in Zed, JetBrains IDEs, Neovim, Emacs, and any other ACP-capable client.
 - [CLI Overview](https://docs.cline.bot/usage/cli-overview.md): Use Cline CLI for interactive terminal sessions and automated headless workflows.
 - [IDE](https://docs.cline.bot/usage/ide.md): Use Cline in your IDE to build a working todo app and learn the core workflow.
 - [Kanban](https://docs.cline.bot/usage/kanban.md): Use Cline Kanban to run multiple coding agents in parallel with isolated git worktrees.

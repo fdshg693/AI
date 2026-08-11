@@ -21,8 +21,8 @@ members = [
     "tools/ctx7",
     "tools/internal/ai-usage",
     "tools/schedule",
-    ".claude/skills/writing-skill-web",
-    "integrations/scripts",
+    "claude-plugins/meta/skills/writing-skill-web",
+    "tools/integration/scripts",
 ]
 
 [dependency-groups]

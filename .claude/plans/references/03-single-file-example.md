@@ -1,10 +1,17 @@
+---
+type: Plan
+status: implementing-done
+---
+
 # タグ一覧の人気順ソート追加 実装プラン（サンプル・単一ファイル完結）
 
 > 小さい変更を1ファイルで完結させるプランのサンプルです。実装対象ではありません。`00-overview.md` + ステップ分割との使い分けは末尾の「書き方のポイント」を参照。
 >
-> このファイルは**実行済みの状態**も示している — 先頭の「進捗」行は実行後に追記する導線のサンプル。単一ファイル完結の小さい機能は、詳細が溜まりにくく progress フォルダを作らずに済むことが多い（[references/progress/README.md](progress/README.md) 参照）。
+> このファイルは**実行済みの状態**も示している — frontmatterの`status: implementing-done`は実行後に更新する導線のサンプル。単一ファイル完結の小さい機能は、詳細が溜まりにくく progress フォルダを作らずに済むことが多い（[references/progress/README.md](progress/README.md) 参照）。
 >
-> **進捗**: ✅ 完了。差分・後続タスクは無し（小規模で計画どおりに完結）。
+> 差分・後続タスクは無し（小規模で計画どおりに完結）。
+>
+> 実際のプランなら`implementing-done`後は削除対象だが（[README.md](../README.md)の「完了後の後片付け」節参照）、このファイルはテンプレートのため削除せず残している。
 
 ## やること
 
@@ -58,3 +65,4 @@
 - `00-overview.md` + ステップ分割（[00-overview-example.md](00-overview-example.md) / [01-research-step-example.md](01-research-step-example.md) / [02-implementation-step-example.md](02-implementation-step-example.md) 参照）は、新規ドメイン追加、複数レイヤーにまたがる機能、または外部API調査が必要な機能に限定する。小さい変更にステップ分割を適用すると、ファイルを開き直すコストの方が実装コストを上回る。
 - **「読むべきファイル・推奨Grep」は小さい変更でも省略しない。** 量は少なくてよいが、観点（何を確認するためか）と優先度は分けて書く。フラットな箇条書きにしない。
 - 構成要素（やること／読むべきファイル・推奨Grep／触るファイル／決定事項／注意点／ルール更新）は複数ファイル版のプランと同じ。単に1ファイルに収めているだけで、書く粒度・書かない情報（コードそのもの、自明な手順）は変わらない。
+- 単一ファイル完結プランも`type: Plan`のfrontmatterと`status`を持つ（概要ファイルとステップファイルを兼ねるため）。値の意味は[README.md](../README.md)の「プランのfrontmatter（OKF準拠）」節を参照。
