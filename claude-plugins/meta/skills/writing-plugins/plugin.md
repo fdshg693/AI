@@ -97,6 +97,7 @@ Source: [plugins.md#plugin-structure-overview](https://code.claude.com/docs/en/p
 | `author`                                           | object       | `{"name": "...", "email": "...", "url": "..."}`                                                                                                |
 | `homepage` / `repository` / `license` / `keywords` | string/array | ドキュメントURL・ソースURL・ライセンス・検索タグ                                                                                               |
 | `defaultEnabled`                                   | boolean      | `false`にすると無効状態でインストールされる（外部サービス連携など、オプトインさせたいプラグイン向け。v2.1.154以降）                            |
+| `metadata`                                         | object       | 自由形式のメタデータフィールド                                                                                                                 |
 
 ### コンポーネントパスフィールド
 
@@ -269,13 +270,14 @@ claude plugin install plugin-name@marketplace-name --scope project
 
 **プラグインソース（`source`）の種類**:
 
-| 種類         | 形式                                                                           | 備考                                                                   |
-| :----------- | :----------------------------------------------------------------------------- | :--------------------------------------------------------------------- |
-| 相対パス     | `"./plugins/foo"`                                                              | マーケットプレイスリポジトリ内。マーケットプレイスルート基準、`..`不可 |
-| `github`     | `{"source":"github","repo":"owner/repo","ref?":"...","sha?":"..."}`            |                                                                        |
-| `url`        | `{"source":"url","url":"https://...","ref?":"...","sha?":"..."}`               | 任意のgitホスト                                                        |
-| `git-subdir` | `{"source":"git-subdir","url":"...","path":"tools/plugin"}`                    | モノレポのサブディレクトリをスパースクローン                           |
-| `npm`        | `{"source":"npm","package":"@acme/plugin","version?":"...","registry?":"..."}` | `npm install`で導入                                                    |
+| 種類         | 形式                                                                           | 備考                                                                                    |
+| :----------- | :----------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------- |
+| 相対パス     | `"./plugins/foo"`                                                              | マーケットプレイスリポジトリ内。マーケットプレイスルート基準、`..`不可                  |
+| `github`     | `{"source":"github","repo":"owner/repo","ref?":"...","sha?":"..."}`            |                                                                                         |
+| `url`        | `{"source":"url","url":"https://...","ref?":"...","sha?":"..."}`               | 任意のgitホスト                                                                         |
+| `git-subdir` | `{"source":"git-subdir","url":"...","path":"tools/plugin"}`                    | モノレポのサブディレクトリをスパースクローン                                            |
+| `npm`        | `{"source":"npm","package":"@acme/plugin","version?":"...","registry?":"..."}` | `npm install`で導入                                                                     |
+| `archive`    | `{"source":"archive","url":"https://...","sha256?":"..."}`                     | HTTPS経由のzipファイルから導入。gitもnpmも不要。整合性検証用のSHA-256ハッシュ指定は任意 |
 
 `ref`と`sha`を両方指定した場合は`sha`が優先される。ローカル相対パスはURL経由で追加されたマーケットプレイスでは解決できない（`marketplace.json`単体しかダウンロードされないため）ので、URL配布する場合は`github`/`npm`/gitURLソースを使う。
 

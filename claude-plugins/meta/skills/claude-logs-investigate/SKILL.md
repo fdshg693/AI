@@ -11,7 +11,7 @@ meta:
   requires_skills: writing-hooks, claude-code-docs, claude-cli-docs
   status: stable
   description: no description
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 # Claude Code ログ調査・仕込みスキル
@@ -20,14 +20,14 @@ Claude Code自体の挙動を、既存ログから調査する/新たに記録�
 
 ## 何をしたいかで使うものを選ぶ
 
-| したいこと                                       | 見る/使うもの                                                                                                            |
-| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| 過去の会話・ツール呼び出し内容を振り返りたい     | セッショントランスクリプト `~/.claude/projects/<project>/<session-id>.jsonl`。`/resume` で該当セッションを再開してもよい |
-| 設定・hook・MCPが反映されない原因を切り分けたい  | `/doctor` `/hooks` `/mcp` `/context` `/status` と `--safe-mode` / `CLAUDE_CONFIG_DIR` 分離起動                           |
-| MCPサーバーとの通信(stderr)を見たい              | `claude --debug mcp`                                                                                                     |
-| hookのマッチャー判定・実行結果を見たい           | `claude --debug hooks` または `CLAUDE_CODE_DEBUG_LOG_LEVEL=verbose`(詳細は writing-hooks スキルの `hooks.md` デバッグ節) |
-| 特定のツール呼び出しを自分の形式で記録し続けたい | hookでログを追記する仕込み(下記「hookでのログ仕込み」。hookの書き方自体は writing-hooks スキルへ)                        |
-| 使用状況を継続的に監視・BI/SIEMへ送りたい        | OpenTelemetry設定(下記「OpenTelemetryの仕込み」、詳細は [otel-reference.md](otel-reference.md))                          |
+| したいこと                                       | 見る/使うもの                                                                                                                                                                               |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 過去の会話・ツール呼び出し内容を振り返りたい     | セッショントランスクリプト `~/.claude/projects/<project>/<session-id>.jsonl`。`/resume` で該当セッションを再開してもよい                                                                    |
+| 設定・hook・MCPが反映されない原因を切り分けたい  | `/doctor` `/hooks` `/mcp` `/context` `/status` と `--safe-mode` / `CLAUDE_CONFIG_DIR` 分離起動                                                                                              |
+| MCPサーバーとの通信(stderr)を見たい              | `claude --debug`(かつての `mcp` サブ引数は廃止され、統一された `--debug` でカバーされる)                                                                                                    |
+| hookのマッチャー判定・実行結果を見たい           | `claude --debug`(かつての `hooks` サブ引数は廃止され、統一された `--debug` でカバーされる)または `CLAUDE_CODE_DEBUG_LOG_LEVEL=verbose`(詳細は writing-hooks スキルの `hooks.md` デバッグ節) |
+| 特定のツール呼び出しを自分の形式で記録し続けたい | hookでログを追記する仕込み(下記「hookでのログ仕込み」。hookの書き方自体は writing-hooks スキルへ)                                                                                           |
+| 使用状況を継続的に監視・BI/SIEMへ送りたい        | OpenTelemetry設定(下記「OpenTelemetryの仕込み」、詳細は [otel-reference.md](otel-reference.md))                                                                                             |
 
 ## 既存ログを見る
 
@@ -52,8 +52,7 @@ Claude Code自体の挙動を、既存ログから調査する/新たに記録�
 
 - `-d, --debug [filter]` — カテゴリフィルタ付きデバッグモード。例: `"api,hooks"`(該当カテゴリのみ)、`"!1p,!file"`(除外指定)
 - `--debug-file <path>` — デバッグログを指定ファイルに書き出す(暗黙的にdebugモードを有効化)
-- `claude --debug mcp` — MCPサーバーのstderr出力を確認(接続してもツールが0件、等の切り分けに有効)
-- `claude --debug hooks` — hookのマッチャー判定・終了コード・出力をライブトレース
+- `claude --debug` — MCPサーバーのstderr出力の確認(接続してもツールが0件、等の切り分けに有効)や、hookのマッチャー判定・終了コード・出力のライブトレースをカバーする(かつての `mcp`/`hooks` サブ引数は廃止され、統一された `--debug` にまとまった)
 - `--safe-mode` — 全カスタマイズ(hook/MCP/skills等)を無効化して起動し、問題の切り分けを行う
 - `CLAUDE_CONFIG_DIR=/tmp/claude-clean claude` — クリーンな設定ディレクトリで起動して切り分ける
 - セッション内スラッシュコマンド:
