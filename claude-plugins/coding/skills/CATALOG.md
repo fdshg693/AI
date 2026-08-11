@@ -44,15 +44,19 @@ meta:
 - parallel-agent-worktree
 ---
 name: parallel-agent-worktree
-description: 複数のClaude Codeセッション（同一ローカル環境上で並行して動くエージェント）が、Linearの未着手issueをタスクキューとして使い、それぞれ別のgit worktreeで衝突なく1タスクずつ分担して作業を進めるためのスキル。Linear issueの検索→claim→worktree作業→完了報告までの一連の流れを自然言語指示で進めたい場合に使う。専用のトラッキングissue1件で「どの環境がどのworktreeを使用中か」を追跡し、空き状況を判定可能にする。専用オーケストレーター（常駐プロセス等）は前提とせず、1タスクのcommit・push完了をもって処理は完結する（次のタスクへ自動で継続しない）。
+description: 複数のClaude Codeセッション（同一ローカル環境上で並行して動くエージェント）が、Linearの未着手issueをタスクキューとして使い、それぞれ別のgit worktreeで衝突なく1タスクずつ分担して作業を進めるためのスキル。Linear issueの検索→claim→worktree作業→完了報告までの一連の流れを自然言語指示で進めたい場合に使う。タスクグループ（Linear Project + `.linear-cli/config.json`の`project`既定値）単位でアクティブな未着手issueを絞り込み、依存関係（`depends_on`）を持つissue群は同じブランチ・worktreeを再利用しながら順番に実装する。専用のトラッキングissue1件で「どの環境がどのworktreeを使用中か」を追跡し、空き状況を判定可能にする。専用オーケストレーター（常駐プロセス等）は前提とせず、1タスクのcommit・push完了をもって処理は完結する（次のタスクへ自動で継続しない）。
 # 前提条件（このスキル自体はインストール・セットアップを一切行わない）:
 #   - `linear-cli` コマンドがPATH上で使え、LINEAR_API_KEYが設定済みであること
 #     （セットアップは claude-plugins/my-tools/skills/linear-cli/SKILL.md 参照）
 #   - `EnterWorktree`/`ExitWorktree` がハーネス組み込みツールとして利用可能であること
+#   - 対象issueが issue-shape.md の定めるタスクグループ対応版の型（構造化ヘッダ・
+#     branch:<slug>ラベル）に沿って配置済みであること（起票手順は issue-authoring.md 参照）
 #
-# 依存スキル: claude-plugins/my-tools/skills/linear-cli（issue検索・作成・ステータス更新・コメント追加/一覧取得/削除）
+# 依存スキル: claude-plugins/my-tools/skills/linear-cli（issue検索・作成・ステータス更新・
+# ラベル絞り込み/付与・コメント追加/一覧取得/削除・issue詳細取得）
 # このスキルはlinear-cliとハーネス組み込みworktreeツールを繋ぐ薄いオーケストレーション層で、
-# 自前のソースコードは持たない。
+# 自前のソースコードは持たない。issueの型・起票手順は同階層の issue-shape.md / issue-authoring.md
+# を参照（本ファイルはそれらを前提としたオーケストレーションフローのみを扱う）。
 meta:
   requires_repo_tools: none
   requires_env: LINEAR_API_KEY
@@ -62,7 +66,7 @@ meta:
   requires_skills: linear-cli
   status: experimental
   description: no description
-  version: 2.0.0
+  version: 2.0.1
 ---
 
 - pr-check
