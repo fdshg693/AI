@@ -141,7 +141,7 @@ def wait_until_running(env_id: str, start_timeout: int) -> None:
         if not envs:
             raise OnaRunError(f"環境が見つかりません: {env_id}")
 
-        phase = envs[0].get("phase")
+        phase = envs[0].get("status", {}).get("phase")
         if phase == RUNNING_PHASE:
             return
         if phase in TERMINAL_FAILURE_PHASES:
