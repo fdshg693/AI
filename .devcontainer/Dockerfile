@@ -6,8 +6,7 @@ FROM mcr.microsoft.com/devcontainers/base:2.0.4-noble
 RUN curl -fsSL https://deb.nodesource.com/setup_26.x | bash - \
 	&& apt-get install -y --no-install-recommends nodejs \
 	&& rm -rf /var/lib/apt/lists/* \
-	&& corepack enable \
-	&& corepack prepare pnpm@11.15.0 --activate
+	&& npm install -g pnpm@11.15.0
 
 # uv (Python tooling for tools/aim, tools/aim-use, etc.), installed system-wide.
 RUN curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR=/usr/local/bin sh
