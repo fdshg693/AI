@@ -7,6 +7,7 @@ allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *)
 #   - 公開リポジトリの読み取りなので認証は必須ではないが、レート制限回避のため `gh auth login` 済みが望ましい
 # !`<command>` で起動時に必ずスナップショットを更新/確認する
 meta:
+  tag: []
   requires_repo_tools: gh
   requires_env: none
   dependencies: none

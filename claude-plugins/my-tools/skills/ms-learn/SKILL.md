@@ -7,6 +7,7 @@ description: Search and fetch official Microsoft/Azure documentation (and code s
 # セットアップは一切行わない。認証不要(Microsoft Learn MCP は公開エンドポイント)。
 # このスキルの設計意図・前提条件の背景は同階層のREADME.md参照(人間のメンテナ向け)
 meta:
+  tag: []
   requires_repo_tools: mslearn
   requires_env: MSLEARN_MCP_OUTPUT_DIR
   dependencies: none

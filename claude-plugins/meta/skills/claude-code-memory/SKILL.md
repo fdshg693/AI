@@ -3,6 +3,7 @@
 name: claude-code-memory
 description: Guides placement of project knowledge in Claude Code, including CLAUDE.md, `.claude/rules/*.md`, and auto memory. Use when deciding what belongs in each mechanism, editing its configuration, or troubleshooting memory behavior.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none

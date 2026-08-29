@@ -65,6 +65,10 @@ pre-commit:
       glob: "**/SKILL.md"
       run: just --justfile tools/internal/justfile skill-descriptions
       stage_fixed: true
+    - name: ensure SKILL.md meta.tag defaults
+      glob: "**/SKILL.md"
+      run: just --justfile tools/internal/justfile skill-tags
+      stage_fixed: true
     - name: check SKILL.md meta.version bump
       glob: "**/SKILL.md"
       run: just --justfile tools/internal/justfile skill-version-bump-check {staged_files}

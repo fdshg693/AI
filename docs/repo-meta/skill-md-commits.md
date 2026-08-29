@@ -18,8 +18,8 @@ status: stable
 1. **生成物の再生成**（`stage_fixed: true`、成功すれば自動でステージに追加される）
    - `skill-catalog.json` / 各プラグインの `CATALOG.md`（詳細は[ai-tools-config](/repo-meta/ai-tools-config.md)）
    - `copilot-plugins/meta/**/SKILL.md`が対象なら`plugin.json`/`marketplace.json`も
-2. **meta.version / meta.description のデフォルト値バックフィル**（`stage_fixed: true`）
-   - `just skill-versions` / `just skill-descriptions` が**リポジトリ全体**の`SKILL.md`を走査し、値が空のフィールドに`1.0.0`/`no description`を補完する。ステージされていない他のスキルにも波及するため、コミット後の差分が「自分が触った分」より大きくなるのは想定内。
+2. **meta.version / meta.description / meta.tag のデフォルト値バックフィル**（`stage_fixed: true`）
+   - `just skill-versions` / `just skill-descriptions` / `just skill-tags` が**リポジトリ全体**の`SKILL.md`を走査し、値が空のフィールドに`1.0.0`/`no description`/`[]`を補完する。ステージされていない他のスキルにも波及するため、コミット後の差分が「自分が触った分」より大きくなるのは想定内。
 3. **meta.versionバンプチェック（ブロッキング、自動修正なし）**
    - `skill/check/check_skill_version_bump.py`が、ステージ済みの各`SKILL.md`をHEADと比較し、「`meta.version`以外の内容が変わったのに`meta.version`が変わっていない」ファイルがあればコミットを拒否する。
 
@@ -40,6 +40,7 @@ just --justfile tools/internal/justfile skill-version-bump
 ```bash
 just --justfile tools/internal/justfile skill-versions
 just --justfile tools/internal/justfile skill-descriptions
+just --justfile tools/internal/justfile skill-tags
 just --justfile tools/internal/justfile skill-catalog
 just --justfile tools/internal/justfile skills-catalog-md
 just --justfile tools/internal/justfile skill-version-bump

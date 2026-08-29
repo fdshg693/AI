@@ -6,6 +6,7 @@ arguments: [target]
 allowed-tools: Bash(python plugins/review/skills/review/*.py *)
 # Python依存: pathspec (`.diffignore` で除外パターンを指定する場合のみ必要。事前に `pip install pathspec` でグローバルインストールしておくこと)
 meta:
+  tag: []
   requires_repo_tools: git, python
   requires_env: none
   dependencies: pathspec

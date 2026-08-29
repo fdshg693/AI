@@ -4,6 +4,7 @@ description: Use when answering questions about Visual Studio Code (the editor) 
 allowed-tools: Bash(python plugins/vscode/skills/vscode-docs/*.py *)
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
+  tag: []
   requires_repo_tools: WebFetch, Read, Grep
   requires_env: none
   dependencies: none
@@ -12,7 +13,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 !`python plugins/vscode/skills/vscode-docs/download_vscode_reference.py`

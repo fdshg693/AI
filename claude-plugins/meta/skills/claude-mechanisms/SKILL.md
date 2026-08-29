@@ -5,6 +5,7 @@
 name: claude-mechanisms
 description: Use when deciding which Claude Code mechanism to reach for — CLAUDE.md/rules/auto memory, a SKILL, a subagent, or a hook — before persisting knowledge, automating a workflow, or delegating a task. Also covers the anti-pattern of hoarding static prompt files instead of using SKILLS. For how to actually write each mechanism, defer to the dedicated skill it points to.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none

@@ -2,6 +2,7 @@
 name: codex-hooks
 description: Use when creating, editing, reviewing, or debugging OpenAI Codex hooks (hooks.json, or inline [hooks] tables in config.toml) — choosing events (PreToolUse, PermissionRequest, PostToolUse, SessionStart, SessionEnd, UserPromptSubmit, Stop, SubagentStart/SubagentStop, PreCompact/PostCompact), writing matcher regexes, command vs mcp_tool handlers, the JSON input/output contract (permissionDecision, decision/reason, continue, additionalContext, hookSpecificOutput), exit codes, async/background hooks, hook trust review via `/hooks`, plugin-bundled hooks, and managed hooks in requirements.toml. Do not use this skill for general config.toml/mcp_servers/sandbox/rules settings beyond hooks (use codex-settings), CLI flags (use codex-cli-docs), general Codex specification questions (use codex-docs), or Claude Code hooks (use writing-hooks — event names and schema differ).
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -10,7 +11,7 @@ meta:
   requires_skills: codex-docs, codex-settings
   status: stable
   description: no description
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 # Codex Hooks作成のベストプラクティス

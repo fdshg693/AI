@@ -5,6 +5,7 @@ name: okf-spec
 description: Use when finding, reading, authoring, or answering questions about Open Knowledge Format (OKF) bundles or concept documents — a markdown+YAML-frontmatter convention (GoogleCloudPlatform/knowledge-catalog) for knowledge that AI agents write and consume. Grounds answers in a periodically re-fetched snapshot of the official spec instead of training-data memory, which may be stale or predate v0.2's provenance/trust/lifecycle/attestation fields.
 allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/download_okf_spec.py *)
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: requests

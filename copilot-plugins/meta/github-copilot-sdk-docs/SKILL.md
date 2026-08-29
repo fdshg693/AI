@@ -2,6 +2,7 @@
 name: github-copilot-sdk-docs
 description: Use when answering questions about the GitHub Copilot SDK (`@github/copilot-sdk` and its Python/Go/Rust/Java/.NET equivalents) — installation, authentication (GitHub OAuth, BYOK, Azure managed identity), sending/streaming messages, custom tools, hooks, custom agents, MCP integration, fleet mode, cloud/remote sessions, session persistence/limits, skills, plugin directories, usage & billing, deployment/scaling/multi-tenancy, or troubleshooting. Grounds answers in the latest official docs (docs.github.com) instead of training-data memory, which may be stale.
 meta:
+  tag: []
   requires_repo_tools: WebFetch
   requires_env: none
   dependencies: none
@@ -10,7 +11,7 @@ meta:
   requires_skills: github-copilot-docs, github-copilot-observability-docs
   status: stable
   description: no description
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 # GitHub Copilot SDK 最新ドキュメント参照

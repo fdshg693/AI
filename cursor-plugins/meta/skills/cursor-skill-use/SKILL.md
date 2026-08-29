@@ -3,6 +3,7 @@
 name: cursor-skill-use
 description: Use when using, creating, or managing Agent Skills in Cursor (the AI code editor) — invoking skills, placing and writing SKILL.md, frontmatter fields (name/description/paths/disable-model-invocation/metadata), skill discovery locations, scoping skills to files, built-in skills, installing from GitHub, migrating rules or slash commands to skills, and bundling skills into plugins. Not for Cursor CLI flags (use cursor-cli-docs) or general Cursor features (use cursor-docs).
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -11,7 +12,7 @@ meta:
   requires_skills: none
   status: experimental
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 # Cursorでのスキルの使い方

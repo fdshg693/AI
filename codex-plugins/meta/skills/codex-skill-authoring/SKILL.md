@@ -2,6 +2,7 @@
 name: codex-skill-authoring
 description: Use when creating, reviewing, or updating a skill for OpenAI Codex. Explain or implement Codex SKILL.md frontmatter, trigger descriptions, progressive disclosure, repository or plugin placement, optional UI metadata, testing, and distribution. Do not apply Claude-specific conventions unless the user explicitly asks for them.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -10,7 +11,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 # Codexスキルの書き方

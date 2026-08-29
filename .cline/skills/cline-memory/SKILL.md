@@ -4,6 +4,7 @@ description: Clineのメモリ・文脈維持機能を説明・設計・設定�
 user-invocable: true
 disable-model-invocation: false
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none

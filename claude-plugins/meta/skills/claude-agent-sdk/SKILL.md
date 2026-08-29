@@ -4,6 +4,7 @@ description: Use when building, reviewing, or troubleshooting Python application
 # Python版のClaude Agent SDKだけを対象にする。別言語のSDK、API名、コード例は扱わない。
 # 公式ドキュメントの取得・抽出は claude-code-docs スキルに依存する。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: ANTHROPIC_API_KEY
   dependencies: claude-agent-sdk, pydantic

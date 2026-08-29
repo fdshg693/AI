@@ -74,19 +74,7 @@ def ensure_meta_field(raw: str, field: str, default_value: str) -> tuple[str, bo
 
     Leaves an already non-empty value untouched.
     """
-    lines = raw.split("\n")
-    field_idx, meta_idx, indent, current_value = _locate_field(lines, field)
-
-    if meta_idx == -1:
-        return _append_meta_block(lines, field, default_value), True
-    if field_idx is not None:
-        if current_value:
-            return raw, False
-        lines[field_idx] = f"{indent}{field}: {_format_scalar(default_value)}"
-        return "\n".join(lines), True
-
-    lines.insert(meta_idx + 1, f"{indent}{field}: {_format_scalar(default_value)}")
-    return "\n".join(lines), True
+    return ensure_meta_field_literal(raw, field, _format_scalar(default_value))
 
 
 def set_meta_field(raw: str, field: str, new_value: str) -> tuple[str, bool]:
@@ -98,7 +86,7 @@ def set_meta_field(raw: str, field: str, new_value: str) -> tuple[str, bool]:
     field_idx, meta_idx, indent, current_value = _locate_field(lines, field)
 
     if meta_idx == -1:
-        return _append_meta_block(lines, field, new_value), True
+        return _append_meta_block(lines, field, _format_scalar(new_value)), True
     if field_idx is not None:
         if current_value == new_value:
             return raw, False
@@ -109,10 +97,34 @@ def set_meta_field(raw: str, field: str, new_value: str) -> tuple[str, bool]:
     return "\n".join(lines), True
 
 
-def _append_meta_block(lines: list[str], field: str, value: str) -> str:
+def ensure_meta_field_literal(raw: str, field: str, default_literal: str) -> tuple[str, bool]:
+    """Like ``ensure_meta_field``, but writes ``default_literal`` verbatim as
+    YAML source instead of running it through ``_format_scalar``'s string-scalar
+    quoting.
+
+    For array-typed fields (e.g. ``tag``) whose default is flow-sequence
+    syntax like ``"[]"``, which ``_format_scalar`` (built for plain string
+    values) would otherwise quote as the literal string ``"'[]'"``.
+    """
+    lines = raw.split("\n")
+    field_idx, meta_idx, indent, current_value = _locate_field(lines, field)
+
+    if meta_idx == -1:
+        return _append_meta_block(lines, field, default_literal), True
+    if field_idx is not None:
+        if current_value:
+            return raw, False
+        lines[field_idx] = f"{indent}{field}: {default_literal}"
+        return "\n".join(lines), True
+
+    lines.insert(meta_idx + 1, f"{indent}{field}: {default_literal}")
+    return "\n".join(lines), True
+
+
+def _append_meta_block(lines: list[str], field: str, formatted_value: str) -> str:
     new_lines = list(lines)
     while new_lines and new_lines[-1] == "":
         new_lines.pop()
     new_lines.append("meta:")
-    new_lines.append(f"  {field}: {_format_scalar(value)}")
+    new_lines.append(f"  {field}: {formatted_value}")
     return "\n".join(new_lines)

@@ -2,6 +2,7 @@
 name: codex-settings
 description: Use when adding or editing OpenAI Codex configuration files — `~/.codex/config.toml`, project-scoped `.codex/config.toml`, profile files (`$CODEX_HOME/<profile>.config.toml`), `rules/*.rules` (execpolicy), hooks (`features.hooks` + `hooks.json` or inline `[hooks]`), `mcp_servers` entries, sandbox/approval-policy/permission-profile settings, or `requirements.toml`. Covers scope precedence, keys project-scoped config can't override, TOML structure, and a pre-flight checklist. Do not use this skill to answer general Codex specification questions (use codex-docs), CLI flags (use codex-cli-docs), or to author or debug AGENTS.md discovery / memories behavior (use codex-memory).
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -10,7 +11,7 @@ meta:
   requires_skills: codex-docs, codex-cli-docs, codex-hooks, codex-memory, codex-skill-authoring
   status: stable
   description: no description
-  version: 1.0.4
+  version: 1.0.5
 ---
 
 # Codex設定ファイルの編集

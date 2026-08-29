@@ -6,6 +6,7 @@ name: github-agentic-workflows
 description: Create, update, review, compile, and debug GitHub Agentic Workflows (gh-aw) markdown workflows. Use when a task mentions GAW, gh-aw, agentic workflows, .github/workflows/*.md, safe outputs, workflow frontmatter, or agentic workflow run failures.
 disable-model-invocation: true
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: CLAUDE_SKILL_DIR
   dependencies: none
@@ -14,7 +15,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 # 依存関係:
 #   - GitHub Agentic Workflows (gh-aw) CLI for compilation and execution checks
 #   - Official GAW reference snapshots downloaded by download_gaw_reference.py
@@ -26,6 +27,7 @@ meta:
 name: issue-triage
 description: "Skill to triage GitHub issues. It can read issue content, comments, and labels, and then suggest actions such as labeling, assigning, or closing the issue."
 meta:
+  tag: []
   requires_repo_tools: gh
   requires_env: none
   dependencies: none
@@ -34,7 +36,7 @@ meta:
   requires_skills: none
   status: experimental
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 - pr-agent-docs
@@ -47,6 +49,7 @@ allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *)
 #   - 公開リポジトリの読み取りなので認証は必須ではないが、レート制限回避のため `gh auth login` 済みが望ましい
 # !`<command>` で起動時に必ずスナップショットを更新/確認する
 meta:
+  tag: []
   requires_repo_tools: gh
   requires_env: none
   dependencies: none

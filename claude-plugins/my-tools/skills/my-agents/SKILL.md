@@ -8,6 +8,7 @@ description: YAML定義のLangchainエージェントを実行・一覧表示・
 # 設定済みであること。このスキルはインストール・セットアップは一切行わない。
 # このスキルの設計意図・前提条件の背景は同階層のREADME.md参照（人間のメンテナ向け）
 meta:
+  tag: []
   requires_repo_tools: tools/my-agents, tools/mslearn
   requires_env: OPENAI_API_KEY
   dependencies: none

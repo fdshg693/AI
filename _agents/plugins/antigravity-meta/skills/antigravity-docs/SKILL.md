@@ -2,6 +2,7 @@
 name: antigravity-docs
 description: Use when answering questions about Google Antigravity — the agentic coding platform, Antigravity 2.0, IDE, CLI, SDK, agent skills, rules, workflows, plugins, hooks, MCP servers, subagents, sandbox, permissions, artifacts, pricing, and use cases. Grounds answers in the latest official documentation from antigravity.google (llms.txt index plus per-page raw Markdown) instead of training-data memory, which may be stale.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: python
@@ -10,7 +11,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.3
+  version: 1.0.4
 ---
 
 # Antigravity Documentation Reference

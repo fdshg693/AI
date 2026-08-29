@@ -5,6 +5,7 @@ description: Cline 用スキルを新規作成・編集するためのメタス�
 user-invocable: true
 disable-model-invocation: false
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none

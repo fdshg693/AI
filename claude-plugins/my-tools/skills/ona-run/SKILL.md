@@ -5,6 +5,7 @@ description: リポジトリURL（またはOnaプロジェクトID）とタス�
 # コンテナ内でAIエージェントCLI（claude/codex）を動かす場合、対象リポジトリのDev Container側にそのCLIが導入済みであることが前提（このスキル・ツールとも導入までは面倒を見ない）
 # このスキルの設計意図・前提条件の背景は同階層のREADME.md参照（人間のメンテナ向け）
 meta:
+  tag: []
   requires_repo_tools: ona-run
   requires_env: none
   dependencies: none

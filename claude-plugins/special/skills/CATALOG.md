@@ -7,6 +7,7 @@ description: 指定したサブスキルの内容をまとめて読み込んで�
 disable-model-invocation: true
 user-invocable: true
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -15,7 +16,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 - skill-group
@@ -25,6 +26,7 @@ description: 様々なスキルをグループ化したスキル
 disable-model-invocation: false
 user-invocable: true
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: python
   dependencies: none

@@ -7,6 +7,7 @@ description: 指定した複数ファイルまたはディレクトリに同一�
 # 前提条件: `aim-ask`コマンドがPATH上にインストール済み（`uv tool install --editable tools/aim-use/aim-ask`）であり、OPENROUTER_API_KEYが設定済み（aim-cliが内部で要求）であること。このスキルはインストール・セットアップは一切行わない
 # このスキルの設計意図・前提条件の背景は tools/aim-use/aim-ask/README.md および PLAN.md 参照（人間のメンテナ向け）
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: OPENROUTER_API_KEY
   dependencies: aim-cli, OPENROUTER_API_KEY
@@ -25,6 +26,7 @@ description: OpenRouter経由でAIモデルを単発呼び出しする`aim` CLI�
 # 前提条件: `aim`コマンドがPATH上にインストール済み（`uv tool install --editable tools/aim`）であり、OPENROUTER_API_KEYが設定済みであること。このスキルはインストール・セットアップは一切行わない
 # このスキルの設計意図・前提条件の背景は同階層のREADME.md参照（人間のメンテナ向け）
 meta:
+  tag: []
   requires_repo_tools: aim
   requires_env: OPENROUTER_API_KEY
   dependencies: none
@@ -41,6 +43,7 @@ meta:
 name: using-aim-library
 description: "`tools/aim` のグローバルインストール済み Python 実装をライブラリとして使い、OpenRouter 経由で AI モデルへ単発リクエストを送る方法を説明する。Python コードからプロンプトを送信したい、モデル略記を解決したい、応答本文を取り出したい場合に使う。CLI コマンドを実行する場合は `aim-cli` を使う。"
 meta:
+  tag: []
   requires_repo_tools: tools/aim
   requires_env: OPENROUTER_API_KEY
   dependencies: aim-cli, python>=3.11
@@ -59,6 +62,7 @@ description: リポジトリ内のファイルをファイル単位でAI要約�
 # 前提条件: `aim-summarize`コマンドがPATH上にインストール済み（`uv tool install --editable tools/aim-use/aim-summarize`）であり、OPENROUTER_API_KEYが設定済み（aim-cliが内部で要求）であること。このスキルはインストール・セットアップは一切行わない
 # このスキルの設計意図・前提条件の背景は tools/aim-use/aim-summarize/README.md および PLAN.md 参照（人間のメンテナ向け）
 meta:
+  tag: []
   requires_repo_tools: git
   requires_env: OPENROUTER_API_KEY
   dependencies: none
@@ -83,6 +87,7 @@ disable-model-invocation: true
 # ユーザーの明示呼び出し（/interactive-cli-wrapper）に限定する
 # このスキルの意図・スコープは同階層のREADME.md参照（人間のメンテナ向け）
 meta:
+  tag: []
   requires_repo_tools: icw
   requires_env: none
   dependencies: pywinpty, pyte
@@ -102,6 +107,7 @@ description: 未着手issue検索・issue作成・ステータス更新（担当
 # LINEAR_API_KEYが設定済みであること。このスキルはインストール・セットアップは一切行わない
 # このスキルの設計意図・前提条件の背景は同階層のREADME.md参照（人間のメンテナ向け）
 meta:
+  tag: []
   requires_repo_tools: tools/linear-cli
   requires_env: LINEAR_API_KEY
   dependencies: "@linear/sdk"
@@ -128,6 +134,7 @@ description: Microsoft Learn/Azure公式ドキュメントを`mslearn`で検索�
 #            claude-plugins/my-tools/skills/aim-ask (並列AI抽出本体)
 # このスキルは上記2つを繋ぐ薄いオーケストレーション層で、自前のソースコードは持たない。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: OPENROUTER_API_KEY
   dependencies: mslearn, aim-ask
@@ -149,6 +156,7 @@ description: Search and fetch official Microsoft/Azure documentation (and code s
 # セットアップは一切行わない。認証不要(Microsoft Learn MCP は公開エンドポイント)。
 # このスキルの設計意図・前提条件の背景は同階層のREADME.md参照(人間のメンテナ向け)
 meta:
+  tag: []
   requires_repo_tools: mslearn
   requires_env: MSLEARN_MCP_OUTPUT_DIR
   dependencies: none
@@ -171,6 +179,7 @@ description: YAML定義のLangchainエージェントを実行・一覧表示・
 # 設定済みであること。このスキルはインストール・セットアップは一切行わない。
 # このスキルの設計意図・前提条件の背景は同階層のREADME.md参照（人間のメンテナ向け）
 meta:
+  tag: []
   requires_repo_tools: tools/my-agents, tools/mslearn
   requires_env: OPENAI_API_KEY
   dependencies: none
@@ -190,6 +199,7 @@ description: リポジトリURL（またはOnaプロジェクトID）とタス�
 # コンテナ内でAIエージェントCLI（claude/codex）を動かす場合、対象リポジトリのDev Container側にそのCLIが導入済みであることが前提（このスキル・ツールとも導入までは面倒を見ない）
 # このスキルの設計意図・前提条件の背景は同階層のREADME.md参照（人間のメンテナ向け）
 meta:
+  tag: []
   requires_repo_tools: ona-run
   requires_env: none
   dependencies: none
@@ -217,6 +227,7 @@ description: Guides multi-step Tavily research with this project's `tav` command
 # ```!```を使った動的コンテキスト埋め込みを使い、更新漏れを防止する
 # 参考: https://code.claude.com/docs/en/skills#inject-dynamic-context
 meta:
+  tag: []
   requires_repo_tools: tav
   requires_env: TAVILY_API_KEY, TAVILY_OUTPUT_DIR, TAVILY_WRITE_LOG, TAVILY_SHOW_LOG_PATH
   dependencies: tavily-python, python-dotenv
@@ -243,6 +254,7 @@ description: tav`で`--topic`指定して収集した`pages/`(extract/crawl/sear
 #            claude-plugins/my-tools/skills/aim-ask (並列AI抽出本体)
 # このスキルは上記2つを繋ぐ薄いオーケストレーション層で、自前のソースコードは持たない。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: OPENROUTER_API_KEY
   dependencies: tav, aim-ask
@@ -259,6 +271,7 @@ meta:
 name: tav-lib
 description: "`tools/tav-cli` のグローバルインストール済み Python 実装をライブラリとして使い、Tavily 経由で Web 検索・URL 本文抽出・サイトマップ・クロール・リサーチを行う方法を説明する。Python コードから Tavily API を呼び出したい、`--detail` プリセットを適用した結果を取り出したい場合に使う。CLI コマンドを実行する場合は `tav-cli` を使う。"
 meta:
+  tag: []
   requires_repo_tools: tools/tav-cli
   requires_env: TAVILY_API_KEY
   dependencies: tav-cli, python>=3.11
@@ -293,6 +306,7 @@ description: Fetch the raw text/markdown content of a single already-known URL v
 # の型契約は意図的に持たない(1 URL のテキスト取得に対しては過剰なため)。結果ファイル・
 # 監査ログ自体は書くが、tav-cli のような複数タスクを跨いだ蓄積レイアウトは持たない。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: TAVILY_API_KEY
   dependencies: tavily, python-dotenv
@@ -315,6 +329,7 @@ description: Resolve and fetch current, version-aware library/framework document
 # レート制限が低い)。このスキルの設計意図・前提条件の背景は同階層のREADME.md参照
 # (人間のメンテナ向け)。
 meta:
+  tag: []
   requires_repo_tools: ctx7
   requires_env: CONTEXT7_API_KEY
   dependencies: requests, python-dotenv

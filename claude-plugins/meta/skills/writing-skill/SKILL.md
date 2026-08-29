@@ -5,6 +5,7 @@ name: writing-skill
 # TDD的なサブエージェント検証は行わない低コスト・日常用途版。高コストなwriting-skill-complexとは棲み分け、モデルの自動起動はこちらに任せる
 description: Use when creating, editing, or evaluating a SKILL.md against best practices — lightweight, everyday guidance covering both writing and reviewing skills. For high-cost subagent-verified TDD testing before deploying critical or widely-shared skills, use writing-skill-complex instead.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none

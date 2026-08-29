@@ -4,6 +4,7 @@ description: OpenRouter経由でAIモデルを単発呼び出しする`aim` CLI�
 # 前提条件: `aim`コマンドがPATH上にインストール済み（`uv tool install --editable tools/aim`）であり、OPENROUTER_API_KEYが設定済みであること。このスキルはインストール・セットアップは一切行わない
 # このスキルの設計意図・前提条件の背景は同階層のREADME.md参照（人間のメンテナ向け）
 meta:
+  tag: []
   requires_repo_tools: aim
   requires_env: OPENROUTER_API_KEY
   dependencies: none

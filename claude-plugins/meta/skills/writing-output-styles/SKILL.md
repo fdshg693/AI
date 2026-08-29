@@ -3,6 +3,7 @@
 name: writing-output-styles
 description: Use when creating or editing a Claude Code output style (.claude/output-styles/*.md, ~/.claude/output-styles/*.md, or a plugin's output-styles/ directory) — choosing keep-coding-instructions, writing frontmatter, distinguishing output styles from CLAUDE.md/subagents/skills/--append-system-prompt, and switching styles via /config.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -11,7 +12,7 @@ meta:
   requires_skills: claude-code-docs
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 # Output Style作成のベストプラクティス

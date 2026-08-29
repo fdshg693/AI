@@ -2,6 +2,7 @@
 name: codex-docs
 description: Use when answering questions about Codex, including the Codex CLI, IDE extension, cloud/app, SDK, configuration, skills, plugins, MCP, subagents, sandboxing, approvals, permissions, security, pricing, and workflows. Ground answers in the latest official Codex docs from developers.openai.com/codex instead of training-data memory, which may be stale.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: requests
@@ -10,7 +11,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 # Codex Documentation Reference

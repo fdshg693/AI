@@ -21,6 +21,7 @@ agent: general-purpose
 #   フォークされたサブエージェントに探索させ、確定したファイルパス一覧だけを
 #   呼び出し元に返させることで、本会話のコンテキストを汚さない。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none

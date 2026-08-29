@@ -12,6 +12,7 @@
 name: antigravity-memory
 description: Guides placement and authoring of persistent Agent context in Google Antigravity — GEMINI.md, AGENTS.md, workspace Rules (.agents/rules), global Rules (~/.gemini/GEMINI.md), and Workflows. Use when deciding what belongs in each mechanism, explaining how/when Antigravity reads these files (including what is and isn't officially documented about nested directories and reload timing), or troubleshooting why a rule isn't applied. Not for Agent Skills (use antigravity-skills) or general Antigravity features (use antigravity-docs).
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -20,7 +21,7 @@ meta:
   requires_skills: antigravity-docs, antigravity-skills
   status: stable
   description: no description
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 # Antigravityのメモリ設計（GEMINI.md / AGENTS.md / Rules）

@@ -20,6 +20,7 @@ description: Fetch the raw text/markdown content of a single already-known URL v
 # の型契約は意図的に持たない(1 URL のテキスト取得に対しては過剰なため)。結果ファイル・
 # 監査ログ自体は書くが、tav-cli のような複数タスクを跨いだ蓄積レイアウトは持たない。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: TAVILY_API_KEY
   dependencies: tavily, python-dotenv

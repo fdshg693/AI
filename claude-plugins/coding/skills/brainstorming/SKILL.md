@@ -8,6 +8,7 @@ description: "You MUST use this before any creative work - creating features, bu
 # 後続スキル: writing-plans
 # 出力: docs/specs/<topic>-design.md
 meta:
+  tag: []
   requires_repo_tools: flow.dot
   requires_env: none
   dependencies: none

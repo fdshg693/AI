@@ -2,6 +2,7 @@
 name: github-copilot-observability-docs
 description: Use when answering questions about GitHub Copilot logs, diagnostic logging, audit logs, usage metrics, agent activity monitoring, or OpenTelemetry for Copilot Chat in VS Code, Copilot CLI, Copilot SDK, or GitHub Enterprise. Grounds answers in the latest official GitHub and VS Code documentation instead of training-data memory, which may be stale.
 meta:
+  tag: []
   requires_repo_tools: WebFetch
   requires_env: none
   dependencies: none
@@ -10,7 +11,7 @@ meta:
   requires_skills: github-copilot-docs, vscode-copilot-docs, copilot-cli-docs
   status: stable
   description: no description
-  version: 1.0.1
+  version: 1.0.2
 ---
 
 # GitHub Copilot のログ・監視・OpenTelemetry 最新ドキュメント参照

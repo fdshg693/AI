@@ -55,6 +55,10 @@ skill-versions:
 skill-descriptions:
     uv run python -m skill.set.set_skill_descriptions
 
+# Ensure every SKILL.md has a meta.tag array (defaults missing ones to [])
+skill-tags:
+    uv run python -m skill.set.set_skill_tags
+
 # Fill missing skill-meta fields using aim-ask (explicit execution only; calls OpenRouter)
 skill-meta-fields-fill:
     uv run python -m skill.set.skill_meta_field_fill

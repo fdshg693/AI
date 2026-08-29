@@ -7,6 +7,7 @@
 name: agy-cli-docs
 description: Use when answering questions about the `agy` command's CLI interface — options, flags, and subcommands (e.g. -p/--print, --model, --mode, --sandbox, agent, models, plugin/plugins, install, update, changelog). Grounds answers in the CLI's own `agy --help` output instead of training-data memory, which may be stale. For Antigravity feature/settings concepts documented on the official site (skills, rules, plugins, hooks, sandbox, permissions), use antigravity-docs instead.
 meta:
+  tag: []
   requires_repo_tools: python
   requires_env: none
   dependencies: agy

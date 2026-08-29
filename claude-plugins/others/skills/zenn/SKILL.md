@@ -12,6 +12,7 @@ user-invocable: true
 
 # 関連スキル: zenn-refine(本スキルの後続として使うと、本番 ZENN 記事に近い品質を目指せる)。
 meta:
+  tag: []
   requires_repo_tools: tav-cli
   requires_env: TAVILY_API_KEY
   dependencies: none

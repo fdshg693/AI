@@ -3,6 +3,7 @@ name: cline-sdk-docs
 description: Explain and implement Cline SDK applications using current official documentation. Use when the user asks about @cline/sdk, @cline/core, @cline/agents, @cline/llms, Cline agents, custom tools, events, providers, permissions, sessions, plugins, automation, or SDK application architecture. Do not use for the Cline REST API or CLI-only questions.
 # 依存: 詳細なSDKパターンは同階層のsdk-reference.md、公式ページの対応表はsdk-reference-map.mdを参照する。最新仕様の取得はcline-docsに委譲する。cline-cli-docsはCLI専用。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: "@cline/sdk,@cline/core,@cline/agents,@cline/llms"
@@ -11,7 +12,7 @@ meta:
   requires_skills: cline-docs,cline-cli-docs
   status: stable
   description: no description
-  version: 2.0.2
+  version: 2.0.3
 ---
 
 # Cline SDK 公式ドキュメント解説

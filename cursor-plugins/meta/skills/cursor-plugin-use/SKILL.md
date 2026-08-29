@@ -2,6 +2,7 @@
 name: cursor-plugin-use
 description: Use when installing, creating, managing, or distributing Cursor plugins (the AI code editor) — plugin structure, the `.cursor-plugin/plugin.json` manifest, bundled components (rules, skills, agents, commands, MCP servers, hooks), local testing from `~/.cursor/plugins/local`, publishing to the Cursor Marketplace, team and Enterprise marketplaces, plugin installation modes, and managing installed plugins from Customize. Not for Agent Skills authoring details (use cursor-skill-use) or general Cursor features (use cursor-docs).
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -10,7 +11,7 @@ meta:
   requires_skills: cursor-docs, cursor-skill-use
   status: experimental
   description: no description
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 # Cursor プラグインの使い方

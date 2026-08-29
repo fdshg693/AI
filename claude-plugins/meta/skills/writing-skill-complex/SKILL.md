@@ -7,6 +7,7 @@ description: Use when creating new skills, editing existing skills, or verifying
 disable-model-invocation: true
 # 日常的な軽量スキル作成にはwriting-skillスキル（サブエージェント検証なし、低コスト）を使う
 meta:
+  tag: []
   requires_repo_tools: graphviz
   requires_env: none
   dependencies: none

@@ -3,6 +3,7 @@
 name: cline-plugin-writer
 description: Cline 用プラグイン（AgentPlugin）を新規作成・編集するためのメタスキル。Use when designing or updating Cline plugins, plugin manifests (package.json cline field), custom tools, lifecycle hooks, slash commands, automation events, or deciding whether an extension belongs in a Plugin vs Skill/Rule. Covers SDK/CLI/Kanban plugins (not VSCode/JetBrains extension skills).
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: "@cline/sdk"

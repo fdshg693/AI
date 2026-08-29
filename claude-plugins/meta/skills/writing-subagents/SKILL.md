@@ -3,6 +3,7 @@
 name: writing-subagents
 description: Use when creating or editing Claude Code subagents (.claude/agents/*.md, ~/.claude/agents/*.md, or the --agents CLI flag) — choosing scope and frontmatter fields, restricting tools, writing effective descriptions, model/permission settings, and avoiding common pitfalls.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -11,7 +12,7 @@ meta:
   requires_skills: claude-code-docs
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 # サブエージェント作成のベストプラクティス

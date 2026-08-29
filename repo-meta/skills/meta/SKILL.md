@@ -4,6 +4,7 @@
 name: meta
 description: "Points to the single most relevant concept doc under docs/repo-meta/ for a given repository-maintenance task (SKILL.md quality checklist, meta: frontmatter fields, SSOT+regeneration pattern, tools/ directory layout, lefthook/justfile wiring, aim automation, GitHub Actions lifecycle, etc.). Use when starting work under repo-meta/, or hitting a skill/tooling drift, staleness, or consistency question and unsure which existing doc already covers it, before writing new one-off guidance."
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none

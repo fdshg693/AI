@@ -2,6 +2,7 @@
 name: tav-lib
 description: "`tools/tav-cli` のグローバルインストール済み Python 実装をライブラリとして使い、Tavily 経由で Web 検索・URL 本文抽出・サイトマップ・クロール・リサーチを行う方法を説明する。Python コードから Tavily API を呼び出したい、`--detail` プリセットを適用した結果を取り出したい場合に使う。CLI コマンドを実行する場合は `tav-cli` を使う。"
 meta:
+  tag: []
   requires_repo_tools: tools/tav-cli
   requires_env: TAVILY_API_KEY
   dependencies: tav-cli, python>=3.11

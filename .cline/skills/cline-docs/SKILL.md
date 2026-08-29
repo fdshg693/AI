@@ -2,6 +2,7 @@
 name: cline-docs
 description: Answer questions about Cline using the latest official documentation at docs.cline.bot. Use for Cline IDE/CLI/SDK features, skills, rules, workflows, configuration, API, providers, MCP, plugins, enterprise features, or troubleshooting when current documented behavior matters.
 meta:
+  tag: []
   requires_repo_tools: python
   requires_env: none
   dependencies: none
@@ -10,7 +11,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 # Cline 公式ドキュメント参照

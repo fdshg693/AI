@@ -7,6 +7,7 @@
 name: writing-rules
 description: Guides creation and maintenance of Claude Code `.claude/rules/*.md` files. Use when adding or updating path-scoped project guidance, organizing existing rules, or bootstrapping rules for a new or largely undocumented codebase.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none

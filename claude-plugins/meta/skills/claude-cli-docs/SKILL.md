@@ -9,6 +9,7 @@ name: claude-cli-docs
 description: Use when answering questions about the `claude` command's CLI interface — options, flags, and subcommands (e.g. -p/--print, --dangerously-skip-permissions, mcp, plugin, agents, doctor). Grounds answers in the CLI's own `claude --help` output instead of training-data memory, which may be stale. For Claude Code feature/settings concepts documented on the official site (hooks, skills, settings.json), use claude-code-docs instead.
 allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *)
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: claude

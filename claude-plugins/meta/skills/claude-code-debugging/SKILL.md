@@ -7,6 +7,7 @@ name: claude-code-debugging
 description: Claude Code自体（CLIツール）のデバッグを一箇所で完結させたい時に使う。既存ログの所在・読み方、デバッグフラグ・スラッシュコマンドでの切り分け、settings起因の不具合切り分け、hookを使ったログの仕込み方、OpenTelemetryでの計装、サブエージェント/CLI分離でのテスト手法、巨大ログの抽出+aim CLIでの要約まで扱う。「Claude Codeがなぜ期待通り動かないか調べたい」「hookやOTelでログを仕込みたい」「セッションログを抽出して分析したい」といった要求で使う。
 allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/scripts/*.py *)
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none

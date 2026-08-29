@@ -14,6 +14,7 @@ description: Use when creating or editing a skill that needs web content — eit
 #
 # 由来・scripts/のコピー前提テンプレートという性質・命名変更の経緯は同階層のREADME.md参照（人間のメンテナ向け）
 meta:
+  tag: []
   requires_repo_tools: uv
   requires_env: none
   dependencies: requests, typer

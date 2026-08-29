@@ -10,6 +10,7 @@ description: >-
   Not for Agent Skills (use cursor-skill-use) or general Cursor features (use
   cursor-docs).
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -18,7 +19,7 @@ meta:
   requires_skills: cursor-skill-use, cursor-docs, claude-code-memory
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 # Cursorのメモリ設計（Rules / AGENTS.md）

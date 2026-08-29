@@ -13,6 +13,7 @@ description: Guides multi-step Tavily research with this project's `tav` command
 # ```!```を使った動的コンテキスト埋め込みを使い、更新漏れを防止する
 # 参考: https://code.claude.com/docs/en/skills#inject-dynamic-context
 meta:
+  tag: []
   requires_repo_tools: tav
   requires_env: TAVILY_API_KEY, TAVILY_OUTPUT_DIR, TAVILY_WRITE_LOG, TAVILY_SHOW_LOG_PATH
   dependencies: tavily-python, python-dotenv

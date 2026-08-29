@@ -5,6 +5,7 @@ description: 未着手issue検索・issue作成・ステータス更新（担当
 # LINEAR_API_KEYが設定済みであること。このスキルはインストール・セットアップは一切行わない
 # このスキルの設計意図・前提条件の背景は同階層のREADME.md参照（人間のメンテナ向け）
 meta:
+  tag: []
   requires_repo_tools: tools/linear-cli
   requires_env: LINEAR_API_KEY
   dependencies: "@linear/sdk"

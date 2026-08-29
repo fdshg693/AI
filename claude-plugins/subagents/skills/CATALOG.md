@@ -5,6 +5,7 @@
 name: dispatching-parallel-agents
 description: Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -13,7 +14,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 - subagent-driven-development
@@ -22,6 +23,7 @@ name: subagent-driven-development
 description: Use when executing implementation plans with independent tasks in the current session
 # 必要エージェント: code-reviewer
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -30,7 +32,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 - test-driven-development
@@ -38,6 +40,7 @@ meta:
 name: test-driven-development
 description: Use when implementing any feature or bugfix, before writing implementation code
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -46,5 +49,5 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---

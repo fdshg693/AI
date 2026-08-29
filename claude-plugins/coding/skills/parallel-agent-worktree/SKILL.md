@@ -14,6 +14,7 @@ description: 複数のClaude Codeセッション（同一ローカル環境上�
 # 自前のソースコードは持たない。issueの型・起票手順は同階層の issue-shape.md / issue-authoring.md
 # を参照（本ファイルはそれらを前提としたオーケストレーションフローのみを扱う）。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: LINEAR_API_KEY
   dependencies: linear-cli

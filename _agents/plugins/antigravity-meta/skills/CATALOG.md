@@ -10,6 +10,7 @@
 name: agy-cli-docs
 description: Use when answering questions about the `agy` command's CLI interface — options, flags, and subcommands (e.g. -p/--print, --model, --mode, --sandbox, agent, models, plugin/plugins, install, update, changelog). Grounds answers in the CLI's own `agy --help` output instead of training-data memory, which may be stale. For Antigravity feature/settings concepts documented on the official site (skills, rules, plugins, hooks, sandbox, permissions), use antigravity-docs instead.
 meta:
+  tag: []
   requires_repo_tools: python
   requires_env: none
   dependencies: agy
@@ -26,6 +27,7 @@ meta:
 name: antigravity-docs
 description: Use when answering questions about Google Antigravity — the agentic coding platform, Antigravity 2.0, IDE, CLI, SDK, agent skills, rules, workflows, plugins, hooks, MCP servers, subagents, sandbox, permissions, artifacts, pricing, and use cases. Grounds answers in the latest official documentation from antigravity.google (llms.txt index plus per-page raw Markdown) instead of training-data memory, which may be stale.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: python
@@ -34,7 +36,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.3
+  version: 1.0.4
 ---
 
 - antigravity-memory
@@ -52,6 +54,7 @@ meta:
 name: antigravity-memory
 description: Guides placement and authoring of persistent Agent context in Google Antigravity — GEMINI.md, AGENTS.md, workspace Rules (.agents/rules), global Rules (~/.gemini/GEMINI.md), and Workflows. Use when deciding what belongs in each mechanism, explaining how/when Antigravity reads these files (including what is and isn't officially documented about nested directories and reload timing), or troubleshooting why a rule isn't applied. Not for Agent Skills (use antigravity-skills) or general Antigravity features (use antigravity-docs).
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -60,7 +63,7 @@ meta:
   requires_skills: antigravity-docs, antigravity-skills
   status: stable
   description: no description
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 - antigravity-skills
@@ -73,6 +76,7 @@ meta:
 name: antigravity-skills
 description: Use when creating, placing, invoking, or troubleshooting agent skills in Google Antigravity — SKILL.md format and frontmatter fields, workspace vs global vs plugin skill locations, how the agent discovers and activates skills, and official best practices. Grounded in the official Antigravity documentation; refresh against the latest docs via the antigravity-docs skill.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -81,5 +85,5 @@ meta:
   requires_skills: antigravity-docs
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---

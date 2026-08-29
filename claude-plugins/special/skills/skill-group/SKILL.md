@@ -4,6 +4,7 @@ description: 様々なスキルをグループ化したスキル
 disable-model-invocation: false
 user-invocable: true
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: python
   dependencies: none

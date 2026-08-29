@@ -12,6 +12,7 @@ description: Microsoft Learn/Azure公式ドキュメントを`mslearn`で検索�
 #            claude-plugins/my-tools/skills/aim-ask (並列AI抽出本体)
 # このスキルは上記2つを繋ぐ薄いオーケストレーション層で、自前のソースコードは持たない。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: OPENROUTER_API_KEY
   dependencies: mslearn, aim-ask

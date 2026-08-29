@@ -7,6 +7,7 @@
 # 関連ファイル
 # tools\internal\skill_meta_field_fill.py
 # docs\repo-meta\skill-meta-fields.md
+# skill-tags.yaml（tagフィールドの許可値一覧）
 
 fields:
   version:
@@ -63,3 +64,9 @@ fields:
     format: "リポジトリルートからのパスのカンマ区切り"
     default: "none"
     example: "tools/aim-use/aim-ask"
+
+  tag:
+    description: "トピック横断でスキルを検索するためのタグ（AIの自動起動判断には使われない）"
+    format: "配列。値は skill-tags.yaml（リポジトリ直下）に登録済みのタグ名のみ"
+    default: "[]"
+    example: "[git, ai-provider]"

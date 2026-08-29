@@ -3,6 +3,7 @@
 name: writing-hooks
 description: Use when creating or editing Claude Code hooks (.claude/settings.json hooks, PreToolUse/PostToolUse/Stop/UserPromptSubmit etc.) — choosing events/matchers/types, writing safe commands, setting exit codes correctly, avoiding common pitfalls.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -11,7 +12,7 @@ meta:
   requires_skills: claude-code-docs
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 # フック作成のベストプラクティス

@@ -3,6 +3,7 @@ name: github-agentic-workflows
 description: Create, update, review, compile, and debug GitHub Agentic Workflows (gh-aw) markdown workflows. Use when a task mentions GAW, gh-aw, agentic workflows, .github/workflows/*.md, safe outputs, workflow frontmatter, or agentic workflow run failures.
 disable-model-invocation: true
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: CLAUDE_SKILL_DIR
   dependencies: none
@@ -11,7 +12,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 # 依存関係:
 #   - GitHub Agentic Workflows (gh-aw) CLI for compilation and execution checks
 #   - Official GAW reference snapshots downloaded by download_gaw_reference.py

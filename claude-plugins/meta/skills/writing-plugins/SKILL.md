@@ -3,6 +3,7 @@
 name: writing-plugins
 description: Use when creating, structuring, or distributing a Claude Code plugin (.claude-plugin/plugin.json, skills/agents/hooks/mcp/lsp bundling, or a marketplace.json) — choosing plugin vs standalone .claude/, manifest fields, directory layout, versioning, and avoiding common pitfalls.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none

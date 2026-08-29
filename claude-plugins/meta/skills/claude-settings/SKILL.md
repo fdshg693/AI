@@ -2,6 +2,7 @@
 name: claude-settings
 description: Claude Codeの設定ファイル（settings.json / settings.local.json / 環境変数）を追加・変更する際に使う。permissionsルールの追加、hooksの登録、サンドボックス設定、環境変数の設定、スコープ（User/Project/Local/Managed）選びで迷った時に使う。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none

@@ -4,6 +4,7 @@ description: Cline 用のルールファイル (.clinerules/*.md) を設計・�
 user-invocable: true
 disable-model-invocation: false
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none

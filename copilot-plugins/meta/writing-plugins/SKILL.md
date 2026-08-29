@@ -2,6 +2,7 @@
 name: writing-plugins
 description: Use when creating, reviewing, installing, distributing, or troubleshooting a GitHub Copilot agent plugin for Copilot CLI, Copilot cloud agent, or VS Code. Covers plugin.json, bundled agents/skills/hooks/MCP/LSP, marketplace.json, enabledPlugins, local testing, host differences, and safe validation. Do not use for Claude Code plugins or VS Code extension API development.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -10,7 +11,7 @@ meta:
   requires_skills: github-copilot-docs, vscode-copilot-docs
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 # GitHub Copilot Plugin の作成・利用

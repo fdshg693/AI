@@ -2,6 +2,7 @@
 name: codex-memory
 description: Use when explaining or designing how OpenAI Codex remembers project context — the `AGENTS.md`/`AGENTS.override.md` project-instructions discovery Codex runs before every turn (precedence order, `project_doc_max_bytes`/`project_doc_fallback_filenames`/`project_root_markers`/`model_instructions_file`), what that discovery does NOT cover (no glob-scoped rule files like Claude Code's `.claude/rules`, no reload mid-session, directories off the root→cwd path are skipped), how to close that gap with a hook, and the separate generated `memories` feature (`features.memories`, `~/.codex/memories/`, `/memories`). Do not use this skill for hook JSON schema/matcher/trust details (use codex-hooks), general config.toml editing beyond memory-related keys (use codex-settings), or CLI flags (use codex-cli-docs).
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -10,7 +11,7 @@ meta:
   requires_skills: codex-docs, codex-settings, codex-hooks
   status: stable
   description: no description
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 # Codexのメモリ機構（AGENTS.md discovery / 生成メモリ）

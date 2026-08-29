@@ -6,6 +6,7 @@ description: Maintains the Claude-related skills under `claude-plugins/meta/skil
 disable-model-invocation: true
 allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/scripts/*.py *)
 meta:
+  tag: []
   requires_repo_tools: tools/internal/plugin_meta/generate/generate_skills_catalog_md.py
   requires_env: none
   dependencies: none
