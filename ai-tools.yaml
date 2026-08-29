@@ -146,7 +146,7 @@ tools:
     readme:
       config_dirs:
         - path: .cursor
-          description: "Cursor が読むルールファイル群（`.cursor/rules/`）。AGENTS.md から自動生成される（`agents-root.mdc` 等）"
+          description: "Cursor が読む設定フォルダ。`.cursor/rules/` はネストした AGENTS.md と重複するため意図的に空（理由は `.cursor/rules/README.md` 参照）"
       plugin_roots:
         - path: cursor-plugins
           description: "Cursor 用プラグイン（`meta/` 配下に `.cursor-plugin`, docs, skills 群）"

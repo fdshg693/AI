@@ -1,6 +1,0 @@
----
-globs: "tools/ctx7/**"
-alwaysApply: false
----
-
-@./README.md

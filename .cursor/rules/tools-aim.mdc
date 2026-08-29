@@ -1,6 +1,0 @@
----
-globs: "tools/aim/**"
-alwaysApply: false
----
-
-@./README.md

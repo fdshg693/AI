@@ -1,6 +1,0 @@
----
-globs: "tools/infra/**"
-alwaysApply: false
----
-
-# インフラを利用するツール

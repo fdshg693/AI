@@ -1,6 +1,0 @@
----
-globs: "tools/model-select/**"
-alwaysApply: false
----
-
-@./README.md

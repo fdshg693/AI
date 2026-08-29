@@ -1,5 +1,13 @@
 """Generate Cursor project rules from repository AGENTS.md files.
 
+NOTE: this script is kept as a reference implementation only. Cursor now
+reads nested AGENTS.md files natively (merged with parent directories, most
+specific wins - see cursor-plugins/meta/skills/cursor-memory/SKILL.md), so
+generating .mdc copies of AGENTS.md would just duplicate that content. This
+script is intentionally NOT wired into lefthook.yml or the justfile's
+`generate` recipe, and is not actually run in this repository. See
+.cursor/rules/README.md for the rationale.
+
 Each AGENTS.md is copied to .cursor/rules/agents-<directory>.mdc and receives
 a globs frontmatter entry for the directory containing the source file, so
 Cursor auto-attaches the rule whenever a file under that directory is in
