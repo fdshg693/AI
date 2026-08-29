@@ -3,6 +3,7 @@
 import argparse
 import json
 import os
+import secrets
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -99,6 +100,22 @@ def append_log(record: dict) -> None:
         f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
 
+def _new_trace_id() -> str:
+    """OTel準拠のtrace id（128bit、32桁hex文字列）を生成する。"""
+    return secrets.token_hex(16)
+
+
+def _resolve_trace(trace: dict[str, str] | None) -> dict[str, str]:
+    """trace辞書にtrace_idが無ければ生成して補う（呼び出し元指定のtrace_idは尊重する）。
+
+    ここで確定させたtrace_idはOpenRouterへの送信（Grafana Cloud連携時のTrace ID）と
+    ローカルログの両方に使われるため、後からGrafana側のトレースと突き合わせられる。
+    """
+    resolved = dict(trace) if trace else {}
+    resolved.setdefault("trace_id", _new_trace_id())
+    return resolved
+
+
 class AimError(Exception):
     """aim経由のOpenRouter API呼び出しが失敗した場合の例外（openrouterへの依存を隠蔽する）。"""
 
@@ -142,11 +159,18 @@ def call(
     user: str | None = None,
     session_id: str | None = None,
     trace: dict[str, str] | None = None,
-) -> str:
+    return_trace_id: bool = False,
+) -> str | tuple[str, str]:
     """OpenRouterへの同期呼び出し（薄いラッパー）。呼び出しごとに calls.jsonl へ記録する。
+
+    trace_id未指定時はこの関数がOTel準拠のtrace idを自動生成し、OpenRouterへの送信・
+    ログ記録の両方に使う（Grafana Cloud連携時、ローカルログとGrafana側のトレースを
+    trace_idで突き合わせられるようにするため）。
+    return_trace_id=Trueの場合、戻り値は (応答テキスト, trace_id) のタプルになる。
 
     ここにログ等を追加すれば、client/call_async 経由の利用者にも同様の挙動が及ぶ。
     """
+    trace = _resolve_trace(trace)
     try:
         res = client.chat.send(
             model=model_id,
@@ -162,7 +186,8 @@ def call(
     append_log(
         _build_log_record(model_id, prompt, res, user=user, session_id=session_id, trace=trace)
     )
-    return extract_text(res.choices[0].message.content)
+    text = extract_text(res.choices[0].message.content)
+    return (text, trace["trace_id"]) if return_trace_id else text
 
 
 async def call_async(
@@ -174,8 +199,10 @@ async def call_async(
     user: str | None = None,
     session_id: str | None = None,
     trace: dict[str, str] | None = None,
-) -> str:
-    """OpenRouterへの非同期呼び出し（薄いラッパー）。call() と同じログ処理を共有する。"""
+    return_trace_id: bool = False,
+) -> str | tuple[str, str]:
+    """OpenRouterへの非同期呼び出し（薄いラッパー）。call() と同じログ処理・trace_id補完を共有する。"""
+    trace = _resolve_trace(trace)
     try:
         res = await client.chat.send_async(
             model=model_id,
@@ -191,7 +218,8 @@ async def call_async(
     append_log(
         _build_log_record(model_id, prompt, res, user=user, session_id=session_id, trace=trace)
     )
-    return extract_text(res.choices[0].message.content)
+    text = extract_text(res.choices[0].message.content)
+    return (text, trace["trace_id"]) if return_trace_id else text
 
 
 def main() -> None:

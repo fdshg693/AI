@@ -33,7 +33,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 - aim-lib
@@ -49,7 +49,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 - aim-summarize

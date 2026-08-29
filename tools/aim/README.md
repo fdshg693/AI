@@ -97,7 +97,7 @@ aim --model minimax-m3 --web --prompt "2026年8月時点の最新ニュースは
   "generation_id": "gen-1783603352-zXMyzMZpyjJ88CJF5wwD",
   "user": null,
   "session_id": null,
-  "trace": { "tool": "aim-cli" }
+  "trace": { "tool": "aim-cli", "trace_id": "3f2a9c1e4b7d4f0aa1e3c6d9b8f7a2c5" }
 }
 ```
 
@@ -106,6 +106,8 @@ aim --model minimax-m3 --web --prompt "2026年8月時点の最新ニュースは
 - `logs/`配下のログファイルはプロンプト本文を含み得るため Git管理対象外（`.gitignore` 参照）。ディレクトリ自体は `.gitkeep` で追跡
 - `call()`/`call_async()` は呼び出し元が `user`/`session_id`/`trace` を渡せる（いずれも省略時は `None`）。`trace` はOpenRouterのSDKの `trace`（`trace_id`/`trace_name`/`span_name`/`generation_name`/`parent_span_id`の既知キー + 任意の追加キーを持つdict）にそのまま渡され、Grafana Cloudへのブロードキャスト設定時にはトレースのカスタム属性としても反映される（詳細は`claude-plugins/topics/skills/openrouter-docs`スキルの`references/observability.md`参照）
 - `aim` コマンドを直接実行した場合は常に `trace: {"tool": "aim-cli"}` が記録される。これにより、`aim`直接利用と`aim-ask`/`aim-summarize`経由の利用（それぞれ`trace.tool`が`"aim-ask"`/`"aim-summarize"`）をログ上で区別できる
+- `trace.trace_id`（32桁hex、OTel準拠のtrace id）は呼び出し元が指定しない限り `call()`/`call_async()` が自動生成し、OpenRouterへの送信・ログ記録の両方に使う。これがGrafana Cloud連携時のTrace IDそのものになるため、ログの`trace.trace_id`をそのままGrafana CloudのTempoで検索すれば対応するトレースにたどり着ける（詳細は下記「Grafana Cloudへのログ配信」参照）
+- `call()`/`call_async()` に `return_trace_id=True` を渡すと、戻り値が `(応答テキスト, trace_id)` のタプルになる（省略時は従来通り応答テキストのみ）。呼び出し元が自身の処理単位（例: 対象ファイルパスやDBレコード）とtrace_idを紐づけて保存したい場合に使う
 
 ## Grafana Cloudへのログ配信（任意）
 
@@ -113,6 +115,7 @@ OpenRouterのBroadcast機能を使うと、`aim`経由の呼び出し（およ�
 
 - 設定はOpenRouterダッシュボード（[`https://openrouter.ai/settings/observability`](https://openrouter.ai/settings/observability)）での手動設定のみ。このCLI/リポジトリ側に自動設定コードは持たない（Broadcast設定にはManagement API Keyという別種の強い権限を持つキーが必要になるため）
 - 設定手順・カスタムメタデータのマッピング（`user`→`user.id`、`session_id`→`session.id`、`trace`の各キー→`trace.metadata.*`等）・TraceQLクエリ例の詳細は `claude-plugins/topics/skills/openrouter-docs` スキルの `references/observability.md` を参照
+- **ローカルログとGrafana側トレースの突き合わせ**: OpenRouterのレスポンスにはGrafana Cloud側のtrace_id/span_idは含まれない（APIが返さない）。そのため `aim` 側で毎回trace_idを自前生成し、OpenRouterへの送信とローカルログの両方に使うことで、ローカルログの`trace.trace_id`＝Grafana CloudのTrace IDという対応を保証している。span_id自体はAPI経由で取得・指定する手段が無いが、1リクエスト＝1トレース（実質1スパン）のため、trace_idでトレースを開けば中のスパンも自動的に見え、実務上span_idの保存は不要
 
 ## エラー時の挙動
 

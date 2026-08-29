@@ -10,7 +10,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 # aim を Python ライブラリとして使う
@@ -90,6 +90,19 @@ print(asyncio.run(ask_aim_many(["フランスの首都は？", "日本の首都�
 - 同時実行数の上限は `ThreadPoolExecutor(max_workers=...)` ではなく `asyncio.Semaphore(...)` で制御する。`config.toml` の `jobs` のような同時実行数設定は、この `Semaphore` の初期値にそのまま渡せる
 - 呼び出し元が同期コードの場合は `asyncio.run(...)` の中に非同期処理を閉じ込める（実例: `tools/aim-use/aim-summarize/aim_summarize/cli.py` の `_generate_all_async` / `summarizer.generate_summary_async`）
 - 単発・逐次呼び出ししかしないなら同期版（`call`）で十分。非同期版（`call_async`）は「複数リクエストを並列に送りたい」場合にのみ選ぶ
+
+## trace_idを取得する（呼び出し元の処理単位と紐づけたい場合）
+
+`call`/`call_async`は呼び出しごとにOTel準拠のtrace_id（32桁hex）を自動生成し、OpenRouterへの送信・`logs/<trace.tool>/<日付>.jsonl`への記録の両方に使う。`return_trace_id=True`を渡すと戻り値が`(応答テキスト, trace_id)`のタプルになり、呼び出し元が自身の処理単位（対象ファイルパス、DBレコードなど）とtrace_idを紐づけて保存できる。Grafana Cloud連携（Broadcast機能）を有効化している場合、このtrace_idがGrafana Cloud側のTrace IDと一致するため、後からTempoで該当トレースを検索できる。
+
+```python
+from aim_cli import create_client, call
+
+with create_client() as client:
+    answer, trace_id = call(client, model_id, prompt, return_trace_id=True)
+```
+
+`trace_id`を明示的に指定したい場合（例: 呼び出し元が既に発行済みのtrace idにネストさせたい）は、`trace={"trace_id": "..."}`をそのまま渡せばよい（指定時は自動生成されず、渡した値がそのまま使われる）。
 
 ## エラー処理
 
