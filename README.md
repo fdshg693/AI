@@ -49,7 +49,7 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 - [docs/](docs/) — AIツールを問わずリポジトリ全体で参照する知識（メンテナンス規約・設計判断・運用知識、他ツール環境への導入手順）を [OKF (Open Knowledge Format)](claude-plugins/coding/skills/okf-spec/) の概念ドキュメントとしてまとめたバンドル。詳細は [docs/index.md](docs/index.md) 参照。
 - [tools/](tools/) — リポジトリ管理・運用を支える便利ツール群。主なサブフォルダ:
   - `aim/`, `aim-use/` — モデル呼び出し CLI とその周辺ツール
-  - `claude-wrapper/`, `cline-wrapper/`, `codex-wrapper/`, `cursor-wrapper/` — 各 AI ツール向けラッパー
+  - `claude-wrapper/`, `cline-wrapper/`, `codex-wrapper/`, `copilot-wrapper/`, `cursor-wrapper/` — 各 AI ツール向けラッパー
   - `interactive-cli-wrapper/` — 対話的（TTY前提でREPLとして動く）CLIをPTY越しに駆動する汎用ラッパー
   - `integration/` — このレポジトリの成果物（プラグイン・スキル）を自分の環境へコピー配置する `skill-deploy` CLI。導入手順は [docs/integrations/](docs/integrations/) 参照
   - `get-settings/` — 設定取得補助

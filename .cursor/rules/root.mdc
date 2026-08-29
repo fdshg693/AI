@@ -5,6 +5,10 @@ alwaysApply: false
 
 @./README.md
 
+## AGENTS.md
+
+`AGENTS.md`の内容に、 `@./...` のような記載があれば、そのパスが差し示すファイルも読みに行くこと。
+
 ## AIツール/プラグイン設定のSSOT
 
 - AIツール・プラグイン・マーケットプレイス・スキルカタログの所在は `ai-tools.yaml` がSSOT。

@@ -2,8 +2,10 @@ packages:
   - "skills-site"
   - "skills-site/api"
   - "tools/cline-wrapper"
+  - "tools/copilot-wrapper"
   - "tools/linear-cli"
   - "tools/skill-search"
 allowBuilds:
   esbuild: true
+  koffi: true
   protobufjs: true
