@@ -19,6 +19,7 @@
     "copilot-cli-docs",
     "github-copilot-docs",
     "github-copilot-observability-docs",
+    "github-copilot-sdk-docs",
     "vscode-copilot-docs",
     "writing-copilot-instructions",
     "writing-plugins",
