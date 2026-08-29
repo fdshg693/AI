@@ -164,7 +164,12 @@ tools:
           description: "Antigravity 用プラグインのルート（実体は `_agents/plugins/` 配下に配置）"
         - path: _agents
           description: "Antigravity 用プラグイン格納場所（`_agents/plugins/`）。`.agents/` と使い分ける（`_agents/README.md` 参照）"
+      config_dirs:
+        - path: .agents/rules
+          description: "Antigravity が読むワークスペース Rules。`AGENTS.md` から自動生成される（`.agents/README.md` 参照）。手編集しない"
     plugins:
       - path: _agents/plugins/antigravity-meta
         kind: plugin
         skills_layout: subdir
+    rules_from_agents_md:
+      output_dir: .agents/rules

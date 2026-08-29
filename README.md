@@ -40,6 +40,7 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 - **Antigravity**
   - [antigravity-plugins/](antigravity-plugins/) — Antigravity 用プラグインのルート（実体は `_agents/plugins/` 配下に配置）
   - [_agents/](_agents/) — Antigravity 用プラグイン格納場所（`_agents/plugins/`）。`.agents/` と使い分ける（`_agents/README.md` 参照）
+  - [.agents/rules/](.agents/rules/) — Antigravity が読むワークスペース Rules。`AGENTS.md` から自動生成される（`.agents/README.md` 参照）。手編集しない
 
 <!-- END: ai-tools-section -->
 

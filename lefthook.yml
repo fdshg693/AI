@@ -43,6 +43,12 @@ pre-commit:
         - "ai-tools.yaml"
       run: just --justfile tools/internal/justfile copilot-instructions
       stage_fixed: true
+    - name: regenerate Antigravity rules
+      glob:
+        - "**/AGENTS.md"
+        - "ai-tools.yaml"
+      run: just --justfile tools/internal/justfile antigravity-rules
+      stage_fixed: true
     - name: regenerate README AIツール節
       glob: "ai-tools.yaml"
       run: just --justfile tools/internal/justfile readme-tools-section
