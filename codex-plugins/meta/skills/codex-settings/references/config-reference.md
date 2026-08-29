@@ -83,9 +83,10 @@ Codexのアクセス制御には2系統あり、**同時に設定しない**（`
 
 - 前提: `features.hooks = true`（`features.codex_hooks` は非推奨エイリアス）
 - 定義場所: `hooks.json`、または `config.toml` 内の `[hooks]` テーブル（同じイベントスキーマ）
-- 主なイベント: `PreToolUse` / `PermissionRequest` / `PostToolUse` / `PreCompact` / `PostCompact` / `SessionStart` / `SubagentStart` / `SubagentStop` / `UserPromptSubmit` / `Stop`
-- `hooks.<Event>[].hooks[]` にハンドラーを並べる。現状コマンドフックのみ実行され、prompt/agentハンドラーはパースされるが実行されない
+- 主なイベント: `PreToolUse` / `PermissionRequest` / `PostToolUse` / `PreCompact` / `PostCompact` / `SessionStart` / `SessionEnd` / `SubagentStart` / `SubagentStop` / `UserPromptSubmit` / `Stop`
+- `hooks.<Event>[].hooks[]` にハンドラーを並べる。`command`と`mcp_tool`ハンドラーのみ実行され、prompt/agentハンドラーはパースされるが実行されない
 - Windows専用コマンドは `commandWindows`（TOMLキー: `command_windows`）で上書きできる
+- イベント別の入出力スキーマ・matcher評価・信頼レビュー（`/hooks`）・非同期hookの詳細は**codex-hooksスキル**を使う
 - Claude Code用の`writing-hooks`スキルはイベント名・スキーマが異なるため、そのまま流用しない
 
 ## rules（execpolicy）
