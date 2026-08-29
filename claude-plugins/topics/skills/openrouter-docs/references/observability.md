@@ -29,8 +29,9 @@ Source: `guides/features/broadcast/grafana`
 Broadcast先の1つ、[Grafana Cloud](https://grafana.com/products/cloud/)（Tempoによる分散トレーシングを含むフルマネージドObservabilityプラットフォーム）向けの詳細。OpenRouterは標準のOTLP HTTP/JSONエンドポイント経由でトレースを送信する。
 
 - **必要な認証情報（3つ）**
-  - Base URL / Instance ID: `https://grafana.com/` にログイン → 右上のアカウントメニューから **My Account**（Cloud Portalに移動。org名を事前に知る必要はなく、ログインすれば自分の組織のポータルに直接入る）→ 対象スタックを選択 → スタック詳細ページ上の複数タイル（Grafana / Prometheus / Loki / Tempo / OpenTelemetry 等）のうち **OpenTelemetry タイルの Configure（Details）** を開く → そのパネルに **OTLP Endpoint（Base URL）と Instance ID（数値、OTLP認証のbasic-auth usernameとして使う）が同じ画面にまとめて表示される**。メインのGrafanaダッシュボードURL自体はBase URLではないので混同しないこと
-  - 補足: Instance IDはスタック全体で1つではなく、Prometheus/Loki/Tempoなど個別データソースごとにも別のInstance IDが存在する。OTLP用に使うのは上記の **OpenTelemetryタイル配下** に表示される値であり、他プロダクトのタイルの値と混同しないこと
+  - 前提: 「スタック」とはGrafana Cloud上の1つのGrafanaインスタンス環境（Grafana本体＋Prometheus/Loki/Tempo等がセットになったもの）のこと。無料登録すると**サインアップ時に自動で1つ作成される**ため、複数の環境を使い分けていない限り、自分のスタックは通常1個しかない（「スタックを選択」に選択肢の迷いは基本ない）
+  - Base URL / Instance ID: `https://grafana.com/` にログイン → Cloud Portal（自分の組織のスタック一覧が表示される。org名やURLを事前に組み立てる必要はない）→ 自分のスタック（の箱/タイル）をクリックして開く → スタック詳細ページ上の複数タイル（Grafana / Prometheus / Loki / Tempo / OpenTelemetry 等、各プロダクトごとに1枚ずつ並んでいる）のうち **OpenTelemetry のタイルだけを開く**（Configure/Detailsボタン）→ そのパネルに **OTLP Endpoint（Base URL）と Instance ID（数値、OTLP認証のbasic-auth usernameとして使う）が同じ画面にまとめて表示される**。メインのGrafanaダッシュボードURL自体はBase URLではないので混同しないこと
+  - 補足: Instance IDはスタック全体で1つではなく、タイルごと（Prometheus用、Loki用、Tempo用…）に別々の値が存在する。OTLP用に使うのは**OpenTelemetryのタイルに表示された値だけ**であり、他のタイルの値と混同しないこと。正確な画面上のラベル・ボタン名はUI変更で変わることがあるため、食い違う場合はログイン後の実際の画面表示を優先すること
   - API Key: `traces:write` スコープのAccess Policyから発行したAPIトークン（`glc_...`で始まる）
 - **設定手順**: `Settings > Observability`（`https://openrouter.ai/settings/observability`）でBroadcastを有効化 → Grafana Cloudの編集アイコンから上記3つを入力 → Test Connectionで疎通確認（成功時のみ保存）→ テストリクエストを送りトレースを確認
 - **閲覧方法**: Grafana Cloud側でExplore > Tempoデータソース（`grafanacloud-*-traces`）> TraceQLタブ、または Drilldown > Traces
