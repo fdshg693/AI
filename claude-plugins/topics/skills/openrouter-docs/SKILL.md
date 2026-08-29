@@ -12,7 +12,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.4
+  version: 1.0.5
 ---
 
 !`python ${CLAUDE_SKILL_DIR}/download_openrouter_reference.py`
@@ -29,6 +29,7 @@ OpenRouter (openrouter.ai) に関する質問に、学習データの記憶で�
 - [references/server-tools.md](references/server-tools.md) — Server Toolsの意味・使い方（Plugins/ユーザー定義Toolとの違い、利用可能ツール一覧）
 - [references/observability.md](references/observability.md) — Observability（Input & Output Logging、Broadcast、Router Metadata）
 - [references/beta-files-classifiers.md](references/beta-files-classifiers.md) — Beta機能: Files / Classifiers
+- [references/models-pricing-benchmarks.md](references/models-pricing-benchmarks.md) — Models API（`/api/v1/models`一覧・単一取得・プロバイダ別`endpoints`）での価格・ベンチマーク（Design Arena / Artificial Analysis）取得
 
 ## 手順
 
