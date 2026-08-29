@@ -77,6 +77,9 @@ pre-commit:
         - "**/SKILL.md"
         - "repo-tools.yaml"
       run: just --justfile tools/internal/justfile skill-repo-tools-check
+    - name: bump release tool pyproject.toml version
+      glob: "tools/**"
+      run: just --justfile tools/internal/justfile release-version-bump {staged_files}
     - name: format Markdown with Prettier
       glob:
         - "*.md"

@@ -38,6 +38,14 @@ status: stable
 
 この`release`フラグは消費側1（チェック対象可否）・消費側2（skills-site公開可否）とは無関係な独立した軸。あるツールがチェック対象・公開対象であっても、タグ+Releaseの対象とは限らない。
 
+## 消費側4: lefthookによるバージョン自動アップ
+
+`lefthook.yml`のpre-commitジョブ「bump release tool pyproject.toml version」（`tools/internal/release/bump_release_versions.py`）も同じ`repo-tools.yaml`を読み、`release: true`の各`path`について、ステージ済みファイルがそのフォルダ配下に1つでもあれば`uv version --bump patch --frozen`でpyproject.tomlのpatchバージョンを1つ上げる。判定はフォルダ単位（そのフォルダ配下の変更ファイル数やdiffの中身は見ない）で、ドキュメントのみの変更でもバージョンが上がる。`--frozen`によりuv.lockの再ロックは行わない。
+
+再ステージは`lefthook.yml`の`stage_fixed`に任せず、スクリプト自身が`git add`でpyproject.tomlを明示的にステージする。`stage_fixed`はジョブ自身の`glob`にマッチし、かつ元々ステージ済みだったファイルしか再ステージしない（例: `tools/aim/README.md`だけをステージしたコミットでは、`tools/aim/pyproject.toml`はそのどちらにも該当せず、`stage_fixed`では拾われない——実機検証済み）。消費側3と同じくworkflow内蔵スニペット方式を踏襲し、`skill/util/repo_tools_registry.py`は使わない（`tools/internal/skill/AGENTS.md`参照）。
+
+これにより、対象4ツールはコミットのたびに（そのフォルダに変更があれば）patchバージョンが上がり、mainへのpush時に消費側3（`tool-release.yml`）が新しいタグ+Releaseを発行する。
+
 ## 実行方法
 
 ```bash

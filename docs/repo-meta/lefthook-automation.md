@@ -16,6 +16,7 @@ status: stable
 - `ai-tools.yaml`由来の各種生成ファイルの再生成（`marketplace.json`×2、`skill-catalog.json`、各`CATALOG.md`、Clineルール、Copilot instructions、READMEのAIツール節。詳細は[ai-tools-config](/repo-meta/ai-tools-config.md)）
 - `SKILL.md`の`meta.version`/`meta.description`デフォルト値のバックフィル
 - `meta.version`が未バンプのままステージされた`SKILL.md`があればコミットをブロック（[skill-meta-fields](/repo-meta/skill-meta-fields.md) / [skill-md-commits](/repo-meta/skill-md-commits.md)参照）
+- `repo-tools.yaml`の`release: true`な各ツールフォルダに変更があれば、pyproject.tomlのpatchバージョンを自動で1つ上げて同じコミットに含める（[repo-tools-config](/repo-meta/repo-tools-config.md)の消費側4参照）
 - ステージ済みMarkdownのPrettier整形、ステージ済みPythonの`ruff format`整形
 
 各ジョブは`glob`で対象を絞り、関係するファイルがステージされたときだけ走る。多くは`stage_fixed: true`のため、再生成・整形後の内容が同じコミットへ自動で再ステージされ、追加のコマンド実行や2回目のコミットが不要になる。

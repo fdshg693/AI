@@ -77,3 +77,10 @@ skill-repo-tools-check:
 # files unconditionally instead of auto-detecting staged ones.
 skill-version-bump *paths:
     uv run python -m skill.set.bump_skill_versions {{ paths }}
+
+# --- release: pyproject.toml version bumps for repo-tools.yaml release:true tools ---
+
+# Bump patch version in pyproject.toml for any repo-tools.yaml release:true
+# tool folder touched by the given (default: staged) files.
+release-version-bump *paths:
+    uv run python -m release.bump_release_versions {{ paths }}
