@@ -56,6 +56,24 @@ meta:
   version: 1.0.2
 ---
 
+- cline-memory
+---
+name: cline-memory
+description: Clineのメモリ・文脈維持機能を説明・設計・設定するスキル。AGENTS.md（プロジェクトルート/グローバル/ネスト）の扱い、Rules (.clinerules) / Skills / Memory Bank の使い分け、セッションをまたぐ文脈維持やコンテキストウィンドウ管理（/newtask, /smol, Auto Compact）について質問されたり設定を依頼されたときに使う。Use when the user asks how Cline remembers context, reads AGENTS.md, or wants to set up Memory Bank.
+user-invocable: true
+disable-model-invocation: false
+meta:
+  requires_repo_tools: none
+  requires_env: none
+  dependencies: none
+  requires_install: none
+  requires_hooks: none
+  requires_skills: cline-docs
+  status: stable
+  description: no description
+  version: 1.0.0
+---
+
 - cline-plugin-writer
 ---
 # 詳細仕様は同階層の plugin-reference.md を必要時だけ読む。最終フォールバックは cline-docs スキルで公式 docs.cline.bot を確認する。
