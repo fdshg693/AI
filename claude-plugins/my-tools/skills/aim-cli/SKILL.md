@@ -72,7 +72,7 @@ aim --model minimax-m3 --web --prompt "2026年8月時点の最新ニュースは
 
 ## ログ
 
-呼び出しごとに`tools/aim/logs/calls.jsonl`（JSON Lines）へ1行追記される。CLIのソースディレクトリ基準の絶対パスを使うため、実行時のカレントディレクトリには依存しない。`cost`・`*_tokens`・`generation_id`はOpenRouterレスポンスの`usage`/`id`フィールドからそのまま転記される。応答本文（completion）はログに含めない。
+呼び出しごとに`tools/aim/logs/<trace.tool>/<YYYY-MM-DD>.jsonl`（JSON Lines）へ1行追記される。`trace.tool`（`aim-cli`/`aim-ask`/`aim-summarize`等。無ければ`unknown`）でフォルダ分けし、日付でファイル分割することで1ファイルへの際限ない肥大化を防いでいる。CLIのソースディレクトリ基準の絶対パスを使うため、実行時のカレントディレクトリには依存しない。`cost`・`*_tokens`・`generation_id`はOpenRouterレスポンスの`usage`/`id`フィールドからそのまま転記される。応答本文（completion）はログに含めない。
 
 ## エラー時の挙動
 

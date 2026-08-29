@@ -13,7 +13,8 @@ from openrouter.errors import OpenRouterError
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 ENV_PATH = SCRIPT_DIR / ".env"
-LOG_PATH = SCRIPT_DIR / "logs" / "calls.jsonl"
+LOG_DIR = SCRIPT_DIR / "logs"
+UNKNOWN_TRACE_TOOL = "unknown"
 
 # 利用可能なモデル一覧。キーはCLIで指定する略記（元のモデルIDが推測できる形にする）。
 MODELS: dict[str, str] = {
@@ -80,9 +81,21 @@ def extract_text(content) -> str:
     return "" if content is None else str(content)
 
 
+def _log_path_for(record: dict) -> Path:
+    """trace.toolごとのフォルダ、日付ごとのファイルにログを振り分ける。
+
+    trace/trace.toolが空の場合は "unknown" フォルダにまとめる。
+    """
+    trace = record.get("trace") or {}
+    tool = trace.get("tool") or UNKNOWN_TRACE_TOOL
+    date = record["timestamp"][:10]
+    return LOG_DIR / tool / f"{date}.jsonl"
+
+
 def append_log(record: dict) -> None:
-    LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with LOG_PATH.open("a", encoding="utf-8") as f:
+    log_path = _log_path_for(record)
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    with log_path.open("a", encoding="utf-8") as f:
         f.write(json.dumps(record, ensure_ascii=False) + "\n")
 
 

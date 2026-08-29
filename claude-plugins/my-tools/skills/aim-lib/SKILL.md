@@ -18,7 +18,7 @@ meta:
 `tools/aim` は現在、独立した `aim` Python パッケージではなく、`aim_cli` モジュールとして配布されている。ライブラリ利用では `aim` コマンドや `aim_cli.main()` を呼ばず、`aim_cli` が提供する薄いラッパー（`create_client` / `call` / `call_async` / `AimError`）を使う。**`openrouter` を直接 import しない** — `openrouter` への依存はパッケージの依存関係にも追加しない。理由は2つ。
 
 - `aim_cli` 側だけが `openrouter` に依存する構成にすることで、利用側パッケージの依存を `aim-cli` 1つに絞れる
-- ログ記録（`calls.jsonl` への追記）が `call`/`call_async` の内部で行われるため、将来 `aim_cli` にログ処理を追加・変更しても、利用側は変更なしにその恩恵を受けられる
+- ログ記録（`logs/<trace.tool>/<日付>.jsonl` への追記）が `call`/`call_async` の内部で行われるため、将来 `aim_cli` にログ処理を追加・変更しても、利用側は変更なしにその恩恵を受けられる
 
 ## 前提条件
 
@@ -110,7 +110,7 @@ except AimError as e:
 
 - ライブラリ版は `aim` コマンドを起動せず、Python プロセス内で呼び出す
 - 標準入力・標準出力・`argparse` は使わない。戻り値の文字列を呼び出し元で処理する
-- `call`/`call_async` はCLI版と同じ `calls.jsonl` への監査ログ追記を内部で行う（呼び出し元が明示的にログを書く必要はない）
+- `call`/`call_async` はCLI版と同じ `logs/<trace.tool>/<日付>.jsonl` への監査ログ追記を内部で行う（呼び出し元が明示的にログを書く必要はない）
 - このツールの契約は user メッセージ 1件の単発呼び出しであり、system プロンプト・マルチターン・エージェント機能は扱わない
 
 クライアントは必ず `with`（非同期なら `async with`）ブロックで使う。API キーやプロンプトを例外メッセージ・標準出力・不要なログへ出力しない。`openrouter` パッケージを直接 import する必要はなく、依存関係にも追加しない — `aim_cli` の `create_client`/`call`/`call_async`/`AimError` のみで完結させる。

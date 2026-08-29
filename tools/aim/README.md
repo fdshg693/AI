@@ -80,7 +80,10 @@ aim --model minimax-m3 --web --prompt "2026年8月時点の最新ニュースは
 
 ## ログ
 
-呼び出しごとに `tools/aim/logs/calls.jsonl`（JSON Lines）へ1行追記される。CLIのソースディレクトリ基準の絶対パスを使うため、実行時のカレントディレクトリには依存しない。
+呼び出しごとに `tools/aim/logs/<trace.tool>/<YYYY-MM-DD>.jsonl`（JSON Lines）へ1行追記される。CLIのソースディレクトリ基準の絶対パスを使うため、実行時のカレントディレクトリには依存しない。
+
+- 1ファイルに書き続けると際限なく肥大化するため、`trace.tool`（例: `aim-cli`/`aim-ask`/`aim-summarize`）でフォルダ分けした上で、`timestamp`の日付（呼び出し元のローカル日付）でファイルを分割する
+- `trace`自体が無い、または`trace.tool`が空の場合は`unknown`フォルダにまとめる（`aim`直接利用時は常に`trace: {"tool": "aim-cli"}`が付くため、`unknown`は主にライブラリ利用時にtraceを渡し忘れた場合に発生する）
 
 ```json
 {
@@ -100,7 +103,7 @@ aim --model minimax-m3 --web --prompt "2026年8月時点の最新ニュースは
 
 - `cost` / `*_tokens` / `generation_id` は OpenRouter レスポンスの `usage` / `id` フィールドからそのまま転記（追加のAPI呼び出しは発生しない）
 - 応答本文（completion）はログに含めない
-- `logs/calls.jsonl` はプロンプト本文を含み得るため Git管理対象外（`.gitignore` 参照）。ディレクトリ自体は `.gitkeep` で追跡
+- `logs/`配下のログファイルはプロンプト本文を含み得るため Git管理対象外（`.gitignore` 参照）。ディレクトリ自体は `.gitkeep` で追跡
 - `call()`/`call_async()` は呼び出し元が `user`/`session_id`/`trace` を渡せる（いずれも省略時は `None`）。`trace` はOpenRouterのSDKの `trace`（`trace_id`/`trace_name`/`span_name`/`generation_name`/`parent_span_id`の既知キー + 任意の追加キーを持つdict）にそのまま渡され、Grafana Cloudへのブロードキャスト設定時にはトレースのカスタム属性としても反映される（詳細は`claude-plugins/topics/skills/openrouter-docs`スキルの`references/observability.md`参照）
 - `aim` コマンドを直接実行した場合は常に `trace: {"tool": "aim-cli"}` が記録される。これにより、`aim`直接利用と`aim-ask`/`aim-summarize`経由の利用（それぞれ`trace.tool`が`"aim-ask"`/`"aim-summarize"`）をログ上で区別できる
 
@@ -128,5 +131,6 @@ tools/aim/
 ├── .gitignore
 └── logs/
     ├── .gitkeep
-    └── calls.jsonl    # gitignore対象
+    └── <trace.tool>/          # 例: aim-cli/, aim-ask/, unknown/ （gitignore対象）
+        └── <YYYY-MM-DD>.jsonl
 ```
