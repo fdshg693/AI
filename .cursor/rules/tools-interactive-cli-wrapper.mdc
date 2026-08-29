@@ -1,0 +1,6 @@
+---
+globs: "tools/interactive-cli-wrapper/**"
+alwaysApply: false
+---
+
+@./README.md

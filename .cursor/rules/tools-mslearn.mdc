@@ -1,0 +1,6 @@
+---
+globs: "tools/mslearn/**"
+alwaysApply: false
+---
+
+@./README.md

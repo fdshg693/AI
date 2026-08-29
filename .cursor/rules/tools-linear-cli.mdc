@@ -1,0 +1,6 @@
+---
+globs: "tools/linear-cli/**"
+alwaysApply: false
+---
+
+@./README.md

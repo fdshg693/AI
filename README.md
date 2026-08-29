@@ -34,6 +34,7 @@ AIコーディングツールの設定・ツールに関する個人の調査・
   - [.github/](.github/) — Copilot 設定（`copilot/settings.json`）、instructions、agents/skills（プラグイン経由で読込）、および CI 用 GitHub Actions workflows
 
 - **Cursor**
+  - [.cursor/](.cursor/) — Cursor が読むルールファイル群（`.cursor/rules/`）。AGENTS.md から自動生成される（`agents-root.mdc` 等）
   - [cursor-plugins/](cursor-plugins/) — Cursor 用プラグイン（`meta/` 配下に `.cursor-plugin`, docs, skills 群）
 
 - **Antigravity**

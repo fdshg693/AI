@@ -1,0 +1,6 @@
+---
+globs: "tools/tav-cli/**"
+alwaysApply: false
+---
+
+@./README.md

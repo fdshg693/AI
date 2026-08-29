@@ -144,6 +144,9 @@ tools:
 
   cursor:
     readme:
+      config_dirs:
+        - path: .cursor
+          description: "Cursor が読むルールファイル群（`.cursor/rules/`）。AGENTS.md から自動生成される（`agents-root.mdc` 等）"
       plugin_roots:
         - path: cursor-plugins
           description: "Cursor 用プラグイン（`meta/` 配下に `.cursor-plugin`, docs, skills 群）"
@@ -151,6 +154,8 @@ tools:
       - path: cursor-plugins/meta
         kind: plugin
         skills_layout: direct
+    rules_from_agents_md:
+      output_dir: .cursor/rules
 
   antigravity:
     readme:

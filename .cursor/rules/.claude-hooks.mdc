@@ -1,0 +1,19 @@
+---
+globs: ".claude/hooks/**"
+alwaysApply: false
+---
+
+## `.claude/hooks` 運用ルール
+
+Claude Code のフックスクリプトを置く場所。ここに置いたスクリプトは `.claude/scripts/hooks_manager.py`（仕様は [.claude/scripts/AGENTS.md](../scripts/AGENTS.md)）が `<hooks>` 契約として読み取り、`hooks.yml` → `settings.json` へ自動反映する。フックの書き方・契約スキーマ・イベント一覧はそちらおよび [claude-plugins/meta/skills/writing-hooks/hooks.md](../../claude-plugins/meta/skills/writing-hooks/hooks.md) を参照のこと。
+
+要点（詳細は scripts/AGENTS.md 参照）:
+
+- **フックスクリプト**（`block_large_read.py` / `stop_alert.py` 等）は、ファイル先頭のモジュールdocstring の中に `<hooks>...</hooks>` ブロックで YAML 契約を書く。1ブロック = 1フック登録だが、同じdocstringに `<hooks>` ブロックを複数並べれば1スクリプトを複数event（例: `PostToolUse`+`PostToolUseFailure`）に登録できる（`long_run_collector.py` 参照。判定にはstdinペイロードの`hook_event_name`を使う）。契約を持たないスクリプトは sync が黙ってスキップする。
+- **共有ヘルパー**は `.claude/hooks/_lib/` パッケージにまとめている。`hooks_manager.py` の sync は `HOOKS_DIR.glob("*.py")`（非再帰）でしかスキャンしないため、サブディレクトリに置いた時点で自動的に走査対象外になる（`_` 始まり命名規約に頼る必要はない）。内訳: `runtime.py`（stdio設定・ログ/`finish()`・JSON stdin読み込み・`env_int` などのボイラープレート）、`aim_client.py`（`aim` CLI呼び出しの共通部分）、`dotenv.py`（`.env` のKEY=VALUE読み込み）、および移設済みの `hook_log.py` / `play_alert_sound.py` / `skill_enquete_state.py` / `skill_frontmatter.py`。新しく共有モジュールを足す場合もここに置くこと。
+- **`tests/`** はフックスクリプトではなく単体テスト・動作確認スクリプト専用。hooks_manager の sync 対象からは**明示的に除外される**（契約を書いても拾われない）。フック本体をここに置かないこと。
+- **`logs/`** はフック実行ごとのデバッグログ（`_lib.hook_log.write_log`）が書き出される生成物。コミットしない。
+- フック自体の有効/無効は `.claude/scripts/hooks.yml` の `enabled` で管理する。スクリプトを置いた・書き換えた後は `just sync` → 必要なら `enabled: true` 編集 → `just reflect` の手順を踏む（`settings.json` は手書きしない）。
+- **`.env`** はこのディレクトリの各フックスクリプト共通の設定ファイル（`_lib.hook_log.resolve_bool_flag()` で読む true/false トグル群）。コミットされるのは `.env.example` のみで、実体の `.env` はルート `.gitignore` の `*.env` で無視される。現在の主なキー: `HOOK_LOG`（デバッグログ出力の可否）、`NOTIFY_INJECTED_VARS`（`inject_env_vars.py` が注入/上書きしたキーを `systemMessage` で通知するかどうか）。
+- **`config/`** は各フックスクリプト用の設定ファイルを置くフォルダ。必要なフックだけ `<script_name>.yaml` というファイル名で自分の設定を置く（例: `inject_env_vars.py` → `config/inject_env_vars.yaml`、Bash/PowerShell 実行前に注入する環境変数の定義。書き方は同ファイル冒頭のコメントを参照）。設定が不要なフックは何も置かなくてよい。
+- **`state/`** はフック間で共有するセッション単位の状態（例: `skill_usage_tracker.py`/`skill_enquete_stop.py` が使う `state/skill_usage/{session_id}.json`）。`logs/` と同様に生成物でありコミットしない（ルート `.gitignore` の `.claude/hooks/state/` で無視）。

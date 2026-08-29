@@ -1,0 +1,6 @@
+---
+globs: "tools/internal/ai-usage/**"
+alwaysApply: false
+---
+
+@./README.md

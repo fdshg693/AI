@@ -34,12 +34,16 @@ cline-rules:
 copilot-instructions:
     uv run python -m plugin_meta.generate.generate_copilot_instructions
 
+# Generate Cursor project rules from AGENTS.md files
+cursor-rules:
+    uv run python -m plugin_meta.generate.generate_cursor_rules
+
 # Regenerate README.md's AIツールごとの設定・プラグインルート section
 readme-tools-section:
     uv run python -m plugin_meta.generate.generate_readme_tools_section
 
 # Regenerate all generated marketplace, skill catalog, and instruction files
-generate: marketplace codex-marketplace copilot-marketplace skill-catalog skills-catalog-md cline-rules copilot-instructions readme-tools-section
+generate: marketplace codex-marketplace copilot-marketplace skill-catalog skills-catalog-md cline-rules copilot-instructions cursor-rules readme-tools-section
 
 # --- skill/set, skill/check: SKILL.md frontmatter itself ---
 

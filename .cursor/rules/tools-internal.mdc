@@ -1,7 +1,6 @@
 ---
-name: "tools/internal instructions"
-description: "Instructions for files in tools/internal/"
-applyTo: "tools/internal/**"
+globs: "tools/internal/**"
+alwaysApply: false
 ---
 
 # 内部ツール

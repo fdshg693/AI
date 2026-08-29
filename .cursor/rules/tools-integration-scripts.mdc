@@ -1,0 +1,6 @@
+---
+globs: "tools/integration/scripts/**"
+alwaysApply: false
+---
+
+@./README.md

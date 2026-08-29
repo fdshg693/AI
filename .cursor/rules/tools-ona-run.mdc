@@ -1,0 +1,6 @@
+---
+globs: "tools/ona-run/**"
+alwaysApply: false
+---
+
+@./README.md
