@@ -23,6 +23,12 @@ MODELS: dict[str, str] = {
     "gpt-luna": "openai/gpt-5.6-luna",
 }
 
+# --web指定時に有効化するOpenRouter Server Tools（モデルが必要と判断した場合のみ呼ばれる）。
+WEB_TOOLS: list[dict] = [
+    {"type": "openrouter:web_search"},
+    {"type": "openrouter:web_fetch"},
+]
+
 
 def print_model_list() -> None:
     width = max(len(alias) for alias in MODELS)
@@ -103,7 +109,7 @@ def _build_log_record(model_id: str, prompt: str, res) -> dict:
     }
 
 
-def call(client: OpenRouter, model_id: str, prompt: str) -> str:
+def call(client: OpenRouter, model_id: str, prompt: str, *, web: bool = False) -> str:
     """OpenRouterへの同期呼び出し（薄いラッパー）。呼び出しごとに calls.jsonl へ記録する。
 
     ここにログ等を追加すれば、client/call_async 経由の利用者にも同様の挙動が及ぶ。
@@ -113,6 +119,7 @@ def call(client: OpenRouter, model_id: str, prompt: str) -> str:
             model=model_id,
             messages=[{"role": "user", "content": prompt}],
             stream=False,
+            tools=WEB_TOOLS if web else None,
         )
     except OpenRouterError as e:
         raise AimError(str(e)) from e
@@ -120,13 +127,14 @@ def call(client: OpenRouter, model_id: str, prompt: str) -> str:
     return extract_text(res.choices[0].message.content)
 
 
-async def call_async(client: OpenRouter, model_id: str, prompt: str) -> str:
+async def call_async(client: OpenRouter, model_id: str, prompt: str, *, web: bool = False) -> str:
     """OpenRouterへの非同期呼び出し（薄いラッパー）。call() と同じログ処理を共有する。"""
     try:
         res = await client.chat.send_async(
             model=model_id,
             messages=[{"role": "user", "content": prompt}],
             stream=False,
+            tools=WEB_TOOLS if web else None,
         )
     except OpenRouterError as e:
         raise AimError(str(e)) from e
@@ -150,6 +158,11 @@ def main() -> None:
         action="store_true",
         help="利用可能なモデルの一覧を表示して終了する",
     )
+    parser.add_argument(
+        "--web",
+        action="store_true",
+        help="Web Search/Web Fetch（OpenRouter Server Tools）を有効にする（モデルが必要と判断した場合のみ呼ばれる）",
+    )
     args = parser.parse_args()
 
     if args.list_models:
@@ -167,7 +180,7 @@ def main() -> None:
 
     try:
         with create_client() as client:
-            content = call(client, model_id, prompt)
+            content = call(client, model_id, prompt, web=args.web)
     except AimError as e:
         print(f"エラー: OpenRouter APIの呼び出しに失敗しました: {e}", file=sys.stderr)
         sys.exit(1)
