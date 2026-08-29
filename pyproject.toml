@@ -23,6 +23,7 @@ members = [
     "tools/internal/ai-usage",
     "tools/schedule",
     "tools/ona-run",
+    "tools/model-select",
     "claude-plugins/meta/skills/writing-skill-web",
     "tools/integration/scripts",
 ]
