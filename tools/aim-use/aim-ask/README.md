@@ -28,3 +28,7 @@ aim-ask claude-plugins/my-tools/skills/aim-ask --format json
 - 総サイズの上限や切り詰めはありません。大きなディレクトリは入力が大きくなり得るため、小規模なスキルフォルダを主な用途とします。参照ドキュメント一式などを抱えて大きくなりがちなディレクトリでは、`--full-content-names "SKILL.md,README.md"`のように内容を渡すファイル名を絞り込み、それ以外はツリー上のパスのみ（内容なし）にできます。
 
 出力は既定でMarkdown、--format jsonでJSONです。各結果には入力文字列のpath、解決後のresolved_path、success、response、errorが含まれます。
+
+## AI呼び出しのメタデータ
+
+AI呼び出し時に`trace`（`tool: "aim-ask"`, `file_path`）と`session_id`（実行1回につき1つ、複数ファイルの呼び出しをまとめて識別）を付与しています。これにより`tools/aim`のログ（ローカルJSONL、設定していればGrafana Cloud側）で`aim`単体利用や他ツールと区別して分析できます。詳細は[tools/aim/README.md](../../aim/README.md)を参照してください。

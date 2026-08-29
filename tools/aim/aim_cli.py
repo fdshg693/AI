@@ -95,7 +95,15 @@ def create_client(api_key: str | None = None) -> OpenRouter:
     return OpenRouter(api_key=api_key or resolve_api_key())
 
 
-def _build_log_record(model_id: str, prompt: str, res) -> dict:
+def _build_log_record(
+    model_id: str,
+    prompt: str,
+    res,
+    *,
+    user: str | None = None,
+    session_id: str | None = None,
+    trace: dict[str, str] | None = None,
+) -> dict:
     usage = res.usage
     return {
         "timestamp": datetime.now().astimezone().isoformat(timespec="seconds"),
@@ -106,10 +114,22 @@ def _build_log_record(model_id: str, prompt: str, res) -> dict:
         "completion_tokens": usage.completion_tokens if usage else None,
         "total_tokens": usage.total_tokens if usage else None,
         "generation_id": res.id,
+        "user": user,
+        "session_id": session_id,
+        "trace": trace,
     }
 
 
-def call(client: OpenRouter, model_id: str, prompt: str, *, web: bool = False) -> str:
+def call(
+    client: OpenRouter,
+    model_id: str,
+    prompt: str,
+    *,
+    web: bool = False,
+    user: str | None = None,
+    session_id: str | None = None,
+    trace: dict[str, str] | None = None,
+) -> str:
     """OpenRouterへの同期呼び出し（薄いラッパー）。呼び出しごとに calls.jsonl へ記録する。
 
     ここにログ等を追加すれば、client/call_async 経由の利用者にも同様の挙動が及ぶ。
@@ -120,14 +140,28 @@ def call(client: OpenRouter, model_id: str, prompt: str, *, web: bool = False) -
             messages=[{"role": "user", "content": prompt}],
             stream=False,
             tools=WEB_TOOLS if web else None,
+            user=user,
+            session_id=session_id,
+            trace=trace,
         )
     except OpenRouterError as e:
         raise AimError(str(e)) from e
-    append_log(_build_log_record(model_id, prompt, res))
+    append_log(
+        _build_log_record(model_id, prompt, res, user=user, session_id=session_id, trace=trace)
+    )
     return extract_text(res.choices[0].message.content)
 
 
-async def call_async(client: OpenRouter, model_id: str, prompt: str, *, web: bool = False) -> str:
+async def call_async(
+    client: OpenRouter,
+    model_id: str,
+    prompt: str,
+    *,
+    web: bool = False,
+    user: str | None = None,
+    session_id: str | None = None,
+    trace: dict[str, str] | None = None,
+) -> str:
     """OpenRouterへの非同期呼び出し（薄いラッパー）。call() と同じログ処理を共有する。"""
     try:
         res = await client.chat.send_async(
@@ -135,10 +169,15 @@ async def call_async(client: OpenRouter, model_id: str, prompt: str, *, web: boo
             messages=[{"role": "user", "content": prompt}],
             stream=False,
             tools=WEB_TOOLS if web else None,
+            user=user,
+            session_id=session_id,
+            trace=trace,
         )
     except OpenRouterError as e:
         raise AimError(str(e)) from e
-    append_log(_build_log_record(model_id, prompt, res))
+    append_log(
+        _build_log_record(model_id, prompt, res, user=user, session_id=session_id, trace=trace)
+    )
     return extract_text(res.choices[0].message.content)
 
 
@@ -180,7 +219,7 @@ def main() -> None:
 
     try:
         with create_client() as client:
-            content = call(client, model_id, prompt, web=args.web)
+            content = call(client, model_id, prompt, web=args.web, trace={"tool": "aim-cli"})
     except AimError as e:
         print(f"エラー: OpenRouter APIの呼び出しに失敗しました: {e}", file=sys.stderr)
         sys.exit(1)

@@ -36,9 +36,18 @@ def resolve_model_id(model: str) -> str:
         raise SummarizerError(f"未知のモデル {model!r} です。指定可能な値: {available}") from exc
 
 
-async def _call_once_async(client, model_id: str, prompt: str) -> str:
+async def _call_once_async(
+    client,
+    model_id: str,
+    prompt: str,
+    *,
+    session_id: str | None = None,
+    trace: dict[str, str] | None = None,
+) -> str:
     try:
-        summary = (await call_async(client, model_id, prompt)).strip()
+        summary = (
+            await call_async(client, model_id, prompt, session_id=session_id, trace=trace)
+        ).strip()
     except AimError as exc:
         raise SummarizerError(f"OpenRouter API呼び出しが失敗しました: {exc}") from exc
 
@@ -48,7 +57,13 @@ async def _call_once_async(client, model_id: str, prompt: str) -> str:
 
 
 async def generate_summary_async(
-    client, model_id: str, file_path: str, file_content: str
+    client,
+    model_id: str,
+    file_path: str,
+    file_content: str,
+    *,
+    session_id: str | None = None,
+    trace: dict[str, str] | None = None,
 ) -> tuple[bool, str]:
     """要約生成を試みる。失敗時は1回までリトライする。
 
@@ -58,7 +73,9 @@ async def generate_summary_async(
     last_error: str = ""
     for _attempt in range(2):
         try:
-            return True, await _call_once_async(client, model_id, prompt)
+            return True, await _call_once_async(
+                client, model_id, prompt, session_id=session_id, trace=trace
+            )
         except SummarizerError as exc:
             last_error = str(exc)
     return False, last_error

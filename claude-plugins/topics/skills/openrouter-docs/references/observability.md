@@ -22,6 +22,72 @@ Source: `guides/features/input-output-logging`, `guides/features/broadcast`, `gu
 
 なお「OpenRouterへのデータ利用許可（Privacy設定、全モデル1%割引）」はInput & Output Loggingとは別設定で、両者は独立に有効化できる。
 
+## Grafana Cloud
+
+Source: `guides/features/broadcast/grafana`
+
+Broadcast先の1つ、[Grafana Cloud](https://grafana.com/products/cloud/)（Tempoによる分散トレーシングを含むフルマネージドObservabilityプラットフォーム）向けの詳細。OpenRouterは標準のOTLP HTTP/JSONエンドポイント経由でトレースを送信する。
+
+- **必要な認証情報（3つ）**
+  - Base URL: Grafana CloudのOTLP gatewayエンドポイント（例: `https://otlp-gateway-prod-us-west-0.grafana.net`）。Grafana Cloudポータルの **Connections > Add new connection > OpenTelemetry (OTLP)** から確認。メインのGrafanaダッシュボードURLとは別物なので注意
+  - Instance ID: 数値のInstance ID（`https://grafana.com/orgs/{org}/stacks` のスタック詳細ページで確認）
+  - API Key: `traces:write` スコープのAccess Policyから発行したAPIトークン（`glc_...`で始まる）
+- **設定手順**: `Settings > Observability`（`https://openrouter.ai/settings/observability`）でBroadcastを有効化 → Grafana Cloudの編集アイコンから上記3つを入力 → Test Connectionで疎通確認（成功時のみ保存）→ テストリクエストを送りトレースを確認
+- **閲覧方法**: Grafana Cloud側でExplore > Tempoデータソース（`grafanacloud-*-traces`）> TraceQLタブ、または Drilldown > Traces
+- **トレース属性**
+  - リソース属性: `service.name`（常に`openrouter`）, `service.version`, `openrouter.trace.id`
+  - スパン属性: `gen_ai.operation.name`, `gen_ai.system`, `gen_ai.request.model`, `gen_ai.response.model`, `gen_ai.usage.{input,output,total}_tokens`, `gen_ai.response.finish_reason`
+- **カスタムメタデータのマッピング**（リクエストの`trace`フィールド・`user`・`session_id`から）
+
+  | Key                           | Grafana Mapping                  | 説明                                                 |
+  | ----------------------------- | -------------------------------- | ---------------------------------------------------- |
+  | `trace_id`                    | Trace ID                         | 複数リクエストを1つのトレースにまとめる              |
+  | `trace_name`                  | Span Name                        | ルートspanのカスタム名                               |
+  | `span_name`                   | Span Name                        | 階層内の中間spanの名前                               |
+  | `generation_name`             | Span Name                        | LLM生成spanの名前                                    |
+  | `parent_span_id`              | Parent Span ID                   | 既存トレース階層内の親spanへのリンク                 |
+  | （`trace`内のその他任意キー） | `trace.metadata.*`配下のspan属性 | TraceQLで`span.trace.metadata.<key>`としてクエリ可能 |
+  | リクエストの`user`            | `user.id` span属性               |                                                      |
+  | リクエストの`session_id`      | `session.id` span属性            |                                                      |
+
+  リクエスト例:
+
+  ```json
+  {
+    "model": "openai/gpt-4o",
+    "messages": [{ "role": "user", "content": "Analyze this metric..." }],
+    "user": "user_12345",
+    "session_id": "session_abc",
+    "trace": {
+      "trace_id": "monitoring_pipeline_001",
+      "trace_name": "Metric Analysis Pipeline",
+      "generation_name": "Anomaly Detection",
+      "environment": "production",
+      "alert_id": "alert_789"
+    }
+  }
+  ```
+
+- **TraceQLクエリ例**
+
+  ```traceql
+  { resource.service.name = "openrouter" }
+  { resource.service.name = "openrouter" && span.gen_ai.request.model = "openai/gpt-4-turbo" }
+  { resource.service.name = "openrouter" && span.trace.metadata.environment = "production" }
+  { resource.service.name = "openrouter" && duration > 5s }
+  { resource.service.name = "openrouter" && span.user.id = "user_abc123" }
+  { resource.service.name = "openrouter" && status = error }
+  ```
+
+- **Privacy Mode**: 有効化するとprompt/completion本文はトレースから除外されるが、トークン使用量・コスト・タイミング・モデル情報・カスタムメタデータは通常通り送信される
+- **トラブルシューティング**（トレースが表示されない場合）
+  1. Grafanaの時間範囲ピッカーを確認（"Last 1 hour"等に広げる）
+  2. OTLP gateway URLを使っているか確認（メインのGrafana URLではない）
+  3. Instance IDが数値か、APIキーに`traces:write`権限があるか確認
+  4. 反映まで1〜2分のタイムラグがあることを考慮する
+
+設定手順・属性名・クエリ構文は変わりやすいので、断定的に答える前に上記Sourceパスを`extract_doc_section.py`で再取得して裏取りすること。
+
 ## Router Metadata（リクエスト単位）
 
 [Router Metadata](https://openrouter.ai/docs/guides/features/router-metadata)は、ワークスペース全体を継続監視するBroadcast/Loggingとは別軸で、単発リクエストのルーティング挙動をデバッグする機能。`X-OpenRouter-Metadata: enabled`ヘッダを付けるとレスポンスに`openrouter_metadata`（選ばれたprovider、フォールバック試行、ガードレール/コンテキスト圧縮/サーバーツール等のpipeline実行内容）が載る。

@@ -91,13 +91,25 @@ aim --model minimax-m3 --web --prompt "2026年8月時点の最新ニュースは
   "prompt_tokens": 15,
   "completion_tokens": 11,
   "total_tokens": 26,
-  "generation_id": "gen-1783603352-zXMyzMZpyjJ88CJF5wwD"
+  "generation_id": "gen-1783603352-zXMyzMZpyjJ88CJF5wwD",
+  "user": null,
+  "session_id": null,
+  "trace": { "tool": "aim-cli" }
 }
 ```
 
 - `cost` / `*_tokens` / `generation_id` は OpenRouter レスポンスの `usage` / `id` フィールドからそのまま転記（追加のAPI呼び出しは発生しない）
 - 応答本文（completion）はログに含めない
 - `logs/calls.jsonl` はプロンプト本文を含み得るため Git管理対象外（`.gitignore` 参照）。ディレクトリ自体は `.gitkeep` で追跡
+- `call()`/`call_async()` は呼び出し元が `user`/`session_id`/`trace` を渡せる（いずれも省略時は `None`）。`trace` はOpenRouterのSDKの `trace`（`trace_id`/`trace_name`/`span_name`/`generation_name`/`parent_span_id`の既知キー + 任意の追加キーを持つdict）にそのまま渡され、Grafana Cloudへのブロードキャスト設定時にはトレースのカスタム属性としても反映される（詳細は`claude-plugins/topics/skills/openrouter-docs`スキルの`references/observability.md`参照）
+- `aim` コマンドを直接実行した場合は常に `trace: {"tool": "aim-cli"}` が記録される。これにより、`aim`直接利用と`aim-ask`/`aim-summarize`経由の利用（それぞれ`trace.tool`が`"aim-ask"`/`"aim-summarize"`）をログ上で区別できる
+
+## Grafana Cloudへのログ配信（任意）
+
+OpenRouterのBroadcast機能を使うと、`aim`経由の呼び出し（および`aim-ask`/`aim-summarize`経由の呼び出し）をGrafana Cloud（OTLP/Tempoトレース）にも並行して送信できる。ローカルの`logs/calls.jsonl`は今まで通り残るため、これは二重化であり置き換えではない。
+
+- 設定はOpenRouterダッシュボード（[`https://openrouter.ai/settings/observability`](https://openrouter.ai/settings/observability)）での手動設定のみ。このCLI/リポジトリ側に自動設定コードは持たない（Broadcast設定にはManagement API Keyという別種の強い権限を持つキーが必要になるため）
+- 設定手順・カスタムメタデータのマッピング（`user`→`user.id`、`session_id`→`session.id`、`trace`の各キー→`trace.metadata.*`等）・TraceQLクエリ例の詳細は `claude-plugins/topics/skills/openrouter-docs` スキルの `references/observability.md` を参照
 
 ## エラー時の挙動
 

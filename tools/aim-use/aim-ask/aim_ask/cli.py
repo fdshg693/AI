@@ -6,6 +6,7 @@ import argparse
 import asyncio
 import os
 import sys
+import uuid
 from pathlib import Path
 
 from aim_cli import MODELS, create_client
@@ -59,22 +60,31 @@ def read_text_or_error(
 
 
 async def _run_all_async(
-    model_id: str, prompt: str, jobs: int, targets: list[tuple[int, str]]
+    model_id: str, prompt: str, jobs: int, targets: list[tuple[int, str, str]], session_id: str
 ) -> list[tuple[int, bool, str]]:
     """対象ファイルへのAI呼び出しを並行実行する（単一プロセス内、スレッド不使用）。
 
-    ``targets`` は ``(entries内でのindex, ファイル内容)`` のリスト。
+    ``targets`` は ``(entries内でのindex, パス文字列, ファイル内容)`` のリスト。
     戻り値は各要素について ``(index, 成功したか, 応答/エラーメッセージ)``。
     """
     semaphore = asyncio.Semaphore(jobs)
 
-    async def worker(client, idx: int, text: str):
+    async def worker(client, idx: int, raw_path: str, text: str):
         async with semaphore:
-            success, result = await ask_file_async(client, model_id, prompt, text)
+            success, result = await ask_file_async(
+                client,
+                model_id,
+                prompt,
+                text,
+                session_id=session_id,
+                trace={"tool": "aim-ask", "file_path": raw_path},
+            )
         return idx, success, result
 
     async with create_client() as client:
-        return await asyncio.gather(*(worker(client, idx, text) for idx, text in targets))
+        return await asyncio.gather(
+            *(worker(client, idx, raw_path, text) for idx, raw_path, text in targets)
+        )
 
 
 def cmd_ask(args: argparse.Namespace) -> int:
@@ -105,7 +115,7 @@ def cmd_ask(args: argparse.Namespace) -> int:
 
     cwd = Path.cwd()
     entries: list[ResultEntry] = []
-    targets: list[tuple[int, str]] = []
+    targets: list[tuple[int, str, str]] = []
     for raw_path in args.paths:
         resolved = resolve_path(raw_path, cwd)
         text, error = read_text_or_error(resolved, full_content_names)
@@ -119,10 +129,11 @@ def cmd_ask(args: argparse.Namespace) -> int:
             }
         )
         if text is not None:
-            targets.append((len(entries) - 1, text))
+            targets.append((len(entries) - 1, raw_path, text))
 
     if targets:
-        results = asyncio.run(_run_all_async(model_id, prompt, jobs, targets))
+        session_id = str(uuid.uuid4())
+        results = asyncio.run(_run_all_async(model_id, prompt, jobs, targets, session_id))
         for idx, success, result in results:
             entries[idx]["success"] = success
             if success:
