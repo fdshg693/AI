@@ -18,7 +18,7 @@ APIキー設定など、インストール後のセットアップは各ツー�
 対象パッケージについて、`.github/workflows/tool-release.yml` が main ブランチへの push をトリガーに、パッケージごとの git タグと GitHub Release を自動発行する。スケジュール実行ではなく「`pyproject.toml` のバージョンが上がった」ときだけ発行される（対象タグが既に存在する場合はサイレントにスキップ）。
 
 - タグ命名規則: `<pyprojectのnameフィールド>-v<version>`（例: `aim-cli-v0.1.0`）
-- 対象パッケージ（4つ。ワークスペース内の兄弟パッケージに依存しないもののみ）
+- 対象パッケージの正本は `repo-tools.yaml` の `release: true` なエントリ（`tool-release.yml` の `discover` ジョブが動的に読む。詳細は [docs/repo-meta/repo-tools-config.md](../../docs/repo-meta/repo-tools-config.md) 参照）。以下の表は現状把握用の参考情報（4つ。ワークスペース内の兄弟パッケージに依存しないもののみ）
 
   | パッケージ名  | ディレクトリ    |
   | ------------- | --------------- |

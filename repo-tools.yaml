@@ -13,6 +13,12 @@
 # to render the public "installable tools" list (name + GitHub folder link
 # only, no install instructions).
 #
+# .github/workflows/tool-release.yml is a third consumer: entries with
+# `release: true` are the tag+GitHub Release targets (workspace-sibling-free
+# packages only). Entries without `release` (or with `release: false`) are
+# not release targets — see tools/install/AGENTS.md for why aim-ask /
+# aim-summarize / my-agents are excluded.
+#
 # Excluded from the check: repo-meta/** (its SKILL.md files reuse
 # requires_repo_tools to mean "files this meta-skill documents", not "CLI
 # dependency" — see docs/repo-meta/tool-companion-skills.md) and
@@ -27,6 +33,7 @@ tools:
   aim:
     path: tools/aim
     install: "uv tool install --editable tools/aim"
+    release: true
   aim-ask:
     path: tools/aim-use/aim-ask
     install: "uv tool install --editable tools/aim-use/aim-ask"
@@ -36,12 +43,15 @@ tools:
   mslearn:
     path: tools/mslearn
     install: "uv tool install --editable tools/mslearn"
+    release: true
   tav:
     path: tools/tav-cli
     install: "uv tool install --editable tools/tav-cli"
+    release: true
   ctx7:
     path: tools/ctx7
     install: "uv tool install --editable tools/ctx7"
+    release: true
   my-agents:
     path: tools/my-agents
     install: "uv tool install --editable tools/my-agents"

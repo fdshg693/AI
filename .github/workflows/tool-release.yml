@@ -6,8 +6,10 @@ name: Tool release
 # リリースは無意味なため)。判定は各ジョブ内でのタグ存在チェックのみで
 # 行うので、ここではpathsフィルタを設けない。
 #
-# 対象はworkspace内の兄弟パッケージに依存しない4パッケージのみ
-# (aim-ask/aim-summarize/my-agentsは対象外。理由はtools/install/AGENTS.md参照)。
+# 対象パッケージはrepo-tools.yamlの`release: true`なエントリから動的に
+# 決定する(discoverジョブ)。現状はworkspace内の兄弟パッケージに依存しない
+# 4パッケージ (aim-ask/aim-summarize/my-agentsは対象外。理由は
+# tools/install/AGENTS.md参照)。
 on:
   push:
     branches:
@@ -22,15 +24,43 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      dirs: ${{ steps.dirs.outputs.dirs }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Read release targets from repo-tools.yaml
+        id: dirs
+        run: |
+          dirs=$(uv run --with pyyaml python -c "
+          import json
+          import yaml
+
+          with open('repo-tools.yaml', encoding='utf-8') as f:
+              config = yaml.safe_load(f)
+
+          paths = [
+              tool['path']
+              for tool in config['tools'].values()
+              if tool.get('release')
+          ]
+          print(json.dumps(paths))
+          ")
+          echo "dirs=$dirs" >> "$GITHUB_OUTPUT"
+          echo "Release targets: $dirs" >> "$GITHUB_STEP_SUMMARY"
+
   release:
+    needs: discover
     strategy:
       fail-fast: false
       matrix:
-        dir:
-          - tools/aim
-          - tools/tav-cli
-          - tools/mslearn
-          - tools/ctx7
+        dir: ${{ fromJson(needs.discover.outputs.dirs) }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
