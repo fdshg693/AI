@@ -34,7 +34,33 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
+---
+
+- antigravity-memory
+---
+# Sources (fetched 2026-08-30 via the antigravity-docs skill, raw Markdown twins
+# at https://antigravity.google/docs/<path>.md — see that skill's docs_url_map.md
+# for the current fetch rule):
+#   https://antigravity.google/docs/rules-workflows
+#   https://antigravity.google/docs/ide/rules
+#   https://antigravity.google/docs/cli/gcli-migration
+#   https://antigravity.google/docs/agent-settings (checked, no memory-related content)
+#   https://antigravity.google/docs/faq (checked, no memory-related content)
+# Depends on: antigravity-docs skill — re-fetch the sources above to refresh this
+# reference when the docs change.
+name: antigravity-memory
+description: Guides placement and authoring of persistent Agent context in Google Antigravity — GEMINI.md, AGENTS.md, workspace Rules (.agents/rules), global Rules (~/.gemini/GEMINI.md), and Workflows. Use when deciding what belongs in each mechanism, explaining how/when Antigravity reads these files (including what is and isn't officially documented about nested directories and reload timing), or troubleshooting why a rule isn't applied. Not for Agent Skills (use antigravity-skills) or general Antigravity features (use antigravity-docs).
+meta:
+  requires_repo_tools: none
+  requires_env: none
+  dependencies: none
+  requires_install: none
+  requires_hooks: none
+  requires_skills: antigravity-docs, antigravity-skills
+  status: stable
+  description: no description
+  version: 1.0.0
 ---
 
 - antigravity-skills
