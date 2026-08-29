@@ -10,7 +10,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 # Antigravity Documentation Reference
@@ -45,19 +45,27 @@ memory.
    app shells: a plain HTTP fetch returns an empty shell with no readable
    content. Use one of these instead:
 
-   - **Preferred — raw Markdown twin**: every docs page has a plain-Markdown
-     twin at `https://antigravity.google/assets/docs/<path>/<filename>.md`.
-     Look up the exact URL in [docs_url_map.md](docs_url_map.md) (docs URL →
-     raw Markdown URL) and fetch it directly.
-   - **Fallback**: fetch the HTML page URL with a tool that renders JavaScript
-     (e.g. the browser integration). If a mapped Markdown URL returns 404 —
-     the map can drift when the site is redeployed — infer the
-     `/assets/docs/<path>/<filename>.md` pattern from nearby map entries or
-     use this fallback.
+   - **Preferred — raw Markdown twin**: every `/docs/...` page has a
+     plain-Markdown twin at **the same path with `.md` appended** — e.g.
+     `https://antigravity.google/docs/skills` →
+     `https://antigravity.google/docs/skills.md`,
+     `https://antigravity.google/docs/ide/tab` →
+     `https://antigravity.google/docs/ide/tab.md`. No path remapping is
+     needed (this replaced an older `/assets/docs/<path>/<filename>.md`
+     scheme with per-page folder remapping — see
+     [docs_url_map.md](docs_url_map.md) for the retired table; do not use
+     its entries, they all 404 under the current site).
+   - **Fallback**: fetch the HTML page URL with a tool that renders
+     JavaScript (e.g. the browser integration). If a `<path>.md` fetch 404s
+     for a page that clearly exists at `/docs/<path>`, that's a signal the
+     site changed its Markdown-twin mechanism again — re-verify the rule
+     (try a few known-good pages) before assuming it's just page-specific
+     drift, and update [docs_url_map.md](docs_url_map.md) with whatever the
+     new rule turns out to be.
 
    Non-docs pages listed in the index (`/pricing`, `/changelog`,
-   `/product/...`, `/use-cases/...`, etc.) have no Markdown twin; fetch their
-   HTML directly.
+   `/product/...`, `/use-cases/...`, etc.) have no Markdown twin — the
+   `.md`-suffix trick 404s there too; fetch their HTML directly.
 
 4. **Answer with sources**
 
@@ -69,5 +77,6 @@ memory.
 ## Notes
 
 - Scripts read and write `output/` relative to this skill directory
-- `docs_url_map.md` is derived from the site's client bundle. Treat 404s as a
-  signal to fall back (see step 3), not as a hard failure
+- `docs_url_map.md` now documents the live `<path>.md` rule (verified
+  2026-08-30) plus a struck-through record of the old per-page table it
+  replaced, kept only for history — don't resurrect those old URLs
