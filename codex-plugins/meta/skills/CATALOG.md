@@ -66,6 +66,22 @@ meta:
   version: 1.0.0
 ---
 
+- codex-memory
+---
+name: codex-memory
+description: Use when explaining or designing how OpenAI Codex remembers project context — the `AGENTS.md`/`AGENTS.override.md` project-instructions discovery Codex runs before every turn (precedence order, `project_doc_max_bytes`/`project_doc_fallback_filenames`/`project_root_markers`/`model_instructions_file`), what that discovery does NOT cover (no glob-scoped rule files like Claude Code's `.claude/rules`, no reload mid-session, directories off the root→cwd path are skipped), how to close that gap with a hook, and the separate generated `memories` feature (`features.memories`, `~/.codex/memories/`, `/memories`). Do not use this skill for hook JSON schema/matcher/trust details (use codex-hooks), general config.toml editing beyond memory-related keys (use codex-settings), or CLI flags (use codex-cli-docs).
+meta:
+  requires_repo_tools: none
+  requires_env: none
+  dependencies: none
+  requires_install: none
+  requires_hooks: "任意: AGENTS.md未カバー範囲を補うPreToolUseフック（本文の作成例を参照）"
+  requires_skills: codex-docs, codex-settings, codex-hooks
+  status: stable
+  description: no description
+  version: 1.0.0
+---
+
 - codex-sdk-use
 ---
 name: codex-sdk-use
@@ -85,17 +101,17 @@ meta:
 - codex-settings
 ---
 name: codex-settings
-description: Use when adding or editing OpenAI Codex configuration files — `~/.codex/config.toml`, project-scoped `.codex/config.toml`, profile files (`$CODEX_HOME/<profile>.config.toml`), `rules/*.rules` (execpolicy), hooks (`features.hooks` + `hooks.json` or inline `[hooks]`), `mcp_servers` entries, sandbox/approval-policy/permission-profile settings, or `requirements.toml`. Covers scope precedence, keys project-scoped config can't override, TOML structure, and a pre-flight checklist. Do not use this skill to answer general Codex specification questions (use codex-docs), CLI flags (use codex-cli-docs), or to author AGENTS.md project instructions.
+description: Use when adding or editing OpenAI Codex configuration files — `~/.codex/config.toml`, project-scoped `.codex/config.toml`, profile files (`$CODEX_HOME/<profile>.config.toml`), `rules/*.rules` (execpolicy), hooks (`features.hooks` + `hooks.json` or inline `[hooks]`), `mcp_servers` entries, sandbox/approval-policy/permission-profile settings, or `requirements.toml`. Covers scope precedence, keys project-scoped config can't override, TOML structure, and a pre-flight checklist. Do not use this skill to answer general Codex specification questions (use codex-docs), CLI flags (use codex-cli-docs), or to author or debug AGENTS.md discovery / memories behavior (use codex-memory).
 meta:
   requires_repo_tools: none
   requires_env: none
   dependencies: none
   requires_install: none
   requires_hooks: none
-  requires_skills: codex-docs, codex-cli-docs, codex-hooks, codex-skill-authoring
+  requires_skills: codex-docs, codex-cli-docs, codex-hooks, codex-memory, codex-skill-authoring
   status: stable
   description: no description
-  version: 1.0.3
+  version: 1.0.4
 ---
 
 - codex-skill-authoring
