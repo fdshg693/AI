@@ -40,6 +40,10 @@ tools:
   aim-summarize:
     path: tools/aim-use/aim-summarize
     install: "uv tool install --editable tools/aim-use/aim-summarize"
+  grepapp:
+    path: tools/grepapp
+    install: "uv tool install --editable tools/grepapp"
+    release: true
   mslearn:
     path: tools/mslearn
     install: "uv tool install --editable tools/mslearn"

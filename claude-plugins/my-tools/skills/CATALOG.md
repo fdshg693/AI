@@ -74,6 +74,28 @@ meta:
   version: 1.0.0
 ---
 
+- grep-app
+---
+name: grep-app
+description: Search real-world code examples across 1M+ public GitHub repositories via a self-built fastmcp CLI wrapper around the grep.app MCP server (https://mcp.grep.app). Use when you need to see how other real projects actually use an API, pattern, or library — literal code search across public GitHub, not semantic/keyword search.
+
+# 前提条件: `grepapp`コマンドがPATH上にインストール済み
+# (`uv tool install --editable tools/grepapp`)であること。このスキルはインストール・
+# セットアップは一切行わない。認証不要(grep.app MCP は公開エンドポイント)。
+# このスキルの設計意図・前提条件の背景は同階層のREADME.md参照(人間のメンテナ向け)
+meta:
+  tag: []
+  requires_repo_tools: grepapp
+  requires_env: GREPAPP_MCP_OUTPUT_DIR
+  dependencies: none
+  requires_install: none
+  requires_hooks: none
+  requires_skills: none
+  status: stable
+  description: no description
+  version: 1.0.0
+---
+
 - interactive-cli-wrapper
 ---
 name: interactive-cli-wrapper

@@ -20,6 +20,7 @@ members = [
     "tools/tav-cli",
     "tools/mslearn",
     "tools/ctx7",
+    "tools/grepapp",
     "tools/internal/ai-usage",
     "tools/schedule",
     "tools/ona-run",
