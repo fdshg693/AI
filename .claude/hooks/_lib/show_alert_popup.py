@@ -107,9 +107,9 @@ def _run_window(text: str, seconds: float) -> None:
     y = max(screen_height - height - margin - 48, 0)  # タスクバー分を避ける
     root.geometry(f"{width}x{height}+{x}+{y}")
 
+    # ユーザーが明示的にクリックしない限り、時間制限いっぱいまで表示し続ける
+    # （Escape/Enter等のキー操作では閉じない）。
     root.bind("<Button-1>", lambda _event: root.destroy())
-    root.bind("<Escape>", lambda _event: root.destroy())
-    root.bind("<Return>", lambda _event: root.destroy())
     root.after(max(int(seconds * 1000), 500), root.destroy)
 
     root.mainloop()
