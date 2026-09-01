@@ -4,18 +4,54 @@
 <meta charset="utf-8">
 <title>model-select report</title>
 <style>
-body { font-family: sans-serif; margin: 2rem; }
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #555;
+  --border: #ccc;
+  --thead-bg: #f0f0f0;
+}
+:root[data-theme="dark"] {
+  --bg: #1e1e1e;
+  --fg: #e6e6e6;
+  --muted: #aaa;
+  --border: #444;
+  --thead-bg: #2a2a2a;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1e1e1e;
+    --fg: #e6e6e6;
+    --muted: #aaa;
+    --border: #444;
+    --thead-bg: #2a2a2a;
+  }
+}
+body { font-family: sans-serif; margin: 2rem; background: var(--bg); color: var(--fg); }
 table { border-collapse: collapse; margin-bottom: 1.5rem; }
-th, td { border: 1px solid #ccc; padding: 0.4rem 0.8rem; text-align: left; }
+th, td { border: 1px solid var(--border); padding: 0.4rem 0.8rem; text-align: left; }
+thead th { background: var(--thead-bg); }
 h3 { margin-top: 1.5rem; }
-.summary { color: #555; }
-footer { margin-top: 2rem; color: #888; font-size: 0.9rem; }
-fieldset { margin-bottom: 1.5rem; }
+.summary { color: var(--muted); }
+footer { margin-top: 2rem; color: var(--muted); font-size: 0.9rem; }
+fieldset { margin-bottom: 1.5rem; border-color: var(--border); }
 label { margin-right: 1.5rem; }
 input[type="number"] { width: 5rem; }
+#theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 0.3rem;
+  background: var(--thead-bg);
+  color: var(--fg);
+  cursor: pointer;
+}
 </style>
 </head>
 <body>
+<button type="button" id="theme-toggle" aria-label="ライト/ダークモード切り替え"></button>
 <h1>model-select report</h1>
 <fieldset>
   <legend>ランク分け設定</legend>
@@ -46,6 +82,55 @@ input[type="number"] { width: 5rem; }
 <script>
 (function () {
   "use strict";
+
+  var THEME_STORAGE_KEY = "model-select-theme";
+
+  function applyTheme(theme) {
+    if (theme === "dark" || theme === "light") {
+      document.documentElement.setAttribute("data-theme", theme);
+    } else {
+      document.documentElement.removeAttribute("data-theme");
+    }
+  }
+
+  function currentEffectiveTheme() {
+    var explicit = document.documentElement.getAttribute("data-theme");
+    if (explicit === "dark" || explicit === "light") {
+      return explicit;
+    }
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  }
+
+  function updateToggleLabel(button) {
+    button.textContent = currentEffectiveTheme() === "dark" ? "☀ ライトモード" : "🌙 ダークモード";
+  }
+
+  function initThemeToggle() {
+    var button = document.getElementById("theme-toggle");
+    var stored = null;
+    try {
+      stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+    } catch (e) {
+      stored = null;
+    }
+    applyTheme(stored);
+    updateToggleLabel(button);
+
+    button.addEventListener("click", function () {
+      var next = currentEffectiveTheme() === "dark" ? "light" : "dark";
+      applyTheme(next);
+      try {
+        window.localStorage.setItem(THEME_STORAGE_KEY, next);
+      } catch (e) {
+        // localStorage不可でも表示切り替え自体は継続する
+      }
+      updateToggleLabel(button);
+    });
+  }
+
+  initThemeToggle();
 
   var FLOOR = {{ floor }};
   var records = JSON.parse(document.getElementById("model-data").textContent);
