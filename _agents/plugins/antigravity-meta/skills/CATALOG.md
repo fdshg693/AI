@@ -63,7 +63,7 @@ meta:
   requires_skills: antigravity-docs, antigravity-skills
   status: stable
   description: no description
-  version: 1.0.1
+  version: 1.1.0
 ---
 
 - antigravity-skills
@@ -86,4 +86,29 @@ meta:
   status: stable
   description: no description
   version: 1.0.3
+---
+
+- antigravity-subagents
+---
+# Sources (fetched 2026-09-01 via the antigravity-docs skill, raw Markdown twins
+# at https://antigravity.google/docs/<path>.md — see that skill's docs_url_map.md
+# for the current fetch rule):
+#   https://antigravity.google/docs/subagents
+#   https://antigravity.google/docs/cli/subagents
+#   https://antigravity.google/docs/cli/commands/agents
+#   https://antigravity.google/docs/sdk/subagents
+# Depends on: antigravity-docs skill — re-fetch the sources above to refresh this reference when the docs change.
+name: antigravity-subagents
+description: Use when delegating work to subagents in Google Antigravity — invoking built-in subagents (research, browser, self), defining custom subagents via Markdown (.md) frontmatter or the SDK, choosing workspace isolation (inherit/branch/share), monitoring/killing subagents in the IDE panel or CLI /agents TUI, understanding lifecycle states and nesting limits, or picking between invoke_subagent, /boost, and /teamwork-preview. Grounded in the official Antigravity documentation; refresh against the latest docs via the antigravity-docs skill.
+meta:
+  tag: []
+  requires_repo_tools: none
+  requires_env: none
+  dependencies: none
+  requires_install: none
+  requires_hooks: none
+  requires_skills: antigravity-docs
+  status: stable
+  description: no description
+  version: 1.0.0
 ---
