@@ -178,6 +178,11 @@
       "description": "リポジトリ内のファイルをファイル単位でAI要約し、SQLite DB（.aim-use/summaries.db）に永続化する`aim-summarize` CLIツールの使い方を説明する。ファイル要約を生成・更新したい、変更されたファイルだけ再要約したい、DBから要約を取得したい場合に使う。"
     },
     {
+      "path": "claude-plugins/my-tools/skills/grep-app",
+      "name": "grep-app",
+      "description": "Search real-world code examples across 1M+ public GitHub repositories via a self-built fastmcp CLI wrapper around the grep.app MCP server (https://mcp.grep.app). Use when you need to see how other real projects actually use an API, pattern, or library — literal code search across public GitHub, not semantic/keyword search."
+    },
+    {
       "path": "claude-plugins/my-tools/skills/interactive-cli-wrapper",
       "name": "interactive-cli-wrapper",
       "description": "Drive an interactive (TTY-only, REPL-style) CLI process from an AI agent one Bash-tool call per turn — start it as a background session, send one line of input, wait for the turn to settle, get the accumulated output back. Use when a CLI has no non-interactive/print flag and must be operated as a live REPL (e.g. Cursor CLI's `agent` run without `-p`). Not for one-shot non-interactive delegation to Cursor CLI (use cursor-cli-use for `agent -p`) and not for CLIs that already support a scriptable non-interactive mode."
