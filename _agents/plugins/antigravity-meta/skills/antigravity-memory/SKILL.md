@@ -21,7 +21,7 @@ meta:
   requires_skills: antigravity-docs, antigravity-skills
   status: stable
   description: no description
-  version: 1.0.1
+  version: 1.1.0
 ---
 
 # Antigravityのメモリ設計（GEMINI.md / AGENTS.md / Rules）
@@ -76,12 +76,13 @@ Google Antigravity がプロジェクト知識を「記憶」する仕組みは�
   - **Always On** — 常時適用
   - **Model Decision** — 自然言語の説明文を見てAIが関連性を判断
   - **Glob** — `*.js` や `src/**/*.ts` のようなパターンにマッチするファイルに適用
-  - Claude Code の `.claude/rules/*.md`（`paths` frontmatterでglob指定）や Cursor の
-    `.cursor/rules/*.mdc`（`alwaysApply`/`description`/`globs`）と発想は同じだが、
-    **frontmatterの具体的なキー名は公式ドキュメントに明記されていない**（発火方式の
-    種類だけが文書化されている）。実際にYAML frontmatterでどう指定するかは、
-    IDE上でRuleを作成して生成されたファイルを確認するか、下記フォールバックで
-    最新ドキュメントを確認してから案内する。
+  - YAML frontmatter では `trigger` キー（`glob`, `always_on`, `model_decision`, `manual`）を指定する。Glob 方式の場合は `trigger: glob` を指定し、`globs:` にカンマ区切りで対象パスを1行で記述する。**globsは250文字制限がある点に注意**
+    ```yaml
+    ---
+    trigger: glob
+    globs: src/**/*.ts, tests/**/*.ts
+    ---
+    ```
 - ルール内では `@filename` で他ファイルを参照できる（相対パスはルールファイル基準、
   絶対パス`/`始まりはまず真の絶対パス、フォールバックでワークスペース相対パスとして解決）。
 - **文字数上限は Rules・Workflows ファイルともに1ファイル12,000文字。** 超える場合は
