@@ -18,6 +18,12 @@ def has_coding_index(model: dict) -> bool:
     return artificial_analysis.get("coding_index") is not None
 
 
-def filter_in_scope(models: list[dict]) -> list[dict]:
-    """variantでなく、かつ``benchmarks.artificial_analysis.coding_index``を持つモデルのみ残す。"""
-    return [m for m in models if not is_variant(m) and has_coding_index(m)]
+def filter_in_scope(models: list[dict], minimum: float) -> list[dict]:
+    """variantでなく、``coding_index``を持ち、かつその値が``minimum``以上のモデルのみ残す。"""
+    return [
+        m
+        for m in models
+        if not is_variant(m)
+        and has_coding_index(m)
+        and m["benchmarks"]["artificial_analysis"]["coding_index"] >= minimum
+    ]

@@ -1,86 +1,41 @@
-"""自己完結HTML生成（サーバー・JS不要、Python側でテーブルHTMLを直接組み立てる）。"""
+"""自己完結HTML生成（サーバー・JS取得不要。Jinja2テンプレート + 埋め込みJSONで組み立てる）。
+
+bucket分け・Pareto最適フィルタはHTML側の埋め込みJSで動的に行うため、ここではモデルレコードを
+JSONとして埋め込むだけで、事前計算は行わない。
+"""
 
 from __future__ import annotations
 
-import html
+import json
 from datetime import datetime
+from pathlib import Path
+
+from jinja2 import Environment, FileSystemLoader, select_autoescape
+
+THRESHOLD_DEFAULT = 65
+STEP_DEFAULT = 3
+
+_TEMPLATES_DIR = Path(__file__).resolve().parent / "templates"
+_ENV = Environment(
+    loader=FileSystemLoader(_TEMPLATES_DIR),
+    autoescape=select_autoescape(["html", "jinja"]),
+)
 
 
-def render_report(
-    generated_at: datetime,
-    sections: list[tuple[str, int, dict[tuple[float, float], list[dict]]]],
-) -> str:
+def render_report(generated_at: datetime, records: list[dict], floor: float) -> str:
     """自己完結HTMLレポートを組み立てる。
 
-    ``sections``は``(セクションタイトル, スコープ内対象モデル総数, bucket→行リストの辞書)``のリスト。
-    bucketは``(low, high)``タプルをキーとし、値の行リストは価格の安い順・Pareto frontier上の
-    モデルのみである前提（``dominance.filter_pareto_frontier``適用済み）。モデルが0件のbucketは
-    見出しごと省略する。
+    ``records``は``id``/``name``/``coding_index``/``price_prompt_per_million``/
+    ``price_completion_per_million``の5フィールドを持つフラットなモデルレコードのリスト。
+    ``floor``はPython側で既に足切り済みの下限値で、HTML側の閾値入力の``min``属性に使う。
+    ランク分け（閾値・ステップ）・Pareto最適フィルタはHTML埋め込みJSが担う。
     """
-    body_parts = [_render_section(title, total, buckets) for title, total, buckets in sections]
-    return _PAGE_TEMPLATE.format(
+    records_json = json.dumps(records, ensure_ascii=False).replace("</", "<\\/")
+    template = _ENV.get_template("report.html.jinja")
+    return template.render(
         generated_at=generated_at.isoformat(timespec="seconds"),
-        sections="\n".join(body_parts),
+        records_json=records_json,
+        floor=floor,
+        threshold_default=max(THRESHOLD_DEFAULT, floor),
+        step_default=STEP_DEFAULT,
     )
-
-
-def _render_section(
-    title: str, total_in_scope: int, buckets: dict[tuple[float, float], list[dict]]
-) -> str:
-    bucket_html = "\n".join(
-        _render_bucket(low, high, rows) for (low, high), rows in sorted(buckets.items()) if rows
-    )
-    return f"""
-<section>
-  <h2>{html.escape(title)}</h2>
-  <p class="summary">スコープ内対象モデル総数（ランク分け前）: {total_in_scope}件</p>
-  {bucket_html}
-</section>
-"""
-
-
-def _render_bucket(low: float, high: float, rows: list[dict]) -> str:
-    row_html = "\n".join(_render_row(row) for row in rows)
-    return f"""
-<h3>coding_index [{low:g}, {high:g})</h3>
-<table>
-  <thead><tr><th>モデル</th><th>ID</th><th>coding_index</th><th>価格（$/M tokens）</th></tr></thead>
-  <tbody>
-  {row_html}
-  </tbody>
-</table>
-"""
-
-
-def _render_row(row: dict) -> str:
-    return (
-        "<tr>"
-        f"<td>{html.escape(row['name'])}</td>"
-        f"<td>{html.escape(row['id'])}</td>"
-        f"<td>{row['coding_index']:g}</td>"
-        f"<td>{row['price_per_million']:.2f}</td>"
-        "</tr>"
-    )
-
-
-_PAGE_TEMPLATE = """<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="utf-8">
-<title>model-select report</title>
-<style>
-body {{ font-family: sans-serif; margin: 2rem; }}
-table {{ border-collapse: collapse; margin-bottom: 1.5rem; }}
-th, td {{ border: 1px solid #ccc; padding: 0.4rem 0.8rem; text-align: left; }}
-h3 {{ margin-top: 1.5rem; }}
-.summary {{ color: #555; }}
-footer {{ margin-top: 2rem; color: #888; font-size: 0.9rem; }}
-</style>
-</head>
-<body>
-<h1>model-select report</h1>
-{sections}
-<footer>生成日時: {generated_at}</footer>
-</body>
-</html>
-"""

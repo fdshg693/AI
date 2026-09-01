@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>model-select report</title>
+<style>
+body { font-family: sans-serif; margin: 2rem; }
+table { border-collapse: collapse; margin-bottom: 1.5rem; }
+th, td { border: 1px solid #ccc; padding: 0.4rem 0.8rem; text-align: left; }
+h3 { margin-top: 1.5rem; }
+.summary { color: #555; }
+footer { margin-top: 2rem; color: #888; font-size: 0.9rem; }
+fieldset { margin-bottom: 1.5rem; }
+label { margin-right: 1.5rem; }
+input[type="number"] { width: 5rem; }
+</style>
+</head>
+<body>
+<h1>model-select report</h1>
+<fieldset>
+  <legend>ランク分け設定</legend>
+  <label>coding_index 下限（閾値）:
+    <input type="number" id="threshold-input" min="{{ floor }}" step="1" value="{{ threshold_default }}">
+  </label>
+  <label>bucketステップ幅:
+    <input type="number" id="step-input" min="0.1" step="1" value="{{ step_default }}">
+  </label>
+  <p class="summary">coding_index &lt; {{ floor }} のモデルはPython側取得段階で恒久的に除外されており、この閾値では復活しません。</p>
+</fieldset>
+
+<section>
+  <h2>入力重視（prompt価格が安い順）</h2>
+  <p class="summary" id="summary-prompt"></p>
+  <div id="buckets-prompt"></div>
+</section>
+
+<section>
+  <h2>出力重視（completion価格が安い順）</h2>
+  <p class="summary" id="summary-completion"></p>
+  <div id="buckets-completion"></div>
+</section>
+
+<footer>生成日時: {{ generated_at }}</footer>
+
+<script type="application/json" id="model-data">{{ records_json | safe }}</script>
+<script>
+(function () {
+  "use strict";
+
+  var FLOOR = {{ floor }};
+  var records = JSON.parse(document.getElementById("model-data").textContent);
+
+  // 以下、model_select/rank.py・model_select/dominance.py・model_select/cli.py の
+  // _build_axis_view・model_select/render.py の空bucket省略ロジックをJSへ移植したもの。
+  // 元のPythonテストケース（tests/test_rank_dominance.py、削除済み）の代表例:
+  //   - bucket境界: minimum=65, step=3 のとき coding_index=65 は [65,68)、68 は [68,71)（上端は次のbucket）
+  //   - minimum未満（例: 64.9）は除外
+  //   - Pareto: 価格・指標ともに同じ以下かつ少なくとも一方が厳密に優れる他要素があれば支配される
+  //   - 価格・指標が完全同値の要素同士は互いに支配しない（両方残る）
+
+  function bucketBounds(value, minimum, step) {
+    var stepsAboveMinimum = Math.floor((value - minimum) / step);
+    var low = minimum + stepsAboveMinimum * step;
+    return [low, low + step];
+  }
+
+  function groupByBucket(items, metricOf, minimum, step) {
+    var buckets = new Map();
+    items.forEach(function (item) {
+      var metric = metricOf(item);
+      if (metric < minimum) {
+        return;
+      }
+      var bounds = bucketBounds(metric, minimum, step);
+      var key = bounds[0] + "," + bounds[1];
+      if (!buckets.has(key)) {
+        buckets.set(key, { low: bounds[0], high: bounds[1], items: [] });
+      }
+      buckets.get(key).items.push(item);
+    });
+    return buckets;
+  }
+
+  function filterParetoFrontier(items, priceOf, metricOf) {
+    var result = [];
+    items.forEach(function (candidate) {
+      var candidatePrice = priceOf(candidate);
+      var candidateMetric = metricOf(candidate);
+      var dominated = false;
+      for (var i = 0; i < items.length; i++) {
+        var other = items[i];
+        if (other === candidate) {
+          continue;
+        }
+        var otherPrice = priceOf(other);
+        var otherMetric = metricOf(other);
+        var notWorse = otherPrice <= candidatePrice && otherMetric >= candidateMetric;
+        var strictlyBetter = otherPrice < candidatePrice || otherMetric > candidateMetric;
+        if (notWorse && strictlyBetter) {
+          dominated = true;
+          break;
+        }
+      }
+      if (!dominated) {
+        result.push(candidate);
+      }
+    });
+    return result;
+  }
+
+  function codingIndexOf(record) {
+    return record.coding_index;
+  }
+
+  function buildAxisView(buckets, priceField) {
+    function priceOf(record) {
+      return record[priceField];
+    }
+    var view = [];
+    buckets.forEach(function (bucket) {
+      var frontier = filterParetoFrontier(bucket.items, priceOf, codingIndexOf);
+      var rows = frontier.map(function (record) {
+        return {
+          id: record.id,
+          name: record.name,
+          coding_index: record.coding_index,
+          price_per_million: priceOf(record),
+        };
+      });
+      rows.sort(function (a, b) {
+        return a.price_per_million - b.price_per_million;
+      });
+      if (rows.length > 0) {
+        view.push({ low: bucket.low, high: bucket.high, rows: rows });
+      }
+    });
+    view.sort(function (a, b) {
+      return a.low - b.low;
+    });
+    return view;
+  }
+
+  function formatMetric(value) {
+    // Python の :g 相当（末尾の不要な小数を落とす）の簡易実装
+    var rounded = Math.round(value * 1000) / 1000;
+    return String(rounded);
+  }
+
+  function clearChildren(el) {
+    while (el.firstChild) {
+      el.removeChild(el.firstChild);
+    }
+  }
+
+  function renderBucket(bucket) {
+    var frag = document.createDocumentFragment();
+
+    var heading = document.createElement("h3");
+    heading.textContent =
+      "coding_index [" + formatMetric(bucket.low) + ", " + formatMetric(bucket.high) + ")";
+    frag.appendChild(heading);
+
+    var table = document.createElement("table");
+    var thead = document.createElement("thead");
+    var headRow = document.createElement("tr");
+    ["モデル", "ID", "coding_index", "価格（$/M tokens）"].forEach(function (text) {
+      var th = document.createElement("th");
+      th.textContent = text;
+      headRow.appendChild(th);
+    });
+    thead.appendChild(headRow);
+    table.appendChild(thead);
+
+    var tbody = document.createElement("tbody");
+    bucket.rows.forEach(function (row) {
+      var tr = document.createElement("tr");
+
+      var tdName = document.createElement("td");
+      tdName.textContent = row.name;
+      tr.appendChild(tdName);
+
+      var tdId = document.createElement("td");
+      tdId.textContent = row.id;
+      tr.appendChild(tdId);
+
+      var tdCoding = document.createElement("td");
+      tdCoding.textContent = formatMetric(row.coding_index);
+      tr.appendChild(tdCoding);
+
+      var tdPrice = document.createElement("td");
+      tdPrice.textContent = row.price_per_million.toFixed(2);
+      tr.appendChild(tdPrice);
+
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    frag.appendChild(table);
+
+    return frag;
+  }
+
+  function renderAxis(containerId, summaryId, priceField, minimum, step) {
+    var container = document.getElementById(containerId);
+    var summary = document.getElementById(summaryId);
+    clearChildren(container);
+
+    var buckets = groupByBucket(records, codingIndexOf, minimum, step);
+    var view = buildAxisView(buckets, priceField);
+
+    summary.textContent = "スコープ内対象モデル総数（ランク分け前）: " + records.length + "件";
+
+    view.forEach(function (bucket) {
+      container.appendChild(renderBucket(bucket));
+    });
+  }
+
+  function renderAll() {
+    var thresholdInput = document.getElementById("threshold-input");
+    var stepInput = document.getElementById("step-input");
+
+    var minimum = Math.max(FLOOR, Number(thresholdInput.value) || FLOOR);
+    if (minimum !== Number(thresholdInput.value)) {
+      thresholdInput.value = String(minimum);
+    }
+    var step = Number(stepInput.value);
+    if (!(step > 0)) {
+      step = 1;
+      stepInput.value = String(step);
+    }
+
+    renderAxis("buckets-prompt", "summary-prompt", "price_prompt_per_million", minimum, step);
+    renderAxis(
+      "buckets-completion",
+      "summary-completion",
+      "price_completion_per_million",
+      minimum,
+      step
+    );
+  }
+
+  document.getElementById("threshold-input").addEventListener("input", renderAll);
+  document.getElementById("step-input").addEventListener("input", renderAll);
+
+  renderAll();
+})();
+</script>
+</body>
+</html>
