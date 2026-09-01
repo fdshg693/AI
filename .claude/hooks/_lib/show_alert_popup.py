@@ -25,8 +25,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-from . import hook_log
-
 DEFAULT_TEXT = "Claude Codeの応答が完了しました"
 DEFAULT_SECONDS = 300.0
 
@@ -49,6 +47,11 @@ def show_popup(text: str | None = None, seconds: float | None = None) -> dict:
     if sys.platform != "win32":
         return {"ok": False, "mode": "unsupported", "detail": f"platform={sys.platform}"}
 
+    # ここでのみ相対importするのは、このモジュール自身が `__main__` として
+    # （＝下の子プロセスとして）直接起動されたとき、モジュールレベルの相対
+    # importだと "no known parent package" で即クラッシュするため。
+    from . import hook_log
+
     if not hook_log.resolve_bool_flag("STOP_ALERT_POPUP", True):
         return {"ok": False, "mode": "disabled"}
 
@@ -58,9 +61,12 @@ def show_popup(text: str | None = None, seconds: float | None = None) -> dict:
     )
 
     try:
-        # DETACHED_PROCESS: 親（このフック）のコンソール/終了から独立させる
+        # CREATE_NO_WINDOW: コンソールウィンドウを一切作らない。DETACHED_PROCESS
+        # だけだと、Windows 11の既定ターミナル機構が新規コンソール要求を検知して
+        # 新しいWindows Terminal（PowerShell）ウィンドウを前面に出してしまうため、
+        # DETACHED_PROCESSではなくこちらを使う。
         # CREATE_NEW_PROCESS_GROUP: Ctrl+C 等のシグナルを親から引き継がない
-        creationflags = subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP
+        creationflags = subprocess.CREATE_NO_WINDOW | subprocess.CREATE_NEW_PROCESS_GROUP
         subprocess.Popen(
             [sys.executable, str(Path(__file__).resolve()), message, str(duration)],
             stdin=subprocess.DEVNULL,
