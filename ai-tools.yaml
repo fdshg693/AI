@@ -83,6 +83,16 @@ tools:
     rules_from_agents_md:
       output_dir: .clinerules
 
+  kilo:
+    readme:
+      config_dirs:
+        - path: .kilo
+          description: "Kilo Code（CLI/TUI/VS Code拡張）が`.kilo/skills/`から自動検出するSkill（SKILL.md形式、marketplace.json/plugin.json相当のバンドル機構はKilo自体に存在しない）"
+    plugins:
+      - path: .kilo
+        kind: workspace
+        skills_layout: subdir
+
   codex:
     readme:
       plugin_roots:

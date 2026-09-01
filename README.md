@@ -25,6 +25,9 @@ AIコーディングツールの設定・ツールに関する個人の調査・
   - [.clinerules/](.clinerules/) — Cline が読むルールファイル群（`root.md`, `tools-*.md`, `templates.md` 等）。詳細は `.clinerules/root.md` 参照
   - [cline-plugins/](cline-plugins/) — Cline 用プラグイン（主にカスタムツール系）
 
+- **Kilo Code**
+  - [.kilo/](.kilo/) — Kilo Code（CLI/TUI/VS Code拡張）が`.kilo/skills/`から自動検出するSkill（SKILL.md形式、marketplace.json/plugin.json相当のバンドル機構はKilo自体に存在しない）
+
 - **Codex**
   - [codex-plugins/](codex-plugins/) — Codex 用プラグイン（`meta/` 配下に設定・スキル）
   - [.agents/](.agents/) — Codex が読むマーケットプレイス定義（`.agents/plugins/marketplace.json`）から `copilot-plugins/` 等のプラグインを読み込む。Antigravity ともフォルダ名が競合するため `_agents/` と使い分け（`.agents/README.md` 参照）
