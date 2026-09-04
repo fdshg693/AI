@@ -61,6 +61,7 @@ git commit -m "..."
 - [ai-tools-config](/repo-meta/ai-tools-config.md) — マーケットプレイス・スキルカタログ生成の詳細
 - [skill-meta-fields](/repo-meta/skill-meta-fields.md) — `meta:`ブロックの新7フィールド運用
 - `.claude/rules/skill-meta-fields.md` — `meta.version`SSOT・バンプ運用のルール本文
+- [committing](../../repo-meta/skills/committing/SKILL.md) — このリポジトリ全体のコミット手順（ステージ対象・件名・フック失敗時）
 
 ## このドキュメントの位置づけ
 

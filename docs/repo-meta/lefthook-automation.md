@@ -42,6 +42,7 @@ status: stable
 - [ai-tools-config](/repo-meta/ai-tools-config.md) — 生成される個々のファイルと生成スクリプトの詳細
 - [skill-md-commits](/repo-meta/skill-md-commits.md) — `SKILL.md`をコミットする際にlefthookが実行する内容と、詰まったときの直し方
 - [repo-ssot-pattern](/repo-meta/repo-ssot-pattern.md) — SSOT→生成スクリプト→lefthookという一連の設計パターン
+- [committing](../../repo-meta/skills/committing/SKILL.md) — このリポジトリでエージェントがコミットするときの手順（フックに任せる／失敗時の直し方）
 
 ## このドキュメントの位置づけ
 

@@ -165,7 +165,7 @@ meta:
   requires_skills: ms-learn, aim-ask
   status: stable
   description: no description
-  version: 1.2.0
+  version: 1.3.0
 ---
 
 - ms-learn
@@ -187,7 +187,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.1.0
+  version: 1.2.0
 ---
 
 - my-agents

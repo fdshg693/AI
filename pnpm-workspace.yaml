@@ -1,6 +1,7 @@
 packages:
   - "skills-site"
   - "skills-site/api"
+  - "tools-site"
   - "tools/cline-wrapper"
   - "tools/copilot-wrapper"
   - "tools/linear-cli"

@@ -9,7 +9,10 @@
     "skills-site:validate": "pnpm --filter ai-skill-catalog-site run validate",
     "skills-site:test": "pnpm --filter ai-skill-catalog-site run test",
     "skills-site:check": "pnpm run skills-site:build && pnpm run skills-site:validate && pnpm run skills-site:test",
-    "skills-site:dev": "pnpm --filter ai-skill-catalog-site run dev"
+    "skills-site:dev": "pnpm --filter ai-skill-catalog-site run dev",
+    "tools-site:dev": "pnpm --filter ai-tools-doc-site run dev",
+    "tools-site:build": "pnpm --filter ai-tools-doc-site run build",
+    "tools-site:generate": "pnpm --filter ai-tools-doc-site run generate"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.1",
