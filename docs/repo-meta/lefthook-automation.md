@@ -25,6 +25,8 @@ status: stable
 
 新しいチェック・再生成ステップを追加するときは、`glob`で対象を絞れる形にできないか先に検討し、できるならlefthookジョブとして実装する。スキルの本文には、lefthookが**既にやっていること**（何が走るか、失敗時の直し方）を書けばよく、同じコマンドを手で実行するよう指示する記述は避ける。
 
+エージェントがコミットするときは生の`git commit`を叩かない。[committing](../../repo-meta/skills/committing/SKILL.md)の同梱ラッパー（`repo-meta/skills/committing/scripts/commit.py`）が同じフックを走らせ、成功/失敗ジョブと直し方だけを返す。lefthookの実行ログをコンテキストに流さないためであり、衛生処理そのものをフックの外へ出す変更ではない。
+
 ## 例外: 有料/外部AI API呼び出しはフック化しない
 
 `skill_meta_field_fill.py`（[skill-meta-fields](/repo-meta/skill-meta-fields.md)、内部でaim-askを呼びOpenRouter APIを叩く）は、意図的にlefthookへ組み込まれていない。コミットのたびに課金を伴うAI呼び出しが走らないよう、明示呼び出し専用（該当スキルの`disable-model-invocation: true`）に留める。「自動化を最大限に活用する」の対象は、決定論的で無料/低コストな整形・再生成に限る。
@@ -42,7 +44,7 @@ status: stable
 - [ai-tools-config](/repo-meta/ai-tools-config.md) — 生成される個々のファイルと生成スクリプトの詳細
 - [skill-md-commits](/repo-meta/skill-md-commits.md) — `SKILL.md`をコミットする際にlefthookが実行する内容と、詰まったときの直し方
 - [repo-ssot-pattern](/repo-meta/repo-ssot-pattern.md) — SSOT→生成スクリプト→lefthookという一連の設計パターン
-- [committing](../../repo-meta/skills/committing/SKILL.md) — このリポジトリでエージェントがコミットするときの手順（フックに任せる／失敗時の直し方）
+- [committing](../../repo-meta/skills/committing/SKILL.md) — エージェント向けコミット手順（lefthook出力を要約するラッパー付き）
 
 ## このドキュメントの位置づけ
 
