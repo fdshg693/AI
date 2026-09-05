@@ -2,6 +2,7 @@
 name: codex-sdk-use
 description: Use when explaining or implementing programmatic control of local Codex agents with the official Codex SDK — the TypeScript library (@openai/codex-sdk) or the Python library (openai-codex). Covers installation, authentication, thread lifecycle, run/streamed turns, structured output, and sandbox/approval options. Do not use for one-shot shell delegation to the CLI (use codex-cli-use) or general Codex specification questions (use codex-docs).
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: CODEX_API_KEY
   dependencies: "@openai/codex-sdk, openai-codex, zod-to-json-schema"
@@ -10,7 +11,7 @@ meta:
   requires_skills: codex-cli-use, codex-docs
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 # Codex SDK 利用ガイド

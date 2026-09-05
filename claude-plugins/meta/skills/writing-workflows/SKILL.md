@@ -4,6 +4,7 @@
 name: writing-workflows
 description: Use when creating, editing, or reviewing a Claude Code dynamic workflow (.claude/workflows/*.js orchestration scripts using agent()/pipeline()/parallel()/phase()) — deciding whether a task warrants a workflow, structuring or auditing the script, choosing a save location, and passing args to a saved workflow.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: CLAUDE_CONFIG_DIR, CLAUDE_CODE_SUBAGENT_MODEL, CLAUDE_CODE_DISABLE_WORKFLOWS
   dependencies: none

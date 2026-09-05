@@ -9,6 +9,10 @@
 `alert.wav` はユーザーが後から置く想定。未配置でもビープで動作確認できる。
 winsound は WAV のみ対応（MP3 等は不可）。
 
+`STOP_ALERT_SOUND_ENABLED` を false にすると、音そのものを鳴らさない
+（ポップアップ通知のみ使いたい場合など）。未設定なら true。
+`HOOK_LOG`同様、`.claude/hooks/.env`での指定にも対応（`hook_log.resolve_bool_flag`経由）。
+
 注意: サウンドスキームが「なし(.None)」だと MessageBeep(MB_ICONASTERISK) は
 呼び出しは成功するが音が出ない。そのためレジストリで Asterisk 音が実際に
 割り当てられているか確認し、未割り当てなら winsound.Beep() の直接トーン生成へ
@@ -20,6 +24,8 @@ from __future__ import annotations
 import os
 import sys
 from pathlib import Path
+
+from . import hook_log
 
 # .claude/hooks/_lib/play_alert_sound.py -> _lib -> .claude/hooks (alert.wav lives here)
 HOOKS_DIR = Path(__file__).resolve().parent.parent
@@ -100,6 +106,10 @@ def _play_beep_or_tone() -> dict:
         return {"ok": False, "mode": "tone_failed", "detail": str(exc)}
 
 
+def _sound_enabled() -> bool:
+    return hook_log.resolve_bool_flag("STOP_ALERT_SOUND_ENABLED", True)
+
+
 def play_alert() -> dict:
     """アラート音を再生する。戻り値は結果の要約（ログ／テスト用）。
 
@@ -107,6 +117,9 @@ def play_alert() -> dict:
     """
     if sys.platform != "win32":
         return {"ok": False, "mode": "unsupported", "detail": f"platform={sys.platform}"}
+
+    if not _sound_enabled():
+        return {"ok": False, "mode": "disabled"}
 
     try:
         import winsound

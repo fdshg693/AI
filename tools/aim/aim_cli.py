@@ -3,6 +3,7 @@
 import argparse
 import json
 import os
+import secrets
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -13,7 +14,8 @@ from openrouter.errors import OpenRouterError
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 ENV_PATH = SCRIPT_DIR / ".env"
-LOG_PATH = SCRIPT_DIR / "logs" / "calls.jsonl"
+LOG_DIR = SCRIPT_DIR / "logs"
+UNKNOWN_TRACE_TOOL = "unknown"
 
 # 利用可能なモデル一覧。キーはCLIで指定する略記（元のモデルIDが推測できる形にする）。
 MODELS: dict[str, str] = {
@@ -22,6 +24,12 @@ MODELS: dict[str, str] = {
     "glm-5.2": "z-ai/glm-5.2",
     "gpt-luna": "openai/gpt-5.6-luna",
 }
+
+# --web指定時に有効化するOpenRouter Server Tools（モデルが必要と判断した場合のみ呼ばれる）。
+WEB_TOOLS: list[dict] = [
+    {"type": "openrouter:web_search"},
+    {"type": "openrouter:web_fetch"},
+]
 
 
 def print_model_list() -> None:
@@ -74,10 +82,38 @@ def extract_text(content) -> str:
     return "" if content is None else str(content)
 
 
+def _log_path_for(record: dict) -> Path:
+    """trace.toolごとのフォルダ、日付ごとのファイルにログを振り分ける。
+
+    trace/trace.toolが空の場合は "unknown" フォルダにまとめる。
+    """
+    trace = record.get("trace") or {}
+    tool = trace.get("tool") or UNKNOWN_TRACE_TOOL
+    date = record["timestamp"][:10]
+    return LOG_DIR / tool / f"{date}.jsonl"
+
+
 def append_log(record: dict) -> None:
-    LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with LOG_PATH.open("a", encoding="utf-8") as f:
+    log_path = _log_path_for(record)
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    with log_path.open("a", encoding="utf-8") as f:
         f.write(json.dumps(record, ensure_ascii=False) + "\n")
+
+
+def _new_trace_id() -> str:
+    """OTel準拠のtrace id（128bit、32桁hex文字列）を生成する。"""
+    return secrets.token_hex(16)
+
+
+def _resolve_trace(trace: dict[str, str] | None) -> dict[str, str]:
+    """trace辞書にtrace_idが無ければ生成して補う（呼び出し元指定のtrace_idは尊重する）。
+
+    ここで確定させたtrace_idはOpenRouterへの送信（Grafana Cloud連携時のTrace ID）と
+    ローカルログの両方に使われるため、後からGrafana側のトレースと突き合わせられる。
+    """
+    resolved = dict(trace) if trace else {}
+    resolved.setdefault("trace_id", _new_trace_id())
+    return resolved
 
 
 class AimError(Exception):
@@ -89,7 +125,15 @@ def create_client(api_key: str | None = None) -> OpenRouter:
     return OpenRouter(api_key=api_key or resolve_api_key())
 
 
-def _build_log_record(model_id: str, prompt: str, res) -> dict:
+def _build_log_record(
+    model_id: str,
+    prompt: str,
+    res,
+    *,
+    user: str | None = None,
+    session_id: str | None = None,
+    trace: dict[str, str] | None = None,
+) -> dict:
     usage = res.usage
     return {
         "timestamp": datetime.now().astimezone().isoformat(timespec="seconds"),
@@ -100,38 +144,82 @@ def _build_log_record(model_id: str, prompt: str, res) -> dict:
         "completion_tokens": usage.completion_tokens if usage else None,
         "total_tokens": usage.total_tokens if usage else None,
         "generation_id": res.id,
+        "user": user,
+        "session_id": session_id,
+        "trace": trace,
     }
 
 
-def call(client: OpenRouter, model_id: str, prompt: str) -> str:
+def call(
+    client: OpenRouter,
+    model_id: str,
+    prompt: str,
+    *,
+    web: bool = False,
+    user: str | None = None,
+    session_id: str | None = None,
+    trace: dict[str, str] | None = None,
+    return_trace_id: bool = False,
+) -> str | tuple[str, str]:
     """OpenRouterへの同期呼び出し（薄いラッパー）。呼び出しごとに calls.jsonl へ記録する。
+
+    trace_id未指定時はこの関数がOTel準拠のtrace idを自動生成し、OpenRouterへの送信・
+    ログ記録の両方に使う（Grafana Cloud連携時、ローカルログとGrafana側のトレースを
+    trace_idで突き合わせられるようにするため）。
+    return_trace_id=Trueの場合、戻り値は (応答テキスト, trace_id) のタプルになる。
 
     ここにログ等を追加すれば、client/call_async 経由の利用者にも同様の挙動が及ぶ。
     """
+    trace = _resolve_trace(trace)
     try:
         res = client.chat.send(
             model=model_id,
             messages=[{"role": "user", "content": prompt}],
             stream=False,
+            tools=WEB_TOOLS if web else None,
+            user=user,
+            session_id=session_id,
+            trace=trace,
         )
     except OpenRouterError as e:
         raise AimError(str(e)) from e
-    append_log(_build_log_record(model_id, prompt, res))
-    return extract_text(res.choices[0].message.content)
+    append_log(
+        _build_log_record(model_id, prompt, res, user=user, session_id=session_id, trace=trace)
+    )
+    text = extract_text(res.choices[0].message.content)
+    return (text, trace["trace_id"]) if return_trace_id else text
 
 
-async def call_async(client: OpenRouter, model_id: str, prompt: str) -> str:
-    """OpenRouterへの非同期呼び出し（薄いラッパー）。call() と同じログ処理を共有する。"""
+async def call_async(
+    client: OpenRouter,
+    model_id: str,
+    prompt: str,
+    *,
+    web: bool = False,
+    user: str | None = None,
+    session_id: str | None = None,
+    trace: dict[str, str] | None = None,
+    return_trace_id: bool = False,
+) -> str | tuple[str, str]:
+    """OpenRouterへの非同期呼び出し（薄いラッパー）。call() と同じログ処理・trace_id補完を共有する。"""
+    trace = _resolve_trace(trace)
     try:
         res = await client.chat.send_async(
             model=model_id,
             messages=[{"role": "user", "content": prompt}],
             stream=False,
+            tools=WEB_TOOLS if web else None,
+            user=user,
+            session_id=session_id,
+            trace=trace,
         )
     except OpenRouterError as e:
         raise AimError(str(e)) from e
-    append_log(_build_log_record(model_id, prompt, res))
-    return extract_text(res.choices[0].message.content)
+    append_log(
+        _build_log_record(model_id, prompt, res, user=user, session_id=session_id, trace=trace)
+    )
+    text = extract_text(res.choices[0].message.content)
+    return (text, trace["trace_id"]) if return_trace_id else text
 
 
 def main() -> None:
@@ -150,6 +238,11 @@ def main() -> None:
         action="store_true",
         help="利用可能なモデルの一覧を表示して終了する",
     )
+    parser.add_argument(
+        "--web",
+        action="store_true",
+        help="Web Search/Web Fetch（OpenRouter Server Tools）を有効にする（モデルが必要と判断した場合のみ呼ばれる）",
+    )
     args = parser.parse_args()
 
     if args.list_models:
@@ -167,7 +260,7 @@ def main() -> None:
 
     try:
         with create_client() as client:
-            content = call(client, model_id, prompt)
+            content = call(client, model_id, prompt, web=args.web, trace={"tool": "aim-cli"})
     except AimError as e:
         print(f"エラー: OpenRouter APIの呼び出しに失敗しました: {e}", file=sys.stderr)
         sys.exit(1)

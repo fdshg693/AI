@@ -4,6 +4,7 @@ description: 既存ZENN記事を改善するスキル
 disable-model-invocation: false
 user-invocable: true
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -12,7 +13,7 @@ meta:
   requires_skills: none
   status: experimental
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 # 既存ZENN記事の改善

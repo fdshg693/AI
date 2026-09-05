@@ -7,6 +7,7 @@ description: Use when building, reviewing, or troubleshooting Python application
 # Python版のClaude Agent SDKだけを対象にする。別言語のSDK、API名、コード例は扱わない。
 # 公式ドキュメントの取得・抽出は claude-code-docs スキルに依存する。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: ANTHROPIC_API_KEY
   dependencies: claude-agent-sdk, pydantic
@@ -30,6 +31,7 @@ name: claude-cli-docs
 description: Use when answering questions about the `claude` command's CLI interface — options, flags, and subcommands (e.g. -p/--print, --dangerously-skip-permissions, mcp, plugin, agents, doctor). Grounds answers in the CLI's own `claude --help` output instead of training-data memory, which may be stale. For Claude Code feature/settings concepts documented on the official site (hooks, skills, settings.json), use claude-code-docs instead.
 allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *)
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: claude
@@ -52,6 +54,7 @@ argument-hint: <claude CLIに委譲するタスクの説明>
 disable-model-invocation: true
 allowed-tools: Bash(claude *)
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -60,7 +63,7 @@ meta:
   requires_skills: claude-cli-docs, claude-code-docs
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 - claude-code-debugging
@@ -73,6 +76,7 @@ name: claude-code-debugging
 description: Claude Code自体（CLIツール）のデバッグを一箇所で完結させたい時に使う。既存ログの所在・読み方、デバッグフラグ・スラッシュコマンドでの切り分け、settings起因の不具合切り分け、hookを使ったログの仕込み方、OpenTelemetryでの計装、サブエージェント/CLI分離でのテスト手法、巨大ログの抽出+aim CLIでの要約まで扱う。「Claude Codeがなぜ期待通り動かないか調べたい」「hookやOTelでログを仕込みたい」「セッションログを抽出して分析したい」といった要求で使う。
 allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/scripts/*.py *)
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -91,6 +95,7 @@ description: Use when answering questions about Claude Code (CLI) features, sett
 allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *)
 # !`<command>`を使ってスクリプトを実行することで、動的にコマンド結果を注入できるようにする。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -99,7 +104,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 - claude-code-memory
@@ -108,6 +113,7 @@ meta:
 name: claude-code-memory
 description: Guides placement of project knowledge in Claude Code, including CLAUDE.md, `.claude/rules/*.md`, and auto memory. Use when deciding what belongs in each mechanism, editing its configuration, or troubleshooting memory behavior.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -125,6 +131,7 @@ name: claude-logs-investigate
 description: Claude Code自体(CLIツール)の動作ログ・デバッグ情報・テレメトリを調査する、または新たに記録する仕組みを仕込む際に使う。セッショントランスクリプトやシェルスナップショットなど既存ログの場所と見方に加え、デバッグフラグ・スラッシュコマンドでの原因切り分け、hookを使った独自ログの仕込み、OpenTelemetryによるテレメトリ送信設定までを扱う。「Claude Codeのログを見たい/調べたい」「なぜ設定やhook、MCPが効かないか調査したい」「ツール呼び出し履歴を記録したい」「テレメトリ/OTelを設定したい」といった要求で使う。
 # hookそのものの書き方(イベント種別・stdin/stdout構造・exit code・settings.jsonへの登録方法)は writing-hooks スキルに依存・委譲する
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: CLAUDE_CODE_ENABLE_TELEMETRY, OTEL_METRICS_EXPORTER, OTEL_LOGS_EXPORTER, OTEL_EXPORTER_OTLP_ENDPOINT, OTEL_EXPORTER_OTLP_PROTOCOL
   dependencies: none
@@ -144,6 +151,7 @@ meta:
 name: claude-mechanisms
 description: Use when deciding which Claude Code mechanism to reach for — CLAUDE.md/rules/auto memory, a SKILL, a subagent, or a hook — before persisting knowledge, automating a workflow, or delegating a task. Also covers the anti-pattern of hoarding static prompt files instead of using SKILLS. For how to actually write each mechanism, defer to the dedicated skill it points to.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -160,6 +168,7 @@ meta:
 name: claude-settings
 description: Claude Codeの設定ファイル（settings.json / settings.local.json / 環境変数）を追加・変更する際に使う。permissionsルールの追加、hooksの登録、サンドボックス設定、環境変数の設定、スコープ（User/Project/Local/Managed）選びで迷った時に使う。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -180,6 +189,7 @@ description: Maintains the Claude-related skills under `claude-plugins/meta/skil
 disable-model-invocation: true
 allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/scripts/*.py *)
 meta:
+  tag: []
   requires_repo_tools: tools/internal/plugin_meta/generate/generate_skills_catalog_md.py
   requires_env: none
   dependencies: none
@@ -197,6 +207,7 @@ meta:
 name: writing-hooks
 description: Use when creating or editing Claude Code hooks (.claude/settings.json hooks, PreToolUse/PostToolUse/Stop/UserPromptSubmit etc.) — choosing events/matchers/types, writing safe commands, setting exit codes correctly, avoiding common pitfalls.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -205,7 +216,7 @@ meta:
   requires_skills: claude-code-docs
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 - writing-output-styles
@@ -214,6 +225,7 @@ meta:
 name: writing-output-styles
 description: Use when creating or editing a Claude Code output style (.claude/output-styles/*.md, ~/.claude/output-styles/*.md, or a plugin's output-styles/ directory) — choosing keep-coding-instructions, writing frontmatter, distinguishing output styles from CLAUDE.md/subagents/skills/--append-system-prompt, and switching styles via /config.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -222,7 +234,7 @@ meta:
   requires_skills: claude-code-docs
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 - writing-plugins
@@ -231,6 +243,7 @@ meta:
 name: writing-plugins
 description: Use when creating, structuring, or distributing a Claude Code plugin (.claude-plugin/plugin.json, skills/agents/hooks/mcp/lsp bundling, or a marketplace.json) — choosing plugin vs standalone .claude/, manifest fields, directory layout, versioning, and avoiding common pitfalls.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -252,6 +265,7 @@ meta:
 name: writing-rules
 description: Guides creation and maintenance of Claude Code `.claude/rules/*.md` files. Use when adding or updating path-scoped project guidance, organizing existing rules, or bootstrapping rules for a new or largely undocumented codebase.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -271,6 +285,7 @@ name: writing-skill
 # TDD的なサブエージェント検証は行わない低コスト・日常用途版。高コストなwriting-skill-complexとは棲み分け、モデルの自動起動はこちらに任せる
 description: Use when creating, editing, or evaluating a SKILL.md against best practices — lightweight, everyday guidance covering both writing and reviewing skills. For high-cost subagent-verified TDD testing before deploying critical or widely-shared skills, use writing-skill-complex instead.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -292,6 +307,7 @@ description: Use when creating new skills, editing existing skills, or verifying
 disable-model-invocation: true
 # 日常的な軽量スキル作成にはwriting-skillスキル（サブエージェント検証なし、低コスト）を使う
 meta:
+  tag: []
   requires_repo_tools: graphviz
   requires_env: none
   dependencies: none
@@ -320,6 +336,7 @@ description: Use when creating or editing a skill that needs web content — eit
 #
 # 由来・scripts/のコピー前提テンプレートという性質・命名変更の経緯は同階層のREADME.md参照（人間のメンテナ向け）
 meta:
+  tag: []
   requires_repo_tools: uv
   requires_env: none
   dependencies: requests, typer
@@ -337,6 +354,7 @@ meta:
 name: writing-subagents
 description: Use when creating or editing Claude Code subagents (.claude/agents/*.md, ~/.claude/agents/*.md, or the --agents CLI flag) — choosing scope and frontmatter fields, restricting tools, writing effective descriptions, model/permission settings, and avoiding common pitfalls.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -345,7 +363,7 @@ meta:
   requires_skills: claude-code-docs
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 - writing-workflows
@@ -355,6 +373,7 @@ meta:
 name: writing-workflows
 description: Use when creating, editing, or reviewing a Claude Code dynamic workflow (.claude/workflows/*.js orchestration scripts using agent()/pipeline()/parallel()/phase()) — deciding whether a task warrants a workflow, structuring or auditing the script, choosing a save location, and passing args to a saved workflow.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: CLAUDE_CONFIG_DIR, CLAUDE_CODE_SUBAGENT_MODEL, CLAUDE_CODE_DISABLE_WORKFLOWS
   dependencies: none

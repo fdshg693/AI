@@ -12,6 +12,7 @@ description: tav`で`--topic`指定して収集した`pages/`(extract/crawl/sear
 #            claude-plugins/my-tools/skills/aim-ask (並列AI抽出本体)
 # このスキルは上記2つを繋ぐ薄いオーケストレーション層で、自前のソースコードは持たない。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: OPENROUTER_API_KEY
   dependencies: tav, aim-ask

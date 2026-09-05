@@ -20,6 +20,7 @@ END_MARKER = "<!-- END: ai-tools-section -->"
 DISPLAY_NAMES = {
     "claude-code": "Claude Code",
     "cline": "Cline",
+    "kilo": "Kilo Code",
     "codex": "Codex",
     "copilot": "GitHub Copilot",
     "cursor": "Cursor",

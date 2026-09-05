@@ -4,6 +4,7 @@
 name: discovering-skills
 description: Searches this repository's full skill catalog via the skill-search agent before starting non-trivial work here, and folds genuinely relevant hits into the task's TODO as explicit skill-loading steps. Use when starting a multi-step task inside this repo (features under claude-plugins/, cursor-plugins/, codex-plugins/, copilot-plugins/, cline-plugins/, antigravity-plugins/, tools/, docs/, repo-meta/ etc.), when unsure whether an existing skill already covers the task, or when the current session's auto-suggested Skill-tool listing seems incomplete — that listing only reflects whichever marketplace/plugin dirs happen to be loaded this session, while the index covers every SKILL.md in the repo regardless.
 meta:
+  tag: []
   requires_repo_tools: tools/skill-search, repo-meta/agents/skill-search.md
   requires_env: OPENROUTER_API_KEY
   dependencies: none
@@ -12,7 +13,7 @@ meta:
   requires_skills: none
   status: experimental
   description: no description
-  version: 1.0.1
+  version: 1.0.2
 ---
 
 # リポジトリ内スキルの発見・TODOへの組み込み

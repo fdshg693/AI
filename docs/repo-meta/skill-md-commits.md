@@ -9,7 +9,7 @@ status: stable
 
 # SKILL.md変更のコミット手順とpre-commitフックの挙動
 
-`**/SKILL.md`にマッチするファイルをステージしてコミットすると、`lefthook.yml`の`pre-commit`フックが複数のステップを自動実行する。挙動を知らずにコミットすると、想定より大きい差分が生まれたり、コミット自体が失敗したりする。このドキュメントはその挙動と対処法をまとめる。
+`**/SKILL.md`にマッチするファイルをステージしてコミットすると、`lefthook.yml`の`pre-commit`フックが複数のステップを自動実行する。挙動を知らずにコミットすると、想定より大きい差分が生まれたり、コミット自体が失敗したりする。このドキュメントはその挙動と対処法をまとめる。エージェントがコミットするときは生の`git commit`ではなく[committing](../../repo-meta/skills/committing/SKILL.md)のラッパーを使い、lefthook生ログではなく成功/失敗ジョブと直し方だけを読む。
 
 ## pre-commitフックが自動でやること
 
@@ -18,8 +18,8 @@ status: stable
 1. **生成物の再生成**（`stage_fixed: true`、成功すれば自動でステージに追加される）
    - `skill-catalog.json` / 各プラグインの `CATALOG.md`（詳細は[ai-tools-config](/repo-meta/ai-tools-config.md)）
    - `copilot-plugins/meta/**/SKILL.md`が対象なら`plugin.json`/`marketplace.json`も
-2. **meta.version / meta.description のデフォルト値バックフィル**（`stage_fixed: true`）
-   - `just skill-versions` / `just skill-descriptions` が**リポジトリ全体**の`SKILL.md`を走査し、値が空のフィールドに`1.0.0`/`no description`を補完する。ステージされていない他のスキルにも波及するため、コミット後の差分が「自分が触った分」より大きくなるのは想定内。
+2. **meta.version / meta.description / meta.tag のデフォルト値バックフィル**（`stage_fixed: true`）
+   - `just skill-versions` / `just skill-descriptions` / `just skill-tags` が**リポジトリ全体**の`SKILL.md`を走査し、値が空のフィールドに`1.0.0`/`no description`/`[]`を補完する。ステージされていない他のスキルにも波及するため、コミット後の差分が「自分が触った分」より大きくなるのは想定内。
 3. **meta.versionバンプチェック（ブロッキング、自動修正なし）**
    - `skill/check/check_skill_version_bump.py`が、ステージ済みの各`SKILL.md`をHEADと比較し、「`meta.version`以外の内容が変わったのに`meta.version`が変わっていない」ファイルがあればコミットを拒否する。
 
@@ -40,6 +40,7 @@ just --justfile tools/internal/justfile skill-version-bump
 ```bash
 just --justfile tools/internal/justfile skill-versions
 just --justfile tools/internal/justfile skill-descriptions
+just --justfile tools/internal/justfile skill-tags
 just --justfile tools/internal/justfile skill-catalog
 just --justfile tools/internal/justfile skills-catalog-md
 just --justfile tools/internal/justfile skill-version-bump
@@ -60,6 +61,7 @@ git commit -m "..."
 - [ai-tools-config](/repo-meta/ai-tools-config.md) — マーケットプレイス・スキルカタログ生成の詳細
 - [skill-meta-fields](/repo-meta/skill-meta-fields.md) — `meta:`ブロックの新7フィールド運用
 - `.claude/rules/skill-meta-fields.md` — `meta.version`SSOT・バンプ運用のルール本文
+- [committing](../../repo-meta/skills/committing/SKILL.md) — このリポジトリ全体のコミット手順（ステージ対象・件名・フック失敗時）
 
 ## このドキュメントの位置づけ
 

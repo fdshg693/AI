@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#     "pyyaml",
+# ]
+# ///
 """Ask an AI model (via the `aim` CLI) whether the curation scope of copilot-excerpt.md
 looks right -- not just whether its titles/URLs still match the source, which is all
 check_copilot_excerpt.py can tell you.
@@ -27,7 +34,12 @@ response is written to its own output file. This script's scope ends at producin
 those files -- a human reads them and decides whether to edit
 output/copilot-excerpt.md. It does not modify copilot-excerpt.md or SKILL.md itself.
 
-Usage: python verify_agent_relevance.py [--model {minimax-m3,gpt-oss-120b,glm-5.2,claude-sonnet-5}] [--verify-dir PATH]
+This script does not import check_copilot_excerpt.py directly, but it invokes it (and
+extract_uncurated_entries.py) as subprocesses using the *same* interpreter that ran
+this script (sys.executable) -- so this script also depends on PyYAML being available
+in that interpreter. Run it via `uv run verify_agent_relevance.py`, not bare `python`.
+
+Usage: uv run verify_agent_relevance.py [--model {mini-m3,gpt-120b,glm-5.2,gpt-luna}] [--verify-dir PATH]
 """
 
 from __future__ import annotations
@@ -73,8 +85,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--model",
-        default="minimax-m3",
-        choices=["minimax-m3", "gpt-oss-120b", "glm-5.2", "claude-sonnet-5"],
+        default="mini-m3",
+        choices=["mini-m3", "gpt-120b", "glm-5.2", "gpt-luna"],
     )
     parser.add_argument("--excerpt", type=Path, default=DEFAULT_EXCERPT)
     parser.add_argument("--verify-dir", type=Path, default=DEFAULT_VERIFY_DIR)

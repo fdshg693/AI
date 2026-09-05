@@ -25,3 +25,7 @@ tools/sandbox/orchestrator/data/
 *.egg-info/
 
 *.pem
+
+# cacheやsqlite3は、実行時に生成される一時ファイルであり、バージョン管理の対象外とする
+.cache/
+*.sqlite3

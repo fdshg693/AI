@@ -8,6 +8,7 @@ argument-hint: <claude CLIに委譲するタスクの説明>
 disable-model-invocation: true
 allowed-tools: Bash(claude *)
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -16,7 +17,7 @@ meta:
   requires_skills: claude-cli-docs, claude-code-docs
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 # Claude CLI 非対話実行

@@ -3,6 +3,7 @@ name: subagent-driven-development
 description: Use when executing implementation plans with independent tasks in the current session
 # 必要エージェント: code-reviewer
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -11,7 +12,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 # Subagent-Driven Development

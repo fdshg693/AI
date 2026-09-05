@@ -3,6 +3,7 @@ name: pr-check
 description: PRの作成・状態確認・レビュー依頼・GitHub Actions操作を行う
 allowed-tools: Bash(gh *), Bash(git *), Bash(python claude-plugins/use-github/skills/pr-check/*.py *)
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: gh, git, python
@@ -11,7 +12,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 # PR確認・管理スキル

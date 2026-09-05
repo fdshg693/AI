@@ -36,9 +36,18 @@ def resolve_model_id(model: str) -> str:
         raise AskerError(f"未知のモデル {model!r} です。指定可能な値: {available}") from exc
 
 
-async def _call_once_async(client, model_id: str, message: str) -> str:
+async def _call_once_async(
+    client,
+    model_id: str,
+    message: str,
+    *,
+    session_id: str | None = None,
+    trace: dict[str, str] | None = None,
+) -> str:
     try:
-        response = (await call_async(client, model_id, message)).strip()
+        response = (
+            await call_async(client, model_id, message, session_id=session_id, trace=trace)
+        ).strip()
     except AimError as exc:
         raise AskerError(f"OpenRouter API呼び出しが失敗しました: {exc}") from exc
 
@@ -47,7 +56,15 @@ async def _call_once_async(client, model_id: str, message: str) -> str:
     return response
 
 
-async def ask_file_async(client, model_id: str, prompt: str, file_content: str) -> tuple[bool, str]:
+async def ask_file_async(
+    client,
+    model_id: str,
+    prompt: str,
+    file_content: str,
+    *,
+    session_id: str | None = None,
+    trace: dict[str, str] | None = None,
+) -> tuple[bool, str]:
     """1ファイル分のAI呼び出しを試みる。失敗時は1回までリトライする。
 
     戻り値は ``(成功したか, 成功時は応答文字列/失敗時はエラーメッセージ)``。
@@ -56,7 +73,9 @@ async def ask_file_async(client, model_id: str, prompt: str, file_content: str) 
     last_error: str = ""
     for _attempt in range(2):
         try:
-            return True, await _call_once_async(client, model_id, message)
+            return True, await _call_once_async(
+                client, model_id, message, session_id=session_id, trace=trace
+            )
         except AskerError as exc:
             last_error = str(exc)
     return False, last_error

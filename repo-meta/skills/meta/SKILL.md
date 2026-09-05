@@ -4,6 +4,7 @@
 name: meta
 description: "Points to the single most relevant concept doc under docs/repo-meta/ for a given repository-maintenance task (SKILL.md quality checklist, meta: frontmatter fields, SSOT+regeneration pattern, tools/ directory layout, lefthook/justfile wiring, aim automation, GitHub Actions lifecycle, etc.). Use when starting work under repo-meta/, or hitting a skill/tooling drift, staleness, or consistency question and unsure which existing doc already covers it, before writing new one-off guidance."
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -12,7 +13,7 @@ meta:
   requires_skills: none
   status: experimental
   description: no description
-  version: 1.1.0
+  version: 1.1.1
 ---
 
 !`python ${CLAUDE_SKILL_DIR}/scripts/list_repo_meta_docs.py`
@@ -27,6 +28,7 @@ meta:
 2. 複数該当しそうな場合は、対象がどの事実・仕組みについてかで絞り込む。
    - `SKILL.md`の`meta:`フィールドの意味・埋め方 → `skill-meta-fields`
    - `SKILL.md`をコミットした時のlefthook挙動（生成物再生成・バージョンバンプ） → `skill-md-commits`
+   - このリポジトリでコミットする手順そのもの（何をステージするか、件名、フック失敗時） → `committing`スキル（方針の正本は`lefthook-automation`）
    - 複数ファイルに渡って一致させたい事実をSSOT+生成で管理するパターン全般 → `repo-ssot-pattern`（`ai-tools.yaml`固有の話なら`ai-tools-config`）
    - `tools/`配下の新規スクリプト・CLIの置き方 → `tools-directory-layout`（Pythonパッケージ化の要否は`uv-workspace`）
    - 便利ツールに使い方スキルを併設するかの判断 → `tool-companion-skills`

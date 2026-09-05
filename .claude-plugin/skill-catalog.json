@@ -49,11 +49,6 @@
       "description": "コードの差分を読み取り専用でレビューする。(1) 現在のブランチから指定したマージ先ブランチへPRを作成したと仮定してのブランチ間差分レビュー、または (2) まだコミットしていない変更(staged/unstaged/untrackedファイル)のレビューに対応する。実際のgit操作(checkout/merge/commit/push/add/stash等、状態を変更する操作)は一切行わない。「このブランチをmainにマージする想定でレビューして」「PRの差分を確認して」「mainへのマージ前チェックをして」のようにマージ先ブランチが分かっている差分レビュー、および「今の変更をレビューして」「コミット前にチェックして」「未コミットの変更を確認して」「git diffを見てレビューして」のような作業ツリーの変更レビュー、どちらの依頼にも使う。"
     },
     {
-      "path": "claude-plugins/coding/skills/split-plan",
-      "name": "split-plan",
-      "description": "実装プランを独立したステップに分割し、各ステップのコンテキストを最小限に保ちながら段階的に実装できるようにするスキル"
-    },
-    {
       "path": "claude-plugins/coding/skills/systematic-debugging",
       "name": "systematic-debugging",
       "description": "Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes"
@@ -62,11 +57,6 @@
       "path": "claude-plugins/coding/skills/task-tracker",
       "name": "task-tracker",
       "description": "複数タスクを行き来しながら開発する際に、タスクごとの現状(CURRENT.md)とセッションIDを`.claude/tasks/{task-name}/`に自動追跡する。新規タスクの開始・既存タスクの再開の両方を `/task-tracker <task-name>` の1コマンドで扱う。"
-    },
-    {
-      "path": "claude-plugins/coding/skills/writing-plans",
-      "name": "writing-plans",
-      "description": "Use when you have a spec or requirements for a multi-step task, before touching code"
     }
   ],
   "claude-plugins/meta": [
@@ -188,6 +178,11 @@
       "description": "リポジトリ内のファイルをファイル単位でAI要約し、SQLite DB（.aim-use/summaries.db）に永続化する`aim-summarize` CLIツールの使い方を説明する。ファイル要約を生成・更新したい、変更されたファイルだけ再要約したい、DBから要約を取得したい場合に使う。"
     },
     {
+      "path": "claude-plugins/my-tools/skills/grep-app",
+      "name": "grep-app",
+      "description": "Search real-world code examples across 1M+ public GitHub repositories via a self-built fastmcp CLI wrapper around the grep.app MCP server (https://mcp.grep.app). Use when you need to see how other real projects actually use an API, pattern, or library — literal code search across public GitHub, not semantic/keyword search."
+    },
+    {
       "path": "claude-plugins/my-tools/skills/interactive-cli-wrapper",
       "name": "interactive-cli-wrapper",
       "description": "Drive an interactive (TTY-only, REPL-style) CLI process from an AI agent one Bash-tool call per turn — start it as a background session, send one line of input, wait for the turn to settle, get the accumulated output back. Use when a CLI has no non-interactive/print flag and must be operated as a live REPL (e.g. Cursor CLI's `agent` run without `-p`). Not for one-shot non-interactive delegation to Cursor CLI (use cursor-cli-use for `agent -p`) and not for CLIs that already support a scriptable non-interactive mode."
@@ -211,6 +206,11 @@
       "path": "claude-plugins/my-tools/skills/my-agents",
       "name": "my-agents",
       "description": "YAML定義のLangchainエージェントを実行・一覧表示・新規作成する `my-agents` CLIの使い方を説明する。カスタムエージェントにプロンプトを投げて答えさせたい、既存のエージェント設定YAMLを確認したい、使えるツールを確認した上で新しいエージェント設定YAMLを作りたい場合に使う。"
+    },
+    {
+      "path": "claude-plugins/my-tools/skills/ona-run",
+      "name": "ona-run",
+      "description": "リポジトリURL（またはOnaプロジェクトID）とタスク内容を指定してOnaの環境（コンテナ）を作成・起動し、その中でAIエージェントCLI等のタスクを実行して完了後に停止する`ona-run` CLIツールの使い方を説明する。`--agent`/`--command`の選び方、`--cleanup`モードの選び方、終了コード・stderrマーカーの意味を判断したい場合に使う。"
     },
     {
       "path": "claude-plugins/my-tools/skills/tav-cli",
@@ -301,6 +301,16 @@
       "path": "claude-plugins/topics/skills/langchain-docs",
       "name": "langchain-docs",
       "description": "Use when answering questions about LangChain, LangGraph, LangSmith, or langchain-ai's Python/JavaScript SDKs and integration packages (chat models, agents, tools, retrieval/RAG, checkpointers, MCP adapters, etc.) — API signatures, parameters, return types, which package/class to use, or deprecated-vs-current patterns (e.g. LLMChain/AgentExecutor vs create_agent). Grounds answers in the latest official API reference (reference.langchain.com) instead of training-data memory, which may be stale."
+    },
+    {
+      "path": "claude-plugins/topics/skills/ona-cli-docs",
+      "name": "ona-cli-docs",
+      "description": "Use when constructing or explaining raw Ona official CLI (`ona` command) invocations -- e.g. `ona-run`'s `--command` needs a hand-built `ona environment exec`/`ona environment ssh` line, or a question is about `ona login`/personal access tokens, environment/automation subcommands, or CLI configuration. Grounds answers in a curated excerpt of ona.com's official docs (via the ona-docs skill's cached llms.txt) instead of training-data memory, which may be stale or reference the pre-rename \"Gitpod\" CLI."
+    },
+    {
+      "path": "claude-plugins/topics/skills/ona-docs",
+      "name": "ona-docs",
+      "description": "Use when answering questions about Ona (ona.com, formerly Gitpod) — the platform for background agents (autonomous AI software engineers that plan, code, test, and open PRs in isolated cloud environments), Automations (trigger-based workflows), Ona environments/Dev Containers, Veto (kernel-level agent security), multi-SCM support (GitHub/GitLab/Bitbucket/Azure DevOps), IDE integrations, the REST API, or company info (leadership, customers, pricing, comparisons to other coding-agent platforms). Grounds answers in the latest official content from ona.com and ona.com/docs instead of training-data memory, which may be stale or still reference \"Gitpod\"."
     },
     {
       "path": "claude-plugins/topics/skills/openrouter-docs",

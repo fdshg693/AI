@@ -4,6 +4,7 @@ description: Use when answering questions about OpenRouter (openrouter.ai) — t
 allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *)
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: openrouter.ai/docs
@@ -12,7 +13,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.6
 ---
 
 !`python ${CLAUDE_SKILL_DIR}/download_openrouter_reference.py`
@@ -21,11 +22,21 @@ meta:
 
 OpenRouter (openrouter.ai) に関する質問に、学習データの記憶ではなく `openrouter.ai/docs` の最新ドキュメントを根拠に回答するためのスキル。
 
+## 頻出トピックのリファレンス
+
+以下4トピックは`references/`に要約を用意している。質問がこれに該当する場合はまずそちらを読む。数値・料率・対応先リスト・Beta状態など変わりやすい情報は、断定的に答える前に各ファイル内のSourceパスを[手順](#手順)の抽出スクリプトで再取得して裏取りすること。
+
+- [references/why-openrouter.md](references/why-openrouter.md) — OpenRouterを経由してモデルを使う意味（統一API、BYOK、独自機能、プロバイダ直叩きとの違い）
+- [references/server-tools.md](references/server-tools.md) — Server Toolsの意味・使い方（Plugins/ユーザー定義Toolとの違い、利用可能ツール一覧）
+- [references/observability.md](references/observability.md) — Observability（Input & Output Logging、Broadcast、Router Metadata）
+- [references/beta-files-classifiers.md](references/beta-files-classifiers.md) — Beta機能: Files / Classifiers
+- [references/models-pricing-benchmarks.md](references/models-pricing-benchmarks.md) — Models API（`/api/v1/models`一覧・単一取得・プロバイダ別`endpoints`）での価格・ベンチマーク（Design Arena / Artificial Analysis）取得
+
 ## 手順
 
 1. **関連箇所を探す**
 
-   - まず `${CLAUDE_SKILL_DIR}/output/llms.txt` を Grep/Read して、質問に関連しそうなページの URL・パスを特定する
+   - 上記4トピックでカバーされていない、あるいはより詳細が必要な質問はここから: まず `${CLAUDE_SKILL_DIR}/output/llms.txt` を Grep/Read して、質問に関連しそうなページの URL・パスを特定する
    - セクション見出し（`## Docs` 配下のカテゴリ: `agent-sdk/`, `api/reference/`, `client-sdks/`, `cookbook/`, `guides/features/`, `guides/routing/` など）で大まかなカテゴリを絞り込める
    - 詳細な本文が必要なら `${CLAUDE_SKILL_DIR}/output/llms-full.txt` を Grep して該当セクションのおおよその位置を掴む
 

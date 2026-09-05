@@ -2,6 +2,7 @@
 name: using-aim-library
 description: "`tools/aim` のグローバルインストール済み Python 実装をライブラリとして使い、OpenRouter 経由で AI モデルへ単発リクエストを送る方法を説明する。Python コードからプロンプトを送信したい、モデル略記を解決したい、応答本文を取り出したい場合に使う。CLI コマンドを実行する場合は `aim-cli` を使う。"
 meta:
+  tag: []
   requires_repo_tools: tools/aim
   requires_env: OPENROUTER_API_KEY
   dependencies: aim-cli, python>=3.11
@@ -10,7 +11,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 # aim を Python ライブラリとして使う
@@ -18,7 +19,7 @@ meta:
 `tools/aim` は現在、独立した `aim` Python パッケージではなく、`aim_cli` モジュールとして配布されている。ライブラリ利用では `aim` コマンドや `aim_cli.main()` を呼ばず、`aim_cli` が提供する薄いラッパー（`create_client` / `call` / `call_async` / `AimError`）を使う。**`openrouter` を直接 import しない** — `openrouter` への依存はパッケージの依存関係にも追加しない。理由は2つ。
 
 - `aim_cli` 側だけが `openrouter` に依存する構成にすることで、利用側パッケージの依存を `aim-cli` 1つに絞れる
-- ログ記録（`calls.jsonl` への追記）が `call`/`call_async` の内部で行われるため、将来 `aim_cli` にログ処理を追加・変更しても、利用側は変更なしにその恩恵を受けられる
+- ログ記録（`logs/<trace.tool>/<日付>.jsonl` への追記）が `call`/`call_async` の内部で行われるため、将来 `aim_cli` にログ処理を追加・変更しても、利用側は変更なしにその恩恵を受けられる
 
 ## 前提条件
 
@@ -91,6 +92,19 @@ print(asyncio.run(ask_aim_many(["フランスの首都は？", "日本の首都�
 - 呼び出し元が同期コードの場合は `asyncio.run(...)` の中に非同期処理を閉じ込める（実例: `tools/aim-use/aim-summarize/aim_summarize/cli.py` の `_generate_all_async` / `summarizer.generate_summary_async`）
 - 単発・逐次呼び出ししかしないなら同期版（`call`）で十分。非同期版（`call_async`）は「複数リクエストを並列に送りたい」場合にのみ選ぶ
 
+## trace_idを取得する（呼び出し元の処理単位と紐づけたい場合）
+
+`call`/`call_async`は呼び出しごとにOTel準拠のtrace_id（32桁hex）を自動生成し、OpenRouterへの送信・`logs/<trace.tool>/<日付>.jsonl`への記録の両方に使う。`return_trace_id=True`を渡すと戻り値が`(応答テキスト, trace_id)`のタプルになり、呼び出し元が自身の処理単位（対象ファイルパス、DBレコードなど）とtrace_idを紐づけて保存できる。Grafana Cloud連携（Broadcast機能）を有効化している場合、このtrace_idがGrafana Cloud側のTrace IDと一致するため、後からTempoで該当トレースを検索できる。
+
+```python
+from aim_cli import create_client, call
+
+with create_client() as client:
+    answer, trace_id = call(client, model_id, prompt, return_trace_id=True)
+```
+
+`trace_id`を明示的に指定したい場合（例: 呼び出し元が既に発行済みのtrace idにネストさせたい）は、`trace={"trace_id": "..."}`をそのまま渡せばよい（指定時は自動生成されず、渡した値がそのまま使われる）。
+
 ## エラー処理
 
 API 呼び出しをアプリケーション内で扱う場合は、`aim_cli.AimError` を捕捉して呼び出し元へ伝播する（内部の `openrouter.errors.OpenRouterError` は `AimError` にラップされるため、呼び出し側は `openrouter` を import しなくてよい）。`resolve_api_key()`（`create_client()` が内部で呼ぶ）は API キーがないと CLI 用にメッセージを出して `SystemExit` するため、ライブラリとして独自のエラー契約が必要なら、呼び出し前に API キーを検証するか、キー解決処理をアプリケーション側で行う。
@@ -110,7 +124,7 @@ except AimError as e:
 
 - ライブラリ版は `aim` コマンドを起動せず、Python プロセス内で呼び出す
 - 標準入力・標準出力・`argparse` は使わない。戻り値の文字列を呼び出し元で処理する
-- `call`/`call_async` はCLI版と同じ `calls.jsonl` への監査ログ追記を内部で行う（呼び出し元が明示的にログを書く必要はない）
+- `call`/`call_async` はCLI版と同じ `logs/<trace.tool>/<日付>.jsonl` への監査ログ追記を内部で行う（呼び出し元が明示的にログを書く必要はない）
 - このツールの契約は user メッセージ 1件の単発呼び出しであり、system プロンプト・マルチターン・エージェント機能は扱わない
 
 クライアントは必ず `with`（非同期なら `async with`）ブロックで使う。API キーやプロンプトを例外メッセージ・標準出力・不要なログへ出力しない。`openrouter` パッケージを直接 import する必要はなく、依存関係にも追加しない — `aim_cli` の `create_client`/`call`/`call_async`/`AimError` のみで完結させる。

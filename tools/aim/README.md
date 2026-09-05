@@ -1,6 +1,8 @@
 # aim — シンプルなモデル呼び出しCLIツール
 
-**関連スキル: `.claude\skills\aim-cli`**
+- **関連スキル**:
+  - `claude-plugins\my-tools\skills\aim-cli\SKILL.md`
+  - `claude-plugins\topics\skills\openrouter-docs\SKILL.md`
 
 - エージェント機能は扱わず、AIモデルの単発呼び出しに集中したCLIツール
 - 複数プロバイダに対応するため [OpenRouter](https://openrouter.ai/) の Python SDK（`openrouter`）を使う
@@ -39,15 +41,19 @@ cat prompt.txt | aim --model gpt-5.6-luna
 
 # 利用可能なモデル一覧を表示
 aim --list-models
+
+# Web Search/Web Fetch（OpenRouter Server Tools）を有効にして呼び出す
+aim --model minimax-m3 --web --prompt "2026年8月時点の最新ニュースは？"
 ```
 
 ### オプション
 
-| オプション      | 必須 | 説明                                                                             |
-| --------------- | ---- | -------------------------------------------------------------------------------- |
-| `--model`       | ○    | 利用するモデルの略記（下記「利用可能なモデル」参照。`--list-models` で一覧表示） |
-| `--prompt`      | △    | プロンプト文字列。省略時は標準入力から読み込む（両方とも無ければエラー）         |
-| `--list-models` | -    | 利用可能なモデルの一覧（略記と実際のモデルID）を表示して終了する                 |
+| オプション      | 必須 | 説明                                                                                                  |
+| --------------- | ---- | ----------------------------------------------------------------------------------------------------- |
+| `--model`       | ○    | 利用するモデルの略記（下記「利用可能なモデル」参照。`--list-models` で一覧表示）                      |
+| `--prompt`      | △    | プロンプト文字列。省略時は標準入力から読み込む（両方とも無ければエラー）                              |
+| `--list-models` | -    | 利用可能なモデルの一覧（略記と実際のモデルID）を表示して終了する                                      |
+| `--web`         | -    | Web Search/Web Fetch（OpenRouter Server Tools）を有効にする（モデルが必要と判断した場合のみ呼ばれる） |
 
 ### 利用可能なモデル
 
@@ -63,9 +69,21 @@ aim --list-models
 - system プロンプトやマルチターンなど、エージェント的な機能は扱わない（単発の user メッセージ 1件のみ）
 - 標準出力にはモデルの応答テキストのみを出力する（パイプで後続処理しやすい）
 
+### Web Search / Web Fetch（`--web`）
+
+`--web`を付けると、OpenRouterのServer Tools（`openrouter:web_search`・`openrouter:web_fetch`）がそのリクエストで使えるようになる。あくまでモデルに「使える状態」を渡すだけで、実際に呼ぶかどうか（0回か複数回か）はモデル自身の判断。Server Toolsの実行はOpenRouter側でリクエスト/レスポンス1往復の中に収まるため、この CLI の「プロンプト1件→応答テキスト1件」という単発設計は変わらない。
+
+- 付けない場合は従来通り（ツール定義は送らない）
+- 付けた場合、ツール定義がリクエストに追加される分、使わなかったとしてもprompt tokens・costがわずかに増える
+- モデルによっては関連するプロンプトでも検索を呼ばないことがある（`minimax-m3`で検証時、最新情報が必要なプロンプトでも`--web`だけでは検索が呼ばれないケースを確認済み）。使わせたい場合はプロンプト内で明示的にWeb検索の利用を指示すると成功率が上がる
+- ログ（`calls.jsonl`）にツール使用有無を記録するフィールドは無い。Server Tools分のコストは既存の`cost`フィールド（`usage`由来）に含まれる
+
 ## ログ
 
-呼び出しごとに `tools/aim/logs/calls.jsonl`（JSON Lines）へ1行追記される。CLIのソースディレクトリ基準の絶対パスを使うため、実行時のカレントディレクトリには依存しない。
+呼び出しごとに `tools/aim/logs/<trace.tool>/<YYYY-MM-DD>.jsonl`（JSON Lines）へ1行追記される。CLIのソースディレクトリ基準の絶対パスを使うため、実行時のカレントディレクトリには依存しない。
+
+- 1ファイルに書き続けると際限なく肥大化するため、`trace.tool`（例: `aim-cli`/`aim-ask`/`aim-summarize`）でフォルダ分けした上で、`timestamp`の日付（呼び出し元のローカル日付）でファイルを分割する
+- `trace`自体が無い、または`trace.tool`が空の場合は`unknown`フォルダにまとめる（`aim`直接利用時は常に`trace: {"tool": "aim-cli"}`が付くため、`unknown`は主にライブラリ利用時にtraceを渡し忘れた場合に発生する）
 
 ```json
 {
@@ -76,13 +94,28 @@ aim --list-models
   "prompt_tokens": 15,
   "completion_tokens": 11,
   "total_tokens": 26,
-  "generation_id": "gen-1783603352-zXMyzMZpyjJ88CJF5wwD"
+  "generation_id": "gen-1783603352-zXMyzMZpyjJ88CJF5wwD",
+  "user": null,
+  "session_id": null,
+  "trace": { "tool": "aim-cli", "trace_id": "3f2a9c1e4b7d4f0aa1e3c6d9b8f7a2c5" }
 }
 ```
 
 - `cost` / `*_tokens` / `generation_id` は OpenRouter レスポンスの `usage` / `id` フィールドからそのまま転記（追加のAPI呼び出しは発生しない）
 - 応答本文（completion）はログに含めない
-- `logs/calls.jsonl` はプロンプト本文を含み得るため Git管理対象外（`.gitignore` 参照）。ディレクトリ自体は `.gitkeep` で追跡
+- `logs/`配下のログファイルはプロンプト本文を含み得るため Git管理対象外（`.gitignore` 参照）。ディレクトリ自体は `.gitkeep` で追跡
+- `call()`/`call_async()` は呼び出し元が `user`/`session_id`/`trace` を渡せる（いずれも省略時は `None`）。`trace` はOpenRouterのSDKの `trace`（`trace_id`/`trace_name`/`span_name`/`generation_name`/`parent_span_id`の既知キー + 任意の追加キーを持つdict）にそのまま渡され、Grafana Cloudへのブロードキャスト設定時にはトレースのカスタム属性としても反映される（詳細は`claude-plugins/topics/skills/openrouter-docs`スキルの`references/observability.md`参照）
+- `aim` コマンドを直接実行した場合は常に `trace: {"tool": "aim-cli"}` が記録される。これにより、`aim`直接利用と`aim-ask`/`aim-summarize`経由の利用（それぞれ`trace.tool`が`"aim-ask"`/`"aim-summarize"`）をログ上で区別できる
+- `trace.trace_id`（32桁hex、OTel準拠のtrace id）は呼び出し元が指定しない限り `call()`/`call_async()` が自動生成し、OpenRouterへの送信・ログ記録の両方に使う。これがGrafana Cloud連携時のTrace IDそのものになるため、ログの`trace.trace_id`をそのままGrafana CloudのTempoで検索すれば対応するトレースにたどり着ける（詳細は下記「Grafana Cloudへのログ配信」参照）
+- `call()`/`call_async()` に `return_trace_id=True` を渡すと、戻り値が `(応答テキスト, trace_id)` のタプルになる（省略時は従来通り応答テキストのみ）。呼び出し元が自身の処理単位（例: 対象ファイルパスやDBレコード）とtrace_idを紐づけて保存したい場合に使う
+
+## Grafana Cloudへのログ配信（任意）
+
+OpenRouterのBroadcast機能を使うと、`aim`経由の呼び出し（および`aim-ask`/`aim-summarize`経由の呼び出し）をGrafana Cloud（OTLP/Tempoトレース）にも並行して送信できる。ローカルの`logs/calls.jsonl`は今まで通り残るため、これは二重化であり置き換えではない。
+
+- 設定はOpenRouterダッシュボード（[`https://openrouter.ai/settings/observability`](https://openrouter.ai/settings/observability)）での手動設定のみ。このCLI/リポジトリ側に自動設定コードは持たない（Broadcast設定にはManagement API Keyという別種の強い権限を持つキーが必要になるため）
+- 設定手順・カスタムメタデータのマッピング（`user`→`user.id`、`session_id`→`session.id`、`trace`の各キー→`trace.metadata.*`等）・TraceQLクエリ例の詳細は `claude-plugins/topics/skills/openrouter-docs` スキルの `references/observability.md` を参照
+- **ローカルログとGrafana側トレースの突き合わせ**: OpenRouterのレスポンスにはGrafana Cloud側のtrace_id/span_idは含まれない（APIが返さない）。そのため `aim` 側で毎回trace_idを自前生成し、OpenRouterへの送信とローカルログの両方に使うことで、ローカルログの`trace.trace_id`＝Grafana CloudのTrace IDという対応を保証している。span_id自体はAPI経由で取得・指定する手段が無いが、1リクエスト＝1トレース（実質1スパン）のため、trace_idでトレースを開けば中のスパンも自動的に見え、実務上span_idの保存は不要
 
 ## エラー時の挙動
 
@@ -101,5 +134,6 @@ tools/aim/
 ├── .gitignore
 └── logs/
     ├── .gitkeep
-    └── calls.jsonl    # gitignore対象
+    └── <trace.tool>/          # 例: aim-cli/, aim-ask/, unknown/ （gitignore対象）
+        └── <YYYY-MM-DD>.jsonl
 ```

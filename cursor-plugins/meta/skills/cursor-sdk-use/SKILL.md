@@ -3,6 +3,7 @@
 name: cursor-sdk-use
 description: Use when building, reviewing, or troubleshooting Python applications that call Cursor agents through the Cursor SDK (`cursor-sdk`) — including local or cloud agents, sync or async clients, streaming, multi-turn sessions, MCP, custom tools, subagents, hooks, sandboxing, persistence, artifacts, and retries. Use the official Cursor Python SDK documentation through the cursor-docs workflow because the SDK API, models, and runtime behavior can change.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: CURSOR_API_KEY
   dependencies: cursor-sdk
@@ -11,7 +12,7 @@ meta:
   requires_skills: cursor-docs
   status: stable
   description: no description
-  version: 1.1.0
+  version: 1.1.1
 ---
 
 # Cursor Python SDK

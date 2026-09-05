@@ -7,6 +7,7 @@ description: Use when answering questions about the Cline CLI (`cline` command) 
 allowed-tools: Bash(python claude-plugins/ai-code-tool/skills/cline-cli-docs/*.py *)
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -15,7 +16,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 - cline-cli-use
@@ -29,6 +30,7 @@ allowed-tools: Bash(cline *)
 # 依存: cline-cli-docs（インストール済みCLIのフラグ一次情報）／cline-docs（docs.cline.bot最新情報）。CLI仕様が変わっていそうな場合は先に確認する。
 # disable-model-invocation: --auto-approve true が既定で、書き込み・シェル実行などの副作用があり得るため、ユーザーの明示呼び出し（/cline-cli-use）に限定する。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: Cline Pass subscription or provider API key configured via `cline auth`
   dependencies: none
@@ -45,6 +47,7 @@ meta:
 name: cline-docs
 description: Answer questions about Cline using the latest official documentation at docs.cline.bot. Use for Cline IDE/CLI/SDK features, skills, rules, workflows, configuration, API, providers, MCP, plugins, enterprise features, or troubleshooting when current documented behavior matters.
 meta:
+  tag: []
   requires_repo_tools: python
   requires_env: none
   dependencies: none
@@ -53,7 +56,26 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
+---
+
+- cline-memory
+---
+name: cline-memory
+description: Clineのメモリ・文脈維持機能を説明・設計・設定するスキル。AGENTS.md（プロジェクトルート/グローバル/ネスト）の扱い、Rules (.clinerules) / Skills / Memory Bank の使い分け、セッションをまたぐ文脈維持やコンテキストウィンドウ管理（/newtask, /smol, Auto Compact）について質問されたり設定を依頼されたときに使う。Use when the user asks how Cline remembers context, reads AGENTS.md, or wants to set up Memory Bank.
+user-invocable: true
+disable-model-invocation: false
+meta:
+  tag: []
+  requires_repo_tools: none
+  requires_env: none
+  dependencies: none
+  requires_install: none
+  requires_hooks: none
+  requires_skills: cline-docs
+  status: stable
+  description: no description
+  version: 1.0.0
 ---
 
 - cline-plugin-writer
@@ -62,6 +84,7 @@ meta:
 name: cline-plugin-writer
 description: Cline 用プラグイン（AgentPlugin）を新規作成・編集するためのメタスキル。Use when designing or updating Cline plugins, plugin manifests (package.json cline field), custom tools, lifecycle hooks, slash commands, automation events, or deciding whether an extension belongs in a Plugin vs Skill/Rule. Covers SDK/CLI/Kanban plugins (not VSCode/JetBrains extension skills).
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: "@cline/sdk"
@@ -80,6 +103,7 @@ description: Cline 用のルールファイル (.clinerules/*.md) を設計・�
 user-invocable: true
 disable-model-invocation: false
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -97,6 +121,7 @@ name: cline-sdk-docs
 description: Explain and implement Cline SDK applications using current official documentation. Use when the user asks about @cline/sdk, @cline/core, @cline/agents, @cline/llms, Cline agents, custom tools, events, providers, permissions, sessions, plugins, automation, or SDK application architecture. Do not use for the Cline REST API or CLI-only questions.
 # 依存: 詳細なSDKパターンは同階層のsdk-reference.md、公式ページの対応表はsdk-reference-map.mdを参照する。最新仕様の取得はcline-docsに委譲する。cline-cli-docsはCLI専用。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: "@cline/sdk,@cline/core,@cline/agents,@cline/llms"
@@ -105,7 +130,7 @@ meta:
   requires_skills: cline-docs,cline-cli-docs
   status: stable
   description: no description
-  version: 2.0.2
+  version: 2.0.3
 ---
 
 - cline-skill-writer
@@ -116,6 +141,7 @@ description: Cline 用スキルを新規作成・編集するためのメタス�
 user-invocable: true
 disable-model-invocation: false
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none

@@ -2,6 +2,7 @@
 name: codex-cli-use
 description: Use when delegating a coding, review, or analysis task to the OpenAI Codex CLI as a one-shot non-interactive worker. Use `codex exec` for scripted or CI-style runs, choose between the configured GPT-5.6 models, and apply an explicit sandbox and approval policy. Do not use this skill to answer detailed CLI specification questions; use codex-cli-docs and codex-docs instead.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: codex-cli, gpt-5.6-luna, gpt-5.6-sol
@@ -10,7 +11,7 @@ meta:
   requires_skills: codex-cli-docs, codex-docs
   status: stable
   description: no description
-  version: 1.1.1
+  version: 1.1.2
 ---
 
 # Codex CLI 非対話実行

@@ -10,6 +10,7 @@ disable-model-invocation: true
 # ユーザーの明示呼び出し（/interactive-cli-wrapper）に限定する
 # このスキルの意図・スコープは同階層のREADME.md参照（人間のメンテナ向け）
 meta:
+  tag: []
   requires_repo_tools: icw
   requires_env: none
   dependencies: pywinpty, pyte

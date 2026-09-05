@@ -1,5 +1,5 @@
 ---
-source: ../../vscode-docs/output/llms.txt
+source: claude-plugins/others/skills/vscode-docs/output/llms.txt
 extracted_from_fetched_at: 2026-07-07T16:54:39.235283+00:00
 curated_at: 2026-07-08
 note: >

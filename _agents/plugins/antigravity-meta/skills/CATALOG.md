@@ -10,6 +10,7 @@
 name: agy-cli-docs
 description: Use when answering questions about the `agy` command's CLI interface — options, flags, and subcommands (e.g. -p/--print, --model, --mode, --sandbox, agent, models, plugin/plugins, install, update, changelog). Grounds answers in the CLI's own `agy --help` output instead of training-data memory, which may be stale. For Antigravity feature/settings concepts documented on the official site (skills, rules, plugins, hooks, sandbox, permissions), use antigravity-docs instead.
 meta:
+  tag: []
   requires_repo_tools: python
   requires_env: none
   dependencies: agy
@@ -26,6 +27,7 @@ meta:
 name: antigravity-docs
 description: Use when answering questions about Google Antigravity — the agentic coding platform, Antigravity 2.0, IDE, CLI, SDK, agent skills, rules, workflows, plugins, hooks, MCP servers, subagents, sandbox, permissions, artifacts, pricing, and use cases. Grounds answers in the latest official documentation from antigravity.google (llms.txt index plus per-page raw Markdown) instead of training-data memory, which may be stale.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: python
@@ -34,7 +36,34 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.4
+---
+
+- antigravity-memory
+---
+# Sources (fetched 2026-08-30 via the antigravity-docs skill, raw Markdown twins
+# at https://antigravity.google/docs/<path>.md — see that skill's docs_url_map.md
+# for the current fetch rule):
+#   https://antigravity.google/docs/rules-workflows
+#   https://antigravity.google/docs/ide/rules
+#   https://antigravity.google/docs/cli/gcli-migration
+#   https://antigravity.google/docs/agent-settings (checked, no memory-related content)
+#   https://antigravity.google/docs/faq (checked, no memory-related content)
+# Depends on: antigravity-docs skill — re-fetch the sources above to refresh this
+# reference when the docs change.
+name: antigravity-memory
+description: Guides placement and authoring of persistent Agent context in Google Antigravity — GEMINI.md, AGENTS.md, workspace Rules (.agents/rules), global Rules (~/.gemini/GEMINI.md), and Workflows. Use when deciding what belongs in each mechanism, explaining how/when Antigravity reads these files (including what is and isn't officially documented about nested directories and reload timing), or troubleshooting why a rule isn't applied. Not for Agent Skills (use antigravity-skills) or general Antigravity features (use antigravity-docs).
+meta:
+  tag: []
+  requires_repo_tools: none
+  requires_env: none
+  dependencies: none
+  requires_install: none
+  requires_hooks: none
+  requires_skills: antigravity-docs, antigravity-skills
+  status: stable
+  description: no description
+  version: 1.1.0
 ---
 
 - antigravity-skills
@@ -47,6 +76,7 @@ meta:
 name: antigravity-skills
 description: Use when creating, placing, invoking, or troubleshooting agent skills in Google Antigravity — SKILL.md format and frontmatter fields, workspace vs global vs plugin skill locations, how the agent discovers and activates skills, and official best practices. Grounded in the official Antigravity documentation; refresh against the latest docs via the antigravity-docs skill.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -55,5 +85,30 @@ meta:
   requires_skills: antigravity-docs
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
+---
+
+- antigravity-subagents
+---
+# Sources (fetched 2026-09-01 via the antigravity-docs skill, raw Markdown twins
+# at https://antigravity.google/docs/<path>.md — see that skill's docs_url_map.md
+# for the current fetch rule):
+#   https://antigravity.google/docs/subagents
+#   https://antigravity.google/docs/cli/subagents
+#   https://antigravity.google/docs/cli/commands/agents
+#   https://antigravity.google/docs/sdk/subagents
+# Depends on: antigravity-docs skill — re-fetch the sources above to refresh this reference when the docs change.
+name: antigravity-subagents
+description: Use when delegating work to subagents in Google Antigravity — invoking built-in subagents (research, browser, self), defining custom subagents via Markdown (.md) frontmatter or the SDK, choosing workspace isolation (inherit/branch/share), monitoring/killing subagents in the IDE panel or CLI /agents TUI, understanding lifecycle states and nesting limits, or picking between invoke_subagent, /boost, and /teamwork-preview. Grounded in the official Antigravity documentation; refresh against the latest docs via the antigravity-docs skill.
+meta:
+  tag: []
+  requires_repo_tools: none
+  requires_env: none
+  dependencies: none
+  requires_install: none
+  requires_hooks: none
+  requires_skills: antigravity-docs
+  status: stable
+  description: no description
+  version: 1.0.0
 ---

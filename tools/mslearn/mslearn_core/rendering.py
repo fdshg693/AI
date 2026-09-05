@@ -15,7 +15,9 @@ import re
 from typing import Any
 
 _MARKDOWN_TITLE = re.compile(r"^#\s+(.+)$", re.MULTILINE)
+_URL_LINE = re.compile(r"^URL:\s+\S+", re.MULTILINE)
 _QA_URL_MARKER = "learn.microsoft.com/answers/"
+_URL_LINE_SCAN_LINES = 15
 
 
 def _clean_title(text: str) -> str:
@@ -58,7 +60,26 @@ def render_code_item(item: dict[str, Any]) -> tuple[str, str, str]:
     return "", title, content
 
 
+def _with_source_url(markdown: str, url: str) -> str:
+    """Insert `URL: <url>` after the leading H1 so fetch files match search files.
+
+    `aim-ask` prompts in the `ms-digest` skill look for a `URL:` line near the
+    top. Search results already had one; fetch used to write the MCP markdown
+    unchanged, so digesting a fetch folder dropped the source URL.
+    """
+    head = "\n".join(markdown.splitlines()[:_URL_LINE_SCAN_LINES])
+    if _URL_LINE.search(head):
+        return markdown
+    url_line = f"URL: {url}"
+    heading_match = _MARKDOWN_TITLE.search(markdown)
+    if heading_match is None:
+        return f"{url_line}\n\n{markdown}"
+    before = markdown[: heading_match.end()]
+    after = markdown[heading_match.end() :].lstrip("\n")
+    return f"{before}\n\n{url_line}\n\n{after}"
+
+
 def render_fetch_item(url: str, markdown: str) -> tuple[str, str, str]:
     title_match = _MARKDOWN_TITLE.search(markdown)
     raw_title = title_match.group(1) if title_match else url.rstrip("/").rsplit("/", 1)[-1]
-    return "", _clean_title(raw_title), markdown
+    return "", _clean_title(raw_title), _with_source_url(markdown, url)

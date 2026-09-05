@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import sys
+import uuid
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -45,7 +46,7 @@ def _missing_entry(file_path: str) -> formatter.SummaryEntry:
 
 
 async def _generate_all_async(
-    model_id: str, jobs: int, new_or_changed: list[tuple[str, str, str]]
+    model_id: str, jobs: int, new_or_changed: list[tuple[str, str, str]], session_id: str
 ) -> list[tuple[str, str, bool, str]]:
     """新規/変更ファイルの要約を並行生成する（単一プロセス内、スレッド不使用）。
 
@@ -55,7 +56,14 @@ async def _generate_all_async(
 
     async def worker(client, rel_path: str, text: str, content_hash: str):
         async with semaphore:
-            success, result = await generate_summary_async(client, model_id, rel_path, text)
+            success, result = await generate_summary_async(
+                client,
+                model_id,
+                rel_path,
+                text,
+                session_id=session_id,
+                trace={"tool": "aim-summarize", "file_path": rel_path},
+            )
         return rel_path, content_hash, success, result
 
     async with create_client() as client:
@@ -124,7 +132,10 @@ def cmd_generate(args: argparse.Namespace) -> int:
 
         generated = 0
         failed = 0
-        results = asyncio.run(_generate_all_async(model_id, config.jobs, new_or_changed))
+        run_session_id = str(uuid.uuid4())
+        results = asyncio.run(
+            _generate_all_async(model_id, config.jobs, new_or_changed, run_session_id)
+        )
         for rel_path, content_hash, success, result in results:
             if success:
                 db.upsert_summary(rel_path, content_hash, result, config.model, now_iso())

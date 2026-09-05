@@ -4,6 +4,7 @@ description: Use when answering questions about the Cline CLI (`cline` command) 
 allowed-tools: Bash(python claude-plugins/ai-code-tool/skills/cline-cli-docs/*.py *)
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -12,7 +13,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 !`python "${CLAUDE_SKILL_DIR}/generate_cline_help_yaml.py"`

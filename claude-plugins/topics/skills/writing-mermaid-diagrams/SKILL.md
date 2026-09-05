@@ -8,6 +8,7 @@
 name: writing-mermaid-diagrams
 description: Use when writing or editing Mermaid diagrams (flowchart, sequence, class, state, ER, etc.) in Markdown files, SKILL.md docs, PR descriptions, or Claude Artifacts. Covers two failure modes that plain Mermaid knowledge misses — diagrams that render differently (or break) across VS Code preview / Mermaid Live Editor / GitHub / Claude Artifacts, and diagrams that are technically valid but hard to read (crossing edges, unlabeled arrows, oversized graphs) or hard to maintain (unstable node IDs, no comments).
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: TAVILY_API_KEY
   dependencies: none

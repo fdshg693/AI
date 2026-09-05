@@ -4,6 +4,7 @@ description: 指定した複数ファイルまたはディレクトリに同一�
 # 前提条件: `aim-ask`コマンドがPATH上にインストール済み（`uv tool install --editable tools/aim-use/aim-ask`）であり、OPENROUTER_API_KEYが設定済み（aim-cliが内部で要求）であること。このスキルはインストール・セットアップは一切行わない
 # このスキルの設計意図・前提条件の背景は tools/aim-use/aim-ask/README.md および PLAN.md 参照（人間のメンテナ向け）
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: OPENROUTER_API_KEY
   dependencies: aim-cli, OPENROUTER_API_KEY

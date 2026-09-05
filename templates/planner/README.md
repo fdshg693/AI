@@ -5,26 +5,28 @@
 ## 正（SSOT）は `.claude/plans/`
 
 **このリポジトリの `.claude/plans/` が唯一の正**。運用ルールの本文・実例を変更したいときは、必ず
-[`.claude/plans/README.md`](../../.claude/plans/README.md) 側を直接編集する。このフォルダには実体を置かない。
+[`.claude/plans/README.md`](../../.claude/plans/README.md)・[`.claude/plans/AGENTS_GENERAL.md`](../../.claude/plans/AGENTS_GENERAL.md) 側を直接編集する。このフォルダには実体を置かない。
 
 ## 他プロジェクトへの導入方法
 
-導入先プロジェクトの `.claude/plans/` に、このリポジトリの `.claude/plans/` から次の4点をそのままコピーする。
+`.claude/plans/` にはこのリポジトリ専用のセットと、他プロジェクトへそのまま持ち出せる汎用セットの2つがある。導入先には**汎用セットだけ**をコピーする。手順・対象ファイルの詳細は [`.claude/plans/COPYING.md`](../../.claude/plans/COPYING.md) を参照（本ファイルでは要点のみ）。
 
 ```
-.claude/plans/
-  AGENTS.md      # ルール要約。プランを書く/読む前に必ず参照するよう誘導する文言
-  CLAUDE.md      # Claude Code 用。中身は `@./AGENTS.md` の1行（AGENTS.md を読み込ませるだけ）
-  README.md      # 本体。プランに書くべき項目・ステップ分割の目安・進め方の推奨を定義
-  references/    # 実例一式（overview / 調査ステップ / 実装ステップ / 単一ファイル完結 / rough / progress）
+.claude/plans/                            （このリポジトリ側）
+  AGENTS_GENERAL.md                       → コピー先で AGENTS.md にリネーム
+  CLAUDE.md                               → Claude Code を使う場合のみコピー（中身は `@./AGENTS.md` の1行）
+  references/skills-general/              → フォルダ名はそのままコピー（AGENTS.md からの相対リンク先のため）
+  references/00〜03-*-example.md          → そのままコピー
+  references/rough/, references/progress/ → そのままコピー
+
+  AGENTS.md・README.md・references/skills/  ← このリポジトリ専用。コピー対象外
 ```
 
-- コピーしたら、`README.md` 内の「ルール更新ポイント」節・`AGENTS.md` の文言を、導入先プロジェクトのルール格納先の慣習
-  （`.claude/rules/` + `paths:` フロントマター、`AGENTS.md`、`CLAUDE.md`、`.clinerules` 等）に合わせて書き換える。
-  このリポジトリでは `.claude/rules` を採用せず `AGENTS.md` に統一しているが、それは一例であり導入先の慣習を優先する。
-- 導入先が Claude Code を使わない場合は `CLAUDE.md` は不要（コピー対象から外してよい）。
-- `.claude/plans/**` にパススコープするルール（`.claude/rules/plans.md` 相当）を導入先で別途持たせたい場合は、
-  `AGENTS.md` の要点を踏まえて手書きする（本フォルダはそのファイルの雛形を保持しない）。
+- コピー後、`AGENTS.md`（旧 `AGENTS_GENERAL.md`）・`references/skills-general/` の内容を、導入先プロジェクトの
+  ルール格納先の慣習（`.claude/rules/` + `paths:` フロントマター、`AGENTS.md`、`CLAUDE.md`、`.clinerules` 等）や、実際に使える
+  サブエージェント・スキルに合わせて書き足す。
+- サンプル（`references/00〜03-*-example.md`）本文中にこのリポジトリ固有のスキルへのリンクが残っている場合は、導入先に同名のスキルが無ければ削除してよい。
+- 導入先が Claude Code を使わない場合は `CLAUDE.md` は不要（コピー対象から外してよい。自動化スクリプトなら `--no-claude`）。
 
 ## 自動化: コピー用スクリプト
 
@@ -36,10 +38,10 @@ cd /path/to/target-project
 python /path/to/ai/templates/planner/copy_plans_template.py
 ```
 
-- 実行すると、このスクリプト自身の場所からリポジトリルートを逆算し、`.claude/plans/`（AGENTS.md・CLAUDE.md・README.md・references/）
-  を CWD 配下の `.claude/plans/` にコピーする。
-- コピー先に4点のいずれかが既にある場合、デフォルトでは**何もコピーせず**エラーになる（事前に全項目の衝突をチェックしてから実行するため、途中まで一部だけコピーされる、という状態にはならない）。上書きしたい場合は `--force` を付ける。
-- `--force` 時、`references/` はマージコピーされる。コピー先にだけ存在する余分なファイルは削除されない点に注意。
-- コピー後、上記「他プロジェクトへの導入方法」に従ってルール格納先の記述を導入先の慣習に合わせて調整すること（スクリプトはファイルコピーのみ行い、内容の書き換えは行わない）。
+- 実行すると、このスクリプト自身の場所からリポジトリルートを逆算し、上記の汎用セットをリネームしつつ CWD 配下の `.claude/plans/` にコピーする。
+- コピー先に対象のいずれかが既にある場合、デフォルトでは**何もコピーせず**エラーになる（事前に全項目の衝突をチェックしてから実行するため、途中まで一部だけコピーされる、という状態にはならない）。上書きしたい場合は `--force` を付ける。
+- `--force` 時、フォルダ系の項目（`references/skills-general` 等）はマージコピーされる。コピー先にだけ存在する余分なファイルは削除されない点に注意。
+- `--no-claude` を付けると `CLAUDE.md` をコピー対象から外す。
+- コピー後、上記「他プロジェクトへの導入方法」に従って内容を導入先の慣習に合わせて調整すること（スクリプトはファイルコピー・リネームのみ行い、内容の書き換えは行わない）。
 
 オプション一覧は `python copy_plans_template.py --help` を参照。

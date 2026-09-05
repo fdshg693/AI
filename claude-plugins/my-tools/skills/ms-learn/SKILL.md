@@ -7,6 +7,7 @@ description: Search and fetch official Microsoft/Azure documentation (and code s
 # セットアップは一切行わない。認証不要(Microsoft Learn MCP は公開エンドポイント)。
 # このスキルの設計意図・前提条件の背景は同階層のREADME.md参照(人間のメンテナ向け)
 meta:
+  tag: []
   requires_repo_tools: mslearn
   requires_env: MSLEARN_MCP_OUTPUT_DIR
   dependencies: none
@@ -15,7 +16,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.1.0
+  version: 1.2.0
 ---
 
 ## エントリポイント: `mslearn` コマンド
@@ -30,8 +31,9 @@ mslearn --help
 ## 最初に見るべき判断フロー
 
 ```markdown
-1. すでに対象ページの URL が分かっているか?
-   Yes -> mslearn fetch <url>
+1. すでに対象ページの URL が分かっているか? または Learn 上の該当ドキュメントの
+   URL が推測できるか?
+   Yes -> mslearn fetch <url>（search は飛ばす）
    No -> 2 へ
 
 2. 欲しいのはコードサンプルか、それとも一般的な説明/手順か?
@@ -40,17 +42,20 @@ mslearn --help
 
 3. search の結果ファイルで十分な深さが取れたか?
    十分 -> そのまま使う
-   途中で切れている/表面的 -> 該当結果ファイル内の contentUrl を mslearn fetch に渡す
+   途中で切れている/表面的 -> 該当結果ファイル内の `URL:` 行を mslearn fetch に渡す
 
 4. 想定外のツールを叩きたい、または上記3ツール以外(サーバー側が新ツールを追加した等)を
    使いたい場合 -> まず `mslearn tools` で現在の提供ツールを確認し、`mslearn call <tool_name>
 --args '{"...": "..."}'` で直接叩く(ツール名をハードコードしないための逃げ道)
 ```
 
-`microsoft_docs_search` はチャンク化された要約(最大500トークン/件、最大10件)しか返さない
-ため、**手順の全体像やトラブルシューティングの詳細が必要なら search の後に fetch で
-該当ページの全文を取る** のが公式の想定パターン(`mslearn tools` の出力にある
-"Follow-up Pattern" の説明どおり)。
+`microsoft_docs_search` はチャンク化された要約(最大500トークン/件、最大10件)しか返さない。
+抜粋そのものは浅いので、search は実質 **公式ページの URL を見つける** 用途が主になる。
+ドキュメントの当たりがついている領域（既知の Learn セクション、前回の検索で得た URL、
+製品ドキュメントの定番パス）では search を省略して直接 `fetch` する方が速い。
+URL が未知で、手順の全体像やトラブルシューティングの詳細が必要なら search の後に
+fetch で該当ページの全文を取る、というのが公式の想定パターン(`mslearn tools` の
+出力にある "Follow-up Pattern" の説明どおり)。
 
 `search` / `code-search` は1回の呼び出しごとに専用フォルダを作り、結果を1件ずつ
 別ファイルに書き出す。ターミナルには **そのフォルダの `index.md` へのパスだけ** が
@@ -65,6 +70,11 @@ mslearn --help
 
 - ❌ `"Azure Functions"` → ✅ `"Azure Functions Python v2 programming model timeout"`
   のように、製品名だけでなく機能名・バージョン・具体的な症状まで含める
+- ただし **ARM/Bicep のリソース型名まで入れると逆効果**。
+  ❌ `"Bicep Microsoft.Search searchServices Microsoft.CognitiveServices accounts"`
+  は、API バージョン違いの自動生成 ARM スキーマ参照ページ（ほぼ同一のボイラープレート）
+  で結果が埋まる。デプロイ手順やクイックスタートが欲しいなら
+  ✅ `"Azure AI Search Bicep quickstart"` のようにチュートリアル語彙で引く
 - 日本語クエリも通るが、製品名・API 名・エラーメッセージは英語の方が一致率が高い。
   日本語で結果が弱ければ英語で再実行する
 - `code-search` は `--language` を付けると精度が上がる(対応言語: csharp javascript
@@ -102,9 +112,13 @@ mslearn --help
     カレントディレクトリからの相対解決)配下に
     `NNNN-<クエリ or URL のスラッグ>/` という連番フォルダ。**同じクエリ/URL を
     再実行しても連番が進むだけで上書きされない**(取得時点によって結果が変わり
-    うるため、毎回別フォルダになる)。
+    うるため、毎回別フォルダになる)。複数の `mslearn` を並列起動しても連番は
+    衝突しない（出力ディレクトリ単位のファイルロックで採番する）。
   - フォルダ直下には結果ファイル(`0001.md`, `0002.md`, ... — タイトルは
     ファイル名でなく `index.md` 側に持つのでシンプルな連番のみ)と `index.md` を書く。
+  - `search` / `fetch` の各結果ファイルは、先頭の `# ` 見出しの直後に `URL: <出典>`
+    行を持つ（`aim-ask` が出典を転記できるようにするため。`code-search` は
+    `Link:` 行）。
   - `search` の結果のうち URL が `learn.microsoft.com/answers/...`
     (Microsoft Q&A のコミュニティ回答)のものは、公式ドキュメントの結果と
     混ざらないよう `qa/` サブフォルダに分離される(`code-search` / `fetch` には

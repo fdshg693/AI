@@ -4,6 +4,7 @@ description: 指定したサブスキルの内容をまとめて読み込んで�
 disable-model-invocation: true
 user-invocable: true
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -12,7 +13,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 ユーザーが `/command-group skill1 skill2 ...` の形で呼び出し、指定されたサブスキルの内容を

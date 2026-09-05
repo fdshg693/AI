@@ -43,6 +43,12 @@ pre-commit:
         - "ai-tools.yaml"
       run: just --justfile tools/internal/justfile copilot-instructions
       stage_fixed: true
+    - name: regenerate Antigravity rules
+      glob:
+        - "**/AGENTS.md"
+        - "ai-tools.yaml"
+      run: just --justfile tools/internal/justfile antigravity-rules
+      stage_fixed: true
     - name: regenerate README AIツール節
       glob: "ai-tools.yaml"
       run: just --justfile tools/internal/justfile readme-tools-section
@@ -59,6 +65,10 @@ pre-commit:
       glob: "**/SKILL.md"
       run: just --justfile tools/internal/justfile skill-descriptions
       stage_fixed: true
+    - name: ensure SKILL.md meta.tag defaults
+      glob: "**/SKILL.md"
+      run: just --justfile tools/internal/justfile skill-tags
+      stage_fixed: true
     - name: check SKILL.md meta.version bump
       glob: "**/SKILL.md"
       run: just --justfile tools/internal/justfile skill-version-bump-check {staged_files}
@@ -67,6 +77,9 @@ pre-commit:
         - "**/SKILL.md"
         - "repo-tools.yaml"
       run: just --justfile tools/internal/justfile skill-repo-tools-check
+    - name: bump release tool pyproject.toml version
+      glob: "tools/**"
+      run: just --justfile tools/internal/justfile release-version-bump {staged_files}
     - name: format Markdown with Prettier
       glob:
         - "*.md"

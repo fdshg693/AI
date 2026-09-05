@@ -7,6 +7,7 @@
 name: antigravity-skills
 description: Use when creating, placing, invoking, or troubleshooting agent skills in Google Antigravity — SKILL.md format and frontmatter fields, workspace vs global vs plugin skill locations, how the agent discovers and activates skills, and official best practices. Grounded in the official Antigravity documentation; refresh against the latest docs via the antigravity-docs skill.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -15,7 +16,7 @@ meta:
   requires_skills: antigravity-docs
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 # Antigravity Skills Reference

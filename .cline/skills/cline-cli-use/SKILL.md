@@ -8,6 +8,7 @@ allowed-tools: Bash(cline *)
 # 依存: cline-cli-docs（インストール済みCLIのフラグ一次情報）／cline-docs（docs.cline.bot最新情報）。CLI仕様が変わっていそうな場合は先に確認する。
 # disable-model-invocation: --auto-approve true が既定で、書き込み・シェル実行などの副作用があり得るため、ユーザーの明示呼び出し（/cline-cli-use）に限定する。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: Cline Pass subscription or provider API key configured via `cline auth`
   dependencies: none

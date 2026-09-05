@@ -7,6 +7,7 @@ description: Use when answering questions about LangChain, LangGraph, LangSmith,
 allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *)
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -15,7 +16,43 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
+---
+
+- ona-cli-docs
+---
+name: ona-cli-docs
+description: Use when constructing or explaining raw Ona official CLI (`ona` command) invocations -- e.g. `ona-run`'s `--command` needs a hand-built `ona environment exec`/`ona environment ssh` line, or a question is about `ona login`/personal access tokens, environment/automation subcommands, or CLI configuration. Grounds answers in a curated excerpt of ona.com's official docs (via the ona-docs skill's cached llms.txt) instead of training-data memory, which may be stale or reference the pre-rename "Gitpod" CLI.
+meta:
+  tag: []
+  requires_repo_tools: none
+  requires_env: none
+  dependencies: none
+  requires_install: none
+  requires_hooks: none
+  requires_skills: ona-docs
+  status: experimental
+  description: no description
+  version: 1.0.1
+---
+
+- ona-docs
+---
+name: ona-docs
+description: Use when answering questions about Ona (ona.com, formerly Gitpod) — the platform for background agents (autonomous AI software engineers that plan, code, test, and open PRs in isolated cloud environments), Automations (trigger-based workflows), Ona environments/Dev Containers, Veto (kernel-level agent security), multi-SCM support (GitHub/GitLab/Bitbucket/Azure DevOps), IDE integrations, the REST API, or company info (leadership, customers, pricing, comparisons to other coding-agent platforms). Grounds answers in the latest official content from ona.com and ona.com/docs instead of training-data memory, which may be stale or still reference "Gitpod".
+allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *)
+# !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
+meta:
+  tag: []
+  requires_repo_tools: none
+  requires_env: none
+  dependencies: requests, typer
+  requires_install: none
+  requires_hooks: none
+  requires_skills: none
+  status: stable
+  description: no description
+  version: 1.0.1
 ---
 
 - openrouter-docs
@@ -25,6 +62,7 @@ description: Use when answering questions about OpenRouter (openrouter.ai) — t
 allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *)
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: openrouter.ai/docs
@@ -33,7 +71,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.6
 ---
 
 - writing-mermaid-diagrams
@@ -47,6 +85,7 @@ meta:
 name: writing-mermaid-diagrams
 description: Use when writing or editing Mermaid diagrams (flowchart, sequence, class, state, ER, etc.) in Markdown files, SKILL.md docs, PR descriptions, or Claude Artifacts. Covers two failure modes that plain Mermaid knowledge misses — diagrams that render differently (or break) across VS Code preview / Mermaid Live Editor / GitHub / Claude Artifacts, and diagrams that are technically valid but hard to read (crossing edges, unlabeled arrows, oversized graphs) or hard to maintain (unstable node IDs, no comments).
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: TAVILY_API_KEY
   dependencies: none

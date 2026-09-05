@@ -4,6 +4,7 @@ description: Use when answering questions about the OpenAI Codex CLI (`codex` co
 allowed-tools: Bash(python claude-plugins/other-clis/skills/codex-cli-docs/*.py *)
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: CLAUDE_SKILL_DIR
   dependencies: python, codex
@@ -12,7 +13,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 !`python "${CLAUDE_SKILL_DIR}/generate_codex_help_yaml.py"`

@@ -2,6 +2,7 @@
 name: writing-copilot-instructions
 description: Use when creating, editing, reviewing, or troubleshooting GitHub Copilot instruction files, including `.github/copilot-instructions.md`, `.github/instructions/**/*.instructions.md`, and `AGENTS.md`, for VS Code, GitHub.com cloud agent, Copilot code review, or Copilot CLI. Covers host and scope selection, Markdown/frontmatter, path globs, concise repository guidance, and verification. Do not use for `.prompt.md` prompt files or Agent Skills unless the task is specifically about choosing between those mechanisms.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -10,7 +11,7 @@ meta:
   requires_skills: github-copilot-docs, vscode-copilot-docs
   status: stable
   description: no description
-  version: 1.0.1
+  version: 1.0.2
 ---
 
 # GitHub Copilot instruction ファイルの設計・作成

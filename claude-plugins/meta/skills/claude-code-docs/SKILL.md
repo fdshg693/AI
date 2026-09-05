@@ -4,6 +4,7 @@ description: Use when answering questions about Claude Code (CLI) features, sett
 allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *)
 # !`<command>`を使ってスクリプトを実行することで、動的にコマンド結果を注入できるようにする。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -12,7 +13,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 !`python ${CLAUDE_SKILL_DIR}/download_claude_code_reference.py`

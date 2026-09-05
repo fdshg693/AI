@@ -2,6 +2,7 @@
 name: writing-skills
 description: Use when creating, editing, reviewing, or validating a GitHub Copilot Agent Skill — including its SKILL.md frontmatter, directory layout, instructions, scripts, resources, trigger description, tool permissions, and gh skill distribution. This skill is for writing skills that GitHub Copilot consumes, not Claude Code skills.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -10,7 +11,7 @@ meta:
   requires_skills: github-copilot-docs
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 # GitHub Copilot Agent Skill の作成・評価

@@ -8,6 +8,7 @@ allowed-tools: Bash(agent *), Write, Agent
 # 依存: cursor-cli-docs（フラグの一次情報）／cursor-docs（cursor.com/docs最新情報）。モデル選択の理由は README.md、CLI全般の一次調査は memos/ を参照
 # disable-model-invocation: --force による書き込み・シェル実行や外部API課金という副作用があるため、Claudeの自動判断ではなくユーザーの明示呼び出し（/cursor-cli-use）に限定する
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: CURSOR_API_KEY, NO_OPEN_BROWSER
   dependencies: none

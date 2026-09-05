@@ -2,6 +2,7 @@
 name: vscode-copilot-docs
 description: Use when answering questions about GitHub Copilot's presence inside VS Code itself (Copilot Chat, Agent mode/Agents window, agent customization, MCP servers, inline suggestions, custom instructions/prompt files, etc.). Grounds answers in a curated excerpt of code.visualstudio.com's official docs instead of training-data memory, which may be stale.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -10,7 +11,7 @@ meta:
   requires_skills: vscode-docs,github-copilot-docs,aim-cli
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 # VS Code 内の GitHub Copilot 最新ドキュメント参照（抜粋版）

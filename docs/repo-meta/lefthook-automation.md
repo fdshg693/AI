@@ -16,6 +16,7 @@ status: stable
 - `ai-tools.yaml`由来の各種生成ファイルの再生成（`marketplace.json`×2、`skill-catalog.json`、各`CATALOG.md`、Clineルール、Copilot instructions、READMEのAIツール節。詳細は[ai-tools-config](/repo-meta/ai-tools-config.md)）
 - `SKILL.md`の`meta.version`/`meta.description`デフォルト値のバックフィル
 - `meta.version`が未バンプのままステージされた`SKILL.md`があればコミットをブロック（[skill-meta-fields](/repo-meta/skill-meta-fields.md) / [skill-md-commits](/repo-meta/skill-md-commits.md)参照）
+- `repo-tools.yaml`の`release: true`な各ツールフォルダに変更があれば、pyproject.tomlのpatchバージョンを自動で1つ上げて同じコミットに含める（[repo-tools-config](/repo-meta/repo-tools-config.md)の消費側4参照）
 - ステージ済みMarkdownのPrettier整形、ステージ済みPythonの`ruff format`整形
 
 各ジョブは`glob`で対象を絞り、関係するファイルがステージされたときだけ走る。多くは`stage_fixed: true`のため、再生成・整形後の内容が同じコミットへ自動で再ステージされ、追加のコマンド実行や2回目のコミットが不要になる。
@@ -23,6 +24,8 @@ status: stable
 ## 「手で実行して」ではなく「フックに任せる」
 
 新しいチェック・再生成ステップを追加するときは、`glob`で対象を絞れる形にできないか先に検討し、できるならlefthookジョブとして実装する。スキルの本文には、lefthookが**既にやっていること**（何が走るか、失敗時の直し方）を書けばよく、同じコマンドを手で実行するよう指示する記述は避ける。
+
+エージェントがコミットするときは生の`git commit`を叩かない。[committing](../../repo-meta/skills/committing/SKILL.md)の同梱ラッパー（`repo-meta/skills/committing/scripts/commit.py`）が同じフックを走らせ、成功/失敗ジョブと直し方だけを返す。lefthookの実行ログをコンテキストに流さないためであり、衛生処理そのものをフックの外へ出す変更ではない。
 
 ## 例外: 有料/外部AI API呼び出しはフック化しない
 
@@ -41,6 +44,7 @@ status: stable
 - [ai-tools-config](/repo-meta/ai-tools-config.md) — 生成される個々のファイルと生成スクリプトの詳細
 - [skill-md-commits](/repo-meta/skill-md-commits.md) — `SKILL.md`をコミットする際にlefthookが実行する内容と、詰まったときの直し方
 - [repo-ssot-pattern](/repo-meta/repo-ssot-pattern.md) — SSOT→生成スクリプト→lefthookという一連の設計パターン
+- [committing](../../repo-meta/skills/committing/SKILL.md) — エージェント向けコミット手順（lefthook出力を要約するラッパー付き）
 
 ## このドキュメントの位置づけ
 

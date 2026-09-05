@@ -4,6 +4,7 @@ description: リポジトリ内のファイルをファイル単位でAI要約�
 # 前提条件: `aim-summarize`コマンドがPATH上にインストール済み（`uv tool install --editable tools/aim-use/aim-summarize`）であり、OPENROUTER_API_KEYが設定済み（aim-cliが内部で要求）であること。このスキルはインストール・セットアップは一切行わない
 # このスキルの設計意図・前提条件の背景は tools/aim-use/aim-summarize/README.md および PLAN.md 参照（人間のメンテナ向け）
 meta:
+  tag: []
   requires_repo_tools: git
   requires_env: OPENROUTER_API_KEY
   dependencies: none

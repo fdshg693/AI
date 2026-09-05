@@ -4,6 +4,7 @@ description: Use when answering questions about Cursor (the AI code editor) — 
 allowed-tools: Bash(python claude-plugins/other-clis/skills/cursor-docs/*.py *)
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -12,7 +13,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 !`python "${CLAUDE_SKILL_DIR}/download_cursor_reference.py"`

@@ -2,6 +2,7 @@
 name: systematic-debugging
 description: Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -10,7 +11,7 @@ meta:
   requires_skills: superpowers:test-driven-development, superpowers:verification-before-completion
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 # Systematic Debugging

@@ -8,6 +8,7 @@ description: Resolve and fetch current, version-aware library/framework document
 # レート制限が低い)。このスキルの設計意図・前提条件の背景は同階層のREADME.md参照
 # (人間のメンテナ向け)。
 meta:
+  tag: []
   requires_repo_tools: ctx7
   requires_env: CONTEXT7_API_KEY
   dependencies: requests, python-dotenv

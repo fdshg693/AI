@@ -24,6 +24,7 @@ agent: general-purpose
 #   フォークされたサブエージェントに探索させ、確定したファイルパス一覧だけを
 #   呼び出し元に返させることで、本会話のコンテキストを汚さない。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -42,6 +43,7 @@ description: Use when answering questions about Visual Studio Code (the editor) 
 allowed-tools: Bash(python plugins/vscode/skills/vscode-docs/*.py *)
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
+  tag: []
   requires_repo_tools: WebFetch, Read, Grep
   requires_env: none
   dependencies: none
@@ -50,7 +52,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 - zenn
@@ -68,6 +70,7 @@ user-invocable: true
 
 # 関連スキル: zenn-refine(本スキルの後続として使うと、本番 ZENN 記事に近い品質を目指せる)。
 meta:
+  tag: []
   requires_repo_tools: tav-cli
   requires_env: TAVILY_API_KEY
   dependencies: none
@@ -86,6 +89,7 @@ description: 既存ZENN記事を改善するスキル
 disable-model-invocation: false
 user-invocable: true
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -94,5 +98,5 @@ meta:
   requires_skills: none
   status: experimental
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---

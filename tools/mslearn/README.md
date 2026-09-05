@@ -89,6 +89,10 @@ webpage link.」という説明文が本文として返ってくる(`is_error=Fa
   (`--json` を付けたときだけ全文入り JSON で標準出力に出し、ファイルは書かない)
 - 出力フォルダは `NNNN-<クエリ or URL のスラッグ>/` で、同じクエリを再実行しても
   連番が進むだけで上書きされない(取得時点によって結果が変わりうるため)。
+  並列実行時の連番衝突を避けるため、採番は出力ディレクトリ単位のファイルロックで
+  直列化する。`search` / `fetch` の各結果ファイルは先頭見出しの直後に
+  `URL:` 行を持ち（`fetch` は MCP 本文に無かった分をこちらで挿入する）、
+  `aim-ask` が出典を転記できるようにする。
   `search` の結果のうち `learn.microsoft.com/answers/...`(Microsoft Q&A の
   コミュニティ回答)は公式ドキュメントと混ざらないよう `qa/` サブフォルダに分離し、
   ファイル名は連番のみ(`0001.md` など)。タイトル・リンク一覧はフォルダ直下の
@@ -111,11 +115,12 @@ tools/mslearn/
 │   ├── client.py              ← `fastmcp.Client` のラッパー(接続・tools/call・tools/list)
 │   ├── rendering.py           ← 生の結果1件 → `(category, title, markdown)` への変換
 │   │                            (search/code-search/fetch それぞれの本文整形と、
-│   │                            search の Q&A URL 判定をここに集約)
+│   │                            search の Q&A URL 判定、fetch への `URL:` 行挿入)
 │   └── output.py              ← `(category, title, markdown)` のリスト →
 │                                  クエリ/URL ごとの連番フォルダ書き出し
 │                                  (`qa/` サブフォルダ分離 + `index.md` 生成) +
 │                                  「index.md のパスだけ」の標準出力サマリ
+├── tests/                  ← オフライン unittest（fetch の URL 行・並列採番）
 └── memo/                   ← 事前調査メモ(公式 MCP サーバー/Agent Skill の調査結果)
 ```
 

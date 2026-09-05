@@ -1,0 +1,19 @@
+{
+  "description": "Inject nested AGENTS.md files that Codex's session-start discovery does not cover (files outside the project-root -> initial-cwd path). Fires on apply_patch (structured, reliable) and Bash (heuristic path detection for read commands like cat/rg/Get-Content). See codex-plugins/meta/skills/codex-memory/SKILL.md section 3.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "^(apply_patch|Bash)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$(git rev-parse --show-toplevel)/.codex/hooks/inject_nested_agents_md.py\"",
+            "commandWindows": "powershell -NoProfile -Command \"python (Join-Path (git rev-parse --show-toplevel) '.codex/hooks/inject_nested_agents_md.py')\"",
+            "statusMessage": "Checking nested AGENTS.md",
+            "additionalContextLimit": 4000
+          }
+        ]
+      }
+    ]
+  }
+}

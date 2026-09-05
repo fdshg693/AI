@@ -1,7 +1,14 @@
+#!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#     "pyyaml",
+# ]
+# ///
 """Extract llms.txt entries that are NOT present in the curated copilot-excerpt.md.
 
 check_copilot_excerpt.py only verifies that copilot-excerpt.md's existing titles/URLs
-still match plugins/vscode/skills/vscode-docs/output/llms.txt -- it does not say
+still match the source llms.txt (path defined in config.yml) -- it does not say
 anything about whether the *scope* of the curation is right. This script produces
 the raw material for that harder question: every source entry whose URL is absent
 from the excerpt, split into two groups by the same keyword heuristic
@@ -18,7 +25,10 @@ These two files are meant to be read next by verify_agent_relevance.py, which as
 an AI model for a natural-language second opinion on both lists. This script itself
 makes no relevance judgement beyond the existing keyword heuristic.
 
-Usage: python extract_uncurated_entries.py [--excerpt PATH] [--source PATH] [--out-dir PATH]
+This script imports check_copilot_excerpt.py, which depends on PyYAML -- run it via
+`uv run extract_uncurated_entries.py`, not bare `python`.
+
+Usage: uv run extract_uncurated_entries.py [--excerpt PATH] [--source PATH] [--out-dir PATH]
 """
 
 from __future__ import annotations

@@ -11,6 +11,7 @@ description: "You MUST use this before any creative work - creating features, bu
 # 後続スキル: writing-plans
 # 出力: docs/specs/<topic>-design.md
 meta:
+  tag: []
   requires_repo_tools: flow.dot
   requires_env: none
   dependencies: none
@@ -30,6 +31,7 @@ name: okf-spec
 description: Use when finding, reading, authoring, or answering questions about Open Knowledge Format (OKF) bundles or concept documents — a markdown+YAML-frontmatter convention (GoogleCloudPlatform/knowledge-catalog) for knowledge that AI agents write and consume. Grounds answers in a periodically re-fetched snapshot of the official spec instead of training-data memory, which may be stale or predate v0.2's provenance/trust/lifecycle/attestation fields.
 allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/download_okf_spec.py *)
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: requests
@@ -58,6 +60,7 @@ description: 複数のClaude Codeセッション（同一ローカル環境上�
 # 自前のソースコードは持たない。issueの型・起票手順は同階層の issue-shape.md / issue-authoring.md
 # を参照（本ファイルはそれらを前提としたオーケストレーションフローのみを扱う）。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: LINEAR_API_KEY
   dependencies: linear-cli
@@ -75,6 +78,7 @@ name: pr-check
 description: PRの作成・状態確認・レビュー依頼・GitHub Actions操作を行う
 allowed-tools: Bash(gh *), Bash(git *), Bash(python claude-plugins/use-github/skills/pr-check/*.py *)
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: gh, git, python
@@ -83,7 +87,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 - proposing-flow
@@ -100,6 +104,7 @@ name: proposing-flow
 description: 実装依頼（「〜を実装して」等）を受けた直後、または実装作業を進める中で理解が深まった時点で、調査・実装・テストの各ステップとその実行主体（メインエージェント/サブエージェント）の提案を得るために使う。呼び出されたメインエージェント自身が、実装依頼の全文と自分が既に会話の中で把握している理解・調査結果をまとめ、Agent toolでflow-proposerサブエージェントに渡してフロー提案を受け取る、という手順を指示するだけの薄いスキルである。実際の調査・判定ロジックは`.claude/agents/flow-proposer.md`側にある。ユーザーの明示的な呼び出しに限らず、実装系の依頼を受けたAIエージェント自身が着手前に自律的に呼び出してもよい。巨大なタスクをメインエージェントだけで抱え込む、逆に些細な作業を過剰に分割する、といった不適切なワークフロー選定を防ぎたい場面で使う。
 argument-hint: "実装依頼の全文（省略時は直近の会話から読み取る）"
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -120,28 +125,11 @@ arguments: [target]
 allowed-tools: Bash(python plugins/review/skills/review/*.py *)
 # Python依存: pathspec (`.diffignore` で除外パターンを指定する場合のみ必要。事前に `pip install pathspec` でグローバルインストールしておくこと)
 meta:
+  tag: []
   requires_repo_tools: git, python
   requires_env: none
   dependencies: pathspec
   requires_install: pathspec
-  requires_hooks: none
-  requires_skills: none
-  status: stable
-  description: no description
-  version: 1.0.0
----
-
-- split-plan
----
-name: split-plan
-description: 実装プランを独立したステップに分割し、各ステップのコンテキストを最小限に保ちながら段階的に実装できるようにするスキル
-disable-model-invocation: false
-user-invocable: true
-meta:
-  requires_repo_tools: .claude/agents/dry-run.agent.md
-  requires_env: none
-  dependencies: none
-  requires_install: none
   requires_hooks: none
   requires_skills: none
   status: stable
@@ -154,6 +142,7 @@ meta:
 name: systematic-debugging
 description: Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -162,7 +151,7 @@ meta:
   requires_skills: superpowers:test-driven-development, superpowers:verification-before-completion
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 - task-tracker
@@ -172,6 +161,7 @@ description: 複数タスクを行き来しながら開発する際に、タス�
 disable-model-invocation: true
 argument-hint: "<task-name>"
 meta:
+  tag: []
   requires_repo_tools: just, hooks_manager
   requires_env: none
   dependencies: python3
@@ -180,28 +170,5 @@ meta:
   requires_skills: none
   status: draft
   description: no description
-  version: 1.0.1
----
-
-- writing-plans
----
-# スペックを元に実装プランを作るスキル。
-name: writing-plans
-# 複数ファイルに分けた実装プランを作れるため、後続でタスク分割しやすい
-# スペックから実装プランを作るので、所要時間はスペックの内容次第。曖昧・複雑なスペックほど時間がかかる。
-# セルフレビュー＋サブエージェントレビューを行うオーバーヘッドあり
-description: Use when you have a spec or requirements for a multi-step task, before touching code
-# 前段スキル: brainstorming (必須ではなく、spec等が出来ていればOK)
-# 入力ファイル: docs/specs/<topic>-design.md (必須ではない。brainstorming スキルの後続として使う場合は、brainstorming の出力がこれになるはず)
-# 出力ファイル: docs/writing-plans/<feature-name>.md + docs/writing-plans/<feature-name>/*.md (one file per task)
-meta:
-  requires_repo_tools: none
-  requires_env: none
-  dependencies: none
-  requires_install: none
-  requires_hooks: none
-  requires_skills: brainstorming
-  status: stable
-  description: no description
-  version: 1.0.0
+  version: 1.0.2
 ---

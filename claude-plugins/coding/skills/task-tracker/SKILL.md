@@ -4,6 +4,7 @@ description: 複数タスクを行き来しながら開発する際に、タス�
 disable-model-invocation: true
 argument-hint: "<task-name>"
 meta:
+  tag: []
   requires_repo_tools: just, hooks_manager
   requires_env: none
   dependencies: python3
@@ -12,7 +13,7 @@ meta:
   requires_skills: none
   status: draft
   description: no description
-  version: 1.0.1
+  version: 1.0.2
 ---
 
 `/task-tracker <task-name>` は、複数タスクを行き来する開発で「このタスクの話はこのファイルにメモする」という人間側のマッピングコストをなくすためのスキル。呼び出すたびに `.claude/tasks/{task-name}/` にセッションIDが自動記録され（`.claude/hooks/task_tracker_session.py`、`UserPromptExpansion`フック）、このSKILL本体は同じ場所の `CURRENT.md` を都度更新してタスクの現状を追跡する。

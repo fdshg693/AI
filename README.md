@@ -25,6 +25,9 @@ AIコーディングツールの設定・ツールに関する個人の調査・
   - [.clinerules/](.clinerules/) — Cline が読むルールファイル群（`root.md`, `tools-*.md`, `templates.md` 等）。詳細は `.clinerules/root.md` 参照
   - [cline-plugins/](cline-plugins/) — Cline 用プラグイン（主にカスタムツール系）
 
+- **Kilo Code**
+  - [.kilo/](.kilo/) — Kilo Code（CLI/TUI/VS Code拡張）が`.kilo/skills/`から自動検出するSkill（SKILL.md形式、marketplace.json/plugin.json相当のバンドル機構はKilo自体に存在しない）
+
 - **Codex**
   - [codex-plugins/](codex-plugins/) — Codex 用プラグイン（`meta/` 配下に設定・スキル）
   - [.agents/](.agents/) — Codex が読むマーケットプレイス定義（`.agents/plugins/marketplace.json`）から `copilot-plugins/` 等のプラグインを読み込む。Antigravity ともフォルダ名が競合するため `_agents/` と使い分け（`.agents/README.md` 参照）
@@ -34,11 +37,13 @@ AIコーディングツールの設定・ツールに関する個人の調査・
   - [.github/](.github/) — Copilot 設定（`copilot/settings.json`）、instructions、agents/skills（プラグイン経由で読込）、および CI 用 GitHub Actions workflows
 
 - **Cursor**
+  - [.cursor/](.cursor/) — Cursor が読む設定フォルダ。`.cursor/rules/` はネストした AGENTS.md と重複するため意図的に空（理由は `.cursor/rules/README.md` 参照）
   - [cursor-plugins/](cursor-plugins/) — Cursor 用プラグイン（`meta/` 配下に `.cursor-plugin`, docs, skills 群）
 
 - **Antigravity**
   - [antigravity-plugins/](antigravity-plugins/) — Antigravity 用プラグインのルート（実体は `_agents/plugins/` 配下に配置）
   - [_agents/](_agents/) — Antigravity 用プラグイン格納場所（`_agents/plugins/`）。`.agents/` と使い分ける（`_agents/README.md` 参照）
+  - [.agents/rules/](.agents/rules/) — Antigravity が読むワークスペース Rules。`AGENTS.md` から自動生成される（`.agents/README.md` 参照）。手編集しない
 
 <!-- END: ai-tools-section -->
 
@@ -48,13 +53,14 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 - [docs/](docs/) — AIツールを問わずリポジトリ全体で参照する知識（メンテナンス規約・設計判断・運用知識、他ツール環境への導入手順）を [OKF (Open Knowledge Format)](claude-plugins/coding/skills/okf-spec/) の概念ドキュメントとしてまとめたバンドル。詳細は [docs/index.md](docs/index.md) 参照。
 - [tools/](tools/) — リポジトリ管理・運用を支える便利ツール群。主なサブフォルダ:
   - `aim/`, `aim-use/` — モデル呼び出し CLI とその周辺ツール
-  - `claude-wrapper/`, `cline-wrapper/`, `codex-wrapper/`, `cursor-wrapper/` — 各 AI ツール向けラッパー
+  - `claude-wrapper/`, `cline-wrapper/`, `codex-wrapper/`, `copilot-wrapper/`, `cursor-wrapper/` — 各 AI ツール向けラッパー
   - `interactive-cli-wrapper/` — 対話的（TTY前提でREPLとして動く）CLIをPTY越しに駆動する汎用ラッパー
   - `integration/` — このレポジトリの成果物（プラグイン・スキル）を自分の環境へコピー配置する `skill-deploy` CLI。導入手順は [docs/integrations/](docs/integrations/) 参照
   - `get-settings/` — 設定取得補助
   - `infra/` — インフラ利用ツール（AI ログ管理等）
   - `install/` — 各ツールのインストール手順（`justfile` 経由で実行）
   - `sandbox/` — ISSUE駆動Dockerサンドボックスエージェント（GitHub ISSUEの`@sandbox`メンションをポーリングで検知しClaude Agent SDKに作業させる仕組み）
+  - `issue-agent/` — GitHub ISSUEのラベル駆動でgit worktree上にClaude Codeを起動し、実装からPR作成・ISSUE返信までを自動化するツール
   - `internal/` — マーケットプレイス/skill カタログ生成等の内部ツール群
 - [templates/](templates/) — ルールやスキル等をまとめて導入する際のテンプレート例（`cline_best/`, `planner/` 等）
 - [.vscode/](.vscode/) — VSCode における AI コーディングツール設定例
@@ -66,6 +72,10 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 ### スキル公開サイト
 
 - [skills-site/](skills-site/) — 登録済みAIコーディングツールのスキルを横断収集し、Astroの静的サイトとして公開する。公開対象の追加、frontmatter、生成・検証手順は [skills-site/README.md](skills-site/README.md) を参照。サイトはスキルの本文・メタデータ・配布ZIPだけを公開し、リポジトリ全体を公開するものではない。
+
+### ツールドキュメントサイト
+
+- [tools-site/](tools-site/) — [repo-tools.yaml](repo-tools.yaml) の `release: true` ツールのインストール/使い方をまとめたVitePress製サイト。GitHub Pagesで公開する。詳細は [tools-site/README.md](tools-site/README.md) を参照。
 
 ## ライセンス・コントリビューション
 
