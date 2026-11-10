@@ -1,6 +1,6 @@
 ---
 type: Plan Step
-status: planning-breakdown
+status: implementing-done
 ---
 
 # Step 9: README・AGENTS.md・docs・探索スキルの最終更新
@@ -63,3 +63,4 @@ status: planning-breakdown
 - 2026-11-10（08 完了時）: [progress/08-subfolder-results.md](progress/08-subfolder-results.md)。08 で更新済み: `repo-layout.md` の「サブモジュールを単体で開く」節、`exploring-this-repo` の同名の節、各サブモジュールの `AGENTS.md`・`CLAUDE.md`。09 で行うこと:
   - README・README_EN の「取得」節に `just sub-agent-hooks-install` を足す（アンブレラ自身の `just hooks-install` も載っていないので一緒に）。
   - `agents-rules` を再生成するとき、サブモジュールの新しい `AGENTS.md`（`skills/`・`site/`）が対象になるか、`_umbrella/` の Junction の中を拾わないかを確認する。
+- 2026-11-10（09 完了時）: [progress/09-docs-results.md](progress/09-docs-results.md)。`agents-rules` は生成物が一度もコミットされておらず旧パス向けの残骸も無いので再生成しなかった。サブモジュールの prettier が `.prettierignore` を読まない不具合を直した。
