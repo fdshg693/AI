@@ -7,6 +7,15 @@
 pre-commit:
   piped: true
   jobs:
+    # Runs only on main; failing here stops the piped stages below.
+    # A plain `echo ... && exit 1` does not fail on Windows (no shell), so it goes through just.
+    - name: block direct commits to main
+      only:
+        - ref: main
+      skip:
+        - merge
+        - rebase
+      run: just --justfile maintenance/scripts/justfile guard-main-branch
     - name: fix
       group:
         parallel: true

@@ -13,6 +13,7 @@ status: stable
 
 ## 現在の`pre-commit`が自動でやっていること
 
+- `main`への直接コミットのブロック（アンブレラと全サブモジュール。`only: ref: main`で`main`のときだけ走り、merge・rebase中は飛ばす）。作業は`just branch-new`／`branch-switch`で切ったブランチで行い、`main`へはマージで入れる（[repo-layout](./repo-layout.md#作業ブランチアンブレラとサブモジュールで揃える)）。lefthookはWindowsで`run:`をシェルに通さず`echo ... && exit 1`が失敗にならないため、失敗は`just guard-main-branch`経由で返す
 - `ai-tools.yaml`由来の各種生成ファイルの再生成（`marketplace.json`×2、`skill-catalog.json`、各`CATALOG.md`、Clineルール、Copilot instructions、READMEのAIツール節。詳細は[ai-tools-config](./ai-tools-config.md)）
 - `SKILL.md`の`meta.version`/`meta.description`デフォルト値のバックフィル
 - `meta.version`が未バンプのままステージされた`SKILL.md`があればコミットをブロック（[skill-meta-fields](./skill-meta-fields.md) / [skill-md-commits](./skill-md-commits.md)参照）

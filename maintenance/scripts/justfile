@@ -133,6 +133,12 @@ links-clean *args:
 links-post-checkout:
     uv run python -m links post-checkout
 
+# Fail with a hint; lefthook's pre-commit runs this only on main (only: ref), so direct commits
+# to main are blocked in the umbrella and every submodule. Merges and rebases are skipped.
+guard-main-branch:
+    @echo "Direct commits to main are blocked. Work on a branch (just branch-new NAME / just branch-switch NAME) and merge it into main."
+    @exit 1
+
 # --- branches: one branch name across the umbrella and every submodule (see maintenance/docs/repo-layout.md) ---
 
 # Branch, upstream ahead/behind, dirty count and pointer state of every repository

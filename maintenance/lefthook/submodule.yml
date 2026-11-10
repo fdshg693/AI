@@ -12,6 +12,14 @@
 pre-commit:
   piped: true
   jobs:
+    # Same guard as the umbrella's lefthook.yml: no direct commits to main.
+    - name: block direct commits to main
+      only:
+        - ref: main
+      skip:
+        - merge
+        - rebase
+      run: just --justfile ../maintenance/scripts/justfile guard-main-branch
     - name: fix
       group:
         parallel: true
