@@ -27,8 +27,6 @@ logs/
 # skill-tools のFB（`SKILL_TOOLS_FB_DIR` 既定の `tools/skill-tools/fb/`）。実行時に増えるローカルメモ
 fb/
 
-tools/sandbox/orchestrator/data/
-
 *.egg-info/
 
 *.pem

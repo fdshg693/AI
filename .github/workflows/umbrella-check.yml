@@ -1,0 +1,47 @@
+name: Umbrella check
+
+# The umbrella owns the aggregate outputs built from its submodules
+# (marketplaces, skill-catalog.json, CATALOG.md, README tools section, registry
+# compatibility copies) and the uv workspace whose members live in submodules.
+# A submodule commit cannot update them, so a pointer update that forgot to
+# regenerate (or a submodule that was not initialized when uv.lock was written)
+# is caught here. See maintenance/docs/repo-layout.md.
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository with submodules
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: uv.lock matches the workspace (members live in submodules)
+        run: uv lock --check
+
+      - name: Regenerate aggregate outputs
+        working-directory: maintenance/scripts
+        run: uv run python -m precommit fix --all
+
+      - name: Generated files are up to date
+        run: |
+          git diff --exit-code -- . ':(exclude)skills' ':(exclude)tools' ':(exclude)agent-compat' ':(exclude)site'
+          git submodule foreach --quiet 'git diff --exit-code'
