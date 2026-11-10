@@ -69,6 +69,14 @@ pre-commit:
               - "**/*"
             run: just --justfile tools/internal/justfile scan-staged-secrets
 
+# Junctions (.links.yaml) are hidden from git via info/exclude, so checking out
+# a commit that tracks files at a junction path silently writes them into the
+# junction's target. This only warns afterwards; see docs/repo-wide/repo-layout.md.
+post-checkout:
+  jobs:
+    - name: warn when a checkout wrote through a junction
+      run: just --justfile tools/internal/justfile links-post-checkout
+
 commit-msg:
   commands:
     lint-commit-message:
