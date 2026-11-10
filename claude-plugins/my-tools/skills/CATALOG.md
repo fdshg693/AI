@@ -3,7 +3,7 @@
 - aim-cli
 ---
 name: aim-cli
-description: OpenRouter経由でAIモデルを単発呼び出しする`aim` CLIツールの使い方を説明する。プロンプトをAIモデルに投げて応答を得たい、プロンプト内の`@path`でファイルやディレクトリの内容を取り込みたい、複数ファイルやスキルフォルダへ同じ質問（要約・バグ指摘など）を`--parallel`で一括したい、利用可能なモデル一覧を確認したい、タスクの難易度に応じてどのモデルを使うか選定したい場合に使う。DBへの永続化が必要な場合は`aim-summarize`を使う。
+description: OpenRouter経由でAIモデルを単発呼び出しする`aim` CLIツールの使い方を説明する。プロンプトをAIモデルに投げて応答を得たい、プロンプト内の`@path`でファイルやディレクトリの内容を取り込みたい、複数ファイルやスキルフォルダへ同じ質問（要約・バグ指摘など）を`--parallel`で一括したい、利用可能なモデル一覧を確認したい、タスクの難易度に応じてどのモデルを使うか選定したい場合に使う。
 # 前提条件: `aim`コマンドがPATH上にインストール済み（`uv tool install --editable tools/aim`）であり、OPENROUTER_API_KEYが設定済みであること。このスキルはインストール・セットアップは一切行わない
 # このスキルの設計意図・前提条件の背景は同階層のREADME.md参照（人間のメンテナ向け）
 meta:
@@ -16,7 +16,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.8
+  version: 1.0.9
 ---
 
 - aim-lib
@@ -33,7 +33,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.7
+  version: 1.0.8
 ---
 
 - aim2-cli
