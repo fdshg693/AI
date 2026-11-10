@@ -4,18 +4,19 @@
 ---
 name: cursor-cli-docs
 description: Use when answering questions about the Cursor CLI (`agent` command, formerly `cursor-agent`) — options, subcommands, sandbox/approval flags, MCP config, worktrees, etc. Grounds answers in the CLI's own `--help` output instead of training-data memory, which may be stale.
-allowed-tools: Bash(python claude-plugins/other-clis/skills/cursor-cli-docs/*.py *)
+allowed-tools: Bash(python cursor-plugins/meta/skills/cursor-cli-docs/*.py *)
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
-  requires_repo_tools: python
+  tag: []
+  requires_repo_tools: none
   requires_env: none
-  dependencies: none
+  dependencies: python
   requires_install: none
   requires_hooks: none
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.5
 ---
 
 - cursor-cli-use
@@ -29,6 +30,7 @@ allowed-tools: Bash(agent *), Write, Agent
 # 依存: cursor-cli-docs（フラグの一次情報）／cursor-docs（cursor.com/docs最新情報）。モデル選択の理由は README.md、CLI全般の一次調査は memos/ を参照
 # disable-model-invocation: --force による書き込み・シェル実行や外部API課金という副作用があるため、Claudeの自動判断ではなくユーザーの明示呼び出し（/cursor-cli-use）に限定する
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: CURSOR_API_KEY, NO_OPEN_BROWSER
   dependencies: none
@@ -44,9 +46,10 @@ meta:
 ---
 name: cursor-docs
 description: Use when answering questions about Cursor (the AI code editor) — features, settings, Agent mode, Plan mode, rules, skills, subagents, hooks, MCP, cloud agents, models & pricing, integrations, etc. Grounds answers in the latest official docs (cursor.com/docs) instead of training-data memory, which may be stale.
-allowed-tools: Bash(python claude-plugins/other-clis/skills/cursor-docs/*.py *)
+allowed-tools: Bash(python cursor-plugins/meta/skills/cursor-docs/*.py *)
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -55,7 +58,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.4
 ---
 
 - cursor-memory
@@ -71,6 +74,7 @@ description: >-
   Not for Agent Skills (use cursor-skill-use) or general Cursor features (use
   cursor-docs).
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -79,14 +83,33 @@ meta:
   requires_skills: cursor-skill-use, cursor-docs, claude-code-memory
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
+---
+
+- cursor-plugin-use
+---
+name: cursor-plugin-use
+description: Use when installing, creating, managing, or distributing Cursor plugins (the AI code editor) — plugin structure, the `.cursor-plugin/plugin.json` manifest, bundled components (rules, skills, agents, commands, MCP servers, hooks), local testing from `~/.cursor/plugins/local`, publishing to the Cursor Marketplace, team and Enterprise marketplaces, plugin installation modes, and managing installed plugins from Customize. Not for Agent Skills authoring details (use cursor-skill-use) or general Cursor features (use cursor-docs).
+meta:
+  tag: []
+  requires_repo_tools: none
+  requires_env: none
+  dependencies: none
+  requires_install: none
+  requires_hooks: none
+  requires_skills: cursor-docs, cursor-skill-use
+  status: experimental
+  description: no description
+  version: 1.0.1
 ---
 
 - cursor-sdk-use
 ---
+# 同梱ファイル: hooks.md / subagents.md / custom-tools.md / mcp.md（Python SDK での実践パターン）/ references/（公式ドキュメント抜粋スナップショット）
 name: cursor-sdk-use
 description: Use when building, reviewing, or troubleshooting Python applications that call Cursor agents through the Cursor SDK (`cursor-sdk`) — including local or cloud agents, sync or async clients, streaming, multi-turn sessions, MCP, custom tools, subagents, hooks, sandboxing, persistence, artifacts, and retries. Use the official Cursor Python SDK documentation through the cursor-docs workflow because the SDK API, models, and runtime behavior can change.
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: CURSOR_API_KEY
   dependencies: cursor-sdk
@@ -95,7 +118,7 @@ meta:
   requires_skills: cursor-docs
   status: stable
   description: no description
-  version: 1.0.1
+  version: 1.1.1
 ---
 
 - cursor-skill-use
@@ -104,6 +127,7 @@ meta:
 name: cursor-skill-use
 description: Use when using, creating, or managing Agent Skills in Cursor (the AI code editor) — invoking skills, placing and writing SKILL.md, frontmatter fields (name/description/paths/disable-model-invocation/metadata), skill discovery locations, scoping skills to files, built-in skills, installing from GitHub, migrating rules or slash commands to skills, and bundling skills into plugins. Not for Cursor CLI flags (use cursor-cli-docs) or general Cursor features (use cursor-docs).
 meta:
+  tag: []
   requires_repo_tools: none
   requires_env: none
   dependencies: none
@@ -112,5 +136,5 @@ meta:
   requires_skills: none
   status: experimental
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---

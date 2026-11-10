@@ -166,7 +166,7 @@ tools:
     plugins:
       - path: cursor-plugins/meta
         kind: plugin
-        skills_layout: direct
+        skills_layout: subdir
     rules_from_agents_md:
       output_dir: .cursor/rules
 
