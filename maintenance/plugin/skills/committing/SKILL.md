@@ -6,7 +6,7 @@
 # 同梱: scripts/commit.py — git commit をフック付きで実行し、lefthook生ログの代わりに
 # 成功/失敗ジョブと直し方だけを返す。生の git commit は使わない。
 name: committing
-description: Makes a git commit in this repository under lefthook pre-commit/commit-msg via a bundled wrapper that returns only passed/failed jobs and remediations (not lefthook's full execution log). Use when the user asks to commit, when lefthook or commitlint rejects a commit, when deciding what to stage versus leave to hooks, or when a commit includes a SKILL.md or tools/ CLI that lefthook cannot fully sync.
+description: Makes a git commit in this repository under lefthook pre-commit/commit-msg via a bundled wrapper that returns only passed/failed jobs and remediations (not lefthook's full execution log), including the two-step commit for files inside a submodule (skills/, tools/, agent-compat/, site/) followed by the umbrella pointer update. Use when the user asks to commit, when lefthook or commitlint rejects a commit, when deciding what to stage versus leave to hooks, or when a commit includes a SKILL.md or tools/ CLI that lefthook cannot fully sync.
 meta:
   tag: []
   requires_repo_tools: lefthook.yml
@@ -17,7 +17,7 @@ meta:
   requires_skills: changing-skills-and-tools
   status: experimental
   description: このリポジトリ固有のgit commit手順（lefthook前提、要約ラッパー同梱、スキル/ツール変更時の下流確認）
-  version: 1.1.7
+  version: 1.1.8
 ---
 
 # このリポジトリでのコミット
@@ -54,6 +54,15 @@ meta:
 7. **ラッパーの報告を読む** — `RESULT` / `HOOKS` / （失敗時）`EXCERPT` と `FAILED` の `fix` だけを根拠にする。lefthook生ログは読まない（`--full-output`は調査時だけ）。
 8. **成功後は`STATUS`を見る** — lefthookの`stage_fixed: true`による再生成・整形が残留している場合は、そのファイルだけをステージし、ラッパーで追加コミットする。生成物だけなら`chore(repo): sync generated files after hooks`、整形だけなら`chore(repo): commit hook formatting`を使う。フックがさらに変更した場合も、残留変更がなくなるまで同じ手順を繰り返す。
 9. **pushしない** — ユーザーが明示したときだけ。`main`/`master`への`--force`はしない。
+
+## サブモジュールの中を変えたとき
+
+`skills/`・`tools/`・`agent-compat/`・`site/` はサブモジュール（[repo-layout](../../../docs/repo-layout.md#サブモジュール)）。中のファイルはアンブレラからはコミットできない。次の 2 段階に分ける。
+
+1. **サブモジュールでコミットする** — そのフォルダへ移り、上の手順 1〜8 をそのリポジトリで行う。detached HEAD なら先に `git switch main`。ラッパーは `python ../maintenance/plugin/skills/committing/scripts/commit.py -m "..."`。フックは `maintenance/lefthook/submodule.yml` から来る（未導入なら `just sub-hooks-install`）。
+2. **アンブレラでポインタを更新する** — アンブレラのルートで `git status` を見る。サブモジュールのパス（`M skills` 等）と、手順 1 のフックが再生成したアンブレラ側の生成物（`.claude-plugin/marketplace.json`・`skill-catalog.json` 等）だけをステージしてラッパーでコミットする。件名は `chore(repo): update <submodule> pointer` か、変更の意味が分かる件名にする。
+
+アンブレラ側のファイル（`registry/`・`maintenance/` 等）も同じ変更に含まれるなら、手順 2 のコミットに一緒に入れる。push する場合は、ユーザーの指示があってから、サブモジュールを先に push する。
 
 ## 件名
 

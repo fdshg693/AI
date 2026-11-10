@@ -13,7 +13,7 @@
 
 ## PRを送る場合
 
-1. Forkして作業ブランチを作成する。
+1. Forkして作業ブランチを作成する。`skills/`・`tools/`・`agent-compat/`・`site/` の中の変更は、それぞれのサブモジュールのリポジトリ（`fdshg693/AI-skills` 等）へPRを送る。アンブレラ（`fdshg693/AI`）へのPRは、それ以外のファイルとサブモジュールのポインタ更新だけにする。
 2. 変更したフォルダのREADME/AGENTS.mdに検証コマンドが書かれていればそれに従う（例: `site/skills-site`配下の変更は`site/skills-site/AGENTS.md`のjustfileレシピを参照）。
 3. PRを作成する。上記の通りFork PRでは一部のCIジョブ（シークレットが必要なもの）が失敗するが、それ自体は問題ない。
 

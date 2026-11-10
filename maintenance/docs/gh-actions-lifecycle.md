@@ -13,6 +13,8 @@ status: stable
 
 このリポジトリは[MIT License](../../LICENSE)で、誰でも自由にFork・改変・再配布してよい。一方でここで説明するGitHub Actions駆動の自動化（issue/PR bot、skills-siteのデプロイ）は第三者には開放していない設定になっている（後述の`author_association`ガードとFork PRでのシークレット非公開）。コントリビュート方法とこの制限の位置づけは[CONTRIBUTING.md](../../CONTRIBUTING.md)を参照。
 
+サブモジュール（skills / tools / agent-compat / site）はアンブレラのワークフローから`actions/checkout`の`submodules: recursive`で取得する。`paths:`フィルタはサブモジュールの中のパターンでは発火しないので、サブモジュールのパス（gitlink）を書く。生成物の再生成漏れと`uv lock --check`は`umbrella-check.yml`が検査する。CLIのタグ+GitHub Releaseはアンブレラではなく`tools/`サブモジュール（fdshg693/AI-tools）の`tool-release.yml`が作る（[repo-layout](./repo-layout.md#ci-とリリース)）。
+
 大きく2系統に分かれる。
 
 1. **skills-siteのビルド→検証→デプロイ→タグ付け**（このリポジトリで唯一の「リリース・デプロイ」パイプライン）
@@ -20,7 +22,7 @@ status: stable
 
 ## 1. skills-siteのリリース・デプロイパイプライン（`skill-site.yml`）
 
-トリガーは`site/skills-site/**`、このワークフロー自身、各プラグインの`skills/**`等への push（main）/ pull_request / `workflow_dispatch`。
+トリガーはサブモジュールのポインタ更新（`site`・`skills`・`tools`）、このワークフロー自身、`registry/ai-tools.yaml`等への push（main）/ pull_request / `workflow_dispatch`。サブモジュール側への push だけでは動かない。
 
 - **`check-secrets`**: `push`かつ`main`、または`workflow_dispatch`のときだけ、`AZURE_STATIC_WEB_APPS_API_TOKEN`の存在を確認して無ければ即失敗させる（デプロイ専用シークレットなのでPRでは走らない）。
 - **`verify`**: push/PR/workflow_dispatchすべてで実行。`OPENROUTER_API_KEY`（catalog buildのskill embeddings計算に必須）を明示チェックしてから`build`→`validate`→`test`を実行し、`dist`と`api`をartifactとしてアップロードする。forkからのPRはリポジトリのシークレットを読めないため、この`OPENROUTER_API_KEY`チェックで**意図的に**落ちる（バグではなく、埋め込み抜きの不完全なビルドをそのまま通過させない安全装置）。

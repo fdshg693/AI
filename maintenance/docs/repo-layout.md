@@ -1,14 +1,14 @@
 ---
 type: Repo Convention
 title: リポジトリ構成とJunctionの規約
-description: "Explains how this repository declares directory junctions in a committed `.links.yaml` instead of committing them, how `just links-sync` / `links-check` / `links-clean` create, verify and remove them (registering each in the owning repo's info/exclude first), which junctions are forbidden (pointing at an ancestor, into another junction, overlapping, outside the umbrella), why scanners must not walk into junctions, and the checkout hazard when a commit tracks files at a junction path. Use when adding a junction, when `links-check` or the post-checkout warning fires, before checking out an old commit, or when writing code that walks the repository tree."
+description: "Explains which submodules this umbrella has (skills / tools / agent-compat / site), which repository owns which generated file, how to clone, commit in a submodule and then update the pointer, and how this repository declares directory junctions in a committed `.links.yaml` instead of committing them, how `just links-sync` / `links-check` / `links-clean` create, verify and remove them (registering each in the owning repo's info/exclude first), which junctions are forbidden (pointing at an ancestor, into another junction, overlapping, outside the umbrella), why scanners must not walk into junctions, and the checkout hazard when a commit tracks files at a junction path. Use when cloning, committing inside a submodule, updating a submodule pointer, adding a junction, when `links-check` or the post-checkout warning fires, before checking out an old commit, or when writing code that walks the repository tree."
 tags: [repo-wide]
 status: draft
 ---
 
 # リポジトリ構成とJunctionの規約
 
-このリポジトリは、アンブレラ（ルート）と、のちに切り出すサブモジュールから成る（再編の経緯は `plans/repo-restructure/`）。サブモジュール単体のフォルダを Claude Code で開けるように、上位や兄弟のフォルダを **Windows の Junction** で参照する。本ドキュメントは Junction の宣言・作成・禁止事項を定める。境界（何をどこに置くか）の節は再編の 05・09 で追記する。
+このリポジトリは、アンブレラ（ルート、`fdshg693/AI`）と 4 つのサブモジュールから成る（再編の経緯は `plans/repo-restructure/`）。サブモジュール単体のフォルダを Claude Code で開けるように、上位や兄弟のフォルダを **Windows の Junction** で参照する。本ドキュメントは置き場所の判定基準、サブモジュールの運用、Junction の宣言・作成・禁止事項を定める。
 
 ## 置き場所の判定基準
 
@@ -27,6 +27,48 @@ status: draft
 他ツールへの届け方（マーケットプレイスの `sources`、gitignore 済みの `workspace_copies`）は [ai-tools-config](./ai-tools-config.md)。生成コピー（`.cline/skills/` 等）は Junction ではなく実ディレクトリで、目印 `.agent-compat-copy` によって走査から外す。
 
 スクリプトを同梱して `tools/` のインストールが要らないスキルは汎用側（例: `skills/plugins/web-lookup`、`skills/plugins/doc-tools`）。CLI 本体は `tools/<name>` の平坦配置のまま（`registry/repo-tools.yaml` の `path` 契約）。
+
+## サブモジュール
+
+| パス            | リポジトリ                                                              | 中身                                                |
+| --------------- | ----------------------------------------------------------------------- | --------------------------------------------------- |
+| `skills/`       | [fdshg693/AI-skills](https://github.com/fdshg693/AI-skills)             | 汎用スキルのプラグイン（`plugins/<plugin>/`）       |
+| `tools/`        | [fdshg693/AI-tools](https://github.com/fdshg693/AI-tools)               | CLI 群（`<name>/` の平坦配置）と `_plugin/my-tools` |
+| `agent-compat/` | [fdshg693/AI-agent-compat](https://github.com/fdshg693/AI-agent-compat) | `agent-tooling/`・`formats/`・`docs/differences/`   |
+| `site/`         | [fdshg693/AI-site](https://github.com/fdshg693/AI-site)                 | `skills-site/`・`tools-site/`                       |
+
+`maintenance/`・`registry/`・`docs/`・`plans/` とツール設定フォルダ（`.claude/` 等）はアンブレラに残る。パスはどこでもアンブレラのルート相対で書く（`tools/aim`、`skills/plugins/coding`）。サブモジュールの中の相対パスにするのは、そのリポジトリだけで完結する記述（各リポジトリの README など）に限る。
+
+### 生成物の所有権
+
+- **アンブレラが持つ**: 複数のリポジトリから集める生成物。`.claude-plugin/marketplace.json`・`skill-catalog.json`、`.agents/plugins/marketplace.json`、`.github/plugin/marketplace.json`、README のツール節、`registry/` の互換コピー、`uv.lock`・`pnpm-lock.yaml`（ワークスペースのメンバーはサブモジュールにあるが、ルート定義はアンブレラだけに置く。サブモジュール直下に `pyproject.toml`・`pnpm-workspace.yaml`・lockfile を置かない）。
+- **サブモジュールが持つ**: その中で完結する生成物。各プラグインの `skills/CATALOG.md`、`SKILL.md` の `meta` 既定値、ツールの版数、agent-tooling の `hooks/generated/`。
+- サブモジュール内のプラグインを指す marketplace のエントリは、相対パスではなくそのリポジトリを指す（Claude Code・Codex は `git-subdir`、Copilot は `github`+`path`。`ref` は付けず既定ブランチを追う）。生成器が `.gitmodules` から決める（[`plugin_source.py`](../scripts/plugin_meta/util/plugin_source.py)）。サイトの GitHub リンクも同じ規則でサブモジュールのリポジトリを指す。
+
+### clone と日々の操作
+
+```sh
+git clone --recurse-submodules https://github.com/fdshg693/AI.git
+cd AI
+just sub-hooks-install   # 各サブモジュールに lefthook を入れる（アンブレラは lefthook install）
+just links-sync          # .links.yaml の Junction を作る
+```
+
+- `git pull` のあとは `just sub-init`（`git submodule update --init --recursive`）。未初期化のサブモジュールがあると uv はそのメンバーを黙って無視し、`uv lock` から落ちる。`uv lock` の前に必ず初期化する。
+- サブモジュールは記録された commit で detached HEAD になる。作業する前に `just sub-sync`（全サブモジュールで `main` を checkout して fast-forward）か、そのサブモジュールで `git switch main`。状態は `just sub-status`。
+
+### コミットは 2 段階
+
+1. **サブモジュールの中でコミットする。** そのサブモジュールのフォルダで `committing` スキルのラッパーを使う。フックは `maintenance/lefthook/submodule.yml`（各サブモジュールの `lefthook.yml` が `extends` する）から来て、アンブレラと同じ再生成・整形・検査が走る。単体で clone したときは `extends` 先が無いので何も走らない。
+2. **アンブレラでポインタを更新する。** アンブレラで `git add <submodule>`（と、手順 1 で再生成されたアンブレラ側の生成物）をコミットする。gitlink の変更で marketplace・`skill-catalog.json` が再生成される。push はサブモジュールを先にする（アンブレラが未 push の commit を指さないように）。
+
+1 つの変更がサブモジュールとアンブレラの両方にまたがっても、アトミックにはコミットできない。サブモジュール → アンブレラの順に分けてコミットする。CI の [`umbrella-check.yml`](../../.github/workflows/umbrella-check.yml) が、生成物の再生成漏れと `uv lock --check` を検査する。
+
+### CI とリリース
+
+- アンブレラのワークフローは `actions/checkout` に `submodules: recursive` を付ける。`paths:` はサブモジュールの中のパターンでは発火しない（アンブレラから見えるのは gitlink だけ）ので、`skills`・`tools`・`site` のようにサブモジュールのパスそのものを書く。
+- サイトの公開（Azure Static Web Apps・GitHub Pages）はアンブレラで動く。サブモジュールへの push だけではサイトは更新されず、アンブレラのポインタ更新で動く。
+- CLI のタグと GitHub Release は AI-tools の `tool-release.yml` が作る（対象はアンブレラの `registry/repo-tools.yaml` を読んで決める）。`git+https://github.com/fdshg693/AI-tools.git#subdirectory=<name>` でインストールする。
 
 ## Junction はコミットせず `.links.yaml` で宣言する
 
@@ -85,6 +127,7 @@ Python の `Path.is_symlink()`／`os.path.islink()` は Junction で False を�
 - Node は `fs.readdir` の Dirent の `isSymbolicLink()` が Junction で true になるので、それで飛ばす。tinyglobby／fast-glob は `followSymbolicLinks: false` を明示する。
 - pytest はルートの [`conftest.py`](../../conftest.py) の `pytest_ignore_collect` で Junction を収集対象から外す。
 - git の一覧に従うもの（skill-tools の通常経路、rg 既定、codegraph、textgraph、lefthook）と、prettier・ruff は exclude 済みの Junction を辿らないので対応不要。
+- `git ls-files`・`git diff --cached` はサブモジュールの中を返さない（gitlink のパスが 1 行出るだけ）。サブモジュールの中まで見るコードは、チェックアウト済みのサブモジュールで同じコマンドを実行してパスを前置する。maintenance/scripts は [`repo_git.py`](../scripts/repo_git.py)、skill-tools は `LocalSource`／`GitHubSource` が自前で行う。
 
 ## 関連
 

@@ -2,6 +2,19 @@
 
 AIコーディングツールの設定・ツールに関する個人の調査・実験リポジトリ。
 
+## 取得
+
+`skills/`・`tools/`・`agent-compat/`・`site/` はサブモジュール（[AI-skills](https://github.com/fdshg693/AI-skills)・[AI-tools](https://github.com/fdshg693/AI-tools)・[AI-agent-compat](https://github.com/fdshg693/AI-agent-compat)・[AI-site](https://github.com/fdshg693/AI-site)）。サブモジュールごと clone する。
+
+```sh
+git clone --recurse-submodules https://github.com/fdshg693/AI.git
+cd AI
+lefthook install && just sub-hooks-install
+just links-sync
+```
+
+pull のあとは `just sub-init`。サブモジュールの中でコミットしてからアンブレラでポインタを更新する 2 段階の手順は [repo-layout](maintenance/docs/repo-layout.md#サブモジュール) を参照。
+
 ## フォルダ構成
 
 リポジトリ直下のサブフォルダを、用途ごとに概観する。  

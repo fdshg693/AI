@@ -23,6 +23,10 @@ status: stable
 
 `pre-commit`は`piped`で fix → format → check の3段に分け、各段の中は`parallel`で並列実行する（fixerの書き込みとPrettier/ruffが同じファイルを奪い合わないため）。`maintenance/scripts`のPythonタスク群は段ごとに1ジョブ（`maintenance/scripts/precommit`）へまとめ、プロセス内で依存順に実行する。ジョブごとの`powershell`+`uv run`起動コストを避けるためで、新しい決定論的Pythonタスクはlefthookジョブを増やすのではなく`maintenance/scripts/precommit/__main__.py`へ足す。
 
+## サブモジュールでのコミット
+
+アンブレラのフックは、サブモジュールの中のコミットでは発火しない。各サブモジュールの`lefthook.yml`は`extends: [../maintenance/lefthook/submodule.yml]`だけを持ち、同じ fix → format → check を走らせる（`just sub-hooks-install`で入れる。単体で clone したときは`extends`先が無いので黙って何も走らない）。`maintenance/scripts`のタスクはステージ済みファイルをアンブレラと全サブモジュールから集めてアンブレラ相対のパスで判定する（[`repo_git.py`](../scripts/repo_git.py)）。サブモジュールのコミットで再生成されたアンブレラ側の生成物（marketplace等）はアンブレラの作業ツリーに残り、ポインタ更新のコミットに入れる。アンブレラ側は、gitlink（`skills`・`tools`・`agent-compat`）がステージされると集約生成物を再生成する。手順は[repo-layout](./repo-layout.md#コミットは-2-段階)。
+
 各ジョブは`glob`で対象を絞り、関係するファイルがステージされたときだけ走る。多くは`stage_fixed: true`のため、再生成・整形後の内容は通常同じコミットへ自動で再ステージされる。成功後に生成物または整形結果が残留した場合は、残留ファイルをステージしてフック付きの追加コミットに含める。追加コミットを省略して作業ツリーへ残さない。
 
 ## 「手で実行して」ではなく「フックに任せる」
