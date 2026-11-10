@@ -75,3 +75,9 @@ status: planning-research
 - 2026-11-10（01 完了時）: ワークスペース直下の他ツール用フォルダはコピー生成に決定し、マニフェスト同居の条件（Copilot の `plugin.json` はスキルを `skills/` 配下へ揃える）を「決定事項」に加えた。
 - 2026-11-10（02 完了時）: 「触るファイル」に、02 の対応表の具体的な移動と改名を追加した。追加したのは、agent-tooling の深さ +1 で直す箇所、`cline-plugins/personal-info` の行き先、`openai.yaml` の扱い、REFERENCES.md などの参照元。
 - 2026-11-10（04 完了時）: 04 のスキャナ除外は Junction（と symlink）の判定であり、`.cline/skills` などの**生成コピー**（実ディレクトリ）は除外できない。06 でコピー生成を入れるときは、`tools/internal/skill/util/skill_frontmatter.py` の走査（`EXCLUDED_DIRECTORY_NAMES` は名前だけ）にパスでの除外を足すなど、生成先を走査から外す仕組みを別に作る。skill-tools は git 一覧に従うので、生成先を ignore するかどうかで扱いが決まる。
+- 2026-11-10（05 完了時）: バッチ 5 を行うときの前提が変わった。
+  - パスは `maintenance/scripts/`（旧 tools/internal）、`registry/ai-tools.yaml`（旧ルート）、`skills/plugins/`（旧 claude-plugins）、`tools/_plugin/my-tools/`。04 の注記にある `tools/internal/skill/util/skill_frontmatter.py` は `maintenance/scripts/skill/util/skill_frontmatter.py`。
+  - 書き換えは `maintenance/scripts/reorg/rewrite_moved_paths.py` に移動表（`reorg/tables/06-*.json`）を渡して行う。前後で `reorg/check_links.py` を比べる（05 完了時点で既存の切れ 111 件）。ルートの互換コピー（`ai-tools.yaml` 等 4 本）は表の `exclude` に入れ、`just --justfile maintenance/scripts/justfile generate` で作り直す。
+  - 新しいプラグイン名（`ai-tools-knowledge` 等）は `claude plugin validate` で確かめる。`claude-` で始まる名前は予約語で拒否される（05 で `meta` → `claude-code` を `cc-knowledge` に変えた）。
+  - 05 のバッチ 6（CATALOG.md を `<plugin>/skills/CATALOG.md` に揃える）は、Copilot（`skills_layout: direct`）だけが残っている。Copilot の配布方式を作るときに `skills/` 配下へ揃え、`ai-tools.yaml` の `skills_layout` と生成器を合わせる。
+  - `agent-tooling/agent_tooling/hooks/REFERENCES.md` の他ツールスキルへのリンクはリポジトリルート基準（`../../../`）に直したので、書き換えツールで追従できる。agent-tooling の build.py は `registry/repo-tools.yaml` を親を辿って探すので、`agent-compat/` へ動かしても直さなくてよい（tests の `parents[2]` は 02 の記載どおり要修正）。

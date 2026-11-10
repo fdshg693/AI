@@ -9,7 +9,7 @@ status: implementing-in-progress
 - [x] [02-research-inventory.md](02-research-inventory.md) — 全スキル・ツール・docs の分類表とパス参照の棚卸し
 - [x] [03-fix-existing-inconsistencies.md](03-fix-existing-inconsistencies.md) — 移動前に既存の不整合を直す
 - [x] [04-links-tooling.md](04-links-tooling.md) — Junction マニフェスト仕様と作成・検証ツール、スキャナの Junction 除外
-- [ ] [05-semantic-reorg.md](05-semantic-reorg.md) — 単一リポジトリのまま意味的再編（git mv）
+- [x] [05-semantic-reorg.md](05-semantic-reorg.md) — 単一リポジトリのまま意味的再編（git mv）
 - [ ] [06-agent-compat.md](06-agent-compat.md) — マルチ AI 対応の分離、ツール別書式サンプルと相違点ドキュメント
 - [ ] [07-submodule-split.md](07-submodule-split.md) — 履歴付きでサブモジュールへ切り出す
 - [ ] [08-subfolder-workspaces.md](08-subfolder-workspaces.md) — サブモジュール単体で開くための Claude Code 用 Junction・指示ファイル
@@ -31,7 +31,7 @@ status: implementing-in-progress
 ```text
 AI/                                 アンブレラ（fdshg693/AI のまま）
 ├─ AGENTS.md / CLAUDE.md / README.md
-├─ registry/                        SSOT yaml 群（ai-tools / repo-tools / meta_field / skill-tags / repo-workflows / repo-hooks）
+├─ registry/                        SSOT yaml 群（ai-tools / repo-tools / meta_field / skill-tags / repo-workflows / repo-hooks）。ルートには旧 skill-tools 向けの生成コピー 4 本
 ├─ .claude/ .claude-plugin/ .agents/ .github/ .cline/ .kilo/ .codex/ .cursor/
 │                                   ツールがワークスペース直下から読む設定。ルートに残す（中身は生成物か Junction）
 ├─ maintenance/                     レポジトリ都合。アンブレラ本体に残す（サブモジュールにしない）
@@ -41,7 +41,7 @@ AI/                                 アンブレラ（fdshg693/AI のまま）
 ├─ plans/
 ├─ skills/        [submodule]       Claude Code 汎用スキル（tools 非依存）
 │  └─ plugins/
-│     ├─ claude-code/               旧 claude-plugins/meta（Claude Code の知識・書き方）
+│     ├─ cc-knowledge/              旧 claude-plugins/meta（Claude Code の知識・書き方。`claude-` で始まる名前は予約語のため）
 │     ├─ coding/ cicd/ topics/ others/ special/ subagents/ no-code/ web-lookup/ doc-tools/
 │     └─ ai-tools-knowledge/        旧 codex/copilot/cursor/antigravity/cline/kilo の知識スキル（Claude Code スキルとして）
 ├─ tools/         [submodule]       CLI 群（tools/<name> の平坦配置は維持。旧 tools/internal/ai-usage → tools/ai-usage）

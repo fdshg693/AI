@@ -1,6 +1,6 @@
 ---
 type: Plan Step
-status: planning-research
+status: implementing-done
 ---
 
 # Step 5: 単一リポジトリのまま意味的再編（git mv）
@@ -89,3 +89,4 @@ status: planning-research
 
 - 2026-11-10（02 完了時）: 02 の対応表（ユーザー確認済み）を反映した。変えたのは、バッチ 1〜4 の移動先、skill-tools の SSOT ファイル名固定への移行措置、名前空間の変更、追跡外ファイルとリポジトリ外参照の具体名、書き換えスクリプトの方針。
 - 2026-11-10（04 完了時）: 04 の成果物も移動対象に入る。`tools/internal/links/` → `maintenance/scripts/links/`（`skill/util/skill_frontmatter.py` と生成器 3 本が `from links.fs import ...` するので、tools/internal と一緒に動かせば import はそのまま）、`docs/repo-wide/repo-layout.md` → `maintenance/docs/repo-layout.md`。ルート `justfile` の `links-*`・`lefthook.yml` の `post-checkout` ジョブ・ルート `AGENTS.md`・`conftest.py` の docstring にあるパスを追従させる。実ディレクトリだったパスを Junction にするバッチでは、`links-check` が「過去に追跡されていたパス」を警告する（想定どおり）。
+- 2026-11-10（05 完了時）: バッチ 1〜4 を実施（記録は [progress/05-reorg-results.md](progress/05-reorg-results.md)）。`claude-code` は予約語でプラグイン名に使えず `cc-knowledge` に変更（ユーザー回答）。バッチ 1 の `meta-plugins` は深さが 1 段増えた。本文だけの変更でも SKILL.md のバンプが要る。registry/ はルートに旧 skill-tools 向けの生成コピーを置く方式にした。バッチ 6 は Copilot 以外が既に揃っており、残りは 06 へ回した。

@@ -72,3 +72,4 @@ status: planning-research
 ## 実行中に判明した変更
 
 - 2026-11-10（01 完了時）: 01-D の go/no-go は GO。marketplace の source 形式、skill-tools `GitHubSource` のサブモジュール対応（切り出し前に必須）、CI・リリースの追従、ワークスペースと lefthook の置き方、事前の実験 TODO を「決定事項」「触るファイル」に反映した。サブモジュールは public なので CI トークンは不要と修正した。
+- 2026-11-10（05 完了時）: SSOT yaml は `registry/` に移り、ルートに旧 skill-tools 向けの生成コピー（`ai-tools.yaml`・`repo-tools.yaml`・`repo-workflows.yaml`・`repo-hooks.yaml`）がある。サブモジュールからは `registry/` を Junction で参照する前提。`tools/` サブモジュールには `tools/_plugin/my-tools`（Claude Code プラグイン）と `tools/ai-usage` が含まれる。互換コピーをいつ消すか（skill-tools の利用者が `registry/` 対応版に上がった後）は切り出し時に決める。
