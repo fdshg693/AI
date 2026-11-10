@@ -1,7 +1,7 @@
 /**
  * Reads repo-tools.yaml (repository root), the SSOT for tools/-installed CLI
  * tools that SKILL.md meta.requires_repo_tools / meta.requires_install
- * declare (see tools/internal/skill/util/repo_tools_registry.py, its Python
+ * declare (see maintenance/scripts/skill/util/repo_tools_registry.py, its Python
  * counterpart). Exposes the "installable tools" list rendered on the site:
  * name + GitHub folder link only, no install instructions.
  */

@@ -12,7 +12,7 @@ meta:
   requires_skills: claude-code-docs
   status: stable
   description: no description
-  version: 1.0.4
+  version: 1.0.5
 ---
 
 # フック作成のベストプラクティス
@@ -54,7 +54,7 @@ meta:
 2. `just --justfile agent-tooling/justfile generate` で `generated/` と `catalog.json` を再生成する
 3. リポジトリ直下で `just hooks-install`（新規）または `just hooks-update`（変更）を実行し、skill-tools に配置・登録させる。他プロジェクトへは `skill-tools hooks install --agent <agent> <hook-id>`
 
-全体の流れと設計判断は `docs/repo-wide/hook-distribution.md`。
+全体の流れと設計判断は `maintenance/docs/hook-distribution.md`。
 
 ## 困ったときは
 

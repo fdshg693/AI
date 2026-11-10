@@ -37,7 +37,7 @@ tav search "Microsoft Fabric overview" --topic msfabric_overview
 
 ## 3. skill-tools
 
-`skill-tools` は、`ai-tools.yaml` に登録された plugin / workspace root の `SKILL.md` bundle の一覧・配置・検索をまとめて扱う CLI です。`meta-plugins/` のような未登録領域は対象外です。
+`skill-tools` は、`ai-tools.yaml` に登録された plugin / workspace root の `SKILL.md` bundle の一覧・配置・検索をまとめて扱う CLI です。`maintenance/plugin/` のような未登録領域は対象外です。
 
 - 詳細なコマンド・設定形式・安全性は [tools/skill-tools/README.md](../../tools/skill-tools/README.md) を参照。
 - インストール: リポジトリルートから `just -f docs/integrations/justfile skill-tools-local`（clone済み）または `just -f docs/integrations/justfile skill-tools-git`（clone不要）。
@@ -77,7 +77,7 @@ tav search "Microsoft Fabric overview" --topic msfabric_overview
 対象パッケージについて、`.github/workflows/tool-release.yml` が main ブランチへの push をトリガーに、パッケージごとの git タグと GitHub Release を自動発行する。スケジュール実行ではなく「`pyproject.toml` のバージョンが上がった」ときだけ発行される（対象タグが既に存在する場合はサイレントにスキップ）。
 
 - タグ命名規則: `<pyprojectのnameフィールド>-v<version>`（例: `aim-cli-v0.1.0`）
-- 対象パッケージの正本は `repo-tools.yaml` の `release: true` なエントリ（`tool-release.yml` の `discover` ジョブが動的に読む。詳細は [repo-tools-config](../repo-wide/repo-tools-config.md) 参照）。以下の表は現状把握用の参考情報（8つ。ワークスペース内の兄弟パッケージに依存しないもののみ）
+- 対象パッケージの正本は `repo-tools.yaml` の `release: true` なエントリ（`tool-release.yml` の `discover` ジョブが動的に読む。詳細は [repo-tools-config](../../maintenance/docs/repo-tools-config.md) 参照）。以下の表は現状把握用の参考情報（8つ。ワークスペース内の兄弟パッケージに依存しないもののみ）
 
   | パッケージ名   | ディレクトリ      |
   | -------------- | ----------------- |

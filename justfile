@@ -64,12 +64,12 @@ hooks-installed:
     {{hooks_cli}} installed
 
 # Junctions declared in .links.yaml. Never delete a junction with rm -rf /
-# Remove-Item -Recurse; use links-clean. See docs/repo-wide/repo-layout.md.
+# Remove-Item -Recurse; use links-clean. See maintenance/docs/repo-layout.md.
 links-sync *args:
-    just --justfile tools/internal/justfile links-sync {{args}}
+    just --justfile maintenance/scripts/justfile links-sync {{args}}
 
 links-check *args:
-    just --justfile tools/internal/justfile links-check {{args}}
+    just --justfile maintenance/scripts/justfile links-check {{args}}
 
 links-clean *args:
-    just --justfile tools/internal/justfile links-clean {{args}}
+    just --justfile maintenance/scripts/justfile links-clean {{args}}

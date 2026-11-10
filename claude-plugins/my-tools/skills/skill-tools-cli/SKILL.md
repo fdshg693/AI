@@ -31,7 +31,7 @@ meta:
 
 このCLIが判断を誤りやすいのは、次の2点を暗黙に推測**しない**設計だからである。
 
-- **対象は`ai-tools.yaml`登録分だけ。** `meta-plugins/`配下（`meta`・`discovering-skills`等）は未登録なので`list-skills`にも`search`結果にも出ない。「あるはずのスキルが出ない」ときはまずここを疑う。仕様どおりなので修正しない。
+- **対象は`ai-tools.yaml`登録分だけ。** `maintenance/plugin/`配下（`meta`・`discovering-skills`等）は未登録なので`list-skills`にも`search`結果にも出ない。「あるはずのスキルが出ない」ときはまずここを疑う。仕様どおりなので修正しない。
 - **sourceは実行時のCWDから推測しない。** 「今いるリポジトリのスキル」が対象になるわけではない。source（`local`のclone パス、または`github`のowner/repo/ref）とindexの位置は設定ファイルで決まる。CWDは「どのプロジェクトへ配置するか」にしか使わない。
 
 結果が想定と違うときは、何をやり直すより先に解決結果を出す。
@@ -200,7 +200,7 @@ skill-tools search --query "ローカルでベクトル検索したい" --top 5 
 - `--json`は`score` / `canonicalId` / `path` / `name` / `description` / `tool` / `plugin` / `status` / `snippet`を返す。`path`はlocalなら絶対パス、GitHubならblob URL、`canonicalId`はsource repo相対の`SKILL.md` path。table表示も`score` / `canonical_id` / `path` / `name` / `snippet`を含む。snippetは語彙一致がある場合だけ出る
 - local sourceのファイル列挙は`git ls-files`。git管理下でないディレクトリではディレクトリ走査へフォールバックし、gitignoreを解釈しないぶん`config show`のfingerprint計算が遅くなる。install時のコピー対象はこの列挙に加えてバンドルコピーの除外/包含ポリシー（`tools/skill-tools/.gitignore`と`.skill-tools`）で絞られる
 
-このリポジトリ内での作業開始時に「関連スキルを探してTODOへ組み込む」流れ自体は`discovering-skills`（`meta-plugins/skills/discovering-skills/`）が持つ。検索を手順の一部として回すならそちらに従い、このスキルはCLI単体の使い方として参照する。
+このリポジトリ内での作業開始時に「関連スキルを探してTODOへ組み込む」流れ自体は`discovering-skills`（`maintenance/plugin/skills/discovering-skills/`）が持つ。検索を手順の一部として回すならそちらに従い、このスキルはCLI単体の使い方として参照する。
 
 ## 終了コードの読み分け
 

@@ -1,5 +1,5 @@
 {
-  "_generated_by": "tools/internal/plugin_meta/generate/generate_skill_catalog.py (DO NOT EDIT MANUALLY)",
+  "_generated_by": "maintenance/scripts/plugin_meta/generate/generate_skill_catalog.py (DO NOT EDIT MANUALLY)",
   "claude-plugins/cicd": [
     {
       "path": "claude-plugins/cicd/skills/diagnosing-actions",
@@ -119,11 +119,6 @@
       "path": "claude-plugins/meta/skills/claude-settings",
       "name": "claude-settings",
       "description": "Claude Codeの設定ファイル（settings.json / settings.local.json / 環境変数）を追加・変更する際に使う。permissionsルールの追加、hooksの登録、サンドボックス設定、環境変数の設定、スコープ（User/Project/Local/Managed）選びで迷った時に使う。"
-    },
-    {
-      "path": "claude-plugins/meta/skills/skill-maintenance",
-      "name": "skill-maintenance",
-      "description": "Maintains the Claude-related skills under `claude-plugins/meta/skills` by refreshing the Claude CLI help snapshot and Claude Code documentation snapshot, inspecting semantic changes, and updating affected skills. Use when explicitly checking whether those skills are stale after a Claude CLI or Claude Code documentation update."
     },
     {
       "path": "claude-plugins/meta/skills/writing-hooks",

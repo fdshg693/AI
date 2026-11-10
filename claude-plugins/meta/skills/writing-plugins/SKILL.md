@@ -31,7 +31,7 @@ meta:
 7. **バージョン戦略を選ぶ** — 内部・開発中のプラグインは`version`を省略してgitコミットSHA方式に任せる。公開・安定版として配るなら`version`を明示し、変更のたびに必ず値を上げる（コミットを積むだけでは配信されない）。
 8. **`--plugin-dir`でローカル検証する** — `claude --plugin-dir ./my-plugin`で起動し、スキル・エージェント・フックを個別に動作確認。編集後は`/reload-plugins`で反映。
 9. **共有前に`claude plugin validate ./my-plugin --strict`を通す** — マニフェストのJSON構文・frontmatter・`hooks.json`の妥当性、未知フィールドの警告まで含めてチェックする。
-10. **配布する** — チーム共有ならリポジトリの`marketplace.json`にエントリを追加（このリポジトリでは`tools/internal/plugin_meta/generate/generate_marketplace.py`で`plugins/*/.claude-plugin/plugin.json`から自動生成される）。コミュニティ配布ならAnthropicの審査フォームから申請する。
+10. **配布する** — チーム共有ならリポジトリの`marketplace.json`にエントリを追加（このリポジトリでは`maintenance/scripts/plugin_meta/generate/generate_marketplace.py`で`plugins/*/.claude-plugin/plugin.json`から自動生成される）。コミュニティ配布ならAnthropicの審査フォームから申請する。
 
 ## チェックリスト（ベストプラクティス）
 

@@ -14,7 +14,7 @@
 | 前提       | PATH 上に CLI があること              | プラグイン一式があれば動く                     |
 | 向き       | このリポジトリで開発・利用するとき    | プラグインだけをよそへ移しても使いたいとき     |
 
-`tools/` 側の実装とスキルの役割分担（スキルは使い方と判断だけを扱い、インストールは行わない）は [docs/repo-wide/tool-companion-skills.md](../../docs/repo-wide/tool-companion-skills.md) を参照。
+`tools/` 側の実装とスキルの役割分担（スキルは使い方と判断だけを扱い、インストールは行わない）は [maintenance/docs/tool-companion-skills.md](../../maintenance/docs/tool-companion-skills.md) を参照。
 
 ## スキル一覧
 

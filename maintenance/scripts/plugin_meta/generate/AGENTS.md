@@ -1,0 +1,2 @@
+- `./generate_*.py` にパスやメタデータをハードコードしない。
+  - 必ず `maintenance/scripts/plugin_meta/util/ai_tools_config.py` 経由で `ai-tools.yaml` から取得する。

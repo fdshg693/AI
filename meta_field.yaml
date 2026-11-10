@@ -5,8 +5,8 @@
 # labels/descriptions on skill detail pages.
 
 # 関連ファイル
-# tools\internal\skill_meta_field_fill.py
-# docs\repo-wide\skill-meta-fields.md
+# maintenance\scripts\skill_meta_field_fill.py
+# maintenance\docs\skill-meta-fields.md
 # skill-tags.yaml（tagフィールドの許可値一覧）
 
 fields:
@@ -60,7 +60,7 @@ fields:
     example: "OPENROUTER_API_KEY"
 
   requires_repo_tools:
-    description: "このリポジトリの自作ツール（repo-tools.yaml 登録済み）への依存。無くても動く任意利用のツールも含め、任意かどうかは本文に書く。外部コマンドは dependencies、エージェントの組み込みツール（WebFetch 等）は書かない。meta-plugins/** だけは「そのメタスキルが説明するファイル」の意味で使う"
+    description: "このリポジトリの自作ツール（repo-tools.yaml 登録済み）への依存。無くても動く任意利用のツールも含め、任意かどうかは本文に書く。外部コマンドは dependencies、エージェントの組み込みツール（WebFetch 等）は書かない。maintenance/plugin/** だけは「そのメタスキルが説明するファイル」の意味で使う"
     format: "repo-tools.yaml のキー、または登録済みパス（リポジトリルートから）のカンマ区切り"
     default: "none"
     example: "tools/aim"

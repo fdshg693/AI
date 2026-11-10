@@ -48,7 +48,7 @@
 リポジトリルートから以下を実行して再生成する。
 
 ```bash
-cd tools/internal
+cd maintenance/scripts
 uv run python -m plugin_meta.generate.generate_skills_catalog_md
 uv run python -m plugin_meta.generate.generate_skill_catalog
 ```

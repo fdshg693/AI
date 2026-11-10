@@ -1,11 +1,11 @@
 # SSOT for "which AI coding tool has which plugins, and where its marketplace /
 # skill-catalog / generated-rules files live" in this repository.
 #
-# tools/internal/plugin_meta/generate/generate_*.py must read these values
-# through tools/internal/plugin_meta/util/ai_tools_config.py instead of
+# maintenance/scripts/plugin_meta/generate/generate_*.py must read these values
+# through maintenance/scripts/plugin_meta/util/ai_tools_config.py instead of
 # hardcoding paths or metadata. README.md's "AIツールごとの設定・プラグインルート"
 # section is generated from the `readme` block below (see
-# tools/internal/plugin_meta/generate/generate_readme_tools_section.py).
+# maintenance/scripts/plugin_meta/generate/generate_readme_tools_section.py).
 #
 # Each `plugins` entry describes one plugin/workspace-skill root:
 #   - path: repo-relative path to the plugin (or, for tool-root skill folders

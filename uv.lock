@@ -97,7 +97,7 @@ requires-dist = [
 [[package]]
 name = "ai-usage-cli"
 version = "0.1.0"
-source = { editable = "tools/internal/ai-usage" }
+source = { editable = "tools/ai-usage" }
 dependencies = [
     { name = "pyte", marker = "sys_platform == 'win32'" },
     { name = "pywinpty", marker = "sys_platform == 'win32'" },
@@ -723,7 +723,7 @@ server = [
 
 [[package]]
 name = "gdevdocs-cli"
-version = "0.1.0"
+version = "0.1.1"
 source = { editable = "tools/gdevdocs" }
 dependencies = [
     { name = "fastmcp" },
@@ -2397,7 +2397,7 @@ wheels = [
 
 [[package]]
 name = "skill-tools"
-version = "0.5.1"
+version = "0.5.2"
 source = { editable = "tools/skill-tools" }
 dependencies = [
     { name = "pathspec" },
@@ -2447,7 +2447,7 @@ wheels = [
 
 [[package]]
 name = "tav-cli"
-version = "3.2.8"
+version = "3.2.9"
 source = { editable = "tools/tav-cli" }
 dependencies = [
     { name = "tavily-python" },

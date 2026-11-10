@@ -16,7 +16,7 @@ const REPO_ROOT = path.resolve(SCRIPT_DIRECTORY, "..", "..", "..");
 const CONFIG_PATH = path.join(REPO_ROOT, "ai-tools.yaml");
 
 // Display name shown in the catalog UI ("<tool> / <plugin>"). Mirrors
-// DISPLAY_NAMES in tools/internal/plugin_meta/generate/generate_readme_tools_section.py.
+// DISPLAY_NAMES in maintenance/scripts/plugin_meta/generate/generate_readme_tools_section.py.
 const TOOL_DISPLAY_NAMES = {
   "claude-code": "Claude Code",
   cline: "Cline",

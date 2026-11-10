@@ -87,7 +87,7 @@ lefthook もこのディレクトリの作業も、各ツールの hooks.json / 
 
 - 他プロジェクト: `skill-tools hooks install --agent <agent> <hook-id>`（配置先・登録ファイルの既定表は skill-tools の README）
 - このリポジトリ: リポジトリ直下で `just hooks-install`（初回）/ `just hooks-update`（変更後）。設定は `.claude/skill-tools.hooks.yaml`、成果物は gitignore
-- 全体の流れと設計判断: [docs/repo-wide/hook-distribution.md](../../../docs/repo-wide/hook-distribution.md)
+- 全体の流れと設計判断: [maintenance/docs/hook-distribution.md](../../../maintenance/docs/hook-distribution.md)
 
 各ツール固有の注意（登録内容そのものは `hook.yaml` を見る）:
 

@@ -22,7 +22,7 @@ members = [
     "tools/ctx7",
     "tools/pyinspect",
     "tools/grepapp",
-    "tools/internal/ai-usage",
+    "tools/ai-usage",
     "tools/schedule/ai-schedule",
     "tools/ona-run",
     "tools/openrouter/model-select",

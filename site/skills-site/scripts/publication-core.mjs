@@ -136,7 +136,7 @@ function validateRegistry(registry) {
 /**
  * Discover skills from the registered roots only (derived from ai-tools.yaml
  * via source-registry.mjs). Anything not reachable from a registered root is
- * intentionally invisible here — some plugins (e.g. meta-plugins/) are
+ * intentionally invisible here — some plugins (e.g. maintenance/plugin/) are
  * deliberately kept out of ai-tools.yaml and must never surface on the site.
  *
  * `overrides` lets skills-site hide entries that ARE registered in

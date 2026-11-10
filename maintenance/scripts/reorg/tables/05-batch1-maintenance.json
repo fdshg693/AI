@@ -1,0 +1,10 @@
+{
+  "moves": [
+    ["tools/internal/ai-usage", "tools/ai-usage"],
+    ["tools/internal", "maintenance/scripts"],
+    ["meta-plugins", "maintenance/plugin"],
+    ["docs/repo-wide", "maintenance/docs"],
+    ["claude-plugins/meta/skills/skill-maintenance", "maintenance/plugin/skills/skill-maintenance"]
+  ],
+  "exclude": ["plans/repo-restructure/", "maintenance/scripts/reorg/", "docs/log.md"]
+}

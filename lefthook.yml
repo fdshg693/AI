@@ -2,8 +2,8 @@
 #   1. fix      — files regenerated/patched from staged sources
 #   2. format   — prettier/ruff over the staged files (after fixers touched them)
 #   3. check    — read-only checks and secret scan over the final staged content
-# tools/internal Python jobs are one in-process entry per stage
-# (tools/internal/precommit), which applies each task's own staged-path globs.
+# maintenance/scripts Python jobs are one in-process entry per stage
+# (maintenance/scripts/precommit), which applies each task's own staged-path globs.
 pre-commit:
   piped: true
   jobs:
@@ -11,7 +11,7 @@ pre-commit:
       group:
         parallel: true
         jobs:
-          - name: tools/internal precommit fix
+          - name: maintenance/scripts precommit fix
             glob:
               - "**/SKILL.md"
               - "**/skills/**"
@@ -20,7 +20,7 @@ pre-commit:
               - ".claude-plugin/marketplace.json"
               - "ai-tools.yaml"
               - "tools/**"
-            run: just --justfile tools/internal/justfile precommit-fix
+            run: just --justfile maintenance/scripts/justfile precommit-fix
             stage_fixed: true
           - name: regenerate hook generated files
             glob:
@@ -56,26 +56,26 @@ pre-commit:
       group:
         parallel: true
         jobs:
-          - name: tools/internal precommit check
+          - name: maintenance/scripts precommit check
             glob:
               - "**/SKILL.md"
               - "repo-tools.yaml"
               - "tools/**/pyproject.toml"
               - "tools/**/package.json"
-            run: just --justfile tools/internal/justfile precommit-check
+            run: just --justfile maintenance/scripts/justfile precommit-check
           - name: scan staged files for secrets
             glob:
               - "*"
               - "**/*"
-            run: just --justfile tools/internal/justfile scan-staged-secrets
+            run: just --justfile maintenance/scripts/justfile scan-staged-secrets
 
 # Junctions (.links.yaml) are hidden from git via info/exclude, so checking out
 # a commit that tracks files at a junction path silently writes them into the
-# junction's target. This only warns afterwards; see docs/repo-wide/repo-layout.md.
+# junction's target. This only warns afterwards; see maintenance/docs/repo-layout.md.
 post-checkout:
   jobs:
     - name: warn when a checkout wrote through a junction
-      run: just --justfile tools/internal/justfile links-post-checkout
+      run: just --justfile maintenance/scripts/justfile links-post-checkout
 
 commit-msg:
   commands:

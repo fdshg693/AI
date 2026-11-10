@@ -4,7 +4,7 @@
 ``Path.rglob`` / ``os.walk`` descend into one, while ``rglob("**")`` does not
 descend into a real directory symlink. ``find_files`` walks without entering
 either kind, so a tree reachable through a junction is read once. A same-named
-helper lives in the umbrella repository's tools/internal/links/fs.py;
+helper lives in the umbrella repository's maintenance/scripts/links/fs.py;
 agent-tooling keeps its own copy because it is distributed on its own.
 """
 

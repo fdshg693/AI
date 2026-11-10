@@ -1,6 +1,6 @@
 # スキル公開サイト
 
-`skills-site` は、 `generated/catalog.json`(`tools\internal\plugin_meta\generate\generate_skill_catalog.py`によって生成) と `public/downloads/` を入力に、Astroで一覧・詳細ページを静的生成するサイトです。公開するのは登録済みスキルの `SKILL.md` 本文、frontmatter由来のメタデータ、スキルフォルダ単位のZIPだけです。
+`skills-site` は、 `generated/catalog.json`(`maintenance\scripts\plugin_meta\generate\generate_skill_catalog.py`によって生成) と `public/downloads/` を入力に、Astroで一覧・詳細ページを静的生成するサイトです。公開するのは登録済みスキルの `SKILL.md` 本文、frontmatter由来のメタデータ、スキルフォルダ単位のZIPだけです。
 
 ## ローカル開発
 
@@ -34,7 +34,7 @@ pnpm --prefix site/skills-site run preview
 ## スキル公開成果物の規約
 
 - 公開対象のルートは `site/skills-site/scripts/source-registry.mjs` が `ai-tools.yaml`（リポジトリ直下）から自動的に導出する。新しいAIツールやプラグインのスキルを追加したら、`ai-tools.yaml` 側にプラグインを登録する（`source-registry.mjs` を直接編集しない）。
-- スキャン対象は `ai-tools.yaml` に登録されたルート配下のみ。登録ルート外にある `SKILL.md`（例: `meta-plugins/` のように意図的に`ai-tools.yaml`へ登録しないプラグイン）は存在してもエラーにならず、単に公開対象から漏れる。
+- スキャン対象は `ai-tools.yaml` に登録されたルート配下のみ。登録ルート外にある `SKILL.md`（例: `maintenance/plugin/` のように意図的に`ai-tools.yaml`へ登録しないプラグイン）は存在してもエラーにならず、単に公開対象から漏れる。
 - `ai-tools.yaml` に登録済み（＝マーケットプレイスには載る）だが、このサイトでは非公開にしたいプラグイン／スキルがある場合は `site/skills-site/site-overrides.yaml`（`site/skills-site/scripts/site-overrides.mjs` が読み込む）の `exclude.sources` / `exclude.skills` に追記する。逆に、`ai-tools.yaml` に無いものをこのファイルだけで公開対象に追加することはできない。
 - スキルの安定したID・URLは `SKILL.md` の `name` ではなく、リポジトリ相対パスを使う。同名スキルがあっても別スキルとして扱う。
 - `site/skills-site/generated/` と `site/skills-site/public/downloads/` の生成物は、ローカルビルドまたはCIで毎回再生成し、手編集しない。

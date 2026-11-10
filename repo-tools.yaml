@@ -4,11 +4,11 @@
 #
 # Register a tool if at least one skill references it, or if another
 # registered tool depends on it / it depends on another registered tool.
-# Do not list tools/internal/** (repo-maintenance scripts) or experimental /
+# Do not list maintenance/scripts/** (repo-maintenance scripts) or experimental /
 # one-off scripts that neither skills nor other tools reference
 # (e.g. tools/schedule/ai-schedule).
 #
-# tools/internal/skill/check/check_skill_repo_tools.py cross-checks every
+# maintenance/scripts/skill/check/check_skill_repo_tools.py cross-checks every
 # non-excluded SKILL.md's requires_repo_tools/requires_install against the
 # `path` values here, so a renamed/removed tool folder or a typo'd path fails
 # loudly instead of silently degrading to a plain-text (non-linked) mention on
@@ -18,7 +18,7 @@
 # Each entry may have requires_tools: a map of other keys in this file to a
 # kind (library / subprocess / family). Omit or leave empty if the tool does
 # not depend on other repo tools. Extra-repo deps (git, PyPI) do not belong
-# here. tools/internal/skill/check/check_repo_tool_relations.py checks that
+# here. maintenance/scripts/skill/check/check_repo_tool_relations.py checks that
 # targets exist, kinds are valid, and library edges match workspace deps in
 # that tool's pyproject.toml.
 #
@@ -42,10 +42,10 @@
 # not release targets — see docs/integrations/cli-tools.md for why
 # my-agents is excluded.
 #
-# Excluded from the skill-path check: meta-plugins/** (its SKILL.md files reuse
+# Excluded from the skill-path check: maintenance/plugin/** (its SKILL.md files reuse
 # requires_repo_tools to mean "files this meta-skill documents", not "CLI
-# dependency" — see docs/repo-wide/tool-companion-skills.md) and
-# tools/internal/** (internal repo-maintenance scripts, never something a
+# dependency" — see maintenance/docs/tool-companion-skills.md) and
+# maintenance/scripts/** (internal repo-maintenance scripts, never something a
 # skill's user installs).
 
 tools:

@@ -4,7 +4,7 @@
 Claudeが会話の中からすぐ使えるようにするためのコンパニオンスキル。このファイルは人間のメンテナ向けで、
 設計意図と前提条件を説明する。Claudeが実行時に読むのは[SKILL.md](SKILL.md)であり、こちらは参照しない。
 
-併設の判断基準は[tool-companion-skills](../../../../docs/repo-wide/tool-companion-skills.md)に従う。
+併設の判断基準は[tool-companion-skills](../../../../maintenance/docs/tool-companion-skills.md)に従う。
 
 ## なぜこのスキルがあるか
 
@@ -51,9 +51,9 @@ Claudeが会話の中からすぐ使えるようにするためのコンパニ�
   `tools/skill-tools/README.md`と`tools/skill-tools/skill_tools/cli/`
 - SKILL.mdはClaudeが実行時に外部ファイルへジャンプしなくて済むよう、要点を意図的に複製している。
   CLIのオプション名・出力形式・終了コードを変えたらSKILL.mdも合わせて更新し、
-  `meta.version`をバンプする（[skill-md-commits](../../../../docs/repo-wide/skill-md-commits.md)）
+  `meta.version`をバンプする（[skill-md-commits](../../../../maintenance/docs/skill-md-commits.md)）
 - 影響範囲の列挙はリポジトリルートから
-  `just --justfile tools/internal/justfile skill-tool-impact skill-tools`
+  `just --justfile maintenance/scripts/justfile skill-tool-impact skill-tools`
 
 ## 使い方フィードバック（`--fb`）
 
@@ -65,10 +65,10 @@ FB導線はこのスキルだけが持つ。
 
 いつ残すか・自動改稿しないこと・種別が曖昧なときの`--fb-kind`はSKILL.mdの判断。
 フラグ・保存レイアウト・終了コードの正本は`tools/skill-tools/README.md`と
-[tool-companion-skills](../../../../docs/repo-wide/tool-companion-skills.md)。
+[tool-companion-skills](../../../../maintenance/docs/tool-companion-skills.md)。
 
 ## 関連スキル
 
-- `discovering-skills`（`meta-plugins/skills/discovering-skills/`）: このリポジトリでの作業開始時に
+- `discovering-skills`（`maintenance/plugin/skills/discovering-skills/`）: このリポジトリでの作業開始時に
   `skill-search`サブエージェント経由で関連スキルを探しTODOへ組み込む上位の手順。
   検索の「回し方」はそちら、CLI単体の使い方はこちらが持つ

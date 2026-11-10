@@ -4,7 +4,7 @@
 
 ## なぜこのスキルがあるか
 
-[tool-companion-skills](../../../../docs/repo-wide/tool-companion-skills.md)の併設判断基準（enum/フラグの選び方、終了コードの意味論）に該当するため併設した。
+[tool-companion-skills](../../../../maintenance/docs/tool-companion-skills.md)の併設判断基準（enum/フラグの選び方、終了コードの意味論）に該当するため併設した。
 
 - `--agent`（テンプレート）と`--command`（完全指定）のどちらを選ぶかは、対象リポジトリのDev Containerに何が導入済みかという文脈判断が必要で、`--help`だけでは分からない
 - `--cleanup`の`stop`/`delete`/`keep`は用途によって選ぶべき値が異なり、決め打ちすると環境を放置して課金が続く、または調査したい環境を消してしまう

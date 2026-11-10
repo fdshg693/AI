@@ -2,7 +2,7 @@
 
 pytest walks into Windows junctions (and does not stop at one pointing at an
 ancestor), so collection skips any symlink or junction directory. Junctions are
-declared in .links.yaml; see docs/repo-wide/repo-layout.md.
+declared in .links.yaml; see maintenance/docs/repo-layout.md.
 """
 
 from __future__ import annotations

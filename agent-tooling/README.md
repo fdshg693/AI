@@ -48,7 +48,7 @@ so the command resolves against the workspace package without a global install.
 The generated hook artifacts are distributable package data. They are
 installed and registered by `skill-tools hooks install`, which reads
 `agent_tooling/hooks/generated/catalog.json` through the repository-root
-`repo-hooks.yaml` (see `docs/repo-wide/hook-distribution.md`). Generated files
+`repo-hooks.yaml` (see `maintenance/docs/hook-distribution.md`). Generated files
 are not hand-edited.
 
 ## Commands

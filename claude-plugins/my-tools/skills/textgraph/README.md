@@ -4,7 +4,7 @@
 
 ## なぜこのスキルがあるか
 
-[tool-companion-skills](../../../../docs/repo-wide/tool-companion-skills.md) の併設判断基準（フラグの選び方、誤ると後続が壊れる意味論）に該当するため併設した。
+[tool-companion-skills](../../../../maintenance/docs/tool-companion-skills.md) の併設判断基準（フラグの選び方、誤ると後続が壊れる意味論）に該当するため併設した。
 
 - `status` / `files` / `impact` / `check` / `fix` のどれを先に叩くかは `--help` だけでは割れる。件数確認と切れ検出と inbound 照会を取り違えると、広い grep に落ちるか、無関係なファイルを `--apply` する
 - 既定の走査はドキュメント拡張子だけ。スクリプトコメントの同じ構文を見るかは `check --scripts` の判断であり、`--help` の有無だけでは「いつ付けるか」は決まらない
