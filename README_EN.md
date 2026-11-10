@@ -2,9 +2,29 @@
 
 A personal research/experiment repository about AI coding tool configurations and tooling.
 
+## Getting the repository
+
+`skills/`, `tools/`, `agent-compat/`, and `site/` are submodules ([AI-skills](https://github.com/fdshg693/AI-skills), [AI-tools](https://github.com/fdshg693/AI-tools), [AI-agent-compat](https://github.com/fdshg693/AI-agent-compat), [AI-site](https://github.com/fdshg693/AI-site)). Clone with the submodules.
+
+```sh
+git clone --recurse-submodules https://github.com/fdshg693/AI.git
+cd AI
+lefthook install && just sub-hooks-install
+just links-sync
+just agent-compat-sync
+just hooks-install && just sub-agent-hooks-install
+```
+
+- `lefthook install` / `just sub-hooks-install` — Install Git hooks in the umbrella and in each submodule
+- `just links-sync` — Create the Junctions declared in `.links.yaml` ([repo-layout](maintenance/docs/repo-layout.md))
+- `just agent-compat-sync` — Create the skill copies for Cline, Kilo Code, and Antigravity
+- `just hooks-install` / `just sub-agent-hooks-install` — Install the agent hooks in the umbrella and in each submodule ([hook-distribution](maintenance/docs/hook-distribution.md))
+
+After a pull, run `just sub-init`. For the two-step flow (commit inside the submodule, then update the pointer in the umbrella), see [repo-layout](maintenance/docs/repo-layout.md#サブモジュール).
+
 ## Folder Structure
 
-An overview of the top-level subfolders, organized by purpose.
+An overview of the top-level subfolders, organized by purpose.  
 Individual lists of plugins/skills are covered in each folder's own README or catalog (not covered by this README).
 
 <!-- BEGIN: ai-tools-section -->
@@ -12,62 +32,62 @@ Individual lists of plugins/skills are covered in each folder's own README or ca
 
 ### Config/Plugin Roots per AI Tool
 
-Mapping between the config folder read by each AI coding tool and the folder holding the actual plugins.
-For the same tool, the "config the tool reads" (starts with `.`) and the "actual plugins" (`*-plugins/`) are sometimes separate.
+Mapping between each AI coding tool's config folder and the folder holding the actual plugins.  
+Skill bodies live in one place only, as Claude Code plugins (`skills/plugins/`, `tools/_plugin/`). Other tools' folders only hold marketplace definitions or gitignored copies made by `just agent-compat-sync`.
 
 - **Claude Code**
-  - [.claude/](.claude/) — Settings for developing this repository itself with Claude Code (rules, skills, hooks, scripts, workflows, etc.)
+  - [.claude/](.claude/) — Settings for developing this repository itself with Claude Code (rules, workflows, etc. hooks/ is where skill-tools self-installs)
   - [skills/plugins/](skills/plugins/) — Actual Claude Code plugins
+  - [tools/_plugin/](tools/_plugin/) — Claude Code plugin bundled with the CLIs in tools/ (`my-tools`: usage skills that assume the CLIs)
   - [.claude-plugin/](.claude-plugin/) — Marketplace definition (`marketplace.json`) and skill catalog (`skill-catalog.json`) that bundle the plugins above
 
-Skill bodies live once, as Claude Code plugins (`skills/plugins/`, `tools/_plugin/`). Other tools' folders only hold marketplace definitions or gitignored copies made by `just agent-compat-sync`. Knowledge skills about other tools are in [skills/plugins/ai-tools-knowledge/](skills/plugins/ai-tools-knowledge/); tool-specific format samples and differences from Claude Code are in [agent-compat/](agent-compat/).
-
 - **Cline**
-  - [.cline/](.cline/) — Cline settings. `.cline/skills/` is a gitignored copy made by `just agent-compat-sync`
-  - [.clinerules/](.clinerules/) — Output folder for Cline rules, generated from `AGENTS.md` by the `tools/agents-rules` CLI (`agents-rules -t cline`). Absent until generated. Do not edit by hand
+  - [.cline/](.cline/) — Cline settings. `.cline/skills/` is a gitignored copy of `skills/plugins/ai-tools-knowledge` made by `just agent-compat-sync` (do not edit by hand)
+  - [.clinerules/](.clinerules/) — Output folder for the rule files Cline reads, generated from `AGENTS.md` by the `tools/agents-rules` CLI (`agents-rules -t cline`). Absent until generated. Do not edit by hand
 
 - **Kilo Code**
-  - [.kilo/](.kilo/) — Kilo Code settings. `.kilo/skills/` is a gitignored copy made by `just agent-compat-sync`
+  - [.kilo/](.kilo/) — Kilo Code (CLI/TUI/VS Code extension) settings. `.kilo/skills/` is a gitignored copy of `skills/plugins/ai-tools-knowledge` made by `just agent-compat-sync`. `.kilo/plugin/` is where agent-tooling installs its hooks
 
 - **Codex**
-  - [.agents/](.agents/) — Marketplace definition read by Codex (`.agents/plugins/marketplace.json`), pointing at `skills/plugins/ai-tools-knowledge` (which ships `.codex-plugin/plugin.json`). See `.agents/README.md` for the clash with Antigravity
+  - [.agents/](.agents/) — Marketplace definition read by Codex (`.agents/plugins/marketplace.json`), pointing at `skills/plugins/ai-tools-knowledge` (which ships `.codex-plugin/plugin.json`). The folder name clashes with Antigravity, so it is used separately from `_agents/` (see `.agents/README.md`)
 
 - **GitHub Copilot**
   - [.github/](.github/) — Copilot settings (`copilot/settings.json`), instructions, marketplace definition (`plugin/marketplace.json`, pointing at the root `plugin.json` of `skills/plugins/ai-tools-knowledge`), and CI GitHub Actions workflows
 
 - **Cursor**
-  - [.cursor/](.cursor/) — Cursor settings. The plugin is `skills/plugins/ai-tools-knowledge` (ships `.cursor-plugin/plugin.json`)
+  - [.cursor/](.cursor/) — Config folder read by Cursor. `.cursor/rules/` is intentionally empty because it would duplicate the nested AGENTS.md files (see `.cursor/rules/README.md` for why). The plugin is `skills/plugins/ai-tools-knowledge` (ships `.cursor-plugin/plugin.json`)
 
 - **Antigravity**
-  - [_agents/](_agents/) — Antigravity workspace plugins (`_agents/plugins/`). `antigravity-meta` is a gitignored copy made by `just agent-compat-sync`. Distinguished from `.agents/` (see `_agents/README.md`)
+  - [_agents/](_agents/) — Antigravity workspace plugins (`_agents/plugins/`). `antigravity-meta` is a gitignored copy of `skills/plugins/ai-tools-knowledge` made by `just agent-compat-sync`. Used separately from `.agents/` (see `_agents/README.md`)
+  - [.agents/rules/](.agents/rules/) — Workspace Rules read by Antigravity, generated from `AGENTS.md` by the `tools/agents-rules` CLI (see `.agents/README.md`). Do not edit by hand
 
 <!-- END: ai-tools-section -->
 
-### Repository Operations & Development Support
+### Submodules
 
-- [maintenance/plugin/](maintenance/plugin/) — Claude Code plugin for maintaining this repository itself (e.g., regeneration steps for generated files). Not a distributable skill but repository-specific, so it is excluded from the marketplace/skill publishing site and from `ai-tools.yaml`. See [maintenance/plugin/README.md](maintenance/plugin/README.md) for details.
-- [tools/](tools/) — Convenience tools supporting repository management/operations. The role index is [tools/README.md](tools/README.md). Main subfolders:
-  - `aim/`, `aim2/` — Model invocation CLI and related tools
-  - `claude-wrapper/`, `cline-wrapper/`, `codex-wrapper/`, `cursor-wrapper/` — Wrappers for each AI tool
-  - `interactive-cli-wrapper/` — A generic wrapper that drives interactive (TTY-based REPL) CLIs over a PTY
-  - `get-settings/` — Settings retrieval helper
-  - `infra/` — Infra usage tools (AI log management, etc.)
-  - `sandbox/` — Issue-driven Docker sandbox agent (a mechanism that polls for `@sandbox` mentions on GitHub issues and has the Claude Agent SDK do the work)
-  - `internal/` — Internal tools such as marketplace/skill catalog generation
-- [docs/integrations/](docs/integrations/) — Guides for bringing this repository's plugins and CLI tools into your own environment. CLI install recipes live in `docs/integrations/justfile`. `skill-tools` itself is [tools/skill-tools/](tools/skill-tools/).
+The following four are separate repositories; the umbrella only holds their commit pointers. When you change files inside one, commit inside the submodule first, then update the pointer in the umbrella ([repo-layout "Submodules"](maintenance/docs/repo-layout.md#サブモジュール)). You can work by opening just the submodule folder, but generation, checks, and workspaces live in the umbrella, so clone and use it from the umbrella.
+
+- [skills/](skills/) ([AI-skills](https://github.com/fdshg693/AI-skills)) — Claude Code plugins that do not depend on tools (`skills/plugins/<name>`). Knowledge skills about other AI tools are also kept here as Claude Code skills, in [skills/plugins/ai-tools-knowledge/](skills/plugins/ai-tools-knowledge/)
+- [tools/](tools/) ([AI-tools](https://github.com/fdshg693/AI-tools)) — CLIs (one directory per tool) and the plugin of usage skills that assume them, [tools/\_plugin/my-tools/](tools/_plugin/my-tools/). The role index is [tools/README.md](tools/README.md)
+- [agent-compat/](agent-compat/) ([AI-agent-compat](https://github.com/fdshg693/AI-agent-compat)) — Support for AI tools other than Claude Code: hooks and context injection in [agent-tooling/](agent-compat/agent-tooling/), tool-specific format samples in [formats/](agent-compat/formats/), and differences in authoring from Claude Code in [docs/differences/](agent-compat/docs/differences/index.md)
+- [site/](site/) ([AI-site](https://github.com/fdshg693/AI-site)) — Public sites
+  - [site/skills-site/](site/skills-site/) — Astro static site that collects registered skills across tools (Azure Static Web Apps). It publishes only skill bodies, metadata, and distribution ZIPs. Steps are in [site/skills-site/AGENTS.md](site/skills-site/AGENTS.md)
+  - [site/tools-site/](site/tools-site/) — VitePress site of install and usage notes for [repo-tools.yaml](registry/repo-tools.yaml) entries with `release: true` (GitHub Pages). [site/tools-site/README.md](site/tools-site/README.md)
+
+### Repository operations (umbrella itself)
+
+- [maintenance/](maintenance/) — For maintaining this repository itself. Not distributed, so it is not listed in the marketplace, the skill publishing site, or `ai-tools.yaml`
+  - [maintenance/plugin/](maintenance/plugin/) — Claude Code plugin for maintenance (commit steps, repository map, how to change skills and tools, etc.). [maintenance/plugin/README.md](maintenance/plugin/README.md)
+  - [maintenance/scripts/](maintenance/scripts/) — Scripts for catalog/marketplace generation, SKILL.md meta filling, pre-commit, and Junctions (`links`)
+  - [maintenance/docs/](maintenance/docs/index.md) — Maintenance conventions and design decisions (OKF concept docs). Layout and boundary conventions are in [repo-layout](maintenance/docs/repo-layout.md)
+- [registry/](registry/) — SSOT yaml files (`ai-tools.yaml`, `repo-tools.yaml`, `meta_field.yaml`, `skill-tags.yaml`, `repo-workflows.yaml`, `repo-hooks.yaml`)
+- [docs/](docs/index.md) — Knowledge bundle for users ([OKF](skills/plugins/coding/skills/okf-spec/)), including setup guides for other environments in [docs/integrations/](docs/integrations/)
+- [plans/](plans/) — Implementation plans
 - [.vscode/](.vscode/) — Example VSCode settings for AI coding tools
 
 ### Temporary / Other
 
 - [temp/](temp/) — Temporary working folder (gitignored, not committed)
-
-### Skill Publishing Site
-
-- [site/skills-site/](site/skills-site/) — Collects skills from registered AI coding tools across the repository and publishes them as an Astro static site. See [site/skills-site/AGENTS.md](site/skills-site/AGENTS.md) for how to add publishing targets, frontmatter, and the generation/verification steps. The site only publishes the skill body/metadata/distribution ZIPs, not the entire repository.
-
-### Tool Documentation Site
-
-- [site/tools-site/](site/tools-site/) — VitePress site of install and usage notes for `repo-tools.yaml` entries with `release: true`. Published on GitHub Pages. See [site/tools-site/README.md](site/tools-site/README.md).
 
 ## License / Contributing
 
@@ -75,14 +95,19 @@ Skill bodies live once, as Claude Code plugins (`skills/plugins/`, `tools/_plugi
 
 ## Other
 
-- `lefthook.yml` — Git hooks configuration that runs on commit, etc. (various regeneration/formatting/secretlint on `pre-commit`, commitlint on `commit-msg`).
+- The 2026-11 restructure changed plugin locations and some plugin names (`meta` → `cc-knowledge`, `my-tools-no-install` → `web-lookup` / `doc-tools`, and others). A mapping table for existing users is in [docs/integrations/claude-code.md](docs/integrations/claude-code.md).
+- `.gitmodules` — Declares the four submodules above. Managed with `just sub-init` / `sub-sync` / `sub-status`.
+- `.links.yaml` / `.umbrella-root` — Junction declarations (placed at each repository root and created with `just links-sync`; the Junctions themselves are not committed) and the marker for the umbrella root. See [repo-layout](maintenance/docs/repo-layout.md) for details.
+- `lefthook.yml` — Git hooks configuration that runs on commit, etc. (various regeneration/formatting/secretlint on `pre-commit`, commitlint on `commit-msg`). The submodule side is `maintenance/lefthook/submodule.yml`.
 - `mise.toml` — Tool version management via [mise](https://mise.jdx.dev/) (pins node / pnpm / terraform / uv for this repository).
 - `pyproject.toml` — Root definition of the uv workspace (manages Python packages such as `tools/aim` together).
-- [registry/](registry/) — SSOT yaml files (`ai-tools.yaml`, `repo-tools.yaml`, `meta_field.yaml`, `skill-tags.yaml`, `repo-workflows.yaml`, `repo-hooks.yaml`). The same-named yaml files at the repository root are generated copies for older skill-tools releases; do not edit them.
 - `pnpm-workspace.yaml` / `package.json` / `pnpm-lock.yaml` — Root definition of the pnpm workspace (`site/skills-site`, `tools/cline-wrapper`) and its lockfile.
 - `.prettierrc.json` / `.prettierignore` — Formatting settings.
 - `commitlint.config.js` — Lint settings for commit messages ([Conventional Commits](https://www.conventionalcommits.org/), `@commitlint/config-conventional`).
 - `.secretlintrc.json` — Secret detection settings for staged files ([secretlint](https://github.com/secretlint/secretlint) `@secretlint/secretlint-rule-preset-recommend`).
-- `AGENTS.md` / `CLAUDE.md` — Repository-wide instruction files for each AI tool (describing the same overall structure as the README).
+- `AGENTS.md` / `CLAUDE.md` — Repository-wide instruction files for each AI tool (they include the README and add behavior rules).
+- `ai-tools.yaml`, `repo-tools.yaml`, `repo-workflows.yaml`, `repo-hooks.yaml` at the repository root — Generated copies for older skill-tools releases that do not know about `registry/` (do not edit by hand).
+- `registry/repo-hooks.yaml` — Location of the agent hook catalog read by skill-tools (`catalog.json` generated by agent-tooling). For hook distribution and self-install (`just hooks-install`), see [maintenance/docs/hook-distribution.md](maintenance/docs/hook-distribution.md).
+- `.codegraph/` — Local CodeGraph knowledge graph (gitignored). After installing, run `codegraph init`. See `skills/plugins/topics/skills/codegraph-docs/` for details.
 
   Resource creation for Azure Static Web Apps is managed via Bicep in [site/skills-site/infra/](site/skills-site/infra/); normal publish updates happen through GitHub Actions on push to main. Local verification/Azure operations use the `justfile` at the repository root.

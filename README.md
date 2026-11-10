@@ -11,7 +11,14 @@ git clone --recurse-submodules https://github.com/fdshg693/AI.git
 cd AI
 lefthook install && just sub-hooks-install
 just links-sync
+just agent-compat-sync
+just hooks-install && just sub-agent-hooks-install
 ```
+
+- `lefthook install`／`just sub-hooks-install` — アンブレラと各サブモジュールに Git hooks を入れる
+- `just links-sync` — `.links.yaml` で宣言した Junction を作る（[repo-layout](maintenance/docs/repo-layout.md)）
+- `just agent-compat-sync` — Cline・Kilo Code・Antigravity 向けのスキルのコピーを作る
+- `just hooks-install`／`just sub-agent-hooks-install` — エージェントフックをアンブレラと各サブモジュールに入れる（[hook-distribution](maintenance/docs/hook-distribution.md)）
 
 pull のあとは `just sub-init`。サブモジュールの中でコミットしてからアンブレラでポインタを更新する 2 段階の手順は [repo-layout](maintenance/docs/repo-layout.md#サブモジュール) を参照。
 
@@ -56,35 +63,31 @@ pull のあとは `just sub-init`。サブモジュールの中でコミット�
 
 <!-- END: ai-tools-section -->
 
-### リポジトリ運用・開発支援
+### サブモジュール
 
-- [agent-compat/agent-tooling/](agent-compat/agent-tooling/) — 複数AIコーディングツール向けのコンテキスト探索・フックアダプター・生成成果物を共有する配布可能なPythonパッケージ。
-- [maintenance/plugin/](maintenance/plugin/) — このリポジトリ自体のメンテ用 Claude Code プラグイン（生成ファイルの再生成手順など）。配布用スキルではなくレポジトリ固有のため、マーケットプレイスやスキル公開サイトには含めず `ai-tools.yaml` にも記載しない。詳細は [maintenance/plugin/README.md](maintenance/plugin/README.md) 参照。
-- [docs/](docs/) — AIツールを問わずリポジトリ全体で参照する知識（メンテナンス規約・設計判断・運用知識、他ツール環境への導入手順）を [OKF (Open Knowledge Format)](skills/plugins/coding/skills/okf-spec/) の概念ドキュメントとしてまとめたバンドル。詳細は [docs/index.md](docs/index.md) 参照。
-- [tools/](tools/) — リポジトリ管理・運用を支える便利ツール群。役割ごとの索引は [tools/README.md](tools/README.md)。主なサブフォルダ:
-  - `aim/`, `aim2/` — モデル呼び出し CLI とその周辺ツール（`aim` は OpenRouter 専用 Python 実装、`aim2` は複数プロバイダ直接接続の Node.js 実装）
-  - `claude-wrapper/`, `cline-wrapper/`, `codex-wrapper/`, `copilot-wrapper/`, `cursor-wrapper/` — 各 AI ツール向けラッパー
-  - `interactive-cli-wrapper/` — 対話的（TTY前提でREPLとして動く）CLIをPTY越しに駆動する汎用ラッパー
-  - `agents-rules/` — 各所の `AGENTS.md` から Cline / Copilot / Antigravity / Cursor 向けのディレクトリスコープ付きルールを生成する CLI（lefthook では自動実行しない。必要時に手動で `agents-rules` を叩く）
-  - `skill-tools/` — このレポジトリの成果物（プラグイン・スキル）の一覧・検索・コピー配置を行う `skill-tools` CLI。導入手順は [docs/integrations/](docs/integrations/) 参照
-  - `get-settings/` — 設定取得補助
-  - `infra/` — インフラ利用ツール（AI ログ管理等）
-  - `sandbox/` — ISSUE駆動Dockerサンドボックスエージェント（GitHub ISSUEの`@sandbox`メンションをポーリングで検知しClaude Agent SDKに作業させる仕組み）
-  - `schedule/` — Windows タスクスケジューラでジョブを定期実行する `ai-schedule` と、そこから呼ばれる `issue-agent`（GitHub ISSUEのラベル駆動でgit worktree上にClaude Codeを起動し、実装からPR作成・ISSUE返信までを自動化するツール）
-  - `internal/` — マーケットプレイス/skill カタログ生成等の内部ツール群
+次の 4 つは別リポジトリで、アンブレラはコミットのポインタだけを持つ。中のファイルを変えたら、サブモジュールの中でコミットしてからアンブレラでポインタを更新する（[repo-layout の「サブモジュール」](maintenance/docs/repo-layout.md#サブモジュール)）。サブモジュールのフォルダだけを開いても作業できるが、生成・検査・ワークスペースはアンブレラにあるので、アンブレラから clone して使う。
+
+- [skills/](skills/)（[AI-skills](https://github.com/fdshg693/AI-skills)） — tools に依存しない Claude Code 用プラグイン群（`skills/plugins/<name>`）。他の AI ツールについての知識スキルも Claude Code スキルとして [skills/plugins/ai-tools-knowledge/](skills/plugins/ai-tools-knowledge/) に置く
+- [tools/](tools/)（[AI-tools](https://github.com/fdshg693/AI-tools)） — CLI 群（1 ツール 1 ディレクトリ）と、それらを前提にした使い方スキルのプラグイン [tools/\_plugin/my-tools/](tools/_plugin/my-tools/)。役割ごとの索引は [tools/README.md](tools/README.md)
+- [agent-compat/](agent-compat/)（[AI-agent-compat](https://github.com/fdshg693/AI-agent-compat)） — Claude Code 以外の AI ツールで使うための仕組み。フックとコンテキスト注入の [agent-tooling/](agent-compat/agent-tooling/)、ツール固有書式のサンプル [formats/](agent-compat/formats/)、Claude Code との書き方の相違点 [docs/differences/](agent-compat/docs/differences/index.md)
+- [site/](site/)（[AI-site](https://github.com/fdshg693/AI-site)） — 公開サイト
+  - [site/skills-site/](site/skills-site/) — 登録済みのスキルを横断収集する Astro の静的サイト（Azure Static Web Apps）。公開するのはスキルの本文・メタデータ・配布 ZIP だけ。手順は [site/skills-site/AGENTS.md](site/skills-site/AGENTS.md)
+  - [site/tools-site/](site/tools-site/) — [repo-tools.yaml](registry/repo-tools.yaml) の `release: true` ツールのインストール/使い方をまとめた VitePress サイト（GitHub Pages）。[site/tools-site/README.md](site/tools-site/README.md)
+
+### リポジトリ運用（アンブレラ本体）
+
+- [maintenance/](maintenance/) — このリポジトリ自体の保守用。配布しないので、マーケットプレイス・スキル公開サイト・`ai-tools.yaml` には載せない
+  - [maintenance/plugin/](maintenance/plugin/) — 保守用の Claude Code プラグイン（コミット手順、リポジトリの地図、スキル・ツールの変更手順など）。[maintenance/plugin/README.md](maintenance/plugin/README.md)
+  - [maintenance/scripts/](maintenance/scripts/) — カタログ・マーケットプレイスの生成、SKILL.md の meta 補完、pre-commit、Junction（`links`）のスクリプト
+  - [maintenance/docs/](maintenance/docs/index.md) — 保守の規約・設計判断（OKF 概念ドキュメント）。構成と境界の規約は [repo-layout](maintenance/docs/repo-layout.md)
+- [registry/](registry/) — SSOT yaml（`ai-tools.yaml`・`repo-tools.yaml`・`meta_field.yaml`・`skill-tags.yaml`・`repo-workflows.yaml`・`repo-hooks.yaml`）
+- [docs/](docs/index.md) — 利用者向けの知識バンドル（[OKF](skills/plugins/coding/skills/okf-spec/)）。他の環境への導入手順 [docs/integrations/](docs/integrations/) など
+- [plans/](plans/) — 実装プラン
 - [.vscode/](.vscode/) — VSCode における AI コーディングツール設定例
 
 ### 一時・その他
 
 - [temp/](temp/) — 一時作業用フォルダ（gitignore 済み、コミット対象外）
-
-### スキル公開サイト
-
-- [site/skills-site/](site/skills-site/) — 登録済みAIコーディングツールのスキルを横断収集し、Astroの静的サイトとして公開する。公開対象の追加、frontmatter、生成・検証手順は [site/skills-site/AGENTS.md](site/skills-site/AGENTS.md) を参照。サイトはスキルの本文・メタデータ・配布ZIPだけを公開し、リポジトリ全体を公開するものではない。
-
-### ツールドキュメントサイト
-
-- [site/tools-site/](site/tools-site/) — [repo-tools.yaml](registry/repo-tools.yaml) の `release: true` ツールのインストール/使い方をまとめたVitePress製サイト。GitHub Pagesで公開する。詳細は [site/tools-site/README.md](site/tools-site/README.md) を参照。
 
 ## ライセンス・コントリビューション
 
@@ -93,15 +96,17 @@ pull のあとは `just sub-init`。サブモジュールの中でコミット�
 ## その他
 
 - 2026-11 の再編でプラグインの置き場所と一部のプラグイン名（`meta` → `cc-knowledge`、`my-tools-no-install` → `web-lookup`／`doc-tools` ほか）が変わった。インストール済みの利用者向けの対応表は [docs/integrations/claude-code.md](docs/integrations/claude-code.md) にある。
-- `lefthook.yml` — コミット時などに走る Git hooks の設定（`pre-commit` での各種再生成・整形・secretlint、`commit-msg` での commitlint）。
+- `.gitmodules` — 上記 4 つのサブモジュールの宣言。`just sub-init`／`sub-sync`／`sub-status` で扱う。
+- `.links.yaml` / `.umbrella-root` — Junction の宣言（各リポジトリのルートに置き、`just links-sync` で作る。Junction 自体はコミットしない）と、アンブレラのルートの目印。詳細は [repo-layout](maintenance/docs/repo-layout.md)。
+- `lefthook.yml` — コミット時などに走る Git hooks の設定（`pre-commit` での各種再生成・整形・secretlint、`commit-msg` での commitlint）。サブモジュール側は `maintenance/lefthook/submodule.yml`。
 - `mise.toml` — [mise](https://mise.jdx.dev/) によるツールバージョン管理（node / pnpm / terraform / uv をこのリポジトリ用にpin）。
 - `pyproject.toml` — uv workspace のルート定義（`tools/aim` 等、Python パッケージ群をまとめて管理）。
 - `pnpm-workspace.yaml` / `package.json` / `pnpm-lock.yaml` — pnpm workspace のルート定義（`site/skills-site`, `tools/cline-wrapper`）とロックファイル。
 - `.prettierrc.json` / `.prettierignore` — フォーマット設定。
 - `commitlint.config.js` — コミットメッセージのlint設定（[Conventional Commits](https://www.conventionalcommits.org/)、`@commitlint/config-conventional`）。
 - `.secretlintrc.json` — ステージ済みファイルのシークレット検知設定（[secretlint](https://github.com/secretlint/secretlint) `@secretlint/secretlint-rule-preset-recommend`）。
-- `AGENTS.md` / `CLAUDE.md` — 各 AI ツール向けのリポジトリ全体指示ファイル（README と同等の構成概観を記載）。
-- [registry/](registry/) — SSOT yaml（`ai-tools.yaml`・`repo-tools.yaml`・`meta_field.yaml`・`skill-tags.yaml`・`repo-workflows.yaml`・`repo-hooks.yaml`）。ルート直下の `ai-tools.yaml`・`repo-tools.yaml`・`repo-workflows.yaml`・`repo-hooks.yaml` は、`registry/` を知らない旧 skill-tools 向けの生成コピー（手編集しない）。
+- `AGENTS.md` / `CLAUDE.md` — 各 AI ツール向けのリポジトリ全体指示ファイル（README を取り込み、行動規約を足す）。
+- ルート直下の `ai-tools.yaml`・`repo-tools.yaml`・`repo-workflows.yaml`・`repo-hooks.yaml` — `registry/` を知らない旧 skill-tools 向けの生成コピー（手編集しない）。
 - `registry/repo-hooks.yaml` — skill-tools が読むエージェントフックカタログ（agent-tooling が生成する `catalog.json`）の所在。フックの配布・自己インストール（`just hooks-install`）は [maintenance/docs/hook-distribution.md](maintenance/docs/hook-distribution.md) 参照。
 - `.codegraph/` — CodeGraph のローカル知識グラフ（gitignore）。導入後は `codegraph init`。詳細は `skills/plugins/topics/skills/codegraph-docs/`。
 

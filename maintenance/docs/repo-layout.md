@@ -50,8 +50,10 @@ status: draft
 ```sh
 git clone --recurse-submodules https://github.com/fdshg693/AI.git
 cd AI
-just sub-hooks-install   # 各サブモジュールに lefthook を入れる（アンブレラは lefthook install）
-just links-sync          # .links.yaml の Junction を作る
+lefthook install && just sub-hooks-install   # アンブレラと各サブモジュールに lefthook を入れる
+just links-sync                              # .links.yaml の Junction を作る
+just agent-compat-sync                       # Cline・Kilo・Antigravity 向けのスキルのコピー
+just hooks-install && just sub-agent-hooks-install  # エージェントフック（下の「サブモジュールを単体で開く」）
 ```
 
 - `git pull` のあとは `just sub-init`（`git submodule update --init --recursive`）。未初期化のサブモジュールがあると uv はそのメンバーを黙って無視し、`uv lock` から落ちる。`uv lock` の前に必ず初期化する。

@@ -14,10 +14,10 @@
 ### テクニック
 
 - 複雑なタスクには、積極的にユーザー質問・サブエージェント活用を行って
-  - 便利なスキル・関連スキルがたくさんこのレポジトリにあります。複雑なタスクには `maintenance\plugin\skills\discovering-skills\SKILL.md` を積極的に参照してください。
-- ツール・スキル変更時は `maintenance\plugin\skills\changing-skills-and-tools\SKILL.md` を参照。
-- このレポジトリ全体に関わるようなタスクには `maintenance\plugin\skills\meta\SKILL.md` を参照。
-- このリポジトリの全体像・「どこに何があるか」は `maintenance/plugin/skills/exploring-this-repo/SKILL.md`。コードの流れ・定義・呼び出し関係・影響範囲は、grep/Read の前に `codegraph_explore`（MCP）または `codegraph explore`（CLI）。地図は `codegraph status` と `codegraph files` が先。索引が無い／古いときは `codegraph init` または `codegraph sync`。`.codegraph/` はローカル索引で git 管理しない。詳細は `skills/plugins/topics/skills/codegraph-docs/SKILL.md`。
+  - 便利なスキル・関連スキルがたくさんこのレポジトリにあります。複雑なタスクには `maintenance/plugin/skills/discovering-skills/SKILL.md` を積極的に参照してください。
+- ツール・スキル変更時は `maintenance/plugin/skills/changing-skills-and-tools/SKILL.md` を参照。
+- このレポジトリ全体に関わるようなタスクには `maintenance/plugin/skills/meta/SKILL.md` を参照。
+- このリポジトリの全体像・「どこに何があるか」は `maintenance/plugin/skills/exploring-this-repo/SKILL.md`。新しいスキル・スクリプト・文書の置き場所は `maintenance/docs/repo-layout.md` の「置き場所の判定基準」で決める。コードの流れ・定義・呼び出し関係・影響範囲は、grep/Read の前に `codegraph_explore`（MCP）または `codegraph explore`（CLI）。地図は `codegraph status` と `codegraph files` が先。索引が無い／古いときは `codegraph init` または `codegraph sync`。`.codegraph/` はローカル索引で git 管理しない。詳細は `skills/plugins/topics/skills/codegraph-docs/SKILL.md`。
 
 ## AIツール/プラグイン設定のSSOT
 
@@ -35,7 +35,7 @@
 - 新7フィールドの初回一括判定・再判定は`maintenance/scripts/skill/set/skill_meta_field_fill.py`（`just --justfile maintenance/scripts/justfile skill-meta-fields-fill`）で行う。
   - 判断結果は必ず`git diff`でレビューしてからコミットする（lefthookには紐づいていない）。
   - 新7フィールドの意味・メンテ手順の詳細は`maintenance/docs/skill-meta-fields.md`を参照。
-- コミット時は `maintenance\plugin\skills\committing\SKILL.md` を参照。
+- コミット時は `maintenance/plugin/skills/committing/SKILL.md` を参照（サブモジュールの中の変更は 2 段階コミット）。
 
 ## コマンド
 
