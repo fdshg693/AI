@@ -22,12 +22,12 @@ For the same tool, the "config the tool reads" (starts with `.`) and the "actual
 
 - **Cline**
   - [.cline/](.cline/) — Cline settings (rules, skills)
-  - [.clinerules/](.clinerules/) — Rule files read by Cline (`root.md`, `tools-*.md`, `templates.md`, etc.). See `.clinerules/root.md` for details
+  - [.clinerules/](.clinerules/) — Output folder for Cline rules, generated from `AGENTS.md` by the `tools/agents-rules` CLI (`agents-rules -t cline`). Absent until generated. Do not edit by hand
   - [cline-plugins/](cline-plugins/) — Cline plugins (mainly custom tools)
 
 - **Codex**
   - [codex-plugins/](codex-plugins/) — Codex plugins (settings/skills under `meta/`)
-  - [.agents/](.agents/) — Marketplace definition read by Codex (`.agents/plugins/marketplace.json`), which loads plugins such as `copilot-plugins/`. Named `_agents/` to avoid a folder-name clash with Antigravity (see `.agents/README.md`)
+  - [.agents/](.agents/) — Marketplace definition read by Codex (`.agents/plugins/marketplace.json`), which loads plugins from `codex-plugins/`. Named `_agents/` to avoid a folder-name clash with Antigravity (see `.agents/README.md`)
 
 - **GitHub Copilot**
   - [copilot-plugins/](copilot-plugins/) — Copilot plugins (docs/skills under `meta/`)
@@ -53,7 +53,6 @@ For the same tool, the "config the tool reads" (starts with `.`) and the "actual
   - `sandbox/` — Issue-driven Docker sandbox agent (a mechanism that polls for `@sandbox` mentions on GitHub issues and has the Claude Agent SDK do the work)
   - `internal/` — Internal tools such as marketplace/skill catalog generation
 - [docs/integrations/](docs/integrations/) — Guides for bringing this repository's plugins and CLI tools into your own environment. CLI install recipes live in `docs/integrations/justfile`. `skill-tools` itself is [tools/skill-tools/](tools/skill-tools/).
-- [templates/](templates/) — Template examples for introducing rules/skills etc. all at once (`cline_best/`, `planner/`, etc.)
 - [.vscode/](.vscode/) — Example VSCode settings for AI coding tools
 
 ### Temporary / Other

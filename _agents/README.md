@@ -1,8 +1,8 @@
-# .agents フォルダ使い方
+# \_agents フォルダ使い方
 
-`.agents` フォルダは Codex にも Antigravity にも使われるため、使い分けが必要
+`.agents` フォルダは Codex にも Antigravity にも使われるため、Antigravity 用プラグインはこの `_agents` に分けて置く（[.agents/README.md](../.agents/README.md) 参照）。
 
 ## 使い分け
 
-- Codex は `.agents\plugins\marketplace.json` のマーケットプレイスから、別フォルダにあるプラグインを読み込む
-- Antigravity は `.agents\plugins\<plugin-name>\` にプラグインを配置する
+- Codex は `.agents\plugins\marketplace.json` のマーケットプレイスから、`codex-plugins/` にあるプラグインを読み込む
+- Antigravity 用プラグインは `.agents\plugins` でなく `_agents\plugins\<plugin-name>\` に配置する

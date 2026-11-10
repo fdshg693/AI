@@ -22,7 +22,7 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 
 - **Cline**
   - [.cline/](.cline/) — Cline 用設定（rules, skills）
-  - [.clinerules/](.clinerules/) — Cline が読むルールファイル群（`root.md`, `tools-*.md`, `templates.md` 等）。詳細は `.clinerules/root.md` 参照
+  - [.clinerules/](.clinerules/) — Cline が読むルールファイルの出力先。`AGENTS.md` から `tools/agents-rules` CLI（`agents-rules -t cline`）で生成する。未生成なら存在しない。手編集しない
   - [cline-plugins/](cline-plugins/) — Cline 用プラグイン（主にカスタムツール系）
 
 - **Kilo Code**
@@ -30,7 +30,7 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 
 - **Codex**
   - [codex-plugins/](codex-plugins/) — Codex 用プラグイン（`meta/` 配下に設定・スキル）
-  - [.agents/](.agents/) — Codex が読むマーケットプレイス定義（`.agents/plugins/marketplace.json`）から `copilot-plugins/` 等のプラグインを読み込む。Antigravity ともフォルダ名が競合するため `_agents/` と使い分け（`.agents/README.md` 参照）
+  - [.agents/](.agents/) — Codex が読むマーケットプレイス定義（`.agents/plugins/marketplace.json`）から `codex-plugins/` のプラグインを読み込む。Antigravity ともフォルダ名が競合するため `_agents/` と使い分け（`.agents/README.md` 参照）
 
 - **GitHub Copilot**
   - [copilot-plugins/](copilot-plugins/) — Copilot 用プラグイン（`meta/` 配下に docs/skills 群）
@@ -62,7 +62,6 @@ AIコーディングツールの設定・ツールに関する個人の調査・
   - `sandbox/` — ISSUE駆動Dockerサンドボックスエージェント（GitHub ISSUEの`@sandbox`メンションをポーリングで検知しClaude Agent SDKに作業させる仕組み）
   - `schedule/` — Windows タスクスケジューラでジョブを定期実行する `ai-schedule` と、そこから呼ばれる `issue-agent`（GitHub ISSUEのラベル駆動でgit worktree上にClaude Codeを起動し、実装からPR作成・ISSUE返信までを自動化するツール）
   - `internal/` — マーケットプレイス/skill カタログ生成等の内部ツール群
-- [templates/](templates/) — ルールやスキル等をまとめて導入する際のテンプレート例（`cline_best/`, `planner/` 等）
 - [.vscode/](.vscode/) — VSCode における AI コーディングツール設定例
 
 ### 一時・その他

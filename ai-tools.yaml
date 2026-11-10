@@ -75,7 +75,7 @@ tools:
         - path: .cline
           description: "Cline 用設定（rules, skills）"
         - path: .clinerules
-          description: "Cline が読むルールファイル群（`root.md`, `tools-*.md`, `templates.md` 等）。詳細は `.clinerules/root.md` 参照"
+          description: "Cline が読むルールファイルの出力先。`AGENTS.md` から `tools/agents-rules` CLI（`agents-rules -t cline`）で生成する。未生成なら存在しない。手編集しない"
       plugin_roots:
         - path: cline-plugins
           description: "Cline 用プラグイン（主にカスタムツール系）"
@@ -103,7 +103,7 @@ tools:
           description: "Codex 用プラグイン（`meta/` 配下に設定・スキル）"
       config_dirs:
         - path: .agents
-          description: "Codex が読むマーケットプレイス定義（`.agents/plugins/marketplace.json`）から `copilot-plugins/` 等のプラグインを読み込む。Antigravity ともフォルダ名が競合するため `_agents/` と使い分け（`.agents/README.md` 参照）"
+          description: "Codex が読むマーケットプレイス定義（`.agents/plugins/marketplace.json`）から `codex-plugins/` のプラグインを読み込む。Antigravity ともフォルダ名が競合するため `_agents/` と使い分け（`.agents/README.md` 参照）"
     plugins:
       - path: codex-plugins/meta
         kind: plugin
