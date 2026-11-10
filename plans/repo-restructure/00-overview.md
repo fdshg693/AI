@@ -56,7 +56,7 @@ AI/                                 アンブレラ（fdshg693/AI のまま）
 
 ## 実装ステップ
 
-0. **前提条件**: `c:\C\ai` で `git init` し、追跡対象に機密情報（`.env`、`site/skills-site/.azure/` 等）が無いことを確認してから初回コミットを作る。lefthook（`lefthook install`）も入れる。それまで 03 以降に着手しない。
+0. **前提条件（2026-11-10 完了）**: `c:\C\ai` で `git init` し、secretlint で全ファイルに問題が無いことを確認して初回コミット `71336a9` を作成した。lefthook も導入済み。`.gitattributes` が LF に正規化するため、作業コピー内の CRLF のファイルは次に触れたときに LF の差分として出る。05 の移動差分と混ざらないよう、03 の前に `git add --renormalize .` を 1 コミットにしておく。
 1. [01-research-platform-constraints.md](01-research-platform-constraints.md) — Junction × Git／Claude Code／Python／rg 等の挙動、サブモジュール × マーケットプレイス／CI／uv・pnpm workspace の制約を調べる。観点 D は構成全体の go/no-go 判定
 2. [02-research-inventory.md](02-research-inventory.md) — 全 SKILL.md・tools・docs を分類し、移動先対応表とパス参照の一覧を作る（分類は 01 と並行可。移動先の確定は 01 の観点 D に依存）
 3. [03-fix-existing-inconsistencies.md](03-fix-existing-inconsistencies.md) — 移動前に壊れた参照・綴り誤り・空フォルダを直す（前提条件のあと、01/02 と並行可）
@@ -69,22 +69,22 @@ AI/                                 アンブレラ（fdshg693/AI のまま）
 
 ## 主要な決定事項
 
-| 決定 | 理由 |
-| --- | --- |
-| 意味的再編（05・06）を単一リポジトリ内で先に済ませ、サブモジュール化（07）は最後 | 移動が 1 リポジトリで完結し、既存の生成・検査で検証できる。境界を誤ったまま切り出すと、後の移動がリポジトリをまたぐ |
-| Junction はコミットしない。サブモジュールごとの宣言ファイル（`.links.yaml`）をコミットし、アンブレラの `links` ツールで作成・検証・除去する | Git は Junction を正しく追跡できない。宣言ファイルなら単体 clone 時に参照先が無いことも明示できる |
-| Junction パスはスクリプトが各リポジトリの exclude ファイルに登録する。書き先は `git rev-parse --git-path info/exclude` で求める | `.gitignore` をコミットで汚さない。サブモジュールの `.git` はファイル（`gitdir:`）なので、パスを直書きできない |
-| アンブレラのルートは、アンブレラにコミットする目印ファイル（例: `.umbrella-root`）で判定する | `.gitmodules` は 07 まで存在しないため、04〜06 の間に使えない |
-| Junction の参照先は兄弟・他サブツリーに限る。自分の祖先は指さない。Junction の中の Junction も指さない。参照先は「自分が属するアンブレラのルート配下」でなければならない | 祖先を指すと再帰走査が無限ループになる。連鎖すると解決順に依存する。フォルダのコピーや移動で、別の場所を指したままの Junction が残る事故を防ぐ |
-| SSOT yaml はルートから `registry/` に集める（ユーザー回答） | Junction はディレクトリにしか張れない。サブモジュール単体で開いても SSOT を参照できるようにする |
-| skills-site の URL 変更は許容し、リダイレクトは作らない（ユーザー回答） | canonical ID がパス由来のため、移動で URL が変わるのは避けられない |
-| git worktree は使わず、作業は直列で行う（ユーザー回答） | Junction の絶対パスと worktree・サブモジュールの組み合わせの複雑さを避ける |
-| Junction を `rm -rf`／`Remove-Item -Recurse` で消すことを禁止し、`just links-clean` だけで外す | 参照先の中身まで消えるおそれがある |
-| `git mv` の対象外（ignore 対象の `.env`・`.venv`・`logs/`・`fb/`・`state/`・sqlite 等）は、05 で移設し、07 で退避してから置き換える | `git mv` は追跡中のファイルしか動かさない。07 でフォルダを clone に置き換えると消える |
-| レポジトリ都合のもの（meta-plugins、tools/internal、docs/repo-wide）は `maintenance/` に集め、アンブレラ本体に残す | アンブレラ自身の保守用であり、切り出しても単体では意味を持たない |
-| 他ツールの「知識スキル」（codex-docs、antigravity-memory 等）は Claude Code スキルとして `skills/` に置く。ツール固有書式のサンプルだけを `agent-compat/formats/` に分ける | 依頼の (c)(d)。中身は普通の SKILL.md であり、置き場所だけがツール別に散っていた |
-| `tools/<name>` の平坦配置と `repo-tools.yaml` の `path` 契約は維持する（`tools/internal` だけ外へ出す） | 公開インストール手順（`uv tool install --editable tools/<name>`）が契約になっている（[tools-directory-layout](../../docs/repo-wide/tools-directory-layout.md)） |
-| 横断的な集約生成物（marketplace.json、skill-catalog.json 等）はアンブレラが生成・所有する。各サブモジュールは自分の中の生成物（プラグイン単位の CATALOG.md 等）だけを持つ | サブモジュールのコミットが他リポジトリのファイルを書き換えると、アトミックに commit できない |
+| 決定                                                                                                                                                                       | 理由                                                                                                                                                            |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 意味的再編（05・06）を単一リポジトリ内で先に済ませ、サブモジュール化（07）は最後                                                                                           | 移動が 1 リポジトリで完結し、既存の生成・検査で検証できる。境界を誤ったまま切り出すと、後の移動がリポジトリをまたぐ                                             |
+| Junction はコミットしない。サブモジュールごとの宣言ファイル（`.links.yaml`）をコミットし、アンブレラの `links` ツールで作成・検証・除去する                                | Git は Junction を正しく追跡できない。宣言ファイルなら単体 clone 時に参照先が無いことも明示できる                                                               |
+| Junction パスはスクリプトが各リポジトリの exclude ファイルに登録する。書き先は `git rev-parse --git-path info/exclude` で求める                                            | `.gitignore` をコミットで汚さない。サブモジュールの `.git` はファイル（`gitdir:`）なので、パスを直書きできない                                                  |
+| アンブレラのルートは、アンブレラにコミットする目印ファイル（例: `.umbrella-root`）で判定する                                                                               | `.gitmodules` は 07 まで存在しないため、04〜06 の間に使えない                                                                                                   |
+| Junction の参照先は兄弟・他サブツリーに限る。自分の祖先は指さない。Junction の中の Junction も指さない。参照先は「自分が属するアンブレラのルート配下」でなければならない   | 祖先を指すと再帰走査が無限ループになる。連鎖すると解決順に依存する。フォルダのコピーや移動で、別の場所を指したままの Junction が残る事故を防ぐ                  |
+| SSOT yaml はルートから `registry/` に集める（ユーザー回答）                                                                                                                | Junction はディレクトリにしか張れない。サブモジュール単体で開いても SSOT を参照できるようにする                                                                 |
+| skills-site の URL 変更は許容し、リダイレクトは作らない（ユーザー回答）                                                                                                    | canonical ID がパス由来のため、移動で URL が変わるのは避けられない                                                                                              |
+| git worktree は使わず、作業は直列で行う（ユーザー回答）                                                                                                                    | Junction の絶対パスと worktree・サブモジュールの組み合わせの複雑さを避ける                                                                                      |
+| Junction を `rm -rf`／`Remove-Item -Recurse` で消すことを禁止し、`just links-clean` だけで外す                                                                             | 参照先の中身まで消えるおそれがある                                                                                                                              |
+| `git mv` の対象外（ignore 対象の `.env`・`.venv`・`logs/`・`fb/`・`state/`・sqlite 等）は、05 で移設し、07 で退避してから置き換える                                        | `git mv` は追跡中のファイルしか動かさない。07 でフォルダを clone に置き換えると消える                                                                           |
+| レポジトリ都合のもの（meta-plugins、tools/internal、docs/repo-wide）は `maintenance/` に集め、アンブレラ本体に残す                                                         | アンブレラ自身の保守用であり、切り出しても単体では意味を持たない                                                                                                |
+| 他ツールの「知識スキル」（codex-docs、antigravity-memory 等）は Claude Code スキルとして `skills/` に置く。ツール固有書式のサンプルだけを `agent-compat/formats/` に分ける | 依頼の (c)(d)。中身は普通の SKILL.md であり、置き場所だけがツール別に散っていた                                                                                 |
+| `tools/<name>` の平坦配置と `repo-tools.yaml` の `path` 契約は維持する（`tools/internal` だけ外へ出す）                                                                    | 公開インストール手順（`uv tool install --editable tools/<name>`）が契約になっている（[tools-directory-layout](../../docs/repo-wide/tools-directory-layout.md)） |
+| 横断的な集約生成物（marketplace.json、skill-catalog.json 等）はアンブレラが生成・所有する。各サブモジュールは自分の中の生成物（プラグイン単位の CATALOG.md 等）だけを持つ  | サブモジュールのコミットが他リポジトリのファイルを書き換えると、アトミックに commit できない                                                                    |
 
 ## ユーザー回答済みの判断（2026-11-10）
 
@@ -99,7 +99,7 @@ AI/                                 アンブレラ（fdshg693/AI のまま）
 
 ## 未決事項（ユーザー判断が必要）
 
-1. **GitHub リポジトリ名の詳細**（07 の直前に確認）: 案はアンブレラ＝既存の `fdshg693/AI`、サブモジュール＝`AI-skills`／`AI-tools`／`AI-agent-compat`／`AI-site`（いずれも public）。既存の `fdshg693/AI` へ履歴なしの新リポジトリを push すると force push になり、GitHub 上の既存の履歴を上書きする。上書きするか、別名で作るかを確認する。
+1. **GitHub リポジトリ名の詳細**（07 の直前に確認）: 案はアンブレラ＝`fdshg693/AI`（既存のものは削除済みのため新規作成。ユーザー回答）、サブモジュール＝`AI-skills`／`AI-tools`／`AI-agent-compat`／`AI-site`（いずれも public）。作成と push は外部向けの操作なので、実行直前に確認する。
 
 ## 変更/新規ファイル一覧
 
