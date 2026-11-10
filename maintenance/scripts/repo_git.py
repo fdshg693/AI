@@ -13,11 +13,67 @@ submodule that is not checked out is skipped.
 
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 from pathlib import Path, PurePosixPath
 
 _PATH_LINE_RE = re.compile(r"^\s*path\s*=\s*(.+?)\s*$")
+
+# Repository-local variables a git hook exports (``git rev-parse --local-env-vars``).
+# They describe the repository whose hook is running (e.g. GIT_INDEX_FILE=.git/index,
+# relative), so a git command run in another repository (umbrella <-> submodule)
+# must not inherit them.
+_LOCAL_GIT_ENV = (
+    "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+    "GIT_COMMON_DIR",
+    "GIT_CONFIG",
+    "GIT_CONFIG_COUNT",
+    "GIT_CONFIG_PARAMETERS",
+    "GIT_DIR",
+    "GIT_GRAFT_FILE",
+    "GIT_IMPLICIT_WORK_TREE",
+    "GIT_INDEX_FILE",
+    "GIT_INTERNAL_SUPER_PREFIX",
+    "GIT_NO_REPLACE_OBJECTS",
+    "GIT_OBJECT_DIRECTORY",
+    "GIT_PREFIX",
+    "GIT_REPLACE_REF_BASE",
+    "GIT_SHALLOW_FILE",
+    "GIT_WORK_TREE",
+)
+
+
+def _git_dir(repo: Path) -> Path | None:
+    clean = {k: v for k, v in os.environ.items() if k not in _LOCAL_GIT_ENV}
+    result = subprocess.run(
+        ["git", "rev-parse", "--absolute-git-dir"],
+        cwd=repo,
+        env=clean,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return Path(result.stdout.strip()).resolve() if result.returncode == 0 else None
+
+
+def _env_for(repo: Path) -> dict[str, str] | None:
+    """Environment for git in ``repo``.
+
+    Inherited (None) when no hook index is set or it belongs to ``repo`` (keeps a
+    temporary index such as ``git commit -a`` uses); otherwise the hook-local
+    variables are dropped so the command sees ``repo``'s own index.
+    """
+    index = os.environ.get("GIT_INDEX_FILE")
+    if not index:
+        return None
+    index_path = Path(index)
+    if not index_path.is_absolute():
+        index_path = repo / index_path
+    git_dir = _git_dir(repo)
+    if git_dir is not None and index_path.resolve().parent == git_dir:
+        return None
+    return {k: v for k, v in os.environ.items() if k not in _LOCAL_GIT_ENV}
 
 
 def submodule_paths(root: Path) -> list[str]:
@@ -48,6 +104,7 @@ def _staged_in(repo: Path) -> list[str]:
     result = subprocess.run(
         ["git", "diff", "--name-only", "--cached", "--diff-filter=ACMR"],
         cwd=repo,
+        env=_env_for(repo),
         capture_output=True,
         text=True,
         encoding="utf-8",
@@ -78,6 +135,7 @@ def show(root: Path, rev: str, rel_posix: str) -> str | None:
     result = subprocess.run(
         ["git", "show", f"{rev}:{inner}"],
         cwd=repo,
+        env=_env_for(repo),
         capture_output=True,
         text=True,
         encoding="utf-8",
@@ -95,6 +153,7 @@ def add(root: Path, rel_posix: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         ["git", "add", "--", inner],
         cwd=repo,
+        env=_env_for(repo),
         capture_output=True,
         text=True,
         encoding="utf-8",

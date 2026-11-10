@@ -4,6 +4,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import repo_git  # noqa: E402
@@ -72,3 +74,50 @@ def test_uninitialized_submodule_is_skipped(tmp_path: Path) -> None:
     (root / "sub").mkdir()
     assert repo_git.submodule_paths(root) == []
     assert repo_git.staged_files(root) == []
+
+
+def _umbrella_with_staged_sub(tmp_path: Path) -> tuple[Path, Path]:
+    upstream = tmp_path / "upstream"
+    init_repo(upstream)
+    (upstream / "a.txt").write_text("v1\n", encoding="utf-8")
+    git(upstream, "add", "a.txt")
+    git(upstream, "commit", "-q", "-m", "init")
+
+    root = tmp_path / "umbrella"
+    init_repo(root)
+    (root / "top.txt").write_text("top\n", encoding="utf-8")
+    git(root, "add", "top.txt")
+    git(root, "submodule", "add", "-q", str(upstream), "sub")
+    git(root, "commit", "-q", "-m", "init")
+
+    sub = root / "sub"
+    (sub / "a.txt").write_text("v2\n", encoding="utf-8")
+    git(sub, "add", "a.txt")
+    (root / "top.txt").write_text("top2\n", encoding="utf-8")
+    git(root, "add", "top.txt")
+    return root, sub
+
+
+def test_umbrella_hook_index_is_not_passed_to_submodules(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # An umbrella pre-commit exports GIT_INDEX_FILE=.git/index (relative); in a
+    # submodule .git is a file, so inheriting it made `git diff --cached` fail.
+    root, _ = _umbrella_with_staged_sub(tmp_path)
+    monkeypatch.setenv("GIT_INDEX_FILE", ".git/index")
+    assert sorted(repo_git.staged_files(root)) == ["sub/a.txt", "top.txt"]
+
+
+def test_submodule_hook_index_is_not_passed_to_umbrella(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root, sub = _umbrella_with_staged_sub(tmp_path)
+    index = subprocess.run(
+        ["git", "rev-parse", "--path-format=absolute", "--git-path", "index"],
+        cwd=sub,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    monkeypatch.setenv("GIT_INDEX_FILE", index)
+    assert sorted(repo_git.staged_files(root)) == ["sub/a.txt", "top.txt"]
