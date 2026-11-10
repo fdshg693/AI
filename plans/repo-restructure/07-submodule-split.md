@@ -73,3 +73,8 @@ status: planning-research
 
 - 2026-11-10（01 完了時）: 01-D の go/no-go は GO。marketplace の source 形式、skill-tools `GitHubSource` のサブモジュール対応（切り出し前に必須）、CI・リリースの追従、ワークスペースと lefthook の置き方、事前の実験 TODO を「決定事項」「触るファイル」に反映した。サブモジュールは public なので CI トークンは不要と修正した。
 - 2026-11-10（05 完了時）: SSOT yaml は `registry/` に移り、ルートに旧 skill-tools 向けの生成コピー（`ai-tools.yaml`・`repo-tools.yaml`・`repo-workflows.yaml`・`repo-hooks.yaml`）がある。サブモジュールからは `registry/` を Junction で参照する前提。`tools/` サブモジュールには `tools/_plugin/my-tools`（Claude Code プラグイン）と `tools/ai-usage` が含まれる。互換コピーをいつ消すか（skill-tools の利用者が `registry/` 対応版に上がった後）は切り出し時に決める。
+- 2026-11-10（06 完了時）: [progress/06-agent-compat-results.md](progress/06-agent-compat-results.md)。切り出しに効く事実は次のとおり。
+  - 他ツールのマニフェスト（`.codex-plugin/`・`.cursor-plugin/`・ルートの `plugin.json`）は `skills/plugins/ai-tools-knowledge/` の中にあり、手で保守する。`skills` サブモジュールが持ち、アンブレラは書き換えない。
+  - アンブレラが生成するのは `.agents/plugins/marketplace.json`・`.github/plugin/marketplace.json` だけ。どちらも今は `./skills/plugins/ai-tools-knowledge` を local パスで指す。切り出し時に、`git-subdir`（Codex）・`github`+`path`（Copilot）へ変えるかを決める。
+  - `.cline/skills/`・`.kilo/skills/`・`_agents/plugins/antigravity-meta/` は gitignore 済みの生成コピー（`just agent-compat-sync`）。サブモジュール化しても参照先（`skills/`）はアンブレラ配下にある。
+  - `agent-compat/` には `agent-tooling/`・`formats/`（目印 `.format-samples`）・`docs/differences/`・README・AGENTS.md・CLAUDE.md がある。uv workspace の member は `agent-compat/agent-tooling`。

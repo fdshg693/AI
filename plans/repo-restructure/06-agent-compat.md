@@ -1,6 +1,6 @@
 ---
 type: Plan Step
-status: planning-research
+status: implementing-done
 ---
 
 # Step 6: マルチ AI 対応の分離、ツール別書式サンプルと相違点ドキュメント
@@ -81,3 +81,9 @@ status: planning-research
   - 新しいプラグイン名（`ai-tools-knowledge` 等）は `claude plugin validate` で確かめる。`claude-` で始まる名前は予約語で拒否される（05 で `meta` → `claude-code` を `cc-knowledge` に変えた）。
   - 05 のバッチ 6（CATALOG.md を `<plugin>/skills/CATALOG.md` に揃える）は、Copilot（`skills_layout: direct`）だけが残っている。Copilot の配布方式を作るときに `skills/` 配下へ揃え、`ai-tools.yaml` の `skills_layout` と生成器を合わせる。
   - `agent-tooling/agent_tooling/hooks/REFERENCES.md` の他ツールスキルへのリンクはリポジトリルート基準（`../../../`）に直したので、書き換えツールで追従できる。agent-tooling の build.py は `registry/repo-tools.yaml` を親を辿って探すので、`agent-compat/` へ動かしても直さなくてよい（tests の `parents[2]` は 02 の記載どおり要修正）。
+- 2026-11-10（06 完了時）: 実行記録は [progress/06-agent-compat-results.md](progress/06-agent-compat-results.md)。計画から次のとおり変えた。
+  - スキルルートは `claude-code` の `plugins` にだけ登録した（skill-tools が重複を拒否する）。他ツールへの届け先は `marketplace.sources` と `workspace_copies` で表す。
+  - マニフェストは生成せず、プラグインと一緒に手で保守する。
+  - `agent-compat/distribution/` は作らなかった。
+  - 知識スキルの書式説明はリンクに置き換えなかった（インストール先でプラグイン外へのリンクが切れるため）。
+  - Codex の `openai.yaml` 5 件は移していない。

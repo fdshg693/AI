@@ -49,3 +49,10 @@ status: planning-breakdown
 - **実行主体**: メインが進める。旧パスの残存確認と README_EN の翻訳はサブエージェントへ委任してよい。
 - **TODO 化**: (1) ルートの文書、(2) docs の索引、(3) repo-meta スキル、(4) 旧パスの残存掃除と生成物の再生成、(5) 完了記録、の 5 TODO。
 - **コミット**: (1)〜(4) をそれぞれ 1 コミット（`docs(repo): ...`。サブモジュール内の文書を変えたら、そのサブモジュール側のコミットとアンブレラのポインタ更新の 2 段階）。(5) の完了記録はプラン全体の `implementing-done` と同じ `docs(plans): ...` の 1 コミット（[コミット方針](00-overview.md#コミット方針全ステップ共通)）。
+
+## 実行中に判明した変更
+
+- 2026-11-10（06 完了時）: [progress/06-agent-compat-results.md](progress/06-agent-compat-results.md)。06 で更新済みのもの: ルート README の AI ツール節（生成）・README_EN の同じ節・`maintenance/docs/claude-code-first-skills.md`・`ai-tools-config.md`・`repo-layout.md`・`docs/integrations/{codex,cline,claude-code}.md`・`docs/index.md`。09 で行うこと:
+  - ルート `AGENTS.md`・README の「フォルダ構成」の残り（`agent-compat/` の説明、`.cline`・`.kilo` の生成コピー）を最終構成に合わせる。
+  - `agent-compat/AGENTS.md` を含めて `agents-rules` を再生成する。
+  - 06 の残課題（progress の「残課題」）を確認する。

@@ -10,7 +10,7 @@ status: implementing-in-progress
 - [x] [03-fix-existing-inconsistencies.md](03-fix-existing-inconsistencies.md) — 移動前に既存の不整合を直す
 - [x] [04-links-tooling.md](04-links-tooling.md) — Junction マニフェスト仕様と作成・検証ツール、スキャナの Junction 除外
 - [x] [05-semantic-reorg.md](05-semantic-reorg.md) — 単一リポジトリのまま意味的再編（git mv）
-- [ ] [06-agent-compat.md](06-agent-compat.md) — マルチ AI 対応の分離、ツール別書式サンプルと相違点ドキュメント
+- [x] [06-agent-compat.md](06-agent-compat.md) — マルチ AI 対応の分離、ツール別書式サンプルと相違点ドキュメント
 - [ ] [07-submodule-split.md](07-submodule-split.md) — 履歴付きでサブモジュールへ切り出す
 - [ ] [08-subfolder-workspaces.md](08-subfolder-workspaces.md) — サブモジュール単体で開くための Claude Code 用 Junction・指示ファイル
 - [ ] [09-docs-and-rules.md](09-docs-and-rules.md) — README・AGENTS.md・docs・探索スキルの最終更新
@@ -48,8 +48,7 @@ AI/                                 アンブレラ（fdshg693/AI のまま）
 │  └─ _plugin/my-tools/skills/      tools 付属スキル（旧 claude-plugins/my-tools、skill-tools-cli・task-tracker・parallel-agent-worktree を含む）
 ├─ agent-compat/  [submodule]       このレポジトリのマルチ AI 対応
 │  ├─ agent-tooling/                フック・コンテキスト注入（旧 agent-tooling）
-│  ├─ distribution/                 各ツール向けマーケットプレイス・マニフェストの生成設定
-│  ├─ formats/<tool>/               ツール固有書式の最小サンプル（skill / plugin / rule / memory）
+│  ├─ formats/<tool>/               ツール固有書式の最小サンプル（skill / plugin / rule / agent）
 │  └─ docs/differences/             Claude Code との書き方の相違点（別軸）
 └─ site/          [submodule]       skills-site / tools-site
 ```
