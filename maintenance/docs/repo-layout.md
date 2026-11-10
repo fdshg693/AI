@@ -10,6 +10,21 @@ status: draft
 
 このリポジトリは、アンブレラ（ルート）と、のちに切り出すサブモジュールから成る（再編の経緯は `plans/repo-restructure/`）。サブモジュール単体のフォルダを Claude Code で開けるように、上位や兄弟のフォルダを **Windows の Junction** で参照する。本ドキュメントは Junction の宣言・作成・禁止事項を定める。境界（何をどこに置くか）の節は再編の 05・09 で追記する。
 
+## 置き場所の判定基準
+
+新しいスキル・スクリプト・文書は、次の順に当てはめて置き場所を決める（2026-11 の再編で決めた基準）。
+
+| 区分                 | 判定                                                                                                         | 置き場所                                                        |
+| -------------------- | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------- |
+| リポジトリ都合       | このリポジトリの保守にしか意味がない（生成器、pre-commit、メンテ手順のスキル、規約文書）                     | `maintenance/plugin`・`maintenance/scripts`・`maintenance/docs` |
+| SSOT                 | 複数の生成物・検査が読む手編集の yaml                                                                        | `registry/`                                                     |
+| tools 付属スキル     | 本文が `tools/<name>` の CLI のインストールを必須にしている（`meta.requires_repo_tools` の値だけで決めない） | `tools/_plugin/my-tools/skills/`                                |
+| 汎用スキル           | 上のどれでもない Claude Code スキル。CLI を任意で使うだけ（無くても動く）ならここ                            | `skills/plugins/<plugin>/skills/`                               |
+| 他 AI ツールの知識   | Codex・Copilot 等の使い方を説明するスキル（中身は普通の SKILL.md）                                           | `skills/plugins/ai-tools-knowledge/`（06 で作る）               |
+| ツール固有書式の見本 | そのツールの書式でしか書けないファイル（plugin manifest、rules の frontmatter 等）                           | `agent-compat/formats/<tool>/`（06 で作る）                     |
+
+スクリプトを同梱して `tools/` のインストールが要らないスキルは汎用側（例: `skills/plugins/web-lookup`、`skills/plugins/doc-tools`）。CLI 本体は `tools/<name>` の平坦配置のまま（`registry/repo-tools.yaml` の `path` 契約）。
+
 ## Junction はコミットせず `.links.yaml` で宣言する
 
 Git は Junction を実ディレクトリとして辿り、参照先の中身を通常ファイルとしてステージしてしまう。そこで Junction 自体はコミットせず、各リポジトリのルートに置く `.links.yaml` に宣言をコミットする。

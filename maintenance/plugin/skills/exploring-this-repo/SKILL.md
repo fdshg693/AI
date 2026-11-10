@@ -33,7 +33,8 @@ meta:
 3. **索引に無いトップレベル** — 中身の種類で振り分ける。
    - `SKILL.md` を探す / どのスキルを読むか → [discovering-skills](../discovering-skills/SKILL.md)
    - このリポジトリ自身のメンテ規約 → [meta](../meta/SKILL.md)（`maintenance/docs/`）
-   - YAML の意味（`ai-tools.yaml` / `repo-tools.yaml` / `meta_field.yaml`） → そのファイルを `Read` し、対応する `maintenance/docs/` へ
+   - 何をどこに置くか（`skills/plugins/`・`tools/_plugin/`・`maintenance/`・`registry/` の境界） → [repo-layout](../../../docs/repo-layout.md)
+   - YAML の意味（`registry/` の `ai-tools.yaml` / `repo-tools.yaml` / `meta_field.yaml` ほか） → そのファイルを `Read` し、対応する `maintenance/docs/` へ
 4. どれにも当てはまらなければ、README が指すそのフォルダの README / `docs/index.md` を `Read` する。リポジトリ全体を grep しない。
 
 ## やらないこと
