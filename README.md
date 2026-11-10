@@ -96,7 +96,7 @@ pull のあとは `just sub-init`。サブモジュールの中でコミット�
 ## その他
 
 - 2026-11 の再編でプラグインの置き場所と一部のプラグイン名（`meta` → `cc-knowledge`、`my-tools-no-install` → `web-lookup`／`doc-tools` ほか）が変わった。インストール済みの利用者向けの対応表は [docs/integrations/claude-code.md](docs/integrations/claude-code.md) にある。
-- `.gitmodules` — 上記 4 つのサブモジュールの宣言。`just sub-init`／`sub-sync`／`sub-status` で扱う。
+- `.gitmodules` — 上記 4 つのサブモジュールの宣言。`just sub-init`／`sub-sync`／`sub-status` で扱う。全リポジトリで同じ名前の作業ブランチを作る・切り替える・push・削除するのは `just branch-*`（[repo-layout](maintenance/docs/repo-layout.md#作業ブランチアンブレラとサブモジュールで揃える)）。
 - `.links.yaml` / `.umbrella-root` — Junction の宣言（各リポジトリのルートに置き、`just links-sync` で作る。Junction 自体はコミットしない）と、アンブレラのルートの目印。詳細は [repo-layout](maintenance/docs/repo-layout.md)。
 - `lefthook.yml` — コミット時などに走る Git hooks の設定（`pre-commit` での各種再生成・整形・secretlint、`commit-msg` での commitlint）。サブモジュール側は `maintenance/lefthook/submodule.yml`。
 - `mise.toml` — [mise](https://mise.jdx.dev/) によるツールバージョン管理（node / pnpm / terraform / uv をこのリポジトリ用にpin）。

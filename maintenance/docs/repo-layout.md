@@ -59,6 +59,25 @@ just hooks-install && just sub-agent-hooks-install  # エージェントフッ�
 - `git pull` のあとは `just sub-init`（`git submodule update --init --recursive`）。未初期化のサブモジュールがあると uv はそのメンバーを黙って無視し、`uv lock` から落ちる。`uv lock` の前に必ず初期化する。
 - サブモジュールは記録された commit で detached HEAD になる。作業する前に `just sub-sync`（全サブモジュールで `main` を checkout して fast-forward）か、そのサブモジュールで `git switch main`。状態は `just sub-status`。
 
+### 作業ブランチ（アンブレラとサブモジュールで揃える）
+
+アンブレラでブランチを切っても、サブモジュールのブランチは変わらない（アンブレラが持つのは commit のポインタだけ）。複数の端末で作業するときは、同じ名前のブランチを全リポジトリに切る。`just branch-*` がアンブレラと全サブモジュールでまとめて行う（実体は [`maintenance/scripts/branches/`](../scripts/branches/)）。
+
+| レシピ                                           | 動作                                                                                                                      |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| `just branch-status`                             | 各リポジトリのブランチ・upstream との差・未コミット数・ポインタの状態                                                     |
+| `just branch-list`                               | ローカルブランチを、どのリポジトリにあるか付きで一覧                                                                      |
+| `just branch-new <name> [--from BASE]`           | 全リポジトリで作って切り替える                                                                                            |
+| `just branch-switch <name> [--create]`           | 全リポジトリで切り替える。ローカルに無くても `origin/<name>` があれば追跡ブランチを作る（別の端末で作ったブランチを拾う） |
+| `just branch-push`                               | 今のブランチを upstream 付きで push。サブモジュールを先にし、失敗したらアンブレラは push しない                           |
+| `just branch-pull`                               | 今のブランチを upstream から fast-forward。`sub-sync` と違って `main` に戻さない                                          |
+| `just branch-delete <name> [--remote] [--force]` | ある所だけ削除。`main`・`master`・既定ブランチ、今いるブランチ、未マージのブランチ（`--force` なし）は断る                |
+
+- どのレシピも `--only <submodule>...` で対象のサブモジュールを絞れる（アンブレラは常に含む）。
+- 状態を変えるレシピは全リポジトリを先に検査し、1 つでも引っかかれば何も変えない（途中まで切り替わった状態を残さない）。
+- 作業ブランチにいる間は `just sub-sync` を使わない（全サブモジュールを `main` に戻す）。
+- マージはサブモジュールが先。サブモジュールの作業ブランチを `main` にマージして push し、アンブレラのポインタをその `main` の commit に合わせてからアンブレラをマージする。
+
 ### コミットは 2 段階
 
 1. **サブモジュールの中でコミットする。** そのサブモジュールのフォルダで `committing` スキルのラッパーを使う。フックは `maintenance/lefthook/submodule.yml`（各サブモジュールの `lefthook.yml` が `extends` する）から来て、アンブレラと同じ再生成・整形・検査が走る。単体で clone したときは `extends` 先が無いので何も走らない。

@@ -132,3 +132,33 @@ links-clean *args:
 # Advisory warning run by lefthook post-checkout (always exits 0)
 links-post-checkout:
     uv run python -m links post-checkout
+
+# --- branches: one branch name across the umbrella and every submodule (see maintenance/docs/repo-layout.md) ---
+
+# Branch, upstream ahead/behind, dirty count and pointer state of every repository
+branch-status *args:
+    uv run python -m branches status {{ args }}
+
+# Local branches across repositories (* marks the current one)
+branch-list *args:
+    uv run python -m branches list {{ args }}
+
+# Create a branch and switch to it everywhere (--from BASE, --only SUB...)
+branch-new name *args:
+    uv run python -m branches new {{ name }} {{ args }}
+
+# Switch everywhere, tracking origin/<name> when only the remote has it (--create, --no-fetch, --only SUB...)
+branch-switch name *args:
+    uv run python -m branches switch {{ name }} {{ args }}
+
+# Delete a branch wherever it exists; refuses main and unmerged branches (--force, --remote)
+branch-delete name *args:
+    uv run python -m branches delete {{ name }} {{ args }}
+
+# Push current branches with upstream set, submodules before the umbrella
+branch-push *args:
+    uv run python -m branches push {{ args }}
+
+# Fast-forward current branches from their upstream without leaving them (unlike sub-sync)
+branch-pull *args:
+    uv run python -m branches pull {{ args }}

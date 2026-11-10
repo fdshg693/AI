@@ -109,3 +109,35 @@ sub-agent-hooks-install *flags:
 
 sub-agent-hooks-update *flags:
     git submodule foreach 'uv run --project "$toplevel/tools/skill-tools" skill-tools hooks update --config .claude/skill-tools.hooks.yaml {{flags}}'
+
+# --- branches: the same branch name across the umbrella and every submodule ---
+# Umbrella branches never create/switch/delete submodule branches; these do it in one step.
+# Every recipe takes --only SUB... to limit submodules. See maintenance/docs/repo-layout.md.
+
+# Branch, upstream ahead/behind, dirty count and pointer state of every repository
+branch-status *args:
+    just --justfile maintenance/scripts/justfile branch-status {{args}}
+
+# Local branches across repositories (* marks the current one)
+branch-list *args:
+    just --justfile maintenance/scripts/justfile branch-list {{args}}
+
+# Create a branch and switch to it everywhere (--from BASE)
+branch-new name *args:
+    just --justfile maintenance/scripts/justfile branch-new {{name}} {{args}}
+
+# Switch everywhere, tracking origin/<name> when only the remote has it (--create, --no-fetch)
+branch-switch name *args:
+    just --justfile maintenance/scripts/justfile branch-switch {{name}} {{args}}
+
+# Delete a branch wherever it exists; refuses main and unmerged branches (--force, --remote)
+branch-delete name *args:
+    just --justfile maintenance/scripts/justfile branch-delete {{name}} {{args}}
+
+# Push current branches with upstream set, submodules before the umbrella
+branch-push *args:
+    just --justfile maintenance/scripts/justfile branch-push {{args}}
+
+# Fast-forward current branches from their upstream without leaving them (unlike sub-sync)
+branch-pull *args:
+    just --justfile maintenance/scripts/justfile branch-pull {{args}}
