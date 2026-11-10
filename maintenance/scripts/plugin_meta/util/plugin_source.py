@@ -2,7 +2,7 @@
 
 Plugins inside a submodule (skills/, tools/) cannot be reached by a relative
 path from the umbrella's marketplace without recursive submodule clones, which
-older clients skip (see plans/repo-restructure 01-D). Their entries point at the
+older clients skip (repo-restructure research 01-D, removed; see git history). Their entries point at the
 submodule's own GitHub repository instead, unpinned (the repository's default
 branch), so an entry never names a commit that has not been pushed yet.
 """
