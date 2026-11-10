@@ -32,7 +32,7 @@ members = [
     "tools/textgraph",
     "tools/vscode-profiles",
     "tools/agents-rules",
-    "agent-tooling",
+    "agent-compat/agent-tooling",
 ]
 
 [dependency-groups]

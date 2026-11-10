@@ -1,0 +1,8 @@
+{
+  "moves": [
+    ["agent-tooling", "agent-compat/agent-tooling"]
+  ],
+  "exclude": ["plans/repo-restructure/", "maintenance/scripts/reorg/", "docs/log.md",
+              "ai-tools.yaml", "repo-tools.yaml", "repo-workflows.yaml", "repo-hooks.yaml"],
+  "links_only": true
+}

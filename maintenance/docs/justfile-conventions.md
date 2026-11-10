@@ -9,7 +9,7 @@ status: stable
 
 # justfileの書き方規約
 
-このリポジトリには複数の`justfile`が共存する。ルート[`justfile`](../../justfile)（`py-format`/`py-lint`/`skills-site-*`/Azureインフラ、フックの自己インストール`hooks-install`/`hooks-update`等リポジトリ横断のもの）、[`maintenance/scripts/justfile`](../scripts/justfile)（このリポジトリ自身のメタ生成、[ai-tools-config](./ai-tools-config.md)参照）、そして`docs/integrations/justfile`・`tools/my-agents/justfile`・`agent-tooling/justfile`・`site/skills-site/justfile`のような、そのディレクトリの関心事に閉じた小さなものに分かれる。
+このリポジトリには複数の`justfile`が共存する。ルート[`justfile`](../../justfile)（`py-format`/`py-lint`/`skills-site-*`/Azureインフラ、フックの自己インストール`hooks-install`/`hooks-update`等リポジトリ横断のもの）、[`maintenance/scripts/justfile`](../scripts/justfile)（このリポジトリ自身のメタ生成、[ai-tools-config](./ai-tools-config.md)参照）、そして`docs/integrations/justfile`・`tools/my-agents/justfile`・`agent-compat/agent-tooling/justfile`・`site/skills-site/justfile`のような、そのディレクトリの関心事に閉じた小さなものに分かれる。
 
 ## 共通の型
 

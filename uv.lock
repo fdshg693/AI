@@ -46,7 +46,7 @@ dev = [
 [[package]]
 name = "agent-tooling"
 version = "0.1.0"
-source = { editable = "agent-tooling" }
+source = { editable = "agent-compat/agent-tooling" }
 
 [package.dev-dependencies]
 dev = [

@@ -17,7 +17,7 @@ meta:
   requires_skills: changing-skills-and-tools
   status: experimental
   description: このリポジトリ固有のgit commit手順（lefthook前提、要約ラッパー同梱、スキル/ツール変更時の下流確認）
-  version: 1.1.6
+  version: 1.1.7
 ---
 
 # このリポジトリでのコミット
@@ -36,7 +36,7 @@ meta:
    - `.env` / `credentials.json` 等の秘密
    - `temp/` や作業メモ、自分以外のエージェントが残した無関係な差分
    - 「DO NOT EDIT MANUALLY」の生成物を手で直しただけの差分（次のコミットでlefthookが上書きする）
-3. **任意でステージ済みのコンテキスト候補を確認する** — `uv run --project agent-tooling agent-context-check --staged` を実行し、表示された対象の`AGENTS.md` / Claude Ruleを読み直す。これは更新要求や失敗条件ではなく、実装がルールから逸脱していないかを判断するための入口である。Git indexの状態やルールの内容を確認できない場合は、候補の有無だけで変更を決めない。
+3. **任意でステージ済みのコンテキスト候補を確認する** — `uv run --project agent-compat/agent-tooling agent-context-check --staged` を実行し、表示された対象の`AGENTS.md` / Claude Ruleを読み直す。これは更新要求や失敗条件ではなく、実装がルールから逸脱していないかを判断するための入口である。Git indexの状態やルールの内容を確認できない場合は、候補の有無だけで変更を決めない。
 4. **スキルまたは `tools/` CLI を含むなら下流を確認する** — lefthook の再生成・整形・辺の整合では、下流スキルの使い方や下流ツールの契約は直らない。`skill-tool-impact` は lefthook に繋いでいない（[skill-tool-relations](../../../docs/skill-tool-relations.md)）。
    - ステージ済みから対象を取る。`**/SKILL.md` はそのパス。`tools/` 配下は `repo-tools.yaml` のキーまたは登録済みパス。スクリプトに git 差分から推定するモードは無い
    - 対象ごとに [changing-skills-and-tools](../changing-skills-and-tools/SKILL.md) の手順に従う。チェックリストはここに複製しない

@@ -28,13 +28,13 @@ pre-commit:
             stage_fixed: true
           - name: regenerate hook generated files
             glob:
-              - "agent-tooling/agent_tooling/core/**"
-              - "agent-tooling/agent_tooling/hooks/common/**"
-              - "agent-tooling/agent_tooling/hooks/scenarios/**"
-              - "agent-tooling/agent_tooling/adapters/**"
-              - "agent-tooling/agent_tooling/hooks/build/**"
+              - "agent-compat/agent-tooling/agent_tooling/core/**"
+              - "agent-compat/agent-tooling/agent_tooling/hooks/common/**"
+              - "agent-compat/agent-tooling/agent_tooling/hooks/scenarios/**"
+              - "agent-compat/agent-tooling/agent_tooling/adapters/**"
+              - "agent-compat/agent-tooling/agent_tooling/hooks/build/**"
               - ".claude/rules/**"
-            run: just --justfile agent-tooling/justfile generate
+            run: just --justfile agent-compat/agent-tooling/justfile generate
             stage_fixed: true
           - name: compile gh-aw workflows
             glob: ".github/workflows/*.md"

@@ -49,7 +49,7 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 
 ### リポジトリ運用・開発支援
 
-- [agent-tooling/](agent-tooling/) — 複数AIコーディングツール向けのコンテキスト探索・フックアダプター・生成成果物を共有する配布可能なPythonパッケージ。
+- [agent-compat/agent-tooling/](agent-compat/agent-tooling/) — 複数AIコーディングツール向けのコンテキスト探索・フックアダプター・生成成果物を共有する配布可能なPythonパッケージ。
 - [maintenance/plugin/](maintenance/plugin/) — このリポジトリ自体のメンテ用 Claude Code プラグイン（生成ファイルの再生成手順など）。配布用スキルではなくレポジトリ固有のため、マーケットプレイスやスキル公開サイトには含めず `ai-tools.yaml` にも記載しない。詳細は [maintenance/plugin/README.md](maintenance/plugin/README.md) 参照。
 - [docs/](docs/) — AIツールを問わずリポジトリ全体で参照する知識（メンテナンス規約・設計判断・運用知識、他ツール環境への導入手順）を [OKF (Open Knowledge Format)](skills/plugins/coding/skills/okf-spec/) の概念ドキュメントとしてまとめたバンドル。詳細は [docs/index.md](docs/index.md) 参照。
 - [tools/](tools/) — リポジトリ管理・運用を支える便利ツール群。役割ごとの索引は [tools/README.md](tools/README.md)。主なサブフォルダ:

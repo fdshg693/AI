@@ -80,7 +80,7 @@ skills-site と同じ除外設定を skill-tools も尊重する。`exclude.sour
 
 ### 6. `repo-hooks.yaml` と `catalog.json` — エージェントフック
 
-`hooks` サブコマンドは`registry/repo-hooks.yaml`（`version: 1` と `catalog`）が指すフックカタログを読む。カタログは `agent-tooling/agent_tooling/hooks/generated/catalog.json` で、agent-tooling のビルドが各 `scenarios/<id>/hook.yaml` と生成ファイル一覧から作る（手編集しない）。流れと設計判断は [hook-distribution](./hook-distribution.md)。
+`hooks` サブコマンドは`registry/repo-hooks.yaml`（`version: 1` と `catalog`）が指すフックカタログを読む。カタログは `agent-compat/agent-tooling/agent_tooling/hooks/generated/catalog.json` で、agent-tooling のビルドが各 `scenarios/<id>/hook.yaml` と生成ファイル一覧から作る（手編集しない）。流れと設計判断は [hook-distribution](./hook-distribution.md)。
 
 - `repo-hooks.yaml` の `catalog` はこのファイル相対、カタログ内のパスはカタログのディレクトリ相対。カタログが参照するファイルはすべてコミット済みの生成物であること（GitHub source はツリー上のファイルしか取れない）。
 - `repo-hooks.yaml` が無い source は「フック0件」でエラーにしない。形式違反・参照切れは終了コード `2`。
