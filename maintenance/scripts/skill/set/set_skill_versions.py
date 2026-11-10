@@ -36,7 +36,7 @@ def main() -> None:
         if not changed:
             continue
 
-        skill_md_path.write_text(frontmatter.with_raw(new_raw), encoding="utf-8")
+        skill_md_path.write_text(frontmatter.with_raw(new_raw), encoding="utf-8", newline="\n")
         updated += 1
         print(f"set meta.version={DEFAULT_VERSION} in {rel_path}")
 

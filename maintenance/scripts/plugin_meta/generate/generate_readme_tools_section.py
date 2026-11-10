@@ -84,7 +84,7 @@ def main() -> None:
 
     config = load_config()
     section = build_section(config)
-    README_PATH.write_text(replace_section(readme_text, section), encoding="utf-8")
+    README_PATH.write_text(replace_section(readme_text, section), encoding="utf-8", newline="\n")
     print(f"Wrote {README_PATH.relative_to(REPO_ROOT)}")
 
 

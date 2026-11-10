@@ -322,7 +322,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 print(f"{progress} unchanged {rel_path} (7 fields already populated)", flush=True)
                 continue
 
-            skill_md_path.write_text(frontmatter.with_raw(new_raw), encoding="utf-8")
+            skill_md_path.write_text(frontmatter.with_raw(new_raw), encoding="utf-8", newline="\n")
             updated += 1
             print(f"{progress} updated {rel_path}: {', '.join(changed_fields)}", flush=True)
 

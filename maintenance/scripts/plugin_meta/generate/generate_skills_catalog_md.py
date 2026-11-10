@@ -73,7 +73,7 @@ def main() -> None:
 
     for skills_dir in skills_dirs:
         catalog_path = skills_dir / "CATALOG.md"
-        catalog_path.write_text(build_catalog(skills_dir), encoding="utf-8")
+        catalog_path.write_text(build_catalog(skills_dir), encoding="utf-8", newline="\n")
         print(f"Wrote {catalog_path.relative_to(REPO_ROOT)}")
 
 

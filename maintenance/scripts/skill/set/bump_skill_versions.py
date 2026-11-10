@@ -61,7 +61,7 @@ def main(argv: list[str]) -> int:
         if not changed:
             continue
 
-        abs_path.write_text(frontmatter.with_raw(new_raw), encoding="utf-8")
+        abs_path.write_text(frontmatter.with_raw(new_raw), encoding="utf-8", newline="\n")
         bumped += 1
         print(f"bumped {raw_path}: {current_version} -> {new_version}")
 

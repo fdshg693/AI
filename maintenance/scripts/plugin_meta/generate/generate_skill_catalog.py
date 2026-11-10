@@ -86,6 +86,7 @@ def main() -> None:
     catalog_path.write_text(
         json.dumps(output, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
+        newline="\n",
     )
     total = sum(len(entries) for entries in catalog.values())
     print(f"Wrote {total} skills across {len(catalog)} groups to {catalog_path}")

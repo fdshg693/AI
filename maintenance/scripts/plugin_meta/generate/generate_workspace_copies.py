@@ -68,7 +68,7 @@ def reset_output_dir(output_dir: Path) -> None:
             )
         shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True)
-    (output_dir / COPY_MARKER).write_text(MARKER_TEXT, encoding="utf-8")
+    (output_dir / COPY_MARKER).write_text(MARKER_TEXT, encoding="utf-8", newline="\n")
 
 
 def write_copy(entry: dict[str, Any]) -> int:
@@ -83,7 +83,9 @@ def write_copy(entry: dict[str, Any]) -> int:
     plugin_json = entry.get("plugin_json")
     if plugin_json:
         (output_dir.parent / "plugin.json").write_text(
-            json.dumps(plugin_json, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+            json.dumps(plugin_json, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+            newline="\n",
         )
     return len(skills)
 

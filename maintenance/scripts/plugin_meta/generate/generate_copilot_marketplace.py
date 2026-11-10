@@ -60,7 +60,7 @@ def main() -> None:
     marketplace = build_marketplace(marketplace_config)
     marketplace_path.parent.mkdir(parents=True, exist_ok=True)
     marketplace_path.write_text(
-        json.dumps(marketplace, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        json.dumps(marketplace, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n"
     )
     print(f"Wrote {len(marketplace['plugins'])} plugins to {marketplace_path}")
 
