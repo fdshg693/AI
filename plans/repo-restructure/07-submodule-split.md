@@ -1,6 +1,6 @@
 ---
 type: Plan Step
-status: planning-research
+status: implemented
 ---
 
 # Step 7: 履歴付きでサブモジュールへ切り出す
@@ -78,3 +78,4 @@ status: planning-research
   - アンブレラが生成するのは `.agents/plugins/marketplace.json`・`.github/plugin/marketplace.json` だけ。どちらも今は `./skills/plugins/ai-tools-knowledge` を local パスで指す。切り出し時に、`git-subdir`（Codex）・`github`+`path`（Copilot）へ変えるかを決める。
   - `.cline/skills/`・`.kilo/skills/`・`_agents/plugins/antigravity-meta/` は gitignore 済みの生成コピー（`just agent-compat-sync`）。サブモジュール化しても参照先（`skills/`）はアンブレラ配下にある。
   - `agent-compat/` には `agent-tooling/`・`formats/`（目印 `.format-samples`）・`docs/differences/`・README・AGENTS.md・CLAUDE.md がある。uv workspace の member は `agent-compat/agent-tooling`。
+- 2026-11-10（07 完了時）: [progress/07-submodule-results.md](progress/07-submodule-results.md)。ユーザー回答: リポジトリ名は案どおり、検査が通れば都度 push してよい、事前の実験リポジトリは作らず本番で確認する、切り出し中は並行作業を止めた。`git filter-repo` の代わりに `git subtree split` を使った。計画外で、skill-tools の local source と、サイトの GitHub リンクのサブモジュール対応が要った。marketplace の `ref` は固定しない。`tool-release.yml` は AI-tools へ移した。残課題（`paths:` の発火、Tool release の再実行、アンブレラのシークレット、skill-tools の表示 URL）は progress に記載。

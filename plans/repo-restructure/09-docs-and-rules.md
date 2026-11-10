@@ -56,3 +56,7 @@ status: planning-breakdown
   - ルート `AGENTS.md`・README の「フォルダ構成」の残り（`agent-compat/` の説明、`.cline`・`.kilo` の生成コピー）を最終構成に合わせる。
   - `agent-compat/AGENTS.md` を含めて `agents-rules` を再生成する。
   - 06 の残課題（progress の「残課題」）を確認する。
+- 2026-11-10（07 完了時）: [progress/07-submodule-results.md](progress/07-submodule-results.md)。07 で更新済み: `maintenance/docs/repo-layout.md` の「サブモジュール」節、`committing` スキル（2 段階コミット）、`lefthook-automation.md`・`gh-actions-lifecycle.md`、README の「取得」節、ルート `AGENTS.md` の 1 項目、CONTRIBUTING、`docs/integrations/{cli-tools,codex,claude-code}.md`。09 で行うこと:
+  - README・README_EN の「フォルダ構成」で、4 つのフォルダがサブモジュールであることと各リポジトリへのリンクを示す。README_EN に「取得」節を足す。
+  - `exploring-this-repo` の地図にサブモジュールと 2 段階コミットを反映する。`agents-rules` を再生成する（サブモジュールの中の AGENTS.md も対象になるか確認する）。
+  - `site/tools-site/docs/index.md` が参照するルートの `repo-tools.yaml`（互換コピー）を `registry/repo-tools.yaml` に直すか決める。

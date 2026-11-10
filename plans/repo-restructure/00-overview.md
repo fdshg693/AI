@@ -11,7 +11,7 @@ status: implementing-in-progress
 - [x] [04-links-tooling.md](04-links-tooling.md) — Junction マニフェスト仕様と作成・検証ツール、スキャナの Junction 除外
 - [x] [05-semantic-reorg.md](05-semantic-reorg.md) — 単一リポジトリのまま意味的再編（git mv）
 - [x] [06-agent-compat.md](06-agent-compat.md) — マルチ AI 対応の分離、ツール別書式サンプルと相違点ドキュメント
-- [ ] [07-submodule-split.md](07-submodule-split.md) — 履歴付きでサブモジュールへ切り出す
+- [x] [07-submodule-split.md](07-submodule-split.md) — 履歴付きでサブモジュールへ切り出す
 - [ ] [08-subfolder-workspaces.md](08-subfolder-workspaces.md) — サブモジュール単体で開くための Claude Code 用 Junction・指示ファイル
 - [ ] [09-docs-and-rules.md](09-docs-and-rules.md) — README・AGENTS.md・docs・探索スキルの最終更新
 
@@ -98,7 +98,7 @@ AI/                                 アンブレラ（fdshg693/AI のまま）
 
 ## 未決事項（ユーザー判断が必要）
 
-1. **GitHub リポジトリ名の詳細**（07 の直前に確認）: 案はアンブレラ＝`fdshg693/AI`（既存のものは削除済みのため新規作成。ユーザー回答）、サブモジュール＝`AI-skills`／`AI-tools`／`AI-agent-compat`／`AI-site`（いずれも public）。作成と push は外部向けの操作なので、実行直前に確認する。
+1. ~~**GitHub リポジトリ名の詳細**~~ → 解決（2026-11-10、07）: アンブレラ `fdshg693/AI`、サブモジュール `AI-skills`／`AI-tools`／`AI-agent-compat`／`AI-site`、すべて public で作成・push した（ユーザー回答: 検査が通れば都度 push してよい）。
 
 ## 変更/新規ファイル一覧
 

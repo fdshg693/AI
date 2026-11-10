@@ -81,3 +81,7 @@ status: planning-breakdown
 - 2026-11-10（01 完了時）: 01-B の実機確認から、アンブレラのスキルは `.claude/skills/<name>` の Junction で見せる方式に確定した。サブモジュールの `CLAUDE.md` から親を `@` import しない（親の `CLAUDE.md` は自動で読まれる）ことを「決定事項」に加え、status を `planning-breakdown` に進めた。
 - 2026-11-10（04 完了時）: `links` はアンブレラから再帰でチェックアウト済みサブモジュールの `.links.yaml` を読むので、「`links-sync` を全サブモジュールに対して実行するレシピ」は不要（`just links-sync` 1 回でよい）。`.links.yaml` はリポジトリのルート直下だけ。agent-tooling の走査は、起点そのもの（`.claude/rules`・`.claude/skills` 全体）が Junction なら読み、起点の中にある Junction は辿らない。`.claude/skills/<name>` の Junction でスキルを見せる場合、Claude Code 自体は読むが、agent-tooling の `recommend_skills` は `.claude/skills` を起点に走査するので `<name>` の Junction の中は見ない点に注意（必要なら 08 で起点の扱いを決める）。
 - 2026-11-10（06 完了時）: `agent-compat/` には `AGENTS.md`・`CLAUDE.md`（`@./AGENTS.md`）・README を作成済み。08 では単体で開いたときの前提（アンブレラ必須、Junction）を追記する。他ツールの知識スキルを Cline・Kilo・Antigravity に見せるコピーは、`just agent-compat-sync` で作る（アンブレラのルートで実行）。
+- 2026-11-10（07 完了時）: [progress/07-submodule-results.md](progress/07-submodule-results.md)。08 に効く事実:
+  - 各サブモジュールのルートには `.gitignore`・`.gitattributes`・`LICENSE`・`lefthook.yml`（`extends: [../maintenance/lefthook/submodule.yml]` だけ）がある。`skills/`・`site/` の README は切り出し時に作った最小のもの。`tools/`・`agent-compat/` は既存の README・AGENTS.md・CLAUDE.md。
+  - サブモジュール単体で開いたときにコミット手順を使うには、`maintenance/plugin/skills/committing` を `.claude/skills/committing` の Junction で見せる（ラッパーは `../maintenance/...` を前提にしている）。
+  - サブモジュールは detached HEAD で checkout される。開いたら `git switch main`（`just sub-sync`）。
