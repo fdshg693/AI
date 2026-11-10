@@ -1,5 +1,5 @@
 ---
-name: using-aim-library
+name: aim-lib
 description: "`tools/aim` のグローバルインストール済み Python 実装をライブラリとして使い、OpenRouter 経由で AI モデルへ単発リクエストを送る方法を説明する。Python コードからプロンプトを送信したい、モデル略記を解決したい、応答本文を取り出したい場合に使う。CLI コマンドを実行する場合は `aim-cli` を使う。"
 meta:
   tag: []
@@ -11,7 +11,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.8
+  version: 1.0.9
 ---
 
 # aim を Python ライブラリとして使う

@@ -13,15 +13,15 @@ description: tav`で`--topic`指定して収集した`pages/`(extract/crawl/sear
 # このスキルは上記2つを繋ぐ薄いオーケストレーション層で、自前のソースコードは持たない。
 meta:
   tag: []
-  requires_repo_tools: none
+  requires_repo_tools: tav, aim
   requires_env: OPENROUTER_API_KEY
-  dependencies: tav, aim-cli
+  dependencies: none
   requires_install: none
   requires_hooks: none
   requires_skills: tav-cli, aim-cli
   status: stable
   description: no description
-  version: 1.0.4
+  version: 1.0.5
 ---
 
 ## 全体の流れ

@@ -11,15 +11,15 @@ allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *) Bash(uv run ${CLAUDE_SKIL
 # !`<command>` で起動時に必ずスナップショットを更新/確認する
 meta:
   tag: []
-  requires_repo_tools: gh
+  requires_repo_tools: none
   requires_env: none
-  dependencies: PyYAML
+  dependencies: PyYAML, gh
   requires_install: npm i -g @colbymchenry/codegraph
   requires_hooks: none
   requires_skills: none
   status: stable
   description: CodeGraph 公式docsミラー、CLI --help YAML、MCP/CLI 実行時判断
-  version: 1.0.3
+  version: 1.0.4
 ---
 
 !`python "${CLAUDE_SKILL_DIR}/download_codegraph_docs.py"`

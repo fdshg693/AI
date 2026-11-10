@@ -26,10 +26,10 @@ meta:
   dependencies: tavily, python-dotenv
   requires_install: tavily, python-dotenv
   requires_hooks: none
-  requires_skills: tav-cli
+  requires_skills: none
   status: stable
   description: no description
-  version: 1.0.3
+  version: 1.0.4
 ---
 
 ## 前提条件

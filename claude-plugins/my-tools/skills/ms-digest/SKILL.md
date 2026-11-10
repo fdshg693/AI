@@ -13,15 +13,15 @@ description: Microsoft Learn/Azure公式ドキュメントを`mslearn`で検索�
 # このスキルは上記2つを繋ぐ薄いオーケストレーション層で、自前のソースコードは持たない。
 meta:
   tag: []
-  requires_repo_tools: none
+  requires_repo_tools: mslearn, aim
   requires_env: OPENROUTER_API_KEY
-  dependencies: mslearn, aim-cli
+  dependencies: none
   requires_install: none
   requires_hooks: none
   requires_skills: ms-learn, aim-cli
   status: stable
   description: no description
-  version: 1.3.4
+  version: 1.3.5
 ---
 
 ## 全体の流れ

@@ -5,7 +5,7 @@ allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *) Bash(uv run ${CLAUDE_SKIL
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
   tag: []
-  requires_repo_tools: none
+  requires_repo_tools: aim
   requires_env: none
   dependencies: requests, typer
   requires_install: none
@@ -13,7 +13,7 @@ meta:
   requires_skills: none
   status: stable
   description: Apify docs snapshot (docs.apify.com / apify.com llms.txt + curated excerpt) with per-page .md fetch and public Store search
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 !`python "${CLAUDE_SKILL_DIR}/webref_cli.py" download`

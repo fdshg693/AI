@@ -15,15 +15,15 @@ description: Use when creating or editing a skill that needs web content — eit
 # 由来・scripts/のコピー前提テンプレートという性質・命名変更の経緯は同階層のREADME.md参照（人間のメンテナ向け）
 meta:
   tag: []
-  requires_repo_tools: uv, gh
+  requires_repo_tools: aim, tav
   requires_env: none
-  dependencies: requests, typer
+  dependencies: requests, typer, uv, gh
   requires_install: none
   requires_hooks: none
   requires_skills: writing-skill, tav-cli, tav-lit, aim-cli
   status: stable
   description: no description
-  version: 1.2.1
+  version: 1.2.2
 ---
 
 # WEB情報を扱うスキルの作り方

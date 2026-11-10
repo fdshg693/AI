@@ -6,15 +6,15 @@ allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *) Bash(uv run ${CLAUDE_SKIL
 # network access to vercel.com is required.
 meta:
   tag: []
-  requires_repo_tools: uv
+  requires_repo_tools: aim
   requires_env: none
-  dependencies: requests, typer
+  dependencies: requests, typer, uv
   requires_install: none
   requires_hooks: none
   requires_skills: none
   status: stable
   description: Vercel documentation snapshot (llms.txt / products.md / sitemap.md / taxonomy.json) plus per-page .md fetch from vercel.com
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 !`uv run "${CLAUDE_SKILL_DIR}/webref_cli.py" download`

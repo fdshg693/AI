@@ -12,15 +12,15 @@ allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/merge_report.py *)
 # Python依存: pathspec (`.diffignore` にパターンを書く場合のみ)
 meta:
   tag: []
-  requires_repo_tools: git, python
+  requires_repo_tools: none
   requires_env: none
-  dependencies: pathspec
+  dependencies: pathspec, git, python
   requires_install: pathspec
   requires_hooks: none
   requires_skills: none
   status: experimental
   description: ブランチ取り込み前のコンフリクト解消案・取り込みレビュー・追従修正案の作成
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 現在のブランチ(取り込み先)に `$incoming` を取り込むと仮定して、マージの**提案**を作る。

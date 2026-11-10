@@ -3,15 +3,15 @@ name: github-copilot-docs
 description: Use when answering questions about GitHub Copilot (Copilot Chat, Copilot CLI, coding agent / cloud agent, agent skills, custom instructions, MCP integration, plans, billing, model access, IDE setup, troubleshooting, etc.). Grounds answers in the latest official docs (docs.github.com) instead of training-data memory, which may be stale.
 meta:
   tag: []
-  requires_repo_tools: WebFetch, Read, Grep, Bash, curl
+  requires_repo_tools: none
   requires_env: none
-  dependencies: python3
+  dependencies: python3, curl
   requires_install: none
   requires_hooks: none
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.4
+  version: 1.0.5
 ---
 
 # GitHub Copilot 最新ドキュメント参照

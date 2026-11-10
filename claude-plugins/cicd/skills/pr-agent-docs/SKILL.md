@@ -8,15 +8,15 @@ allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *)
 # !`<command>` で起動時に必ずスナップショットを更新/確認する
 meta:
   tag: []
-  requires_repo_tools: gh
+  requires_repo_tools: none
   requires_env: none
-  dependencies: none
+  dependencies: gh
   requires_install: none
   requires_hooks: none
   requires_skills: none
   status: stable
   description: PR-Agent 公式 docs/docs をローカルにミラーして使い方を根拠付きで答えるスキル
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 !`python "${CLAUDE_SKILL_DIR}/download_pr_agent_docs.py"`

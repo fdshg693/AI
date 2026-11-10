@@ -48,10 +48,10 @@ fields:
     example: "uv tool install --editable tools/aim"
 
   dependencies:
-    description: "スキル内スクリプトが使うライブラリ依存"
-    format: "パッケージ名のカンマ区切り"
+    description: "スキル内スクリプトが使うライブラリ依存と、このリポジトリ外の外部コマンド（gh, git, uv, python 等）"
+    format: "パッケージ名・コマンド名のカンマ区切り"
     default: "none"
-    example: "pyyaml"
+    example: "pyyaml, gh"
 
   requires_env:
     description: "必要な環境変数・.env設定"
@@ -60,8 +60,8 @@ fields:
     example: "OPENROUTER_API_KEY"
 
   requires_repo_tools:
-    description: "このリポジトリの自作ツールへの依存"
-    format: "リポジトリルートからのパスのカンマ区切り"
+    description: "このリポジトリの自作ツール（repo-tools.yaml 登録済み）への依存。無くても動く任意利用のツールも含め、任意かどうかは本文に書く。外部コマンドは dependencies、エージェントの組み込みツール（WebFetch 等）は書かない。meta-plugins/** だけは「そのメタスキルが説明するファイル」の意味で使う"
+    format: "repo-tools.yaml のキー、または登録済みパス（リポジトリルートから）のカンマ区切り"
     default: "none"
     example: "tools/aim"
 

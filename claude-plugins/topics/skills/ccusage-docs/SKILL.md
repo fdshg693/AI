@@ -11,7 +11,7 @@ description: Use when answering questions about ccusage (ccusage.com) — the lo
 allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *) Bash(uv run ${CLAUDE_SKILL_DIR}/*.py *)
 meta:
   tag: []
-  requires_repo_tools: none
+  requires_repo_tools: aim
   requires_env: none
   dependencies: requests, typer, PyYAML
   requires_install: none
@@ -19,7 +19,7 @@ meta:
   requires_skills: none
   status: stable
   description: Official site (llms.txt) plus bundled `ccusage --help` YAML. Former ccusage-cli-docs lives under cli-help.md / output/cli/.
-  version: 1.1.0
+  version: 1.1.1
 ---
 
 !`python "${CLAUDE_SKILL_DIR}/webref_cli.py" download`

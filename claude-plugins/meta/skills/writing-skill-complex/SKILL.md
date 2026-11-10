@@ -8,15 +8,15 @@ disable-model-invocation: true
 # 日常的な軽量スキル作成にはwriting-skillスキル（サブエージェント検証なし、低コスト）を使う
 meta:
   tag: []
-  requires_repo_tools: graphviz
+  requires_repo_tools: none
   requires_env: none
-  dependencies: none
+  dependencies: graphviz
   requires_install: none
   requires_hooks: none
   requires_skills: superpowers:test-driven-development,writing-skill
   status: stable
   description: no description
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 # Writing Skills

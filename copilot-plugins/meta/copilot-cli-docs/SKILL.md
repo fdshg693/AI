@@ -3,7 +3,7 @@ name: copilot-cli-docs
 description: Use when answering questions about the GitHub Copilot CLI (`copilot` command) — options, commands, help topics, MCP config, permissions, etc. Grounds answers in the CLI's own `--help` output instead of training-data memory, which may be stale.
 meta:
   tag: []
-  requires_repo_tools: Read, Grep
+  requires_repo_tools: none
   requires_env: none
   dependencies: python, copilot-cli
   requires_install: none
@@ -11,7 +11,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.3
+  version: 1.0.4
 ---
 
 # GitHub Copilot CLI ヘルプ参照

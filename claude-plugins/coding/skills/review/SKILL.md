@@ -11,15 +11,15 @@ allowed-tools: Bash(python plugins/review/skills/review/*.py *)
 # PRレビューのみ gh CLI(認証済み)が必須。無い場合はエラーで終了する
 meta:
   tag: []
-  requires_repo_tools: git, python, gh
+  requires_repo_tools: none
   requires_env: none
-  dependencies: pathspec
+  dependencies: pathspec, git, python, gh
   requires_install: pathspec
   requires_hooks: none
   requires_skills: none
   status: stable
   description: no description
-  version: 1.1.0
+  version: 1.1.1
 ---
 
 コードの差分をレビューする。**実際にgit状態を変更する操作(checkout/merge/commit/push/add/stashなど)や、PRへのコメント投稿・approve・mergeなどは一切行わない。行うのは既存の状態の読み取り(diff/status/show、PRの閲覧)のみ。**

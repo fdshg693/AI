@@ -5,15 +5,15 @@ allowed-tools: Bash(python cursor-plugins/meta/skills/cursor-cli-docs/*.py *)
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
   tag: []
-  requires_repo_tools: python
+  requires_repo_tools: none
   requires_env: none
-  dependencies: none
+  dependencies: python
   requires_install: none
   requires_hooks: none
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.4
+  version: 1.0.5
 ---
 
 !`python "${CLAUDE_SKILL_DIR}/generate_cursor_agent_help_yaml.py"`

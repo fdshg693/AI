@@ -3,7 +3,7 @@ name: ona-cli-docs
 description: Use when constructing or explaining raw Ona official CLI (`ona` command) invocations -- e.g. `ona-run`'s `--command` needs a hand-built `ona environment exec`/`ona environment ssh` line, or a question is about `ona login`/personal access tokens, environment/automation subcommands, or CLI configuration. Grounds answers in a curated excerpt of ona.com's official docs (via the ona-docs skill's cached llms.txt) instead of training-data memory, which may be stale or reference the pre-rename "Gitpod" CLI.
 meta:
   tag: []
-  requires_repo_tools: none
+  requires_repo_tools: aim
   requires_env: none
   dependencies: none
   requires_install: none
@@ -11,7 +11,7 @@ meta:
   requires_skills: ona-docs
   status: experimental
   description: no description
-  version: 1.0.1
+  version: 1.0.2
 ---
 
 # Ona 公式CLI（`ona`コマンド）リファレンス（抜粋版）

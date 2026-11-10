@@ -9,9 +9,10 @@ meta:
   dependencies: none
   requires_install: none
   requires_hooks: none
+  requires_skills: none
   status: experimental
   description: Kiloの永続的な指示とコンテキストの使い分けガイド
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 # Kilo Memory / Context Guide

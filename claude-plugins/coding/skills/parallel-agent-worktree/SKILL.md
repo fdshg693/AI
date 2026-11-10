@@ -15,15 +15,15 @@ description: 複数のClaude Codeセッション（同一ローカル環境上�
 # を参照（本ファイルはそれらを前提としたオーケストレーションフローのみを扱う）。
 meta:
   tag: []
-  requires_repo_tools: none
+  requires_repo_tools: linear-cli
   requires_env: LINEAR_API_KEY
-  dependencies: linear-cli
+  dependencies: none
   requires_install: none
   requires_hooks: none
   requires_skills: linear-cli
   status: experimental
   description: no description
-  version: 2.0.2
+  version: 2.0.3
 ---
 
 # parallel-agent-worktree の使い方

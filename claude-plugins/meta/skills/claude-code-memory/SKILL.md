@@ -9,10 +9,10 @@ meta:
   dependencies: none
   requires_install: none
   requires_hooks: none
-  requires_skills: claude-code-docs, writing-rules, writing-hooks, configuring-settings
+  requires_skills: claude-code-docs, writing-rules, writing-hooks, claude-settings
   status: stable
   description: no description
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 # Claude Codeのメモリ設計

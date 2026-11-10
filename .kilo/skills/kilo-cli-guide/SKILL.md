@@ -9,9 +9,10 @@ meta:
   dependencies: none
   requires_install: none
   requires_hooks: none
+  requires_skills: none
   status: experimental
   description: Kilo CLI usage guide
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 # Kilo CLI を使う

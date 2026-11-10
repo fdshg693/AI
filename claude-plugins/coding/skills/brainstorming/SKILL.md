@@ -9,7 +9,7 @@ description: "You MUST use this before any creative work - creating features, bu
 # 出力: docs/specs/<topic>-design.md
 meta:
   tag: []
-  requires_repo_tools: flow.dot
+  requires_repo_tools: none
   requires_env: none
   dependencies: none
   requires_install: none
@@ -17,7 +17,7 @@ meta:
   requires_skills: elements-of-style:writing-clearly-and-concisely
   status: stable
   description: no description
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 # Brainstorming Ideas Into Designs

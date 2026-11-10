@@ -6,15 +6,15 @@ allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *) Bash(uv run ${CLAUDE_SKIL
 # The pinned Markdown fallback is used only when a rendered page is insufficient.
 meta:
   tag: []
-  requires_repo_tools: uv
+  requires_repo_tools: none
   requires_env: none
-  dependencies: requests, typer
+  dependencies: requests, typer, uv
   requires_install: none
   requires_hooks: none
   requires_skills: none
   status: stable
   description: Current LiteLLM technical documentation indexed from the official sitemap
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 !`uv run "${CLAUDE_SKILL_DIR}/webref_cli.py" download-index`
