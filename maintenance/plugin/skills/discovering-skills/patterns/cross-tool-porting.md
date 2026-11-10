@@ -22,17 +22,17 @@
 
 ## スキルの場所
 
-| スキル                      | パス                                                                  |
-| --------------------------- | --------------------------------------------------------------------- |
-| `writing-skill`             | `skills/plugins/cc-knowledge/skills/writing-skill/SKILL.md`           |
-| `writing-skill-complex`     | `skills/plugins/cc-knowledge/skills/writing-skill-complex/SKILL.md`   |
-| `cursor-skill-use`          | `cursor-plugins/meta/skills/cursor-skill-use/SKILL.md`                |
-| `cursor-plugin-use`         | `cursor-plugins/meta/skills/cursor-plugin-use/SKILL.md`               |
-| `codex-skill-authoring`     | `codex-plugins/meta/skills/codex-skill-authoring/SKILL.md`            |
-| `writing-skills`（Copilot） | `copilot-plugins/meta/writing-skills/SKILL.md`                        |
-| `cline-skill-writer`        | `.cline/skills/cline-skill-writer/SKILL.md`                           |
-| `cline-plugin-writer`       | `.cline/skills/cline-plugin-writer/SKILL.md`                          |
-| `antigravity-skills`        | `_agents/plugins/antigravity-meta/skills/antigravity-skills/SKILL.md` |
+| スキル                      | パス                                                                       |
+| --------------------------- | -------------------------------------------------------------------------- |
+| `writing-skill`             | `skills/plugins/cc-knowledge/skills/writing-skill/SKILL.md`                |
+| `writing-skill-complex`     | `skills/plugins/cc-knowledge/skills/writing-skill-complex/SKILL.md`        |
+| `cursor-skill-use`          | `skills/plugins/ai-tools-knowledge/skills/cursor-skill-use/SKILL.md`       |
+| `cursor-plugin-use`         | `skills/plugins/ai-tools-knowledge/skills/cursor-plugin-use/SKILL.md`      |
+| `codex-skill-authoring`     | `skills/plugins/ai-tools-knowledge/skills/codex-skill-authoring/SKILL.md`  |
+| `writing-skills`（Copilot） | `skills/plugins/ai-tools-knowledge/skills/copilot-writing-skills/SKILL.md` |
+| `cline-skill-writer`        | `skills/plugins/ai-tools-knowledge/skills/cline-skill-writer/SKILL.md`     |
+| `cline-plugin-writer`       | `skills/plugins/ai-tools-knowledge/skills/cline-plugin-writer/SKILL.md`    |
+| `antigravity-skills`        | `skills/plugins/ai-tools-knowledge/skills/antigravity-skills/SKILL.md`     |
 
 ## 手順
 

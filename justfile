@@ -63,6 +63,13 @@ hooks-update *flags:
 hooks-installed:
     {{hooks_cli}} installed
 
+# Gitignored copies of skills for tools that only read the workspace root
+# (.cline/skills, .kilo/skills, _agents/plugins/antigravity-meta). Declared by
+# workspace_copies in registry/ai-tools.yaml. Run after cloning and after editing
+# skills/plugins/ai-tools-knowledge; pre-commit also refreshes them.
+agent-compat-sync:
+    uv run --directory maintenance/scripts python -m plugin_meta.generate.generate_workspace_copies
+
 # Junctions declared in .links.yaml. Never delete a junction with rm -rf /
 # Remove-Item -Recurse; use links-clean. See maintenance/docs/repo-layout.md.
 links-sync *args:

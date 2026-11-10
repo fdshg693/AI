@@ -10,6 +10,13 @@
   },
   "plugins": [
     {
+      "name": "ai-tools-knowledge",
+      "source": "./skills/plugins/ai-tools-knowledge",
+      "description": "Knowledge skills about other AI coding tools (Codex, GitHub Copilot, Cursor, Antigravity, Cline, Kilo Code): docs, CLIs, SDKs, memory, skills and plugins",
+      "version": "0.1.0",
+      "strict": true
+    },
+    {
       "name": "cicd",
       "source": "./skills/plugins/cicd",
       "description": "CICD plugins for Claude",

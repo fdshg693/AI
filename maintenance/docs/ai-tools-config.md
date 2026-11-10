@@ -17,7 +17,10 @@ status: stable
 
 `registry/ai-tools.yaml` が、「どのAIツールがどのプラグインを持ち、マーケットプレイス定義・スキルカタログがどこにあるか」の単一の情報源（SSOT）。
 
-- 各ツール（`claude-code` / `cline` / `codex` / `copilot` / `cursor` / `antigravity`）ごとに `plugins`（登録プラグイン一覧）、`marketplace`（出力先・メタデータ）、`skill_catalog`、`readme`（README生成用の説明文）等を持つ
+- 各ツール（`claude-code` / `cline` / `kilo` / `codex` / `copilot` / `cursor` / `antigravity`）ごとに `plugins`（スキルルートとして登録するプラグイン一覧）、`marketplace`（出力先・メタデータ・`sources`）、`workspace_copies`、`skill_catalog`、`readme`（README生成用の説明文）等を持つ
+- `plugins` の `path` は**スキルの実体**を指す。同じスキルルートは 1 つのツールにしか登録できない（skill-tools が重複を拒否する）。他ツールの知識スキルは Claude Code プラグイン `skills/plugins/ai-tools-knowledge` として `claude-code` に登録し、他ツールの `plugins` は空にする
+- `marketplace.sources`（Codex・Copilot）: そのツールのマーケットプレイスに載せるプラグインディレクトリ。各ディレクトリはそのツールのマニフェスト（Codex は `.codex-plugin/plugin.json`、Copilot はルートの `plugin.json`）をプラグインと一緒に持ち、手で保守する。生成器はそれを読んでマーケットプレイスだけを作る。Cursor の `.cursor-plugin/plugin.json` も同じディレクトリに置く（マーケットプレイスは生成しない）
+- `workspace_copies`（Cline・Kilo・Antigravity）: ワークスペース直下からしかスキルを読まないツール向けのコピー。`from` のスキルのうちフォルダ名が `include` に合うものを `output_dir` へコピーし、`plugin_json` があれば `output_dir` の親に書く。出力は gitignore 済みで、目印の `.agent-compat-copy` を置く（`find_skill_md_files` はこれがあるディレクトリを走査しない）。clone 直後と知識スキルの編集後に `just agent-compat-sync`（pre-commit も実行する）
 - プラグイン一覧は `rglob` 等での自動検出ではなく、`ai-tools.yaml` に**明示的に列挙**する方針（同名プラグインの重複登録などのdriftを防ぐため、人が編集するファイル側にリストを置いてdiffに残す）
 - 読み込みは必ず `maintenance/scripts/plugin_meta/util/ai_tools_config.py` の `load_tool(tool_key)` / `load_config()` 経由。`generate_*.py` にパスやメタデータをハードコードしない
 
@@ -25,14 +28,15 @@ status: stable
 
 以下はすべて `ai-tools.yaml` から生成される「派生ファイル」で、ファイル冒頭に `DO NOT EDIT MANUALLY` の注記が入る。**直接編集せず、`ai-tools.yaml` を直して再生成する**。
 
-| 生成物                                                                            | 生成スクリプト                     |
-| --------------------------------------------------------------------------------- | ---------------------------------- |
-| `.claude-plugin/marketplace.json`（Claude Code）                                  | `generate_marketplace.py`          |
-| `.agents/plugins/marketplace.json`（Codex）                                       | `generate_codex_marketplace.py`    |
-| `copilot-plugins/meta/plugin.json` / `.github/plugin/marketplace.json`（Copilot） | `generate_copilot_marketplace.py`  |
-| `.claude-plugin/skill-catalog.json`                                               | `generate_skill_catalog.py`        |
-| 各プラグインの `skills/CATALOG.md`                                                | `generate_skills_catalog_md.py`    |
-| `README.md` の `<!-- BEGIN/END: ai-tools-section -->` 節                          | `generate_readme_tools_section.py` |
+| 生成物                                                            | 生成スクリプト                     |
+| ----------------------------------------------------------------- | ---------------------------------- |
+| `.claude-plugin/marketplace.json`（Claude Code）                  | `generate_marketplace.py`          |
+| `.agents/plugins/marketplace.json`（Codex）                       | `generate_codex_marketplace.py`    |
+| `.github/plugin/marketplace.json`（Copilot）                      | `generate_copilot_marketplace.py`  |
+| `.cline/skills/` ほか `workspace_copies` の出力（gitignore 済み） | `generate_workspace_copies.py`     |
+| `.claude-plugin/skill-catalog.json`                               | `generate_skill_catalog.py`        |
+| 各プラグインの `skills/CATALOG.md`                                | `generate_skills_catalog_md.py`    |
+| `README.md` の `<!-- BEGIN/END: ai-tools-section -->` 節          | `generate_readme_tools_section.py` |
 
 いずれも `maintenance/scripts/plugin_meta/generate/generate_*.py` にあり、`from plugin_meta.util.ai_tools_config import REPO_ROOT, load_tool` で設定を読み、対象ファイルを**丸ごと再生成**（マージではない）する。
 
@@ -63,14 +67,14 @@ just --justfile maintenance/scripts/justfile skill-versions            # meta.ve
 2. `ai-tools.yaml` の `tools.claude-code.plugins` に `- path: skills/plugins/<name>` / `kind: plugin` / `skills_layout: subdir` を追記（**アルファベット順**を維持）
 3. `.claude-plugin/marketplace.json` と `.claude-plugin/skill-catalog.json`、対象プラグインの `skills/CATALOG.md` を再生成（上記コマンド、またはコミット時のlefthookに任せる）
 
-Codex/Copilotプラグインを追加する場合も同様に、まず該当ツールの `plugins`（Copilotは`kind: plugin`エントリが単一である前提、`generate_copilot_marketplace.py`参照）を `ai-tools.yaml` に追記してから再生成する。
+Codex/Copilot のマーケットプレイスに載せる場合は、プラグインディレクトリにそのツールのマニフェストを置き、該当ツールの `marketplace.sources` に追記してから再生成する。Cline・Kilo・Antigravity に見せる場合は `workspace_copies` の `include` を広げる。
 
 ## 落とし穴
 
 - `ai-tools.yaml` を更新せずにプラグインフォルダだけ作っても、マーケットプレイスやスキルカタログには載らない（`generate_*.py`は`ai-tools.yaml`列挙分しか見ない）
 - 生成ファイルを直接編集しても、次のコミットでlefthookが上書きする
-- `skills_layout` は `subdir`（`<plugin>/skills/`配下にSKILL.md）と `direct`（`<plugin>`直下にSKILL.md、Copilot/Cursorが該当）の2種類。プラグインの実態に合わせて正しく指定する
-- Copilotの `generate_copilot_marketplace.py` はスキル一覧を `copilot-plugins/meta` 配下のフォルダ名から自動検出する（`ai-tools.yaml`には列挙しない）。他ツールとは挙動が異なる点に注意
+- `skills_layout` は `subdir`（`<plugin>/skills/`配下にSKILL.md）と `direct`（`<plugin>`直下にSKILL.md）の2種類。現在の登録はすべて `subdir`
+- `workspace_copies` の出力（`.cline/skills/` 等）を直接編集しても、次の `just agent-compat-sync` で消える。編集は `skills/plugins/ai-tools-knowledge` 側で行う
 
 ## 関連
 

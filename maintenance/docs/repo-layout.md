@@ -14,14 +14,17 @@ status: draft
 
 新しいスキル・スクリプト・文書は、次の順に当てはめて置き場所を決める（2026-11 の再編で決めた基準）。
 
-| 区分                 | 判定                                                                                                         | 置き場所                                                        |
-| -------------------- | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------- |
-| リポジトリ都合       | このリポジトリの保守にしか意味がない（生成器、pre-commit、メンテ手順のスキル、規約文書）                     | `maintenance/plugin`・`maintenance/scripts`・`maintenance/docs` |
-| SSOT                 | 複数の生成物・検査が読む手編集の yaml                                                                        | `registry/`                                                     |
-| tools 付属スキル     | 本文が `tools/<name>` の CLI のインストールを必須にしている（`meta.requires_repo_tools` の値だけで決めない） | `tools/_plugin/my-tools/skills/`                                |
-| 汎用スキル           | 上のどれでもない Claude Code スキル。CLI を任意で使うだけ（無くても動く）ならここ                            | `skills/plugins/<plugin>/skills/`                               |
-| 他 AI ツールの知識   | Codex・Copilot 等の使い方を説明するスキル（中身は普通の SKILL.md）                                           | `skills/plugins/ai-tools-knowledge/`（06 で作る）               |
-| ツール固有書式の見本 | そのツールの書式でしか書けないファイル（plugin manifest、rules の frontmatter 等）                           | `agent-compat/formats/<tool>/`（06 で作る）                     |
+| 区分                   | 判定                                                                                                         | 置き場所                                                        |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------- |
+| リポジトリ都合         | このリポジトリの保守にしか意味がない（生成器、pre-commit、メンテ手順のスキル、規約文書）                     | `maintenance/plugin`・`maintenance/scripts`・`maintenance/docs` |
+| SSOT                   | 複数の生成物・検査が読む手編集の yaml                                                                        | `registry/`                                                     |
+| tools 付属スキル       | 本文が `tools/<name>` の CLI のインストールを必須にしている（`meta.requires_repo_tools` の値だけで決めない） | `tools/_plugin/my-tools/skills/`                                |
+| 汎用スキル             | 上のどれでもない Claude Code スキル。CLI を任意で使うだけ（無くても動く）ならここ                            | `skills/plugins/<plugin>/skills/`                               |
+| 他 AI ツールの知識     | Codex・Copilot 等の使い方を説明するスキル（中身は普通の SKILL.md）                                           | `skills/plugins/ai-tools-knowledge/`                            |
+| マルチ AI 対応の仕組み | 複数の AI ツールへ同じものを届ける仕組み（フック・コンテキスト注入）。スキルの実体は置かない                 | `agent-compat/agent-tooling/`                                   |
+| ツール固有書式の見本   | そのツールの書式でしか書けないファイル（plugin manifest、rules の frontmatter 等）                           | `agent-compat/formats/<tool>/`                                  |
+
+他ツールへの届け方（マーケットプレイスの `sources`、gitignore 済みの `workspace_copies`）は [ai-tools-config](./ai-tools-config.md)。生成コピー（`.cline/skills/` 等）は Junction ではなく実ディレクトリで、目印 `.agent-compat-copy` によって走査から外す。
 
 スクリプトを同梱して `tools/` のインストールが要らないスキルは汎用側（例: `skills/plugins/web-lookup`、`skills/plugins/doc-tools`）。CLI 本体は `tools/<name>` の平坦配置のまま（`registry/repo-tools.yaml` の `path` 契約）。
 

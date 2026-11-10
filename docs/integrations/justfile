@@ -54,7 +54,7 @@ agents-rules-local:
 agents-rules-git:
     uv tool install "git+{{repo_url}}#subdirectory=tools/agents-rules"
 
-# Install the cline-personal-info plugin (tools/cline-wrapper, cline-plugins/personal-info) globally for Cline SDK/CLI.
+# Install the cline-personal-info plugin (tools/cline-wrapper, agent-compat/formats/cline/personal-info) globally for Cline SDK/CLI.
 # Shells out to Git Bash to dodge a PowerShell/cmd "uv_spawn 'npm'" ENOENT bug — see docs/integrations/cline.md.
 cline-personal-info:
-    & "C:/Program Files/Git/bin/bash.exe" -c "cline plugin install ../../cline-plugins/personal-info --force"
+    & "C:/Program Files/Git/bin/bash.exe" -c "cline plugin install ../../agent-compat/formats/cline/personal-info --force"

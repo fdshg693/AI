@@ -20,24 +20,26 @@ For the same tool, the "config the tool reads" (starts with `.`) and the "actual
   - [skills/plugins/](skills/plugins/) — Actual Claude Code plugins
   - [.claude-plugin/](.claude-plugin/) — Marketplace definition (`marketplace.json`) and skill catalog (`skill-catalog.json`) that bundle the plugins above
 
+Skill bodies live once, as Claude Code plugins (`skills/plugins/`, `tools/_plugin/`). Other tools' folders only hold marketplace definitions or gitignored copies made by `just agent-compat-sync`. Knowledge skills about other tools are in [skills/plugins/ai-tools-knowledge/](skills/plugins/ai-tools-knowledge/); tool-specific format samples and differences from Claude Code are in [agent-compat/](agent-compat/).
+
 - **Cline**
-  - [.cline/](.cline/) — Cline settings (rules, skills)
+  - [.cline/](.cline/) — Cline settings. `.cline/skills/` is a gitignored copy made by `just agent-compat-sync`
   - [.clinerules/](.clinerules/) — Output folder for Cline rules, generated from `AGENTS.md` by the `tools/agents-rules` CLI (`agents-rules -t cline`). Absent until generated. Do not edit by hand
-  - [cline-plugins/](cline-plugins/) — Cline plugins (mainly custom tools)
+
+- **Kilo Code**
+  - [.kilo/](.kilo/) — Kilo Code settings. `.kilo/skills/` is a gitignored copy made by `just agent-compat-sync`
 
 - **Codex**
-  - [codex-plugins/](codex-plugins/) — Codex plugins (settings/skills under `meta/`)
-  - [.agents/](.agents/) — Marketplace definition read by Codex (`.agents/plugins/marketplace.json`), which loads plugins from `codex-plugins/`. Named `_agents/` to avoid a folder-name clash with Antigravity (see `.agents/README.md`)
+  - [.agents/](.agents/) — Marketplace definition read by Codex (`.agents/plugins/marketplace.json`), pointing at `skills/plugins/ai-tools-knowledge` (which ships `.codex-plugin/plugin.json`). See `.agents/README.md` for the clash with Antigravity
 
 - **GitHub Copilot**
-  - [copilot-plugins/](copilot-plugins/) — Copilot plugins (docs/skills under `meta/`)
-  - [.github/](.github/) — Copilot settings (`copilot/settings.json`), instructions, agents/skills (loaded via plugins), and CI GitHub Actions workflows
+  - [.github/](.github/) — Copilot settings (`copilot/settings.json`), instructions, marketplace definition (`plugin/marketplace.json`, pointing at the root `plugin.json` of `skills/plugins/ai-tools-knowledge`), and CI GitHub Actions workflows
 
 - **Cursor**
-  - [cursor-plugins/](cursor-plugins/) — Cursor plugins (`.cursor-plugin`, docs, skills under `meta/`)
+  - [.cursor/](.cursor/) — Cursor settings. The plugin is `skills/plugins/ai-tools-knowledge` (ships `.cursor-plugin/plugin.json`)
 
 - **Antigravity**
-  - [_agents/](_agents/) — Storage location for Antigravity plugins (`_agents/plugins/`). Distinguished from `.agents/` (see `_agents/README.md`)
+  - [_agents/](_agents/) — Antigravity workspace plugins (`_agents/plugins/`). `antigravity-meta` is a gitignored copy made by `just agent-compat-sync`. Distinguished from `.agents/` (see `_agents/README.md`)
 
 <!-- END: ai-tools-section -->
 

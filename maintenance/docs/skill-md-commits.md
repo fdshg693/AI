@@ -17,7 +17,7 @@ status: stable
 
 1. **生成物の再生成**（`stage_fixed: true`、成功すれば自動でステージに追加される）
    - `skill-catalog.json` / 各プラグインの `CATALOG.md`（詳細は[ai-tools-config](./ai-tools-config.md)）
-   - `copilot-plugins/meta/**/SKILL.md`が対象なら`plugin.json`/`marketplace.json`も
+   - `skills/plugins/ai-tools-knowledge/**` が対象なら、gitignore 済みのワークスペースコピー（`.cline/skills/` 等）も作り直す（コミットには入らない）
 2. **meta.version / meta.description / meta.tag のデフォルト値バックフィル**（`stage_fixed: true`）
    - `just skill-versions` / `just skill-descriptions` / `just skill-tags` が**リポジトリ全体**の`SKILL.md`を走査し、値が空のフィールドに`1.0.0`/`no description`/`[]`を補完する。ステージされていない他のスキルにも波及するため、コミット後の差分が「自分が触った分」より大きくなるのは想定内。
 3. **meta.versionバンプチェック（ブロッキング、自動修正なし）**

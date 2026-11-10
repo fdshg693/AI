@@ -13,7 +13,7 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 ### AIツールごとの設定・プラグインルート
 
 各 AI コーディングツール向けの設定フォルダとプラグイン実体フォルダの対応。  
-同一ツールでも「ツールが読む設定（`.` 始まり）」と「プラグイン実体（`*-plugins/`）」が分かれていることがある。
+スキルの実体は Claude Code プラグイン（`skills/plugins/`・`tools/_plugin/`）に 1 か所だけ置く。他ツールのフォルダにあるのはマーケットプレイス定義か、`just agent-compat-sync` で作る gitignore 済みのコピー。
 
 - **Claude Code**
   - [.claude/](.claude/) — このリポジトリ自体を Claude Code で開発するための設定（rules, workflows 等。hooks/ は skill-tools による自己インストール先）
@@ -22,27 +22,23 @@ AIコーディングツールの設定・ツールに関する個人の調査・
   - [.claude-plugin/](.claude-plugin/) — 上記プラグイン群をまとめるマーケットプレイス定義（`marketplace.json`）と skill カタログ（`skill-catalog.json`）
 
 - **Cline**
-  - [.cline/](.cline/) — Cline 用設定（rules, skills）
+  - [.cline/](.cline/) — Cline 用設定。`.cline/skills/` は `skills/plugins/ai-tools-knowledge` から `just agent-compat-sync` で作る gitignore 済みのコピー（手編集しない）
   - [.clinerules/](.clinerules/) — Cline が読むルールファイルの出力先。`AGENTS.md` から `tools/agents-rules` CLI（`agents-rules -t cline`）で生成する。未生成なら存在しない。手編集しない
-  - [cline-plugins/](cline-plugins/) — Cline 用プラグイン（主にカスタムツール系）
 
 - **Kilo Code**
-  - [.kilo/](.kilo/) — Kilo Code（CLI/TUI/VS Code拡張）が`.kilo/skills/`から自動検出するSkill（SKILL.md形式、marketplace.json/plugin.json相当のバンドル機構はKilo自体に存在しない）
+  - [.kilo/](.kilo/) — Kilo Code（CLI/TUI/VS Code拡張）の設定。`.kilo/skills/` は `skills/plugins/ai-tools-knowledge` から `just agent-compat-sync` で作る gitignore 済みのコピー。`.kilo/plugin/` は agent-tooling のフック配置先
 
 - **Codex**
-  - [codex-plugins/](codex-plugins/) — Codex 用プラグイン（`meta/` 配下に設定・スキル）
-  - [.agents/](.agents/) — Codex が読むマーケットプレイス定義（`.agents/plugins/marketplace.json`）から `codex-plugins/` のプラグインを読み込む。Antigravity ともフォルダ名が競合するため `_agents/` と使い分け（`.agents/README.md` 参照）
+  - [.agents/](.agents/) — Codex が読むマーケットプレイス定義（`.agents/plugins/marketplace.json`）。`skills/plugins/ai-tools-knowledge`（`.codex-plugin/plugin.json` を同梱）を指す。Antigravity ともフォルダ名が競合するため `_agents/` と使い分け（`.agents/README.md` 参照）
 
 - **GitHub Copilot**
-  - [copilot-plugins/](copilot-plugins/) — Copilot 用プラグイン（`meta/` 配下に docs/skills 群）
-  - [.github/](.github/) — Copilot 設定（`copilot/settings.json`）、instructions、agents/skills（プラグイン経由で読込）、および CI 用 GitHub Actions workflows
+  - [.github/](.github/) — Copilot 設定（`copilot/settings.json`）、instructions、マーケットプレイス定義（`plugin/marketplace.json`。`skills/plugins/ai-tools-knowledge` のルート `plugin.json` を指す）、および CI 用 GitHub Actions workflows
 
 - **Cursor**
-  - [.cursor/](.cursor/) — Cursor が読む設定フォルダ。`.cursor/rules/` はネストした AGENTS.md と重複するため意図的に空（理由は `.cursor/rules/README.md` 参照）
-  - [cursor-plugins/](cursor-plugins/) — Cursor 用プラグイン（`meta/` 配下に `.cursor-plugin`, docs, skills 群）
+  - [.cursor/](.cursor/) — Cursor が読む設定フォルダ。`.cursor/rules/` はネストした AGENTS.md と重複するため意図的に空（理由は `.cursor/rules/README.md` 参照）。プラグインは `skills/plugins/ai-tools-knowledge`（`.cursor-plugin/plugin.json` を同梱）
 
 - **Antigravity**
-  - [_agents/](_agents/) — Antigravity 用プラグイン格納場所（`_agents/plugins/`）。`.agents/` と使い分ける（`_agents/README.md` 参照）
+  - [_agents/](_agents/) — Antigravity のワークスペースプラグイン置き場（`_agents/plugins/`）。`antigravity-meta` は `skills/plugins/ai-tools-knowledge` から `just agent-compat-sync` で作る gitignore 済みのコピー。`.agents/` と使い分ける（`_agents/README.md` 参照）
   - [.agents/rules/](.agents/rules/) — Antigravity が読むワークスペース Rules。`AGENTS.md` から `tools/agents-rules` CLI で生成する（`.agents/README.md` 参照）。手編集しない
 
 <!-- END: ai-tools-section -->

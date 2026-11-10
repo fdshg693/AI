@@ -25,9 +25,13 @@ marketplace:
 codex-marketplace:
     uv run python -m plugin_meta.generate.generate_codex_marketplace
 
-# Regenerate copilot-plugins/meta/plugin.json and .github/plugin/marketplace.json
+# Regenerate .github/plugin/marketplace.json from each source's root plugin.json
 copilot-marketplace:
     uv run python -m plugin_meta.generate.generate_copilot_marketplace
+
+# Write the gitignored workspace skill copies (.cline/skills, .kilo/skills, _agents/plugins/...)
+workspace-copies:
+    uv run python -m plugin_meta.generate.generate_workspace_copies
 
 # Regenerate .claude-plugin/skill-catalog.json
 skill-catalog:
@@ -48,7 +52,7 @@ registry-compat:
 # Regenerate all generated marketplace and skill catalog files.
 # AGENTS.md -> Cline/Copilot/Antigravity rules are not generated here; run the
 # tools/agents-rules CLI (`uv run agents-rules`) explicitly when needed.
-generate: marketplace codex-marketplace copilot-marketplace skill-catalog skills-catalog-md readme-tools-section registry-compat
+generate: marketplace codex-marketplace copilot-marketplace workspace-copies skill-catalog skills-catalog-md readme-tools-section registry-compat
 
 # --- skill/set, skill/check, skill/query: SKILL.md frontmatter and relation graph ---
 

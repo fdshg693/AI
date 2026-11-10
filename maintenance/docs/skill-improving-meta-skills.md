@@ -27,7 +27,7 @@ Claude Codeの `skills/plugins/cc-knowledge/skills/` 配下には、スキルの
 
 ## 他ツールにも同種のメタスキルがある
 
-Cline（`cline-skill-writer`）、Codex（`codex-skill-authoring`）、Copilot（`copilot-plugins/meta/writing-skills`）にも、それぞれ自分のツール向けの「スキルの書き方スキル」がある。これは[claude-code-first-skills](./claude-code-first-skills.md)の方針どおり、**そのツール自身のスキル機構についてのスキル**であり、Claude Codeの`writing-skill`をポートしたものではない。
+Cline（`cline-skill-writer`）、Codex（`codex-skill-authoring`）、Copilot（`skills/plugins/ai-tools-knowledge/skills/copilot-writing-skills`）にも、それぞれ自分のツール向けの「スキルの書き方スキル」がある。これは[claude-code-first-skills](./claude-code-first-skills.md)の方針どおり、**そのツール自身のスキル機構についてのスキル**であり、Claude Codeの`writing-skill`をポートしたものではない。
 
 ## 新しいメンテナンスガイダンスをどこに置くか
 

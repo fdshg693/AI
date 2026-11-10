@@ -75,6 +75,8 @@ claude plugin install <plugin-name>@seiwan-marketplace --scope project
 
 ほかのプラグイン名（`cicd`・`coding`・`my-tools`・`no-code`・`others`・`special`・`subagents`・`topics`）は変わらない。
 
+Codex・Cursor・Antigravity・Cline・Kilo・Copilot の使い方を説明するスキル（`codex-docs`・`cursor-skill-use` など）は、新しいプラグイン `ai-tools-knowledge` として Claude Code からも入れられる。Codex・Copilot のマーケットプレイスでも、旧 `meta` プラグインに代わってこのプラグインを配布する。
+
 ## 3. 確認・管理
 
 ```

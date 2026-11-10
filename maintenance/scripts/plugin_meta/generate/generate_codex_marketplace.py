@@ -1,5 +1,6 @@
-"""Regenerate .agents/plugins/marketplace.json from the codex plugins listed
-in ai-tools.yaml.
+"""Regenerate .agents/plugins/marketplace.json from the codex marketplace
+sources listed in ai-tools.yaml (``marketplace.sources``: plugin dirs carrying a
+``.codex-plugin/plugin.json``).
 
 Plugin paths in the generated catalog are relative to the repository root, as
 required for a repo-scoped Codex marketplace.
@@ -37,7 +38,8 @@ def manifest_entry(manifest_path: Path, default_category: str) -> dict:
 
 def discover_plugins(tool: dict, default_category: str) -> list[dict]:
     manifest_paths = [
-        REPO_ROOT / plugin["path"] / ".codex-plugin" / "plugin.json" for plugin in tool["plugins"]
+        REPO_ROOT / source / ".codex-plugin" / "plugin.json"
+        for source in tool["marketplace"]["sources"]
     ]
     return [manifest_entry(manifest_path, default_category) for manifest_path in manifest_paths]
 

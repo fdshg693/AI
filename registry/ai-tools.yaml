@@ -14,6 +14,18 @@
 #     "workspace" (tool-root skills folder, no manifest, not marketplace-registered)
 #   - skills_layout: "subdir" if SKILL.md folders live under <path>/skills, or
 #     "direct" if SKILL.md folders are immediate children of <path> itself
+# A skill root may be listed under one tool only (skill-tools rejects duplicates).
+# Skill bodies live once under skills/ or tools/_plugin/ as Claude Code plugins;
+# other tools reach them through:
+#   - marketplace.sources: plugin dirs listed in that tool's marketplace. Each
+#     dir carries the tool's own manifest (.codex-plugin/plugin.json, root
+#     plugin.json for Copilot), maintained with the plugin.
+#   - workspace_copies: gitignored copies for tools that only read skills from
+#     the workspace root (Cline, Kilo, Antigravity). Written by
+#     generate_workspace_copies.py (`just agent-compat-sync`); never edit them.
+#     from: skill root to copy from; include: fnmatch patterns on the skill
+#     folder name; output_dir: where the skill folders go; plugin_json: optional
+#     manifest written at output_dir's parent.
 
 tools:
   claude-code:
@@ -29,6 +41,9 @@ tools:
         - path: .claude-plugin
           description: "上記プラグイン群をまとめるマーケットプレイス定義（`marketplace.json`）と skill カタログ（`skill-catalog.json`）"
     plugins:
+      - path: skills/plugins/ai-tools-knowledge
+        kind: plugin
+        skills_layout: subdir
       - path: skills/plugins/cicd
         kind: plugin
         skills_layout: subdir
@@ -78,16 +93,14 @@ tools:
     readme:
       config_dirs:
         - path: .cline
-          description: "Cline 用設定（rules, skills）"
+          description: "Cline 用設定。`.cline/skills/` は `skills/plugins/ai-tools-knowledge` から `just agent-compat-sync` で作る gitignore 済みのコピー（手編集しない）"
         - path: .clinerules
           description: "Cline が読むルールファイルの出力先。`AGENTS.md` から `tools/agents-rules` CLI（`agents-rules -t cline`）で生成する。未生成なら存在しない。手編集しない"
-      plugin_roots:
-        - path: cline-plugins
-          description: "Cline 用プラグイン（主にカスタムツール系）"
-    plugins:
-      - path: .cline
-        kind: workspace
-        skills_layout: subdir
+    plugins: []
+    workspace_copies:
+      - from: skills/plugins/ai-tools-knowledge/skills
+        include: ["cline-*"]
+        output_dir: .cline/skills
     rules_from_agents_md:
       output_dir: .clinerules
 
@@ -95,25 +108,22 @@ tools:
     readme:
       config_dirs:
         - path: .kilo
-          description: "Kilo Code（CLI/TUI/VS Code拡張）が`.kilo/skills/`から自動検出するSkill（SKILL.md形式、marketplace.json/plugin.json相当のバンドル機構はKilo自体に存在しない）"
-    plugins:
-      - path: .kilo
-        kind: workspace
-        skills_layout: subdir
+          description: "Kilo Code（CLI/TUI/VS Code拡張）の設定。`.kilo/skills/` は `skills/plugins/ai-tools-knowledge` から `just agent-compat-sync` で作る gitignore 済みのコピー。`.kilo/plugin/` は agent-tooling のフック配置先"
+    plugins: []
+    workspace_copies:
+      - from: skills/plugins/ai-tools-knowledge/skills
+        include: ["kilo-*"]
+        output_dir: .kilo/skills
 
   codex:
     readme:
-      plugin_roots:
-        - path: codex-plugins
-          description: "Codex 用プラグイン（`meta/` 配下に設定・スキル）"
       config_dirs:
         - path: .agents
-          description: "Codex が読むマーケットプレイス定義（`.agents/plugins/marketplace.json`）から `codex-plugins/` のプラグインを読み込む。Antigravity ともフォルダ名が競合するため `_agents/` と使い分け（`.agents/README.md` 参照）"
-    plugins:
-      - path: codex-plugins/meta
-        kind: plugin
-        skills_layout: subdir
+          description: "Codex が読むマーケットプレイス定義（`.agents/plugins/marketplace.json`）。`skills/plugins/ai-tools-knowledge`（`.codex-plugin/plugin.json` を同梱）を指す。Antigravity ともフォルダ名が競合するため `_agents/` と使い分け（`.agents/README.md` 参照）"
+    plugins: []
     marketplace:
+      sources:
+        - skills/plugins/ai-tools-knowledge
       output_path: .agents/plugins/marketplace.json
       name: seiwan-codex-marketplace
       interface:
@@ -122,37 +132,20 @@ tools:
 
   copilot:
     readme:
-      plugin_roots:
-        - path: copilot-plugins
-          description: "Copilot 用プラグイン（`meta/` 配下に docs/skills 群）"
       config_dirs:
         - path: .github
-          description: "Copilot 設定（`copilot/settings.json`）、instructions、agents/skills（プラグイン経由で読込）、および CI 用 GitHub Actions workflows"
+          description: "Copilot 設定（`copilot/settings.json`）、instructions、マーケットプレイス定義（`plugin/marketplace.json`。`skills/plugins/ai-tools-knowledge` のルート `plugin.json` を指す）、および CI 用 GitHub Actions workflows"
     plugins:
-      - path: copilot-plugins/meta
-        kind: plugin
-        skills_layout: direct
       - path: .github
         kind: workspace
         skills_layout: subdir
     marketplace:
-      plugin_json_output_path: copilot-plugins/meta/plugin.json
+      sources:
+        - skills/plugins/ai-tools-knowledge
       output_path: .github/plugin/marketplace.json
-      plugin:
-        name: meta
-        description: "Skills for researching and authoring GitHub Copilot, Copilot CLI, VS Code Copilot, agent skills, and agent plugins."
-        version: "1.0.0"
-        author:
-          name: fdshg693
-          url: "https://github.com/fdshg693"
-        homepage: "https://github.com/fdshg693/AI"
-        repository: "https://github.com/fdshg693/AI"
-        keywords:
-          - github-copilot
-          - copilot-cli
-          - vs-code
-          - agent-skills
-          - plugins
+      owner:
+        name: fdshg693
+        url: "https://github.com/fdshg693"
       name: ai-plugins
       metadata:
         description: "GitHub Copilot plugins maintained in the AI research repository."
@@ -164,28 +157,24 @@ tools:
     readme:
       config_dirs:
         - path: .cursor
-          description: "Cursor が読む設定フォルダ。`.cursor/rules/` はネストした AGENTS.md と重複するため意図的に空（理由は `.cursor/rules/README.md` 参照）"
-      plugin_roots:
-        - path: cursor-plugins
-          description: "Cursor 用プラグイン（`meta/` 配下に `.cursor-plugin`, docs, skills 群）"
-    plugins:
-      - path: cursor-plugins/meta
-        kind: plugin
-        skills_layout: subdir
+          description: "Cursor が読む設定フォルダ。`.cursor/rules/` はネストした AGENTS.md と重複するため意図的に空（理由は `.cursor/rules/README.md` 参照）。プラグインは `skills/plugins/ai-tools-knowledge`（`.cursor-plugin/plugin.json` を同梱）"
+    plugins: []
     rules_from_agents_md:
       output_dir: .cursor/rules
 
   antigravity:
     readme:
-      plugin_roots:
-        - path: _agents
-          description: "Antigravity 用プラグイン格納場所（`_agents/plugins/`）。`.agents/` と使い分ける（`_agents/README.md` 参照）"
       config_dirs:
+        - path: _agents
+          description: "Antigravity のワークスペースプラグイン置き場（`_agents/plugins/`）。`antigravity-meta` は `skills/plugins/ai-tools-knowledge` から `just agent-compat-sync` で作る gitignore 済みのコピー。`.agents/` と使い分ける（`_agents/README.md` 参照）"
         - path: .agents/rules
           description: "Antigravity が読むワークスペース Rules。`AGENTS.md` から `tools/agents-rules` CLI で生成する（`.agents/README.md` 参照）。手編集しない"
-    plugins:
-      - path: _agents/plugins/antigravity-meta
-        kind: plugin
-        skills_layout: subdir
+    plugins: []
+    workspace_copies:
+      - from: skills/plugins/ai-tools-knowledge/skills
+        include: ["antigravity-*", "agy-*"]
+        output_dir: _agents/plugins/antigravity-meta/skills
+        plugin_json:
+          name: antigravity-meta
     rules_from_agents_md:
       output_dir: .agents/rules

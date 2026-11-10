@@ -253,7 +253,7 @@ test("wraps a set requires_hooks value into a single link to the hook scenarios"
   const hooked = result.catalog.skills.find((skill) => skill.name === "hooked-skill");
   assert.deepEqual(hooked.meta.requiresHooks, {
     text: "PreToolUse: Bash差し戻し",
-    href: "https://github.com/fdshg693/AI/tree/main/agent-tooling/agent_tooling/hooks/scenarios",
+    href: "https://github.com/fdshg693/AI/tree/main/agent-compat/agent-tooling/agent_tooling/hooks/scenarios",
   });
 });
 

@@ -2,7 +2,7 @@
 
 `.cursor/rules/` は意図的に空にしている（Project Rules を配置していない）。
 
-以前は各ディレクトリの `AGENTS.md` を 生成スクリプト（現在は [tools/agents-rules](../../tools/agents-rules/README.md) の `--target cursor`）でコピーし、`.mdc` ファイルとしてここに生成していた。しかし Cursor はネストした `AGENTS.md` をネイティブに読み込み、親ディレクトリの内容と結合して（より具体的な方を優先して）適用する（詳細は [cursor-plugins/meta/skills/cursor-memory/SKILL.md](../../cursor-plugins/meta/skills/cursor-memory/SKILL.md) 参照）。そのため生成した `.mdc` はリポジトリ各所の `AGENTS.md` と内容が重複するだけの二重管理になっており、削除した。
+以前は各ディレクトリの `AGENTS.md` を 生成スクリプト（現在は [tools/agents-rules](../../tools/agents-rules/README.md) の `--target cursor`）でコピーし、`.mdc` ファイルとしてここに生成していた。しかし Cursor はネストした `AGENTS.md` をネイティブに読み込み、親ディレクトリの内容と結合して（より具体的な方を優先して）適用する（詳細は [skills/plugins/ai-tools-knowledge/skills/cursor-memory/SKILL.md](../../skills/plugins/ai-tools-knowledge/skills/cursor-memory/SKILL.md) 参照）。そのため生成した `.mdc` はリポジトリ各所の `AGENTS.md` と内容が重複するだけの二重管理になっており、削除した。
 
 このリポジトリの `AGENTS.md` 群（ルート含む）をそのまま参照させれば Cursor 側の指示は足りる。
 

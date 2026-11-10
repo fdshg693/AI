@@ -1,7 +1,7 @@
 ---
 type: AI Tool
 title: Cline SDK を使った、カスタマイズした Cline 利用 CLI ツール
-description: Explains how to install this repository's cline-plugins/personal-info AgentPlugin globally into Cline (just cline-personal-info), and documents three Windows-specific known issues encountered along the way — PATH vs Path case-sensitivity breaking npm spawn from PowerShell/cmd, hub-daemon EADDRINUSE port conflicts, and @cline/cli-windows-x64's missing @cline/shared and jiti dependencies causing "load failed" plugins — with their workarounds. Use when `cline plugin install` fails on Windows, or when deciding whether a Cline plugin issue is this repo's code vs an upstream Cline packaging bug.
+description: Explains how to install this repository's agent-compat/formats/cline/personal-info AgentPlugin globally into Cline (just cline-personal-info), and documents three Windows-specific known issues encountered along the way — PATH vs Path case-sensitivity breaking npm spawn from PowerShell/cmd, hub-daemon EADDRINUSE port conflicts, and @cline/cli-windows-x64's missing @cline/shared and jiti dependencies causing "load failed" plugins — with their workarounds. Use when `cline plugin install` fails on Windows, or when deciding whether a Cline plugin issue is this repo's code vs an upstream Cline packaging bug.
 tags: [cline]
 generated: { by: reference_agent/claude-sonnet-5, at: 2026-08-09T15:58:38Z }
 status: stable
@@ -11,7 +11,8 @@ status: stable
 
 ## 関連ファイル
 
-- `cline-plugins\meta\` — skill-writer / plugin-writer / rule-writer / docs 等の authoring meta skills をまとめた Cline Plugin（`AgentPlugin`）。
+- `agent-compat/formats/cline/personal-info/` — カスタムツール登録を確かめる最小の Cline Plugin（`AgentPlugin`）。
+- Cline 向けの知識スキル（skill-writer / plugin-writer / rule-writer / docs 等）は `skills/plugins/ai-tools-knowledge/` にあり、このリポジトリを Cline で開くときは `just agent-compat-sync` で `.cline/skills/` にコピーを作る（gitignore 済み）。
 
 ## インストール
 
@@ -21,14 +22,14 @@ status: stable
 just -f docs/integrations/justfile cline-personal-info
 ```
 
-中身は実質 `cline plugin install cline-plugins/personal-info --force` で、global（`~/.cline/plugins/`）にインストールする。
+中身は実質 `cline plugin install agent-compat/formats/cline/personal-info --force` で、global（`~/.cline/plugins/`）にインストールする。
 
 ### なぜ PowerShell 直打ちだと失敗するか
 
 PowerShell や cmd から直接
 
 ```powershell
-cline plugin install cline-plugins\meta
+cline plugin install agent-compat\formats\cline\personal-info
 ```
 
 を実行すると次のエラーになる:

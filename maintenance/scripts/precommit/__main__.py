@@ -61,7 +61,13 @@ FIX_TASKS = (
     Task(
         "copilot-marketplace",
         "plugin_meta.generate.generate_copilot_marketplace",
-        ("copilot-plugins/meta/**/SKILL.md", "registry/ai-tools.yaml"),
+        ("**/plugin.json", "registry/ai-tools.yaml"),
+    ),
+    Task(
+        # Gitignored output: refreshing it never adds files to the commit.
+        "workspace-copies",
+        "plugin_meta.generate.generate_workspace_copies",
+        ("skills/plugins/ai-tools-knowledge/**", "registry/ai-tools.yaml"),
     ),
     Task(
         "skill-catalog",

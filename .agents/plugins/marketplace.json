@@ -5,10 +5,10 @@
   },
   "plugins": [
     {
-      "name": "meta",
+      "name": "ai-tools-knowledge",
       "source": {
         "source": "local",
-        "path": "./codex-plugins/meta"
+        "path": "./skills/plugins/ai-tools-knowledge"
       },
       "policy": {
         "installation": "AVAILABLE",

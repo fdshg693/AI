@@ -1,7 +1,7 @@
 ---
 type: Design Decision
 title: Claude Code中心のスキル方針
-description: Explains this repository's policy that most SKILL.md content is written for Claude Code specifically (exploiting its frontmatter mechanisms like allowed-tools, disable-model-invocation, dynamic `!command` context injection, and this repo's own meta block) and only appears for another AI tool as a meta-skill about using that tool itself, not a ported copy. Use when deciding whether a skill belongs under skills/plugins/cc-knowledge or a specialized skills/plugins/ plugin only, whether to port an existing Claude Code skill to cline-plugins/codex-plugins/copilot-plugins/cursor-plugins, or why those folders look sparser than skills/plugins.
+description: Explains this repository's policy that SKILL.md content is written for Claude Code specifically (exploiting its frontmatter mechanisms like allowed-tools, disable-model-invocation, dynamic `!command` context injection, and this repo's own meta block); knowledge about other AI tools is also kept as Claude Code skills in skills/plugins/ai-tools-knowledge and reaches those tools through generated marketplaces or gitignored workspace copies, while tool-specific format samples and the differences from Claude Code live in agent-compat/. Use when deciding whether a skill belongs under skills/plugins/cc-knowledge, ai-tools-knowledge or another skills/plugins/ plugin, whether to port an existing Claude Code skill to another tool, or where a tool-specific SKILL.md/plugin format example should go.
 tags: [claude-code, cline, codex, copilot, cursor, antigravity, repo-wide]
 generated: { by: reference_agent/cline-glm-5.2, at: 2026-08-09T14:39:30Z }
 status: stable
@@ -9,12 +9,14 @@ status: stable
 
 # Claude Code中心のスキル方針
 
-このリポジトリのスキルの大部分はClaude Code向けに書かれており、他のAIコーディングツール（Cline/Codex/Copilot/Cursor/Antigravity）向けフォルダには、原則としてその**ツール自体の使い方に関するメタスキルだけ**が置かれる。1個のタスク向けスキルを全ツールへ機械的にポートする方針ではない。
+このリポジトリのスキルの大部分はClaude Code向けに書かれており、他のAIコーディングツール（Cline/Codex/Copilot/Cursor/Antigravity/Kilo）について持つのは、原則としてその**ツール自体の使い方に関する知識スキルだけ**である。それも Claude Code スキルとして `skills/plugins/ai-tools-knowledge/` に 1 か所で置く。1個のタスク向けスキルを全ツールへ機械的にポートする方針ではない。
 
 ## 実態の比較
 
 - `skills/plugins/*/skills/` — このリポジトリの大半のタスク特化スキルの本体（`writing-hooks`、`ai-tools-config`、`claude-mechanisms`、`proposing-flow`等）
-- `.cline/skills/`、`codex-plugins/meta/skills/`、`copilot-plugins/meta/` — ほぼ`<tool>-cli-docs`・`<tool>-docs`・`<tool>-sdk-docs`・`<tool>-skill-writer`/`plugin-writer`/`rule-writer`のような、**そのツール自体を使うためのメタスキル**のみ
+- `skills/plugins/ai-tools-knowledge/skills/` — `<tool>-cli-docs`・`<tool>-docs`・`<tool>-sdk-docs`・`<tool>-skill-writer`/`plugin-writer`/`rule-writer`のような、**そのツール自体を使うための知識スキル**
+- 他ツールへの届け方は 2 通りで、どちらもスキルのコピーをコミットしない。Codex・Copilot・Cursor は、このプラグインに同梱したそれぞれのマニフェスト（`.codex-plugin/plugin.json`、ルートの `plugin.json`、`.cursor-plugin/plugin.json`）を、生成したマーケットプレイスから指す。ワークスペース直下からしか読まない Cline・Kilo・Antigravity には、`registry/ai-tools.yaml` の `workspace_copies` に従って gitignore 済みのコピーを `just agent-compat-sync` で作る（[ai-tools-config](./ai-tools-config.md)）
+- `agent-compat/` — スキルの実体は置かない。マルチ AI 対応の仕組み（`agent-tooling`）、ツール固有書式の最小サンプル（`formats/<tool>/`）、Claude Code との書き方の相違点（`docs/differences/`）
 
 ## なぜポートしないか
 
@@ -35,7 +37,7 @@ Claude CodeのSKILL.mdフロントマターには他ツールの機構では1:1�
 
 「これをCline/Codex/Copilotにも追加して」と言われたら、まず次を切り分ける。
 
-1. 対象が**そのツール自体の使い方**（CLIオプション、SDK、プラグインの書き方等）についてのガイドなら、`<tool>-*`のメタスキルとして追加する
+1. 対象が**そのツール自体の使い方**（CLIオプション、SDK、プラグインの書き方等）についてのガイドなら、`skills/plugins/ai-tools-knowledge/skills/` に `<tool>-*` の知識スキルとして追加する。そのツールで読ませて初めて意味がある実物（そのツール用の frontmatter を持つ SKILL.md、マニフェスト等）は `agent-compat/formats/<tool>/` のサンプルにし、知識スキルからはリンクする
 2. 対象がClaude-Code特有の仕組みに依存したワークフロースキルなら、基本的にポートしない。どうしても必要なら、Claude Code専用の仕組みを取り除き、そのツール自身の流儀で書き直す
 
 `ai-tools.yaml`の`skills_layout`（`subdir`/`direct`）はあくまで各ツールが実際に使うSKILL.md配置形式の違いを表すフィールドであり、Claude Code側のレイアウトをコピーしたものではない（[ai-tools-config](./ai-tools-config.md)参照）。

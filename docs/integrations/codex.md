@@ -1,7 +1,7 @@
 ---
 type: AI Tool
 title: Codex プラグインのインストール
-description: Explains how to install this repository's codex-plugins/meta plugin via the .agents/plugins/marketplace.json local marketplace (seiwan-codex-marketplace) — from the ChatGPT desktop app, or from Codex CLI with or without cloning (including sparse checkout), plus update/removal commands and troubleshooting when the plugin doesn't appear. Use when installing or updating this repo's Codex plugin into an external environment.
+description: Explains how to install this repository's ai-tools-knowledge plugin (skills/plugins/ai-tools-knowledge) via the .agents/plugins/marketplace.json local marketplace (seiwan-codex-marketplace) — from the ChatGPT desktop app, or from Codex CLI with or without cloning (including sparse checkout), plus update/removal commands and troubleshooting when the plugin doesn't appear. Use when installing or updating this repo's Codex plugin into an external environment.
 tags: [codex]
 generated: { by: reference_agent/claude-sonnet-5, at: 2026-08-09T15:58:38Z }
 status: stable
@@ -27,9 +27,11 @@ Codex CLI では、マーケットプレイスの Git URL を直接登録でき�
 この定義では、マーケットプレイス名を `seiwan-codex-marketplace`、表示名を `Seiwan Codex Marketplace` とし、次のプラグインを登録している。
 
 ```text
-meta
-└── codex-plugins/meta
+ai-tools-knowledge
+└── skills/plugins/ai-tools-knowledge
 ```
+
+プラグイン本体は Claude Code 向けと共通で、Codex 用のマニフェスト `.codex-plugin/plugin.json` を同じディレクトリに置いている。以前の `meta`（`codex-plugins/meta`）は廃止した。入れていた場合は `meta` を外して `ai-tools-knowledge` を入れ直す。
 
 `source.path` は `.agents/plugins/` からの相対パスではなく、レポジトリルートからの相対パスで解決される。
 
@@ -79,14 +81,14 @@ codex
 /plugins
 ```
 
-マーケットプレイスの一覧から **Seiwan Codex Marketplace** を選び、`meta` をインストールする。インストール後は Codex CLI の新しいセッションを開始すると、同梱スキルを利用できる。
+マーケットプレイスの一覧から **Seiwan Codex Marketplace** を選び、`ai-tools-knowledge` をインストールする。インストール後は Codex CLI の新しいセッションを開始すると、同梱スキルを利用できる。
 
 ### sparse checkout を使う場合
 
 このレポジトリではマーケットプレイス定義とプラグイン本体が別のディレクトリにあるため、sparse checkout を使う場合は両方を取得対象にする。
 
 ```bash
-codex plugin marketplace add https://github.com/<OWNER>/<REPOSITORY>.git --sparse .agents/plugins --sparse codex-plugins/meta
+codex plugin marketplace add https://github.com/<OWNER>/<REPOSITORY>.git --sparse .agents/plugins --sparse skills/plugins/ai-tools-knowledge
 ```
 
 `<OWNER>/<REPOSITORY>` は、このレポジトリを公開している GitHub の所有者名とレポジトリ名に置き換える。
@@ -112,7 +114,7 @@ codex
 /plugins
 ```
 
-マーケットプレイスの一覧から **Seiwan Codex Marketplace** を選び、`meta` をインストールする。インストール後は Codex CLI の新しいセッションを開始すると、同梱スキルを利用できる。
+マーケットプレイスの一覧から **Seiwan Codex Marketplace** を選び、`ai-tools-knowledge` をインストールする。インストール後は Codex CLI の新しいセッションを開始すると、同梱スキルを利用できる。
 
 ## 更新・削除
 
@@ -129,11 +131,11 @@ codex plugin marketplace upgrade seiwan-codex-marketplace
 codex plugin marketplace remove seiwan-codex-marketplace
 ```
 
-ChatGPT デスクトップアプリでインストールした場合は、Plugins の一覧から `meta` を開き、**Uninstall plugin** を選択する。
+ChatGPT デスクトップアプリでインストールした場合は、Plugins の一覧から `ai-tools-knowledge` を開き、**Uninstall plugin** を選択する。
 
 ## インストール後に利用できるもの
 
-`meta` には、次のスキルが含まれる。
+`ai-tools-knowledge` には、Codex を含む AI コーディングツールの知識スキルが含まれる（一覧は `skills/plugins/ai-tools-knowledge/skills/CATALOG.md`）。Codex 関連の主なもの:
 
 - `codex-docs` — OpenAI 公式 Codex ドキュメントを参照して回答する
 - `codex-cli-docs` — 実行環境の `codex --help` を根拠に Codex CLI を説明する
@@ -142,7 +144,7 @@ ChatGPT デスクトップアプリでインストールした場合は、Plugin
 プラグインが見つからない場合は、次を確認する。
 
 - `.agents/plugins/marketplace.json` がレポジトリルートの配下に存在する
-- `marketplace.json` の `source.path` が `./codex-plugins/meta` になっている
+- `marketplace.json` の `source.path` が `./skills/plugins/ai-tools-knowledge` になっている
 - ChatGPT デスクトップアプリを再起動したか、Codex CLI で `marketplace list` を実行したか
 - インストール後に新しいチャットまたは Codex セッションを開始したか
 

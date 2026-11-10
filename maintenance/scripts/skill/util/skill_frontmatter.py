@@ -27,6 +27,11 @@ EXCLUDED_DIRECTORY_NAMES = {
     "generated",
 }
 
+# A directory holding this file is a gitignored workspace copy of skills that
+# live elsewhere (plugin_meta/generate/generate_workspace_copies.py). Scans skip
+# it so a skill is never counted or rewritten twice.
+WORKSPACE_COPY_MARKER = ".agent-compat-copy"
+
 
 @dataclass
 class SkillFrontmatter:
@@ -47,7 +52,10 @@ def find_skill_md_files(root: Path) -> list[Path]:
     # Junctions are pruned too (os.walk follows them), so a skill reachable through
     # a junction is never counted or rewritten twice.
     found = []
-    for dir_path, _dir_names, file_names in walk_no_links(root, EXCLUDED_DIRECTORY_NAMES):
+    for dir_path, dir_names, file_names in walk_no_links(root, EXCLUDED_DIRECTORY_NAMES):
+        if WORKSPACE_COPY_MARKER in file_names:
+            dir_names[:] = []
+            continue
         if "SKILL.md" in file_names:
             found.append(Path(dir_path) / "SKILL.md")
     return sorted(found)

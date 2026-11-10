@@ -52,3 +52,8 @@ tools/sandbox/orchestrator/data/
 .agents/hooks/
 # skill-tools のプロジェクト manifest・journal
 .skill-tools/
+# 他ツールがワークスペース直下から読むスキルのコピー（registry/ai-tools.yaml の workspace_copies。
+# `just agent-compat-sync` で skills/plugins/ai-tools-knowledge から作る。手編集しない）
+/.cline/skills/
+/.kilo/skills/
+/_agents/plugins/antigravity-meta/
