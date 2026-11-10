@@ -6,10 +6,9 @@ Fetches a URL, records a YAML frontmatter block (source + fetched_at) on top
 of the raw response body, and skips re-fetching if the existing file is
 still fresh (default: within the last 24 hours) unless --force is given.
 
-This follows the same freshness-check contract as
-claude-plugins/ai-code-tool/scripts/llms_txt_downloader.py (shared by the
-vscode-docs / github-copilot-docs skills), but is written as a standalone,
-copy-and-adapt script rather than an importable shared module: a plain
+The vscode-docs / github-copilot-docs skills carry adapted copies of this
+file. It is written as a standalone, copy-and-adapt script rather than an
+importable shared module: a plain
 `claude-plugins/*/skills/<name>/` skill directory has no shared
 `scripts/` folder one level up to import from.
 

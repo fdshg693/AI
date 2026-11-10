@@ -4,7 +4,7 @@
 
 ## なぜこのスキルがあるか
 
-`claude-plugins/ai-code-tool/skills/`配下の`vscode-docs`・`github-copilot-docs`・`vscode-copilot-docs`など、WEBドキュメントを参照する複数のスキルで、以下のロジックがほぼ同じ形で個別に実装されていた。
+`vscode-docs`（`claude-plugins/others/skills/`）・`github-copilot-docs`・`vscode-copilot-docs`（`copilot-plugins/meta/`）など、WEBドキュメントを参照する複数のスキルで、以下のロジックがほぼ同じ形で個別に実装されていた。
 
 - ダウンロード結果への`fetched_at`記録とfreshnessチェック(既定24時間)
 - `llms.txt`/`llms-full.txt`候補パスの存在確認
@@ -20,7 +20,7 @@
 この設計を選んだ理由（[web-patterns-reference.md](web-patterns-reference.md) 1.1節・1.5節も参照）:
 
 - 単発の`claude-plugins/*/skills/`配下のスキルでは、共有`scripts/`モジュールを1つ上の階層に作るより、スキル単体にスクリプトを1本コピーする方がシンプルで、依存関係も追跡しやすい
-- 複数スキルで本当にロジックを共有したい場合（プラグイン内など）は、`claude-plugins/ai-code-tool/scripts/llms_txt_downloader.py`のような共通モジュールを置くパターンもあるが、それは例外的な対応であり本スキルの既定ではない
+- 複数スキルで本当にロジックを共有したい場合（プラグイン内など）は、共通モジュールを1つ上の階層に置くパターンもあるが、それは例外的な対応であり本スキルの既定ではない
 
 そのため、**このスキル自身の`scripts/`を更新しても、既にコピーして使っている個別スキル(`vscode-docs`等)には自動反映されない**。個別スキル側のコピーが古い設計のままになっていないかは、`skill-maintenance`スキルのような横断メンテナンス作業で気づいた時に見直す。
 

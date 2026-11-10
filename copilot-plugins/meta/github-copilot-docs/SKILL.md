@@ -11,7 +11,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.3
+  version: 1.0.4
 ---
 
 # GitHub Copilot 最新ドキュメント参照

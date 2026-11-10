@@ -1,7 +1,7 @@
 ---
 name: vscode-docs
 description: Use when answering questions about Visual Studio Code (the editor) features, settings, keybindings, extensions, tasks, debugging, source control, Copilot Chat/Agent mode in VS Code, etc. Grounds answers in the latest official docs (code.visualstudio.com) instead of training-data memory, which may be stale.
-allowed-tools: Bash(python plugins/vscode/skills/vscode-docs/*.py *)
+allowed-tools: Bash(python claude-plugins/others/skills/vscode-docs/*.py *)
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
   tag: []
@@ -13,10 +13,10 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.3
+  version: 1.0.4
 ---
 
-!`python plugins/vscode/skills/vscode-docs/download_vscode_reference.py`
+!`python claude-plugins/others/skills/vscode-docs/download_vscode_reference.py`
 
 # VS Code 最新ドキュメント参照
 
@@ -45,6 +45,6 @@ Visual Studio Code に関する質問に、学習データの記憶ではなく 
 
 ## 補足
 
-- スクリプトはこのディレクトリ（`plugins/vscode/skills/vscode-docs/`）を基準に `./output/` を読み書きする
-- ダウンロード処理の実体は `plugins/vscode/scripts/llms_txt_downloader.py`（github-copilot スキルと共通）にあり、このスクリプトはそれを呼び出す薄いラッパー
+- スクリプトはこのディレクトリ（`claude-plugins/others/skills/vscode-docs/`）を基準に `./output/` を読み書きする
+- `download_vscode_reference.py` は writing-skill-web の `download_web_reference.py` テンプレートを標準ライブラリだけで動くように写したもの（github-copilot-docs の `download_copilot_reference.py` も同じ形）
 - ダウンロードは 24 時間以内に取得済みならスキップされる（`--force` で強制再取得）

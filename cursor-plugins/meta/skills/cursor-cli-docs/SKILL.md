@@ -1,7 +1,7 @@
 ---
 name: cursor-cli-docs
 description: Use when answering questions about the Cursor CLI (`agent` command, formerly `cursor-agent`) — options, subcommands, sandbox/approval flags, MCP config, worktrees, etc. Grounds answers in the CLI's own `--help` output instead of training-data memory, which may be stale.
-allowed-tools: Bash(python claude-plugins/other-clis/skills/cursor-cli-docs/*.py *)
+allowed-tools: Bash(python cursor-plugins/meta/skills/cursor-cli-docs/*.py *)
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
   tag: []
@@ -13,7 +13,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.3
+  version: 1.0.4
 ---
 
 !`python "${CLAUDE_SKILL_DIR}/generate_cursor_agent_help_yaml.py"`
@@ -39,7 +39,7 @@ Cursor CLI（`agent` コマンド、旧名 `cursor-agent`）に関する質問�
 
 ## 補足
 
-- スクリプトはこのディレクトリ（`claude-plugins/other-clis/skills/cursor-cli-docs/`）を基準に `output/` を読み書きする
+- スクリプトはこのディレクトリ（`cursor-plugins/meta/skills/cursor-cli-docs/`）を基準に `output/` を読み書きする
 - `agent --version` と `agent --help` を実行し、構造化した結果を `output/help_result.yaml` に書き出す（バージョン、usage、description、arguments、options、commands）
 - Cursor CLI のコマンド名は `agent`（旧名 `cursor-agent` は同じバイナリを指すレガシーエイリアスとして残っている）。`--help` は Commander.js（Node.js）製で、GitHub Copilot CLI と同じ「フラグ名の行 + 2スペース以上区切りの説明」形式（Codex CLI の clap 製ヘルプとはレイアウトが異なる）。トップレベルには Examples/Help Topics/Learn More に相当するセクションは無い
 - `agent` コマンドが無い/失敗する環境ではスクリプトの実行が失敗するが、その場合はバンドル済みの `output/help_result.yaml`(同梱の生成済みスナップショット)をそのまま使う

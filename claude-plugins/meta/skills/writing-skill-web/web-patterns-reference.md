@@ -49,7 +49,7 @@
 
 すべてのスクリプトは[scripts/webref_cli.py](scripts/webref_cli.py)経由(`webref_cli.py <subcommand>`)で呼ぶ。個別スクリプトを`python download_xxx.py`のように直接呼ぶ本文は書かない(以降の節のコマンド例も`webref_cli.py`経由の形で示す)。
 
-- 複数スキルで同じダウンロードロジックを共有したい(プラグイン内など)場合は、`claude-plugins/ai-code-tool/scripts/llms_txt_downloader.py`のように共通モジュールを1つ上の階層に置き、各スキルの`download_xxx.py`はそれを呼ぶ薄いラッパーにする。ただしプラグインではない単発の`.claude/skills/`配下では、共有先の`scripts/`ディレクトリを作らずスキル単体にスクリプトを1本コピーする方がシンプル
+- 複数スキルで同じダウンロードロジックを共有したい(プラグイン内など)場合は、共通モジュールを1つ上の階層に置き、各スキルの`download_xxx.py`はそれを呼ぶ薄いラッパーにする。ただしプラグインではない単発の`.claude/skills/`配下では、共有先の`scripts/`ディレクトリを作らずスキル単体にスクリプトを1本コピーする方がシンプル
 - 出力は必ず`output/`のようなサブディレクトリに置き、スクリプトの実行位置に依存しないよう`Path(__file__).resolve().parent`基準の絶対パスで解決する
 
 ### 1.2 frontmatter + freshnessチェックの契約
@@ -63,7 +63,7 @@ fetched_at: <ISO8601形式のUTCタイムスタンプ>
 ---
 ```
 
-再実行時はこの`fetched_at`を読み、既定のfreshness window(通常24時間)以内なら再取得せずスキップする。`--force`で無条件に再取得できるようにする。この契約は同梱の[scripts/download_web_reference.py](scripts/download_web_reference.py)、および実例の`claude-plugins/ai-code-tool/scripts/llms_txt_downloader.py`・`claude-plugins/ai-code-tool/skills/copilot-cli-docs/generate_copilot_help_yaml.py`で共通。
+再実行時はこの`fetched_at`を読み、既定のfreshness window(通常24時間)以内なら再取得せずスキップする。`--force`で無条件に再取得できるようにする。この契約は同梱の[scripts/download_web_reference.py](scripts/download_web_reference.py)、および実例の`claude-plugins/others/skills/vscode-docs/download_vscode_reference.py`・`copilot-plugins/meta/copilot-cli-docs/generate_copilot_help_yaml.py`で共通。
 
 なぜ毎回ダウンロードしないか: スキル起動のたびに外部サイトへリクエストすると、レイテンシとレート制限リスクが積み重なる。ドキュメントサイトの更新頻度は通常24時間より粗いため、frontmatterで最終取得時刻を自己記述させれば安価に鮮度を判定できる。
 
@@ -93,7 +93,7 @@ allowed-tools: Bash(python .claude/skills/some-docs/*.py *)
 2. 本文が必要なら、見つけたURLを個別にWebFetchで取得する(索引ファイル自体には本文がない旨をSKILL.md本文に明記する)
 3. 索引に無関係な質問が来た場合は、サイトの検索エンドポイントやドキュメントルートを直接WebFetchで探索してよい、という逃げ道も書いておく
 
-実例: `claude-plugins/ai-code-tool/skills/vscode-docs/SKILL.md`、`claude-plugins/ai-code-tool/skills/github-copilot-docs/SKILL.md`(GitHub Docsは`docs.github.com/api/article/body?pathname=...`という本文取得専用エンドポイントも持っており、WebFetchより軽量に本文だけ取れる。サイトごとにこの種の隠れた取得手段が無いか調べる価値がある)
+実例: `claude-plugins/others/skills/vscode-docs/SKILL.md`、`copilot-plugins/meta/github-copilot-docs/SKILL.md`(GitHub Docsは`docs.github.com/api/article/body?pathname=...`という本文取得専用エンドポイントも持っており、WebFetchより軽量に本文だけ取れる。サイトごとにこの種の隠れた取得手段が無いか調べる価値がある)
 
 ### 1.5 候補パスの存在確認は`check_urls.py`でまとめて
 
@@ -154,7 +154,7 @@ python "${CLAUDE_SKILL_DIR}/webref_cli.py" check-urls \
 
 **運用:** 元索引は再ダウンロードのたびに更新されるので、抜粋は時間とともにドリフトする。チェックスクリプトはメンテナが手動で走らせる運用が前提で、スキル呼び出しの都度は実行しない。
 
-(このテンプレート群は`claude-plugins/ai-code-tool/skills/vscode-copilot-docs`で実運用しているスクリプト群を汎用化して同梱したもの。実装に必要なものはすべて同梱済みで、実運用側を読みに行く必要はない)
+(このテンプレート群は`copilot-plugins/meta/vscode-copilot-docs`で実運用しているスクリプト群を汎用化して同梱したもの。実装に必要なものはすべて同梱済みで、実運用側を読みに行く必要はない)
 
 ### 1.7 `Source:`/`# タイトル`型の全文ダンプからのセクション抽出
 

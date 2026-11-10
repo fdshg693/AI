@@ -1,7 +1,7 @@
 ---
 name: codex-cli-docs
 description: Use when answering questions about the OpenAI Codex CLI (`codex` command) — options, subcommands, sandbox/approval policies, MCP config, etc. Grounds answers in the CLI's own `--help` output instead of training-data memory, which may be stale.
-allowed-tools: Bash(python claude-plugins/other-clis/skills/codex-cli-docs/*.py *)
+allowed-tools: Bash(python codex-plugins/meta/skills/codex-cli-docs/*.py *)
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
   tag: []
@@ -13,7 +13,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.3
+  version: 1.0.4
 ---
 
 !`python "${CLAUDE_SKILL_DIR}/generate_codex_help_yaml.py"`
@@ -39,7 +39,7 @@ OpenAI Codex CLI（`codex` コマンド）に関する質問に、学習デー�
 
 ## 補足
 
-- スクリプトはこのディレクトリ（`claude-plugins/other-clis/skills/codex-cli-docs/`）を基準に `output/` を読み書きする
+- スクリプトはこのディレクトリ（`codex-plugins/meta/skills/codex-cli-docs/`）を基準に `output/` を読み書きする
 - `codex --version` と `codex --help` を実行し、構造化した結果を `output/help_result.yaml` に書き出す（バージョン、usage、description、commands、arguments、options）
 - Codex CLI の `--help` は clap（Rust）製で GitHub Copilot CLI とはヘルプの書式が異なる（`Arguments:`/`Options:` の各エントリは「フラグ名の行」＋「インデントされた説明行（複数行・空行区切りの段落を含む）」の形。パーサーはこれらの説明行を空白1つで連結して1つの `description` にまとめている）
 - `codex` コマンドが無い/失敗する環境ではスクリプトの実行が失敗するが、その場合はバンドル済みの `output/help_result.yaml`(同梱の生成済みスナップショット、`codex-help.md` から生成)をそのまま使う

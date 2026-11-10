@@ -13,10 +13,10 @@ to accumulate across many pages for later reuse), use the `tav-cli` skill
 instead.
 
 PowerShell example:
-    python .\claude-plugins\web\skills\tav-lit\extract_page.py https://example.com/page
+    python .\claude-plugins\my-tools\skills\tav-lit\extract_page.py https://example.com/page
 
 bash example:
-    python ./claude-plugins/web/skills/tav-lit/extract_page.py https://example.com/page --query "pricing"
+    python ./claude-plugins/my-tools/skills/tav-lit/extract_page.py https://example.com/page --query "pricing"
 """
 
 from __future__ import annotations

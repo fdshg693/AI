@@ -1,7 +1,7 @@
 ---
 name: cline-cli-docs
 description: Use when answering questions about the Cline CLI (`cline` command) — prompts, plan/act execution, providers and models, authentication, JSON output, sessions, MCP, plugins, hooks, scheduling, Hub, Kanban, worktrees, ACP, permissions, or any command-line option. Grounds answers in the installed CLI's current `--help` output and the official Cline CLI reference instead of stale memory.
-allowed-tools: Bash(python claude-plugins/ai-code-tool/skills/cline-cli-docs/*.py *)
+allowed-tools: Bash(python .cline/skills/cline-cli-docs/*.py *)
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
   tag: []
@@ -13,7 +13,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.3
+  version: 1.0.4
 ---
 
 !`python "${CLAUDE_SKILL_DIR}/generate_cline_help_yaml.py"`

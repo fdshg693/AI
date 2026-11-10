@@ -58,7 +58,7 @@ Tavily extract API を叩いてタイトルと本文を Markdown ファイルに
 ## ファイル構成
 
 ```text
-claude-plugins/web/skills/tav-lit/
+claude-plugins/my-tools/skills/tav-lit/
 ├── README.md         ← このファイル(前提条件・設計意図)
 ├── SKILL.md           ← AI に読ませるスキル本体(判断フロー・引数・出力形式)
 └── extract_page.py    ← 唯一の実装。1 URL を受け取り、stdout にタイトル+本文を印字する

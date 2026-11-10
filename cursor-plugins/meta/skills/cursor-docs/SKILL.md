@@ -1,7 +1,7 @@
 ---
 name: cursor-docs
 description: Use when answering questions about Cursor (the AI code editor) — features, settings, Agent mode, Plan mode, rules, skills, subagents, hooks, MCP, cloud agents, models & pricing, integrations, etc. Grounds answers in the latest official docs (cursor.com/docs) instead of training-data memory, which may be stale.
-allowed-tools: Bash(python claude-plugins/other-clis/skills/cursor-docs/*.py *)
+allowed-tools: Bash(python cursor-plugins/meta/skills/cursor-docs/*.py *)
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
   tag: []
@@ -13,7 +13,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.3
+  version: 1.0.4
 ---
 
 !`python "${CLAUDE_SKILL_DIR}/download_cursor_reference.py"`
@@ -47,6 +47,6 @@ Cursor（AIコードエディタ）に関する質問に、学習データの記
 
 ## 補足
 
-- スクリプトはこのディレクトリ（`claude-plugins/other-clis/skills/cursor-docs/`）を基準に `output/` を読み書きする
+- スクリプトはこのディレクトリ（`cursor-plugins/meta/skills/cursor-docs/`）を基準に `output/` を読み書きする
 - ダウンロードは24時間以内に取得済みならスキップされる（`--force` で強制再取得）
 - `output/llms.txt` は生成物だが、ネットワークが使えない環境でも索引だけは参照できるようリポジトリにコミットして同梱している（本文自体はコミットされないため、本文が必要な質問には結局 WebFetch が要る）

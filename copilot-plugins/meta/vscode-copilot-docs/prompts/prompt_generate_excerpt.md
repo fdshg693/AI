@@ -1,4 +1,4 @@
-The text below is the full contents of `plugins/vscode/skills/vscode-docs/output/llms.txt`,
+The text below is the full contents of `claude-plugins/others/skills/vscode-docs/output/llms.txt`,
 the official VS Code documentation index. It lists documentation pages grouped under
 `## Section name` headings, each in the form `- [Title](URL): description`.
 
