@@ -150,5 +150,5 @@ meta:
   requires_skills: cline-docs, cline-rule-writer
   status: stable
   description: no description
-  version: 1.0.0
+  version: 1.0.1
 ---
