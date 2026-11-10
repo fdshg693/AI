@@ -1,6 +1,6 @@
 ---
 type: Plan Step
-status: implemented
+status: implementing-done
 ---
 
 # Step 7: 履歴付きでサブモジュールへ切り出す
