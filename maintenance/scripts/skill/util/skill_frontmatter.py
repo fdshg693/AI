@@ -31,6 +31,10 @@ EXCLUDED_DIRECTORY_NAMES = {
 # live elsewhere (plugin_meta/generate/generate_workspace_copies.py). Scans skip
 # it so a skill is never counted or rewritten twice.
 WORKSPACE_COPY_MARKER = ".agent-compat-copy"
+# A directory holding this file contains format samples for other AI tools
+# (agent-compat/formats/). Their SKILL.md files are examples, not skills.
+FORMAT_SAMPLES_MARKER = ".format-samples"
+NOT_SKILL_MARKERS = frozenset({WORKSPACE_COPY_MARKER, FORMAT_SAMPLES_MARKER})
 
 
 @dataclass
@@ -53,7 +57,7 @@ def find_skill_md_files(root: Path) -> list[Path]:
     # a junction is never counted or rewritten twice.
     found = []
     for dir_path, dir_names, file_names in walk_no_links(root, EXCLUDED_DIRECTORY_NAMES):
-        if WORKSPACE_COPY_MARKER in file_names:
+        if NOT_SKILL_MARKERS.intersection(file_names):
             dir_names[:] = []
             continue
         if "SKILL.md" in file_names:

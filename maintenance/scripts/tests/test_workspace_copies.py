@@ -72,3 +72,13 @@ def test_scanner_skips_marked_copies(repo: Path) -> None:
     found = {p.parent.name for p in find_skill_md_files(repo)}
     assert found == {"cline-a", "cline-b", "kilo-a"}
     assert all(".cline" not in p.parts for p in find_skill_md_files(repo))
+
+
+def test_scanner_skips_format_samples(tmp_path: Path) -> None:
+    from skill.util.skill_frontmatter import FORMAT_SAMPLES_MARKER
+
+    make_skill(tmp_path / "skills", "real")
+    samples = tmp_path / "agent-compat" / "formats"
+    make_skill(samples / "codex" / "skill", "sample")
+    (samples / FORMAT_SAMPLES_MARKER).write_text("", encoding="utf-8")
+    assert [p.parent.name for p in find_skill_md_files(tmp_path)] == ["real"]
