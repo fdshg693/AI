@@ -99,6 +99,7 @@ just sub-agent-hooks-install  # アンブレラと同じ Claude Code フック�
 - **何を見せるか**: 宣言は各サブモジュールの `.links.yaml` が正本で、このドキュメントには一覧を書かない。足すのは「そのフォルダの作業に要るもの」だけにする（アンブレラ全体を見せると単体で開く意味が無くなる）。スキルは `.claude/skills/<name>`、強く結びついたアンブレラのフォルダ（`registry/` など）は `_umbrella/<name>` という名前で見せる。
 - **アンブレラで開いたとき**: サブモジュールの `.claude/skills` は起動時には読まれない。サブモジュール内のファイルを読むと、`skills:committing`・`tools:committing` のようなディレクトリ別のスキルとして遅延ロードされる（中身は同じスキル。Claude Code 2.1 で確認）。
 - **`_umbrella/` の中身はアンブレラ（または別のサブモジュール）のファイル**。そこで直したら、コミットはそのファイルが属するリポジトリで行う。サブモジュールのコミットには入らない（Junction は exclude 済み）。
+- **`plans/` は全サブモジュールで共有**: 各サブモジュール直下の `plans/` はアンブレラの `plans/` を参照する。作成・変更したプランはアンブレラに属する。
 - **指示ファイル**: サブモジュールの `CLAUDE.md` は `@./AGENTS.md` だけ。`@../...` で親を import しない（親は自動で読まれるので二重になる。外部 import の承認も出る）。サブモジュールの `AGENTS.md` には、アンブレラの規約と重複しない、そのフォルダ固有の責務だけを書く。
 - **フック**: 各サブモジュールの `.claude/skill-tools.hooks.yaml`（source はアンブレラ）をコミットし、入れたフックと `.claude/settings.json`・`.skill-tools/` は gitignore する。`.claude/hooks` を Junction で共有しない（`.env`・`logs/`・`state/` まで共有し、サブモジュールでのインストールがアンブレラの実体を書き換える）。カタログを再生成したら `just sub-agent-hooks-update`。
 - **ワークスペース**: `uv run`・pnpm はアンブレラの workspace と `.venv` をそのまま使う。サブモジュール直下に `pyproject.toml`・`pnpm-workspace.yaml` を置かない。
