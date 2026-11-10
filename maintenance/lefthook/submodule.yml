@@ -1,0 +1,60 @@
+# Shared git hooks for the submodules (skills / tools / agent-compat / site).
+# Each submodule's lefthook.yml only has `extends: [../maintenance/lefthook/submodule.yml]`;
+# in a standalone clone (no umbrella) the extends target is missing and lefthook
+# silently runs nothing. Install with `just sub-hooks-install` from the umbrella.
+#
+# Commands run from the submodule root. Every submodule sits one level below the
+# umbrella, so umbrella tools are reached through `../`. The maintenance/scripts
+# tasks address umbrella-relative paths and collect staged files from every
+# submodule themselves (maintenance/scripts/repo_git.py). Aggregate outputs they
+# regenerate in the umbrella (marketplaces, skill-catalog.json) stay as umbrella
+# working-tree changes and go into the pointer-update commit.
+pre-commit:
+  piped: true
+  jobs:
+    - name: fix
+      group:
+        parallel: true
+        jobs:
+          - name: maintenance/scripts precommit fix
+            run: just --justfile ../maintenance/scripts/justfile precommit-fix
+            stage_fixed: true
+          - name: regenerate hook generated files
+            # only matches inside agent-compat
+            glob:
+              - "agent-tooling/agent_tooling/core/**"
+              - "agent-tooling/agent_tooling/hooks/common/**"
+              - "agent-tooling/agent_tooling/hooks/scenarios/**"
+              - "agent-tooling/agent_tooling/adapters/**"
+              - "agent-tooling/agent_tooling/hooks/build/**"
+            run: just --justfile agent-tooling/justfile generate
+            stage_fixed: true
+    - name: format
+      group:
+        parallel: true
+        jobs:
+          - name: format Markdown with Prettier
+            glob:
+              - "*.md"
+              - "**/*.md"
+            run: node ../node_modules/prettier/bin/prettier.cjs --write {staged_files}
+            stage_fixed: true
+          - name: format Python with ruff
+            glob:
+              - "*.py"
+              - "**/*.py"
+            run: uv run --project .. ruff format {staged_files}
+            stage_fixed: true
+    - name: check
+      group:
+        parallel: true
+        jobs:
+          - name: maintenance/scripts precommit check
+            run: just --justfile ../maintenance/scripts/justfile precommit-check
+          - name: scan staged files for secrets
+            run: just --justfile ../maintenance/scripts/justfile scan-staged-secrets
+
+commit-msg:
+  commands:
+    lint-commit-message:
+      run: node ../node_modules/@commitlint/cli/cli.js --cwd .. --edit {1}

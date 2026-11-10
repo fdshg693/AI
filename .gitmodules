@@ -1,0 +1,3 @@
+[submodule "site"]
+	path = site
+	url = https://github.com/fdshg693/AI-site.git

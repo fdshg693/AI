@@ -80,3 +80,22 @@ links-check *args:
 
 links-clean *args:
     just --justfile maintenance/scripts/justfile links-clean {{args}}
+
+# --- submodules (skills / tools / agent-compat / site). See maintenance/docs/repo-layout.md ---
+
+# Clone/checkout every submodule at the commit the umbrella records (run after clone and pull)
+sub-init:
+    git submodule update --init --recursive
+
+# Branch, pointer and working-tree state of every submodule
+sub-status:
+    git submodule status
+    git submodule foreach "git status --short --branch"
+
+# Check out main in every submodule and fast-forward it from origin (leaves detached HEAD behind)
+sub-sync:
+    git submodule foreach "git switch main && git pull --ff-only"
+
+# Install lefthook in every submodule (hooks come from maintenance/lefthook/submodule.yml)
+sub-hooks-install:
+    git submodule foreach lefthook install
