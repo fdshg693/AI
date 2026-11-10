@@ -13,12 +13,12 @@ meta:
   requires_skills: none
   status: experimental
   description: no description
-  version: 1.0.8
+  version: 1.0.9
 ---
 
 # リポジトリ内スキルの発見・TODOへの組み込み
 
-このリポジトリには`skills/plugins/`だけでなく`cursor-plugins/`・`codex-plugins/`・`copilot-plugins/`・`cline-plugins/`・`_agents/`・`maintenance/plugin/`などに90件超のスキルが分散している。今のセッションでAIに自動提案されるSkillツール一覧は、そのセッションで実際にロードされているマーケットプレイス/プラグインディレクトリ次第で変わり、関連スキルが存在するのに一覧に出てこないことがある。このスキルは、その隙間を`skill-tools search`（ローカル本文語彙と意味検索のハイブリッド検索）で埋め、見つけたスキルをTODOの中の適切な位置に明示的に組み込む。
+このリポジトリには`skills/plugins/`（他ツールの知識は`skills/plugins/ai-tools-knowledge/`）・`tools/_plugin/`・`maintenance/plugin/`などに90件超のスキルが分散している。今のセッションでAIに自動提案されるSkillツール一覧は、そのセッションで実際にロードされているマーケットプレイス/プラグインディレクトリ次第で変わり、関連スキルが存在するのに一覧に出てこないことがある。このスキルは、その隙間を`skill-tools search`（ローカル本文語彙と意味検索のハイブリッド検索）で埋め、見つけたスキルをTODOの中の適切な位置に明示的に組み込む。
 
 ## 手順
 

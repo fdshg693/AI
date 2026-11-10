@@ -11,28 +11,30 @@
 
 ## 使うスキル（対象ツールに応じて選ぶ）
 
-| 対象ツール     | 執筆規約スキル                                     | 配置先                             |
-| -------------- | -------------------------------------------------- | ---------------------------------- |
-| Claude Code    | `writing-skill`（複雑なら`writing-skill-complex`） | `skills/plugins/*/skills/`         |
-| Cursor         | `cursor-skill-use` / `cursor-plugin-use`           | `cursor-plugins/*/skills/`         |
-| Codex          | `codex-skill-authoring`                            | `codex-plugins/*/skills/`          |
-| GitHub Copilot | `writing-skills`（`copilot-plugins/meta/`配下）    | `copilot-plugins/*/`               |
-| Cline          | `cline-skill-writer` / `cline-plugin-writer`       | `cline-plugins/`, `.cline/skills/` |
-| Antigravity    | `antigravity-skills`                               | `_agents/plugins/*/skills/`        |
+| 対象ツール     | 執筆規約スキル                                     | そのツールでの置き場所（書式の実物）                     |
+| -------------- | -------------------------------------------------- | -------------------------------------------------------- |
+| Claude Code    | `writing-skill`（複雑なら`writing-skill-complex`） | `skills/plugins/*/skills/`                               |
+| Cursor         | `cursor-skill-use` / `cursor-plugin-use`           | `.cursor/skills/`（`agent-compat/formats/cursor/`）      |
+| Codex          | `codex-skill-authoring`                            | `.agents/skills/`（`agent-compat/formats/codex/`）       |
+| GitHub Copilot | `copilot-writing-skills`                           | `.github/skills/`（`agent-compat/formats/copilot/`）     |
+| Cline          | `cline-skill-writer` / `cline-plugin-writer`       | `.cline/skills/`（`agent-compat/formats/cline/`）        |
+| Antigravity    | `antigravity-skills`                               | `.agents/skills/`（`agent-compat/formats/antigravity/`） |
+
+このリポジトリ自身では、スキルの実体を Claude Code スキルとして `skills/plugins/` に置き、他ツールへはマーケットプレイスか `just agent-compat-sync` のコピーで届ける（[claude-code-first-skills](../../../../docs/claude-code-first-skills.md)）。違いの一覧は `agent-compat/docs/differences/index.md`。
 
 ## スキルの場所
 
-| スキル                      | パス                                                                       |
-| --------------------------- | -------------------------------------------------------------------------- |
-| `writing-skill`             | `skills/plugins/cc-knowledge/skills/writing-skill/SKILL.md`                |
-| `writing-skill-complex`     | `skills/plugins/cc-knowledge/skills/writing-skill-complex/SKILL.md`        |
-| `cursor-skill-use`          | `skills/plugins/ai-tools-knowledge/skills/cursor-skill-use/SKILL.md`       |
-| `cursor-plugin-use`         | `skills/plugins/ai-tools-knowledge/skills/cursor-plugin-use/SKILL.md`      |
-| `codex-skill-authoring`     | `skills/plugins/ai-tools-knowledge/skills/codex-skill-authoring/SKILL.md`  |
-| `writing-skills`（Copilot） | `skills/plugins/ai-tools-knowledge/skills/copilot-writing-skills/SKILL.md` |
-| `cline-skill-writer`        | `skills/plugins/ai-tools-knowledge/skills/cline-skill-writer/SKILL.md`     |
-| `cline-plugin-writer`       | `skills/plugins/ai-tools-knowledge/skills/cline-plugin-writer/SKILL.md`    |
-| `antigravity-skills`        | `skills/plugins/ai-tools-knowledge/skills/antigravity-skills/SKILL.md`     |
+| スキル                   | パス                                                                       |
+| ------------------------ | -------------------------------------------------------------------------- |
+| `writing-skill`          | `skills/plugins/cc-knowledge/skills/writing-skill/SKILL.md`                |
+| `writing-skill-complex`  | `skills/plugins/cc-knowledge/skills/writing-skill-complex/SKILL.md`        |
+| `cursor-skill-use`       | `skills/plugins/ai-tools-knowledge/skills/cursor-skill-use/SKILL.md`       |
+| `cursor-plugin-use`      | `skills/plugins/ai-tools-knowledge/skills/cursor-plugin-use/SKILL.md`      |
+| `codex-skill-authoring`  | `skills/plugins/ai-tools-knowledge/skills/codex-skill-authoring/SKILL.md`  |
+| `copilot-writing-skills` | `skills/plugins/ai-tools-knowledge/skills/copilot-writing-skills/SKILL.md` |
+| `cline-skill-writer`     | `skills/plugins/ai-tools-knowledge/skills/cline-skill-writer/SKILL.md`     |
+| `cline-plugin-writer`    | `skills/plugins/ai-tools-knowledge/skills/cline-plugin-writer/SKILL.md`    |
+| `antigravity-skills`     | `skills/plugins/ai-tools-knowledge/skills/antigravity-skills/SKILL.md`     |
 
 ## 手順
 
