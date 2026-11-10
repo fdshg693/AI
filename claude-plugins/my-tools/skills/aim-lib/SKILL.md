@@ -11,7 +11,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.7
+  version: 1.0.8
 ---
 
 # aim を Python ライブラリとして使う
@@ -80,7 +80,7 @@ print(asyncio.run(ask_aim_many(["フランスの首都は？", "日本の首都�
 
 - 同じクライアントを `async with` 1つで開き、複数の `call_async` 呼び出しで使い回す（コネクションプールが再利用され、リクエストごとに新規プロセス/新規コネクションを作らずに済む）
 - 同時実行数の上限は `ThreadPoolExecutor(max_workers=...)` ではなく `asyncio.Semaphore(...)` で制御する。`config.toml` の `jobs` のような同時実行数設定は、この `Semaphore` の初期値にそのまま渡せる
-- 呼び出し元が同期コードの場合は `asyncio.run(...)` の中に非同期処理を閉じ込める（実例: `tools/aim-use/aim-summarize/aim_summarize/cli.py` の `_generate_all_async` / `summarizer.generate_summary_async`）
+- 呼び出し元が同期コードの場合は `asyncio.run(...)` の中に非同期処理を閉じ込める
 - 単発・逐次呼び出ししかしないなら同期版（`call`）で十分。非同期版（`call_async`）は「複数リクエストを並列に送りたい」場合にのみ選ぶ
 
 ## trace_idを取得する（呼び出し元の処理単位と紐づけたい場合）

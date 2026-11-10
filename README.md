@@ -53,7 +53,7 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 - [meta-plugins/](meta-plugins/) — このリポジトリ自体のメンテ用 Claude Code プラグイン（生成ファイルの再生成手順など）。配布用スキルではなくレポジトリ固有のため、マーケットプレイスやスキル公開サイトには含めず `ai-tools.yaml` にも記載しない。詳細は [meta-plugins/README.md](meta-plugins/README.md) 参照。
 - [docs/](docs/) — AIツールを問わずリポジトリ全体で参照する知識（メンテナンス規約・設計判断・運用知識、他ツール環境への導入手順）を [OKF (Open Knowledge Format)](claude-plugins/coding/skills/okf-spec/) の概念ドキュメントとしてまとめたバンドル。詳細は [docs/index.md](docs/index.md) 参照。
 - [tools/](tools/) — リポジトリ管理・運用を支える便利ツール群。役割ごとの索引は [tools/README.md](tools/README.md)。主なサブフォルダ:
-  - `aim/`, `aim2/`, `aim-use/` — モデル呼び出し CLI とその周辺ツール（`aim` は OpenRouter 専用 Python 実装、`aim2` は複数プロバイダ直接接続の Node.js 実装）
+  - `aim/`, `aim2/` — モデル呼び出し CLI とその周辺ツール（`aim` は OpenRouter 専用 Python 実装、`aim2` は複数プロバイダ直接接続の Node.js 実装）
   - `claude-wrapper/`, `cline-wrapper/`, `codex-wrapper/`, `copilot-wrapper/`, `cursor-wrapper/` — 各 AI ツール向けラッパー
   - `interactive-cli-wrapper/` — 対話的（TTY前提でREPLとして動く）CLIをPTY越しに駆動する汎用ラッパー
   - `agents-rules/` — 各所の `AGENTS.md` から Cline / Copilot / Antigravity / Cursor 向けのディレクトリスコープ付きルールを生成する CLI（lefthook では自動実行しない。必要時に手動で `agents-rules` を叩く）

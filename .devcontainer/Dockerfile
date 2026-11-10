@@ -8,7 +8,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_26.x | bash - \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& npm install -g pnpm@11.15.0
 
-# uv (Python tooling for tools/aim, tools/aim-use, etc.), installed system-wide.
+# uv (Python tooling for tools/aim, etc.), installed system-wide.
 RUN curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR=/usr/local/bin sh
 
 # AI agent CLIs used by tools/ona-run's --agent claude/codex templates.

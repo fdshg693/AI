@@ -40,7 +40,7 @@
 # `release: true` are the tag+GitHub Release targets (workspace-sibling-free
 # packages only). Entries without `release` (or with `release: false`) are
 # not release targets — see docs/integrations/cli-tools.md for why
-# aim-summarize / my-agents are excluded.
+# my-agents is excluded.
 #
 # Excluded from the skill-path check: meta-plugins/** (its SKILL.md files reuse
 # requires_repo_tools to mean "files this meta-skill documents", not "CLI

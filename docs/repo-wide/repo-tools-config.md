@@ -36,7 +36,7 @@ status: stable
 
 `.github/workflows/tool-release.yml`の`discover`ジョブも同じ`repo-tools.yaml`を読む。各エントリの`release: true`フィールドを見て、値が`true`のエントリの`path`一覧をタグ+GitHub Releaseの対象（`release`ジョブの`strategy.matrix.dir`）として動的に決定する。読み込みは`util/`の共有ローダを使わず、workflow内で完結する独立したPythonスニペット（`uv run --with pyyaml python -c "..."`）で行う——`tools/internal/skill/AGENTS.md`が`util/`モジュールの新規消費者を`set/`・`check/`・`query/`に限っているため。
 
-執筆時点の対象は`aim`/`grepapp`/`mslearn`/`tav`/`ctx7`の5エントリ（`tools/aim`・`tools/grepapp`・`tools/mslearn`・`tools/tav-cli`・`tools/ctx7`）。`aim-summarize`/`my-agents`はworkspace内兄弟パッケージへの依存でdependency confusionを起こすため`release`未設定（対象外）——詳細は[docs/integrations/cli-tools.md](../../docs/integrations/cli-tools.md)参照。
+執筆時点の対象は`aim`/`grepapp`/`mslearn`/`tav`/`ctx7`の5エントリ（`tools/aim`・`tools/grepapp`・`tools/mslearn`・`tools/tav-cli`・`tools/ctx7`）。`my-agents`はworkspace内兄弟パッケージへ依存し単体インストールで壊れるため`release`未設定（対象外）——詳細は[docs/integrations/cli-tools.md](../../docs/integrations/cli-tools.md)参照。
 
 この`release`フラグは消費側1（チェック対象可否）・消費側2（skills-site公開可否）とは無関係な独立した軸。あるツールがチェック対象・公開対象であっても、タグ+Releaseの対象とは限らない。
 

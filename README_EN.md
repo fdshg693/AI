@@ -46,7 +46,7 @@ For the same tool, the "config the tool reads" (starts with `.`) and the "actual
 
 - [meta-plugins/](meta-plugins/) — Claude Code plugin for maintaining this repository itself (e.g., regeneration steps for generated files). Not a distributable skill but repository-specific, so it is excluded from the marketplace/skill publishing site and from `ai-tools.yaml`. See [meta-plugins/README.md](meta-plugins/README.md) for details.
 - [tools/](tools/) — Convenience tools supporting repository management/operations. The role index is [tools/README.md](tools/README.md). Main subfolders:
-  - `aim/`, `aim-use/` — Model invocation CLI and related tools
+  - `aim/`, `aim2/` — Model invocation CLI and related tools
   - `claude-wrapper/`, `cline-wrapper/`, `codex-wrapper/`, `cursor-wrapper/` — Wrappers for each AI tool
   - `interactive-cli-wrapper/` — A generic wrapper that drives interactive (TTY-based REPL) CLIs over a PTY
   - `get-settings/` — Settings retrieval helper

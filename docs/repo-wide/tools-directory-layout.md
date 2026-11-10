@@ -1,7 +1,7 @@
 ---
 type: Repo Convention
 title: tools/配下のディレクトリ構成規約
-description: Explains the directory conventions this repo uses for convenience scripts under tools/ — one directory per tool (or a grouping subfolder for related tools, e.g. tools/aim-use/), its own README/AGENTS.md/CLAUDE.md import chain, turning it into a globally installable CLI via a package manifest entrypoint, and the expectation that first-class tools expose version metadata and --version. Use when adding a new script/tool to tools/, deciding whether it needs its own subfolder or a real package, or wiring up its CLAUDE.md.
+description: Explains the directory conventions this repo uses for convenience scripts under tools/ — one directory per tool (or a grouping subfolder for related tools, e.g. tools/schedule/), its own README/AGENTS.md/CLAUDE.md import chain, turning it into a globally installable CLI via a package manifest entrypoint, and the expectation that first-class tools expose version metadata and --version. Use when adding a new script/tool to tools/, deciding whether it needs its own subfolder or a real package, or wiring up its CLAUDE.md.
 tags: [tools, repo-wide]
 generated: { by: reference_agent/cline-glm-5.2, at: 2026-08-09T14:39:30Z }
 status: stable
@@ -14,7 +14,7 @@ status: stable
 ## 配置単位
 
 - 基本は`tools/`直下に1ツール1ディレクトリ（`tools/aim`、`tools/ctx7`、`tools/mslearn`、`tools/my-agents`等）
-- 関連する複数ツールをまとめたい場合は1段グループ化する（`tools/aim-use/aim-summarize`は`tools/aim`を利用するラッパー、`tools/internal/ai-usage`はこのリポジトリ内部専用ツール群の1つ）
+- 関連する複数ツールをまとめたい場合は1段グループ化する（`tools/schedule/`は`ai-schedule`とそこから定期実行される`issue-agent`をまとめる、`tools/internal/ai-usage`はこのリポジトリ内部専用ツール群の1つ）
 - Pythonパッケージ化が不要なディレクトリもある（`tools/infra`はBicep+スクリプト、`tools/sandbox`は実験用）。すべてを無理に`uv`ワークスペースへ載せる必要はない（判断基準は[uv-workspace](/repo-wide/uv-workspace.md)参照）
 
 ## 役割索引

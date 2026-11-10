@@ -90,7 +90,7 @@ tav search "Microsoft Fabric overview" --topic msfabric_overview
   | `ctx7-cli`     | `tools/ctx7`      |
   | `textgraph`    | `tools/textgraph` |
 
-- `aim-summarize` / `my-agents` は対象外。`[tool.uv.sources]` で workspace 内の兄弟パッケージ（`aim-cli`・`mslearn-cli`・`tav-cli`）を参照しているが、この解決は `uv build` が生成する wheel には反映されず、workspace 外で単体インストールすると壊れるため。`my-agents` は依存パッケージ名（`mslearn-cli`・`tav-cli`）が PyPI 上に存在せず素直にインストールエラーになるが、`aim-summarize` は依存名 `aim-cli` が PyPI 上の無関係な別パッケージ（[Aim](https://aimstack.io/) という MLOps 向け実験管理ツール）に静かに誤解決されてしまい、インストール自体はエラーなく完了した上で実行時に `ModuleNotFoundError` で壊れる（dependency confusion）。このため `justfile` にもこの2パッケージ向けの `-git` レシピは意図的に追加していない。
+- `my-agents` は対象外。`[tool.uv.sources]` で workspace 内の兄弟パッケージ（`mslearn-cli`・`tav-cli`）を参照しているが、この解決は `uv build` が生成する wheel には反映されず、workspace 外で単体インストールすると壊れるため（依存パッケージ名が PyPI 上に存在せずインストールエラーになる）。なお依存名が PyPI 上の無関係なパッケージと一致すると、エラーなくインストールされて実行時に `ModuleNotFoundError` で壊れる（dependency confusion。例: `aim-cli` は [Aim](https://aimstack.io/) という別パッケージに誤解決される）。このため `justfile` にも `my-agents` 向けの `-git` レシピは意図的に追加していない。
 
 - ピン留めインストール（対象8パッケージのみ）:
 

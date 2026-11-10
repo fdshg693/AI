@@ -16,7 +16,7 @@ meta:
   requires_skills: none
   status: experimental
   description: スキルまたは tools/ CLI 変更時の影響範囲列挙と設計正本への誘導
-  version: 1.0.6
+  version: 1.0.7
 ---
 
 # スキルまたは tools/ CLI を変えるとき
@@ -37,7 +37,7 @@ just --justfile tools/internal/justfile skill-tool-impact --help
 
 ## 手順
 
-1. **変更対象を特定する** — スキルなら frontmatter の `name` または `SKILL.md` パス。ツールなら `repo-tools.yaml` のキーまたは登録済み `tools/...` パス。git の差分から対象を推定するモードは無い。同名がツールキーとスキル名で衝突するときはツールキーが優先される（例: `aim-summarize`）。スキル側を見るときは `SKILL.md` パスで指定する。
+1. **変更対象を特定する** — スキルなら frontmatter の `name` または `SKILL.md` パス。ツールなら `repo-tools.yaml` のキーまたは登録済み `tools/...` パス。git の差分から対象を推定するモードは無い。同名がツールキーとスキル名で衝突するときはツールキーが優先される（例: `textgraph`）。スキル側を見るときは `SKILL.md` パスで指定する。
 2. **影響範囲を列挙する** — リポジトリルートから:
 
    ```text

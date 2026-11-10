@@ -8,7 +8,7 @@ name: Tool release
 #
 # 対象パッケージはrepo-tools.yamlの`release: true`なエントリから動的に
 # 決定する(discoverジョブ)。現状はworkspace内の兄弟パッケージに依存しない
-# 5パッケージ (aim-summarize/my-agentsは対象外。理由は
+# 5パッケージ (my-agentsは対象外。理由は
 # docs/integrations/cli-tools.md参照)。
 on:
   push:

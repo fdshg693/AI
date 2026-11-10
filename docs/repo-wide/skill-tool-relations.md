@@ -33,14 +33,14 @@ flowchart LR
 
 ツールが他のリポジトリ内ツールに依存していても、スキルグラフからは取れない。依存は次のような場所に散在していた。
 
-- `pyproject.toml` の workspace 依存（`aim-summarize` の `dependencies = ["aim-cli"]`）
-- グループフォルダ（`tools/aim-use/` は `tools/aim` を使うラッパー群、という説明が [tools-directory-layout](/repo-wide/tools-directory-layout.md) にあるだけ）
+- `pyproject.toml` の workspace 依存（`my-agents` の `dependencies` にある `mslearn-cli` / `tav-cli`）
+- グループフォルダ（`tools/schedule/` は `ai-schedule` とそこから呼ばれる `issue-agent`、という説明が [tools-directory-layout](/repo-wide/tools-directory-layout.md) にあるだけ）
 - README / AGENTS.md の散文
 - スキル経由の推論（後述のとおり損失がある）
 
 スキル経由で補うのも不十分である。
 
-- `aim-summarize` スキルの `requires_repo_tools` は `git` であり、`aim` でも `aim-summarize` でもない。ツール同士のライブラリ依存はスキルメタに現れていない
+- `my-agents` スキルの `requires_repo_tools` は `tools/my-agents, tools/mslearn` であり、同じく依存する `tav` は現れない。ツール同士のライブラリ依存はスキルメタに現れていない
 - `tav-digest` / `ms-digest` は自前のソースを持たないオーケストレーションスキルで `requires_repo_tools: none`。`aim` を変えても、ツール逆引きではこれらのスキルに届かない（スキル→スキルの `requires_skills` を辿れば届く）
 - 2つのツールが同じスキルから参照されていても、それらが互いに依存していることにはならない
 
@@ -71,7 +71,7 @@ flowchart LR
 
 ## ツール→ツールの宣言
 
-`repo-tools.yaml` の各エントリに `requires_tools` を足す。キーは同ファイルのツール名（`aim` / `tav` / `aim-summarize` 等）。値は関係の種類。
+`repo-tools.yaml` の各エントリに `requires_tools` を足す。キーは同ファイルのツール名（`aim` / `tav` / `my-agents` 等）。値は関係の種類。
 
 ```yaml
 tools:
@@ -81,19 +81,20 @@ tools:
     release: true
     # requires_tools を省略するか、空にする = リポジトリ内ツールへは依存しない
 
-  aim-summarize:
-    path: tools/aim-use/aim-summarize
-    install: "uv tool install --editable tools/aim-use/aim-summarize"
+  my-agents:
+    path: tools/my-agents
+    install: "uv tool install --editable tools/my-agents"
     requires_tools:
-      aim: library
+      mslearn: library
+      tav: library
 ```
 
 ### 関係の種類
 
-| `kind`       | 意味                                                                          | 上流を変えたとき下流を見るか                                                   |
-| ------------ | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| `library`    | Python import / workspace パッケージ依存                                      | **必須。** 公開関数・型・例外・デフォルトモデルが変わったら下流を直す          |
-| `subprocess` | 他CLIをプロセスとして呼ぶ                                                     | **必須。** フラグ・終了コード・stdout契約が変わったら下流を直す                |
+| `kind`       | 意味                                                                  | 上流を変えたとき下流を見るか                                                   |
+| ------------ | --------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `library`    | Python import / workspace パッケージ依存                              | **必須。** 公開関数・型・例外・デフォルトモデルが変わったら下流を直す          |
+| `subprocess` | 他CLIをプロセスとして呼ぶ                                             | **必須。** フラグ・終了コード・stdout契約が変わったら下流を直す                |
 | `family`     | 実行時依存はないが、規約を共有する（`.env` の置き場、モデル略記など） | **確認する。** 規約ドキュメントや共通フラグを変えたら下流のREADME/スキルを見る |
 
 `kind` を分けるのは、変更の爆破半径を「壊れる」と「揃えておきたい」で切り分けるため。`family` だけを `requires_tools` に書くのは、共有規約の変更が実際に波及するときだけにする。ディレクトリが隣同士というだけで辺を張らない。
@@ -143,13 +144,13 @@ tools:
 
 ## 既存の実例
 
-| 上流             | 下流                                                | `kind`                  | 辿り方                                                                                                                                   |
-| ---------------- | --------------------------------------------------- | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `aim`            | `aim-summarize`                                     | `library`               | `repo-tools.yaml` の `requires_tools`（実体は `tools/aim-use/aim-summarize/pyproject.toml` の workspace 依存）。スキルメタからは取れない |
-| `aim`            | `aim-cli` / `aim-lib` スキル                        | （ツール→スキル逆引き） | `requires_repo_tools: aim` / `tools/aim`                                                                                                 |
-| `aim-cli` スキル | `aim-summarize` / `tav-digest` / `ms-digest` スキル | （スキル→スキル）       | 各スキルの `requires_skills`                                                                                                             |
-| `tav`            | `tav-cli` / `tav-lib` スキル                        | （ツール→スキル逆引き） | `requires_repo_tools`                                                                                                                    |
-| `tav-cli` スキル | `tav-digest` / `tav-lit` スキル                     | （スキル→スキル）       | `requires_skills`。`tav-lit` は実行時に `tav` へ依存しないので、ツール→ツールの辺は張らない                                              |
+| 上流              | 下流                              | `kind`                  | 辿り方                                                                                                                       |
+| ----------------- | --------------------------------- | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `mslearn` / `tav` | `my-agents`                       | `library`               | `repo-tools.yaml` の `requires_tools`（実体は `tools/my-agents/pyproject.toml` の workspace 依存）。スキルメタからは取れない |
+| `aim`             | `aim-cli` / `aim-lib` スキル      | （ツール→スキル逆引き） | `requires_repo_tools: aim` / `tools/aim`                                                                                     |
+| `aim-cli` スキル  | `tav-digest` / `ms-digest` スキル | （スキル→スキル）       | 各スキルの `requires_skills`                                                                                                 |
+| `tav`             | `tav-cli` / `tav-lib` スキル      | （ツール→スキル逆引き） | `requires_repo_tools`                                                                                                        |
+| `tav-cli` スキル  | `tav-digest` / `tav-lit` スキル   | （スキル→スキル）       | `requires_skills`。`tav-lit` は実行時に `tav` へ依存しないので、ツール→ツールの辺は張らない                                  |
 
 `tav-digest` はツールではない。`tav` と `aim` のツール同士に辺は無い。`aim` の CLI 契約を変えたときに digest スキルへ届ける経路は、`aim` →（逆引き）→ `aim-cli` スキル →（逆引き）→ `tav-digest` スキル、という **ツール→スキル→スキル** である。ツール→ツールを足しても、この経路は残す。
 
