@@ -18,7 +18,7 @@ agent-tooling/agent_tooling/adapters/<agent>/<id>.py         ← 本体（Claude
         ▼
 agent-tooling/agent_tooling/hooks/generated/<agent>/<id>.*   ← 相対 import をインライン化した単一ファイル（コミットする生成物）
 agent-tooling/agent_tooling/hooks/generated/catalog.json     ← 全 hook.yaml とファイル一覧の集約
-        │  repo-hooks.yaml（リポジトリ直下）がカタログの所在を指す
+        │  registry/repo-hooks.yamlがカタログの所在を指す
         ▼
 skill-tools hooks list / install / installed / update / remove
         │  ファイル配置 + 登録ファイル（.claude/settings.json / .codex/hooks.json / .cursor/hooks.json / .agents/hooks.json）へのマージ + manifest 記録
@@ -34,7 +34,7 @@ skill-tools hooks list / install / installed / update / remove
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | フックの正本は `agent-tooling/agent_tooling/hooks/` に一本化し、Claude 専用フック（旧 `.claude/hooks/*.py`）も scenario として置く。配布物は `generated/` だけ | 生成→配布の経路を1本にし、skill-tools が読む場所を1箇所にする。共通ヘルパーはビルド時にインライン化されるので配布物に `_lib` が要らない     |
 | メタデータは scenario ごとの `hook.yaml` に置き、ビルドが `generated/catalog.json` に集約する。docstring の `<hooks>` 契約は廃止                               | Python を import せずに読めるデータにし、skill-tools が agent-tooling の内部構造に依存しないようにする。二重管理を避ける                    |
-| リポジトリ直下の `repo-hooks.yaml` はカタログの所在だけを書く                                                                                                  | `repo-tools.yaml` / `repo-workflows.yaml` と同じ「直下の SSOT を入口にする」入力契約に揃える。GitHub source でも2ファイルの取得で一覧できる |
+| `registry/repo-hooks.yaml` はカタログの所在だけを書く                                                                                                          | `repo-tools.yaml` / `repo-workflows.yaml` と同じ「直下の SSOT を入口にする」入力契約に揃える。GitHub source でも2ファイルの取得で一覧できる |
 | CLI は `skill-tools hooks <list\|install\|installed\|update\|remove>`                                                                                          | スキル用 `install` と選択子・オプションの意味が違うので、`workflow` と同じくグループ化する                                                  |
 | インストール＝有効化。`enabled` フラグは持たない                                                                                                               | manifest で登録を追跡できれば「入れる/外す」で足りる。旧 `hooks.yml` の中間状態を再発明しない                                               |
 | 登録ファイルへは skill-tools が追加したエントリだけをマージ・削除する（所有権は manifest の hash）                                                             | 配布先には利用者自身のフックがある。旧 hooks_manager は `hooks` キーを丸ごと上書きしていた                                                  |

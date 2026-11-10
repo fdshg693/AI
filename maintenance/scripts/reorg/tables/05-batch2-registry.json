@@ -1,0 +1,12 @@
+{
+  "moves": [
+    ["ai-tools.yaml", "registry/ai-tools.yaml"],
+    ["repo-tools.yaml", "registry/repo-tools.yaml"],
+    ["meta_field.yaml", "registry/meta_field.yaml"],
+    ["skill-tags.yaml", "registry/skill-tags.yaml"],
+    ["repo-workflows.yaml", "registry/repo-workflows.yaml"],
+    ["repo-hooks.yaml", "registry/repo-hooks.yaml"]
+  ],
+  "exclude": ["plans/repo-restructure/", "maintenance/scripts/reorg/", "docs/log.md"],
+  "links_only": true
+}

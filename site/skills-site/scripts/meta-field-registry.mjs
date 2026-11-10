@@ -1,5 +1,5 @@
 /**
- * Reads meta_field.yaml (repository root), the SSOT for the definitions of
+ * Reads registry/meta_field.yaml, the SSOT for the definitions of
  * the `meta:` subfields in SKILL.md frontmatter, and exposes them for use by
  * the publication pipeline and (eventually) the site UI.
  *
@@ -14,7 +14,7 @@ import yaml from "js-yaml";
 
 const SCRIPT_DIRECTORY = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(SCRIPT_DIRECTORY, "..", "..", "..");
-const META_FIELD_YAML_PATH = path.join(REPO_ROOT, "meta_field.yaml");
+const META_FIELD_YAML_PATH = path.join(REPO_ROOT, "registry", "meta_field.yaml");
 
 /** Convert a meta_field.yaml snake_case field name to the camelCase key used on JS `meta` objects. */
 export function toCamelCase(fieldName) {

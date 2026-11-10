@@ -1,5 +1,5 @@
 /**
- * Reads repo-tools.yaml (repository root), the SSOT for tools/-installed CLI
+ * Reads registry/repo-tools.yaml, the SSOT for tools/-installed CLI
  * tools that SKILL.md meta.requires_repo_tools / meta.requires_install
  * declare (see maintenance/scripts/skill/util/repo_tools_registry.py, its Python
  * counterpart). Exposes the "installable tools" list rendered on the site:
@@ -13,7 +13,7 @@ import yaml from "js-yaml";
 
 const SCRIPT_DIRECTORY = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(SCRIPT_DIRECTORY, "..", "..", "..");
-const REPO_TOOLS_YAML_PATH = path.join(REPO_ROOT, "repo-tools.yaml");
+const REPO_TOOLS_YAML_PATH = path.join(REPO_ROOT, "registry", "repo-tools.yaml");
 
 // Mirrors GITHUB_BASE_URL in build-catalog.mjs.
 const GITHUB_BASE_URL = "https://github.com/fdshg693/AI";

@@ -9,11 +9,11 @@ status: stable
 
 # スキルとツールの関係グラフ
 
-スキルや `tools/` 配下のCLIを変えるとき、関連して直すべきスキル・ツールをグラフから列挙する。スキル起点の辺は各 `SKILL.md` の `meta:`、ツール→ツールは [`repo-tools.yaml`](../../repo-tools.yaml) の `requires_tools`。変更時の手順は [changing-skills-and-tools](../plugin/skills/changing-skills-and-tools/SKILL.md) がスクリプト実行とこの文書への誘導だけを持つ。コミット直前の確認は [committing](../plugin/skills/committing/SKILL.md)。
+スキルや `tools/` 配下のCLIを変えるとき、関連して直すべきスキル・ツールをグラフから列挙する。スキル起点の辺は各 `SKILL.md` の `meta:`、ツール→ツールは [`repo-tools.yaml`](../../registry/repo-tools.yaml) の `requires_tools`。変更時の手順は [changing-skills-and-tools](../plugin/skills/changing-skills-and-tools/SKILL.md) がスクリプト実行とこの文書への誘導だけを持つ。コミット直前の確認は [committing](../plugin/skills/committing/SKILL.md)。
 
 ## スキル起点の辺
 
-辺の**定義**は [`meta_field.yaml`](../../meta_field.yaml)（[skill-meta-fields](./skill-meta-fields.md)）がSSOT。辺の**実体**は各 `SKILL.md` の `meta:` に書かれている。
+辺の**定義**は [`meta_field.yaml`](../../registry/meta_field.yaml)（[skill-meta-fields](./skill-meta-fields.md)）がSSOT。辺の**実体**は各 `SKILL.md` の `meta:` に書かれている。
 
 ```mermaid
 flowchart LR
@@ -24,7 +24,7 @@ flowchart LR
 | 方向            | 宣言場所                   | 辿り方                                                                                                 | 例                                  |
 | --------------- | -------------------------- | ------------------------------------------------------------------------------------------------------ | ----------------------------------- |
 | スキル → スキル | `meta.requires_skills`     | そのスキルの frontmatter を読む                                                                        | `tav-digest` → `tav-cli`, `aim-cli` |
-| スキル → ツール | `meta.requires_repo_tools` | 同上。値は [`repo-tools.yaml`](../../repo-tools.yaml) のキーまたは `path`                              | `aim-cli` → `aim`                   |
+| スキル → ツール | `meta.requires_repo_tools` | 同上。値は [`repo-tools.yaml`](../../registry/repo-tools.yaml) のキーまたは `path`                     | `aim-cli` → `aim`                   |
 | ツール → スキル | （宣言なし、逆引き）       | 全 `SKILL.md` の `requires_repo_tools` / `requires_install` をスキャンし、当該ツールを指すものを集める | `aim` ← `aim-cli`, `aim-lib`        |
 
 ツール→スキルの逆引きは、辺を二重に持たなくてよい。スキル側の `requires_repo_tools`（およびツール名がそちらに無いときの `requires_install`）が唯一の正向で、逆は索引である。コンパニオンスキル（使い方スキル）とその他の消費者の区別は [tool-companion-skills](./tool-companion-skills.md) の置き場所・責務で人間が判断する。ツール側に「これが使い方スキル」と書くフィールドは必須にしない。
@@ -57,11 +57,11 @@ flowchart LR
 
 逆引きはすべて正向の索引とする（同じ事実を2箇所に手で書かない）。
 
-| 方向            | 正向のSSOT                                                     | 逆引き             |
-| --------------- | -------------------------------------------------------------- | ------------------ |
-| スキル → スキル | 各 `SKILL.md` の `requires_skills`                             | 全スキルをスキャン |
-| スキル → ツール | 各 `SKILL.md` の `requires_repo_tools`                         | 全スキルをスキャン |
-| ツール → ツール | [`repo-tools.yaml`](../../repo-tools.yaml) の `requires_tools` | 同ファイル内の索引 |
+| 方向            | 正向のSSOT                                                              | 逆引き             |
+| --------------- | ----------------------------------------------------------------------- | ------------------ |
+| スキル → スキル | 各 `SKILL.md` の `requires_skills`                                      | 全スキルをスキャン |
+| スキル → ツール | 各 `SKILL.md` の `requires_repo_tools`                                  | 全スキルをスキャン |
+| ツール → ツール | [`repo-tools.yaml`](../../registry/repo-tools.yaml) の `requires_tools` | 同ファイル内の索引 |
 
 `meta_field.yaml` はスキル側フィールドの意味のSSOTのまま。ツール側の辺はスキル frontmatter に足さず、ツール登録のSSOTである `repo-tools.yaml` に足す。理由は次のとおり。
 
@@ -123,7 +123,7 @@ tools:
 3. このスキルがコンパニオンなら、対象ツールの README / `--help` / `--ai-help`。使い方FBは `skill-tools --fb`（[tool-companion-skills](./tool-companion-skills.md)）。スキルは使い方だけを持ち、セットアップはツールREADME側
 4. `requires_repo_tools` / `requires_install` を変えたら `repo-tools.yaml` にそのツールが既にあることを確認する（lefthook チェック）
 
-フィールド定義そのものを増やす・意味を変えるときだけ [`meta_field.yaml`](../../meta_field.yaml) を先に直す。個別スキルの依存を足す作業で `meta_field.yaml` は触らない。
+フィールド定義そのものを増やす・意味を変えるときだけ [`meta_field.yaml`](../../registry/meta_field.yaml) を先に直す。個別スキルの依存を足す作業で `meta_field.yaml` は触らない。
 
 ### ツールを変える
 

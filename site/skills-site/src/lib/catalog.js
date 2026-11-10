@@ -2,14 +2,14 @@ import catalog from "../../generated/catalog.json";
 
 export const skills = catalog.skills;
 
-// meta_field.yaml (repo root) is the SSOT for these entries; build-catalog.mjs
+// registry/meta_field.yaml is the SSOT for these entries; build-catalog.mjs
 // loads it once via meta-field-registry.mjs and embeds it here so UI code
 // never reads meta_field.yaml itself (Astro/Vite relocates bundled modules
 // during prerendering, which breaks meta-field-registry.mjs's file-relative
 // path resolution if imported directly from a component).
 export const metaFieldRegistry = catalog.metaFieldRegistry;
 
-// repo-tools.yaml (repo root) is the SSOT for these entries; same relocation
+// registry/repo-tools.yaml is the SSOT for these entries; same relocation
 // caveat as metaFieldRegistry above (see build-catalog.mjs).
 export const repoTools = catalog.repoTools;
 

@@ -76,6 +76,7 @@ For the same tool, the "config the tool reads" (starts with `.`) and the "actual
 - `lefthook.yml` — Git hooks configuration that runs on commit, etc. (various regeneration/formatting/secretlint on `pre-commit`, commitlint on `commit-msg`).
 - `mise.toml` — Tool version management via [mise](https://mise.jdx.dev/) (pins node / pnpm / terraform / uv for this repository).
 - `pyproject.toml` — Root definition of the uv workspace (manages Python packages such as `tools/aim` together).
+- [registry/](registry/) — SSOT yaml files (`ai-tools.yaml`, `repo-tools.yaml`, `meta_field.yaml`, `skill-tags.yaml`, `repo-workflows.yaml`, `repo-hooks.yaml`). The same-named yaml files at the repository root are generated copies for older skill-tools releases; do not edit them.
 - `pnpm-workspace.yaml` / `package.json` / `pnpm-lock.yaml` — Root definition of the pnpm workspace (`site/skills-site`, `tools/cline-wrapper`) and its lockfile.
 - `.prettierrc.json` / `.prettierignore` — Formatting settings.
 - `commitlint.config.js` — Lint settings for commit messages ([Conventional Commits](https://www.conventionalcommits.org/), `@commitlint/config-conventional`).

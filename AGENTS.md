@@ -20,14 +20,14 @@
 
 ## AIツール/プラグイン設定のSSOT
 
-- AIツール・プラグイン・マーケットプレイス・スキルカタログの所在は `ai-tools.yaml` がSSOT。
-- 新しいプラグインを追加・削除したら、先に `ai-tools.yaml` を更新する。
+- AIツール・プラグイン・マーケットプレイス・スキルカタログの所在は `registry/ai-tools.yaml` がSSOT。SSOT yaml（`ai-tools` / `repo-tools` / `meta_field` / `skill-tags` / `repo-workflows` / `repo-hooks`）は `registry/` に置く。ルート直下の同名 yaml 4 本は旧 skill-tools 向けの生成コピーで、手編集しない。
+- 新しいプラグインを追加・削除したら、先に `registry/ai-tools.yaml` を更新する。
 - `./README.md` の `<!-- BEGIN: ai-tools-section -->`〜`<!-- END: ai-tools-section -->` は `maintenance/scripts/plugin_meta/generate/generate_readme_tools_section.py` が `ai-tools.yaml` の `readme` ブロックから生成する。手編集しない。
 
 ## SKILL.md meta フィールドのSSOT
 
-- `SKILL.md`フロントマターの`meta:`サブフィールド（`version`/`description`/`status`/`requires_skills`等）の定義は`meta_field.yaml`がSSOT。
-  - 新フィールドを追加・意味を変更する場合は先に`meta_field.yaml`を更新する。
+- `SKILL.md`フロントマターの`meta:`サブフィールド（`version`/`description`/`status`/`requires_skills`等）の定義は`registry/meta_field.yaml`がSSOT。
+  - 新フィールドを追加・意味を変更する場合は先に`registry/meta_field.yaml`を更新する。
 - 新フィールドは全てスカラー文字列（複数値はカンマ区切り、該当なしは`none`）。YAMLリスト値にしない（`maintenance/scripts/skill/util/skill_meta_field.py`の制約）。
 - `meta.version`以外のフィールドを変更した場合も、既存の`skill/check/check_skill_version_bump.py`が「frontmatter全体の変更」として検知するため、`meta.version`を1つ上げること。
   - 手動で編集してもよいが、`maintenance/scripts/skill/set/bump_skill_versions.py`（`just --justfile maintenance/scripts/justfile skill-version-bump`）で自動バンプできる（末尾の数値セグメントを+1し、`1.2.3-beta`等の接尾辞は落として`1.2.4`にする）。

@@ -3,7 +3,7 @@
 Walks the whole repo (not just marketplace-listed plugins) for SKILL.md
 files. Any file whose frontmatter is missing meta.tag gets it patched
 in-place to an empty array ([]). Files that already declare meta.tag
-(including an empty one) are left untouched. See skill-tags.yaml (repo root)
+(including an empty one) are left untouched. See registry/skill-tags.yaml
 for the allowed tag values; this script does not assign any.
 """
 

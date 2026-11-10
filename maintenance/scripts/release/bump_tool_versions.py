@@ -33,7 +33,7 @@ from typing import Literal
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-REPO_TOOLS_YAML_PATH = REPO_ROOT / "repo-tools.yaml"
+REPO_TOOLS_YAML_PATH = REPO_ROOT / "registry" / "repo-tools.yaml"
 
 
 class ToolVersionError(RuntimeError):

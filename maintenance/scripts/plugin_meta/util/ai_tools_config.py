@@ -13,7 +13,7 @@ from typing import Any
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
-CONFIG_PATH = REPO_ROOT / "ai-tools.yaml"
+CONFIG_PATH = REPO_ROOT / "registry" / "ai-tools.yaml"
 
 
 def load_config(config_path: Path = CONFIG_PATH) -> dict[str, Any]:

@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'site/tools-site/**'
-      - 'repo-tools.yaml'
+      - 'registry/repo-tools.yaml'
       - 'tools/aim/README.md'
       - 'tools/grepapp/README.md'
       - 'tools/mslearn/README.md'
@@ -21,7 +21,7 @@ on:
       - main
     paths:
       - 'site/tools-site/**'
-      - 'repo-tools.yaml'
+      - 'registry/repo-tools.yaml'
       - 'tools/aim/README.md'
       - 'tools/grepapp/README.md'
       - 'tools/mslearn/README.md'

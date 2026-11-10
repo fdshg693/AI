@@ -74,7 +74,7 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 
 ### ツールドキュメントサイト
 
-- [site/tools-site/](site/tools-site/) — [repo-tools.yaml](repo-tools.yaml) の `release: true` ツールのインストール/使い方をまとめたVitePress製サイト。GitHub Pagesで公開する。詳細は [site/tools-site/README.md](site/tools-site/README.md) を参照。
+- [site/tools-site/](site/tools-site/) — [repo-tools.yaml](registry/repo-tools.yaml) の `release: true` ツールのインストール/使い方をまとめたVitePress製サイト。GitHub Pagesで公開する。詳細は [site/tools-site/README.md](site/tools-site/README.md) を参照。
 
 ## ライセンス・コントリビューション
 
@@ -90,7 +90,8 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 - `commitlint.config.js` — コミットメッセージのlint設定（[Conventional Commits](https://www.conventionalcommits.org/)、`@commitlint/config-conventional`）。
 - `.secretlintrc.json` — ステージ済みファイルのシークレット検知設定（[secretlint](https://github.com/secretlint/secretlint) `@secretlint/secretlint-rule-preset-recommend`）。
 - `AGENTS.md` / `CLAUDE.md` — 各 AI ツール向けのリポジトリ全体指示ファイル（README と同等の構成概観を記載）。
-- `repo-hooks.yaml` — skill-tools が読むエージェントフックカタログ（agent-tooling が生成する `catalog.json`）の所在。フックの配布・自己インストール（`just hooks-install`）は [maintenance/docs/hook-distribution.md](maintenance/docs/hook-distribution.md) 参照。
+- [registry/](registry/) — SSOT yaml（`ai-tools.yaml`・`repo-tools.yaml`・`meta_field.yaml`・`skill-tags.yaml`・`repo-workflows.yaml`・`repo-hooks.yaml`）。ルート直下の `ai-tools.yaml`・`repo-tools.yaml`・`repo-workflows.yaml`・`repo-hooks.yaml` は、`registry/` を知らない旧 skill-tools 向けの生成コピー（手編集しない）。
+- `registry/repo-hooks.yaml` — skill-tools が読むエージェントフックカタログ（agent-tooling が生成する `catalog.json`）の所在。フックの配布・自己インストール（`just hooks-install`）は [maintenance/docs/hook-distribution.md](maintenance/docs/hook-distribution.md) 参照。
 - `.codegraph/` — CodeGraph のローカル知識グラフ（gitignore）。導入後は `codegraph init`。詳細は `claude-plugins/topics/skills/codegraph-docs/`。
 
   Azure Static Web Appsへのリソース作成は [site/skills-site/infra/](site/skills-site/infra/) のBicepで管理し、通常の公開更新はmainへのpushからGitHub Actionsで行う。ローカルの検証・Azure操作はリポジトリ直下のjustfileを使う。

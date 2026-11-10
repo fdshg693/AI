@@ -7,7 +7,9 @@ the moves with ``git mv`` and before committing::
     uv run python -m reorg.rewrite_moved_paths reorg/tables/<batch>.json --dry-run
 
 The table is a JSON object ``{"moves": [[old_prefix, new_prefix], ...],
-"exclude": [repo-relative prefixes to leave untouched]}``. Prefixes are POSIX,
+"exclude": [repo-relative prefixes to leave untouched], "links_only": false}``.
+``links_only`` skips step 2 (useful when the moved names are also used as plain
+names in prose, e.g. ``ai-tools.yaml``). Prefixes are POSIX,
 repo-root relative, without a trailing slash.
 
 What it rewrites in every tracked text file (``git ls-files``, so junctions and
@@ -70,12 +72,12 @@ def repo_root() -> Path:
     return Path(git(Path.cwd(), "rev-parse", "--show-toplevel").strip())
 
 
-def load_table(path: Path) -> tuple[list[tuple[str, str]], tuple[str, ...]]:
+def load_table(path: Path) -> tuple[list[tuple[str, str]], tuple[str, ...], bool]:
     data = json.loads(path.read_text(encoding="utf-8"))
     moves = [(old.strip("/"), new.strip("/")) for old, new in data["moves"]]
     moves.sort(key=lambda m: len(m[0]), reverse=True)
     exclude = tuple(data.get("exclude", ()))
-    return moves, exclude
+    return moves, exclude, bool(data.get("links_only", False))
 
 
 def map_prefix(path: str, moves: list[tuple[str, str]], reverse: bool = False) -> str:
@@ -188,7 +190,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     root = repo_root()
-    moves, exclude = load_table(args.table)
+    moves, exclude, links_only = load_table(args.table)
     exclude = ALWAYS_EXCLUDE + exclude
     old_paths = old_tree_paths(root)
     pattern, lookup = build_prefix_pattern(moves)
@@ -211,7 +213,8 @@ def main(argv: list[str] | None = None) -> int:
         text = original.replace("\r\n", "\n")
         old_rel = map_prefix(rel, moves, reverse=True)
         updated = rewrite_links(text, rel, old_rel, moves, old_paths)
-        updated = rewrite_prefixes(updated, pattern, lookup)
+        if not links_only:
+            updated = rewrite_prefixes(updated, pattern, lookup)
         if args.report_relative:
             for old, _ in moves:
                 for line_no, line in enumerate(updated.splitlines(), 1):

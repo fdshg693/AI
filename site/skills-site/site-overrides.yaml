@@ -1,6 +1,6 @@
 # skills-site publication overrides.
 #
-# ai-tools.yaml (repository root) is the SSOT for which tool/plugin exists
+# registry/ai-tools.yaml is the SSOT for which tool/plugin exists
 # and what ships in the marketplace/skill-catalog outputs. Everything listed
 # there is registered in site/skills-site/scripts/source-registry.mjs and is a
 # candidate for publication on this site.

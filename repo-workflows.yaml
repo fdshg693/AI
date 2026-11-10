@@ -1,3 +1,7 @@
+# GENERATED compatibility copy of registry/repo-workflows.yaml (DO NOT EDIT MANUALLY).
+# Edit registry/repo-workflows.yaml; maintenance/scripts/plugin_meta/generate/
+# generate_registry_compat.py rewrites this file for skill-tools releases
+# that still read SSOT files from the repository root.
 # Read-only purpose catalog. References are repo-relative canonical SKILL.md IDs
 # and repo-tools.yaml keys; this file does not install or execute anything.
 version: 1

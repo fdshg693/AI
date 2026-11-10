@@ -33,6 +33,8 @@ skill-tools はディレクトリを総なめして `SKILL.md` を拾うので�
 
 ## 入力契約（リポジトリ側が守るもの）
 
+SSOT yaml は `registry/` に置く。skill-tools は `registry/<name>` を先に探し、無ければ source ルートの `<name>` を読む（`skill_tools/registry.py`）。yaml 内のパスはどちらに置いてもリポジトリルート相対。`registry/` を知らない旧版 skill-tools のために、`ai-tools.yaml`・`repo-tools.yaml`・`repo-workflows.yaml`・`repo-hooks.yaml` はルートにも生成コピーを置く（`maintenance/scripts/plugin_meta/generate/generate_registry_compat.py`。pre-commit が再生成する）。旧版の利用者がいなくなったら生成器ごと消す。
+
 ### 1. `ai-tools.yaml` — スキルの探索ルート
 
 `tools.<tool>.plugins[]` の各エントリがスキルの探索ルートになる（実装: `skill_tools/catalog/`）。
@@ -76,7 +78,7 @@ skills-site と同じ除外設定を skill-tools も尊重する。`exclude.sour
 
 ### 6. `repo-hooks.yaml` と `catalog.json` — エージェントフック
 
-`hooks` サブコマンドはリポジトリ直下の `repo-hooks.yaml`（`version: 1` と `catalog`）が指すフックカタログを読む。カタログは `agent-tooling/agent_tooling/hooks/generated/catalog.json` で、agent-tooling のビルドが各 `scenarios/<id>/hook.yaml` と生成ファイル一覧から作る（手編集しない）。流れと設計判断は [hook-distribution](./hook-distribution.md)。
+`hooks` サブコマンドは`registry/repo-hooks.yaml`（`version: 1` と `catalog`）が指すフックカタログを読む。カタログは `agent-tooling/agent_tooling/hooks/generated/catalog.json` で、agent-tooling のビルドが各 `scenarios/<id>/hook.yaml` と生成ファイル一覧から作る（手編集しない）。流れと設計判断は [hook-distribution](./hook-distribution.md)。
 
 - `repo-hooks.yaml` の `catalog` はこのファイル相対、カタログ内のパスはカタログのディレクトリ相対。カタログが参照するファイルはすべてコミット済みの生成物であること（GitHub source はツリー上のファイルしか取れない）。
 - `repo-hooks.yaml` が無い source は「フック0件」でエラーにしない。形式違反・参照切れは終了コード `2`。

@@ -13,7 +13,7 @@ from typing import Any
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
-META_FIELD_YAML_PATH = REPO_ROOT / "meta_field.yaml"
+META_FIELD_YAML_PATH = REPO_ROOT / "registry" / "meta_field.yaml"
 
 
 def load_meta_fields(path: Path = META_FIELD_YAML_PATH) -> dict[str, dict[str, Any]]:

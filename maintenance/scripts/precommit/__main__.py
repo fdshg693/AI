@@ -51,33 +51,45 @@ FIX_TASKS = (
     Task(
         "marketplace",
         "plugin_meta.generate.generate_marketplace",
-        ("**/.claude-plugin/plugin.json", "ai-tools.yaml"),
+        ("**/.claude-plugin/plugin.json", "registry/ai-tools.yaml"),
     ),
     Task(
         "codex-marketplace",
         "plugin_meta.generate.generate_codex_marketplace",
-        ("**/.codex-plugin/plugin.json", "ai-tools.yaml"),
+        ("**/.codex-plugin/plugin.json", "registry/ai-tools.yaml"),
     ),
     Task(
         "copilot-marketplace",
         "plugin_meta.generate.generate_copilot_marketplace",
-        ("copilot-plugins/meta/**/SKILL.md", "ai-tools.yaml"),
+        ("copilot-plugins/meta/**/SKILL.md", "registry/ai-tools.yaml"),
     ),
     Task(
         "skill-catalog",
         "plugin_meta.generate.generate_skill_catalog",
-        ("**/skills/**", ".claude-plugin/marketplace.json", "ai-tools.yaml"),
+        ("**/skills/**", ".claude-plugin/marketplace.json", "registry/ai-tools.yaml"),
         after=("marketplace",),
     ),
     Task(
         "skills-catalog-md",
         "plugin_meta.generate.generate_skills_catalog_md",
-        ("**/skills/**", "ai-tools.yaml"),
+        ("**/skills/**", "registry/ai-tools.yaml"),
     ),
     Task(
         "readme-tools-section",
         "plugin_meta.generate.generate_readme_tools_section",
-        ("ai-tools.yaml",),
+        ("registry/ai-tools.yaml",),
+    ),
+    Task(
+        "registry-compat",
+        "plugin_meta.generate.generate_registry_compat",
+        (
+            "registry/*.yaml",
+            # A hand edit of a root copy is overwritten from registry/.
+            "ai-tools.yaml",
+            "repo-tools.yaml",
+            "repo-workflows.yaml",
+            "repo-hooks.yaml",
+        ),
     ),
     Task("tool-version-bump", "release.bump_tool_versions", ("tools/**",), call="list"),
 )
@@ -92,13 +104,23 @@ CHECK_TASKS = (
     Task(
         "skill-repo-tools-check",
         "skill.check.check_skill_repo_tools",
-        ("**/SKILL.md", "repo-tools.yaml", "tools/**/pyproject.toml", "tools/**/package.json"),
+        (
+            "**/SKILL.md",
+            "registry/repo-tools.yaml",
+            "tools/**/pyproject.toml",
+            "tools/**/package.json",
+        ),
         call="argv",
     ),
     Task(
         "repo-tool-relations-check",
         "skill.check.check_repo_tool_relations",
-        ("**/SKILL.md", "repo-tools.yaml", "tools/**/pyproject.toml", "tools/**/package.json"),
+        (
+            "**/SKILL.md",
+            "registry/repo-tools.yaml",
+            "tools/**/pyproject.toml",
+            "tools/**/package.json",
+        ),
         call="argv",
     ),
 )

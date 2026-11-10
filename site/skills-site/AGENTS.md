@@ -33,7 +33,7 @@ pnpm --prefix site/skills-site run preview
 
 ## スキル公開成果物の規約
 
-- 公開対象のルートは `site/skills-site/scripts/source-registry.mjs` が `ai-tools.yaml`（リポジトリ直下）から自動的に導出する。新しいAIツールやプラグインのスキルを追加したら、`ai-tools.yaml` 側にプラグインを登録する（`source-registry.mjs` を直接編集しない）。
+- 公開対象のルートは `site/skills-site/scripts/source-registry.mjs` が `registry/ai-tools.yaml`から自動的に導出する。新しいAIツールやプラグインのスキルを追加したら、`ai-tools.yaml` 側にプラグインを登録する（`source-registry.mjs` を直接編集しない）。
 - スキャン対象は `ai-tools.yaml` に登録されたルート配下のみ。登録ルート外にある `SKILL.md`（例: `maintenance/plugin/` のように意図的に`ai-tools.yaml`へ登録しないプラグイン）は存在してもエラーにならず、単に公開対象から漏れる。
 - `ai-tools.yaml` に登録済み（＝マーケットプレイスには載る）だが、このサイトでは非公開にしたいプラグイン／スキルがある場合は `site/skills-site/site-overrides.yaml`（`site/skills-site/scripts/site-overrides.mjs` が読み込む）の `exclude.sources` / `exclude.skills` に追記する。逆に、`ai-tools.yaml` に無いものをこのファイルだけで公開対象に追加することはできない。
 - スキルの安定したID・URLは `SKILL.md` の `name` ではなく、リポジトリ相対パスを使う。同名スキルがあっても別スキルとして扱う。

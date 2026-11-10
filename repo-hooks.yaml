@@ -1,3 +1,7 @@
+# GENERATED compatibility copy of registry/repo-hooks.yaml (DO NOT EDIT MANUALLY).
+# Edit registry/repo-hooks.yaml; maintenance/scripts/plugin_meta/generate/
+# generate_registry_compat.py rewrites this file for skill-tools releases
+# that still read SSOT files from the repository root.
 # Entry point for distributable agent hooks (read by `skill-tools hooks ...`).
 #
 # This file only says where the hook catalog lives. Do not list hooks here:
@@ -7,7 +11,8 @@
 # file it references are committed build outputs under generated/, so a
 # GitHub source can list hooks by fetching this file and the catalog only.
 #
-# `catalog` is relative to this file. Paths inside the catalog are relative to
-# the catalog's own directory.
+# `catalog` is relative to the repository root (this file lives in registry/;
+# a root-level compatibility copy is generated for older skill-tools). Paths
+# inside the catalog are relative to the catalog's own directory.
 version: 1
 catalog: agent-tooling/agent_tooling/hooks/generated/catalog.json

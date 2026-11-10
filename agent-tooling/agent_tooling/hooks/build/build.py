@@ -807,8 +807,17 @@ def load_hook_specs(package_root: Path) -> dict[str, HookSpec]:
 
 
 def _repo_tool_keys(package_root: Path) -> set[str] | None:
-    path = package_root.parent.parent / "repo-tools.yaml"
-    if not path.is_file():
+    # The umbrella repository keeps it in registry/; search upward so the
+    # package's depth inside the repository does not matter.
+    path = next(
+        (
+            candidate
+            for parent in package_root.parents
+            if (candidate := parent / "registry" / "repo-tools.yaml").is_file()
+        ),
+        None,
+    )
+    if path is None:
         return None
     data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     return set((data.get("tools") or {}).keys())

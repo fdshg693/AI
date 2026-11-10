@@ -41,10 +41,14 @@ skills-catalog-md:
 readme-tools-section:
     uv run python -m plugin_meta.generate.generate_readme_tools_section
 
+# Regenerate the root compatibility copies of registry/*.yaml read by older skill-tools
+registry-compat:
+    uv run python -m plugin_meta.generate.generate_registry_compat
+
 # Regenerate all generated marketplace and skill catalog files.
 # AGENTS.md -> Cline/Copilot/Antigravity rules are not generated here; run the
 # tools/agents-rules CLI (`uv run agents-rules`) explicitly when needed.
-generate: marketplace codex-marketplace copilot-marketplace skill-catalog skills-catalog-md readme-tools-section
+generate: marketplace codex-marketplace copilot-marketplace skill-catalog skills-catalog-md readme-tools-section registry-compat
 
 # --- skill/set, skill/check, skill/query: SKILL.md frontmatter and relation graph ---
 

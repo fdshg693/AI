@@ -394,7 +394,10 @@ def test_build_all_rejects_entries_that_disagree_with_hook_yaml(tmp_path: Path):
 )
 def test_hook_yaml_validation(tmp_path: Path, old, new, message):
     root, entries = _demo_package(tmp_path)
-    (tmp_path / "repo" / "repo-tools.yaml").write_text("tools:\n  aim: {}\n", encoding="utf-8")
+    (tmp_path / "repo" / "registry").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "repo" / "registry" / "repo-tools.yaml").write_text(
+        "tools:\n  aim: {}\n", encoding="utf-8"
+    )
     path = root / "hooks" / "scenarios" / "demo" / "hook.yaml"
     path.write_text(path.read_text(encoding="utf-8").replace(old, new, 1), encoding="utf-8")
     with pytest.raises(InlineError, match=message):

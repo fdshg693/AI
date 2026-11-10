@@ -42,7 +42,7 @@ jobs:
           import json
           import yaml
 
-          with open('repo-tools.yaml', encoding='utf-8') as f:
+          with open('registry/repo-tools.yaml', encoding='utf-8') as f:
               config = yaml.safe_load(f)
 
           paths = [

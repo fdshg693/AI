@@ -1,3 +1,7 @@
+# GENERATED compatibility copy of registry/ai-tools.yaml (DO NOT EDIT MANUALLY).
+# Edit registry/ai-tools.yaml; maintenance/scripts/plugin_meta/generate/
+# generate_registry_compat.py rewrites this file for skill-tools releases
+# that still read SSOT files from the repository root.
 # SSOT for "which AI coding tool has which plugins, and where its marketplace /
 # skill-catalog / generated-rules files live" in this repository.
 #

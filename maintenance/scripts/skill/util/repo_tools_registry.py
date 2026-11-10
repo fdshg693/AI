@@ -15,7 +15,7 @@ from typing import Any
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
-REPO_TOOLS_YAML_PATH = REPO_ROOT / "repo-tools.yaml"
+REPO_TOOLS_YAML_PATH = REPO_ROOT / "registry" / "repo-tools.yaml"
 
 REQUIRES_TOOLS_KINDS = frozenset({"library", "subprocess", "family"})
 

@@ -11,7 +11,7 @@ status: stable
 
 ## SSOT: `repo-tools.yaml`
 
-リポジトリ直下の[`repo-tools.yaml`](../../repo-tools.yaml)が、「`SKILL.md`の`meta.requires_repo_tools`/`meta.requires_install`が参照してよい、`tools/`配下の自作CLIツール」と、ツール同士の依存（`requires_tools`）の単一の情報源（SSOT）。各エントリは`path`（`tools/`配下のディレクトリ）、`install`（インストールコマンド）、`description`（ツール概要の取得元を示す`<repo相対path>[#<dotted key>]` locator。例`tools/aim/pyproject.toml#project.description`）を持つ。概要本文はここに書かず、locatorが指す先（各ツールのマニフェスト、無ければREADME）をSSOTとする（[tool-conventions](./tool-conventions.md)）。他の登録ツールに依存するときは`requires_tools`（キーは同ファイルのツール名、値は`library` / `subprocess` / `family`）を書く。辺の意味は[skill-tool-relations](./skill-tool-relations.md)。
+[`registry/repo-tools.yaml`](../../registry/repo-tools.yaml)が、「`SKILL.md`の`meta.requires_repo_tools`/`meta.requires_install`が参照してよい、`tools/`配下の自作CLIツール」と、ツール同士の依存（`requires_tools`）の単一の情報源（SSOT）。各エントリは`path`（`tools/`配下のディレクトリ）、`install`（インストールコマンド）、`description`（ツール概要の取得元を示す`<repo相対path>[#<dotted key>]` locator。例`tools/aim/pyproject.toml#project.description`）を持つ。概要本文はここに書かず、locatorが指す先（各ツールのマニフェスト、無ければREADME）をSSOTとする（[tool-conventions](./tool-conventions.md)）。他の登録ツールに依存するときは`requires_tools`（キーは同ファイルのツール名、値は`library` / `subprocess` / `family`）を書く。辺の意味は[skill-tool-relations](./skill-tool-relations.md)。
 
 版数はここには置かない。Pythonは各ツールの`pyproject.toml`、Nodeは`package.json`がSSOTであり、公開CLIの`--version`もその値を返す。詳細は[tool-conventions](./tool-conventions.md)。
 

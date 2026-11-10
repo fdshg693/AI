@@ -142,7 +142,7 @@ skill-tools install-tools --dry-run
 skill-tools install-tools aim tav
 ```
 
-- 対象はsource（設定中の`source`）のルートにある`repo-tools.yaml`の全エントリ。**`release`の値では絞らない**（タグ+Release対象かどうかは別の軸であり、`release: false`や未設定のツールも含めて全件が列挙・インストール対象）
+- 対象はsource（設定中の`source`）の`registry/repo-tools.yaml`（無ければルートの`repo-tools.yaml`）の全エントリ。**`release`の値では絞らない**（タグ+Release対象かどうかは別の軸であり、`release: false`や未設定のツールも含めて全件が列挙・インストール対象）
 - `list-tools`は`tool name<TAB>path<TAB>install command<TAB>summary`の4列をタブ区切りで標準出力へ出す。`summary`は`repo-tools.yaml`の`description` locator（`tools/.../pyproject.toml#project.description`、READMEパス等）を解決した1行概要で、locator未指定なら空。locatorが壊れているとツール名とlocatorを出して終了コード`2`で止まる。**概要を機械的に扱うなら`--json`**（`{name, path, install, description}`の配列。stderrの`source: ...`は同じ）。最初にこれで登録名と`install`コマンドを確認する
 - `install-tools`は選択したツールの`install`文字列（`uv tool install --editable tools/...`や`cd tools/... && pnpm add -g .`）を**sourceのルートで**実行する。選択子は登録名（`aim`）またはリポジトリ相対の`path`（`tools/aim`）。**1つも指定しなければ全ツール**が対象なので、いきなり全件を走らせる前に`--dry-run`で内容を確認する
 - **インストールはlocal sourceが必要。** コマンドがリポジトリ相対のため、GitHub sourceでは実行せずエラー（終了コード`4`）になる。cloneのパスは`config show`の`source.path`で確認できる

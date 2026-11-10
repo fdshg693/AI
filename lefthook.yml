@@ -18,7 +18,11 @@ pre-commit:
               - "**/.claude-plugin/plugin.json"
               - "**/.codex-plugin/plugin.json"
               - ".claude-plugin/marketplace.json"
+              - "registry/*.yaml"
               - "ai-tools.yaml"
+              - "repo-tools.yaml"
+              - "repo-workflows.yaml"
+              - "repo-hooks.yaml"
               - "tools/**"
             run: just --justfile maintenance/scripts/justfile precommit-fix
             stage_fixed: true
@@ -59,7 +63,7 @@ pre-commit:
           - name: maintenance/scripts precommit check
             glob:
               - "**/SKILL.md"
-              - "repo-tools.yaml"
+              - "registry/repo-tools.yaml"
               - "tools/**/pyproject.toml"
               - "tools/**/package.json"
             run: just --justfile maintenance/scripts/justfile precommit-check

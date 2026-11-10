@@ -15,7 +15,7 @@ status: stable
 
 ## SSOT: `ai-tools.yaml`
 
-リポジトリ直下の `ai-tools.yaml` が、「どのAIツールがどのプラグインを持ち、マーケットプレイス定義・スキルカタログがどこにあるか」の単一の情報源（SSOT）。
+`registry/ai-tools.yaml` が、「どのAIツールがどのプラグインを持ち、マーケットプレイス定義・スキルカタログがどこにあるか」の単一の情報源（SSOT）。
 
 - 各ツール（`claude-code` / `cline` / `codex` / `copilot` / `cursor` / `antigravity`）ごとに `plugins`（登録プラグイン一覧）、`marketplace`（出力先・メタデータ）、`skill_catalog`、`readme`（README生成用の説明文）等を持つ
 - プラグイン一覧は `rglob` 等での自動検出ではなく、`ai-tools.yaml` に**明示的に列挙**する方針（同名プラグインの重複登録などのdriftを防ぐため、人が編集するファイル側にリストを置いてdiffに残す）

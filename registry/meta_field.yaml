@@ -67,6 +67,6 @@ fields:
 
   tag:
     description: "トピック横断でスキルを検索するためのタグ（AIの自動起動判断には使われない）"
-    format: "配列。値は skill-tags.yaml（リポジトリ直下）に登録済みのタグ名のみ"
+    format: "配列。値は registry/skill-tags.yamlに登録済みのタグ名のみ"
     default: "[]"
     example: "[git, ai-provider]"

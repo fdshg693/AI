@@ -1,3 +1,7 @@
+# GENERATED compatibility copy of registry/repo-tools.yaml (DO NOT EDIT MANUALLY).
+# Edit registry/repo-tools.yaml; maintenance/scripts/plugin_meta/generate/
+# generate_registry_compat.py rewrites this file for skill-tools releases
+# that still read SSOT files from the repository root.
 # SSOT for first-class CLI tools under tools/: tools that a SKILL.md may
 # declare (meta.requires_repo_tools / meta.requires_install) and/or that
 # participate in tool-to-tool edges (requires_tools).
