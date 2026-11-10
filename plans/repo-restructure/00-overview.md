@@ -12,7 +12,7 @@ status: implementing-in-progress
 - [x] [05-semantic-reorg.md](05-semantic-reorg.md) — 単一リポジトリのまま意味的再編（git mv）
 - [x] [06-agent-compat.md](06-agent-compat.md) — マルチ AI 対応の分離、ツール別書式サンプルと相違点ドキュメント
 - [x] [07-submodule-split.md](07-submodule-split.md) — 履歴付きでサブモジュールへ切り出す
-- [ ] [08-subfolder-workspaces.md](08-subfolder-workspaces.md) — サブモジュール単体で開くための Claude Code 用 Junction・指示ファイル
+- [x] [08-subfolder-workspaces.md](08-subfolder-workspaces.md) — サブモジュール単体で開くための Claude Code 用 Junction・指示ファイル
 - [ ] [09-docs-and-rules.md](09-docs-and-rules.md) — README・AGENTS.md・docs・探索スキルの最終更新
 
 # リポジトリ再編（意味的分割＋サブモジュール化）実装プラン - 概要

@@ -60,3 +60,6 @@ status: planning-breakdown
   - README・README_EN の「フォルダ構成」で、4 つのフォルダがサブモジュールであることと各リポジトリへのリンクを示す。README_EN に「取得」節を足す。
   - `exploring-this-repo` の地図にサブモジュールと 2 段階コミットを反映する。`agents-rules` を再生成する（サブモジュールの中の AGENTS.md も対象になるか確認する）。
   - `site/tools-site/docs/index.md` が参照するルートの `repo-tools.yaml`（互換コピー）を `registry/repo-tools.yaml` に直すか決める。
+- 2026-11-10（08 完了時）: [progress/08-subfolder-results.md](progress/08-subfolder-results.md)。08 で更新済み: `repo-layout.md` の「サブモジュールを単体で開く」節、`exploring-this-repo` の同名の節、各サブモジュールの `AGENTS.md`・`CLAUDE.md`。09 で行うこと:
+  - README・README_EN の「取得」節に `just sub-agent-hooks-install` を足す（アンブレラ自身の `just hooks-install` も載っていないので一緒に）。
+  - `agents-rules` を再生成するとき、サブモジュールの新しい `AGENTS.md`（`skills/`・`site/`）が対象になるか、`_umbrella/` の Junction の中を拾わないかを確認する。

@@ -1,6 +1,6 @@
 ---
 type: Plan Step
-status: planning-breakdown
+status: implementing-done
 ---
 
 # Step 8: サブモジュール単体で開くための Claude Code 用 Junction・指示ファイル
@@ -85,3 +85,6 @@ status: planning-breakdown
   - 各サブモジュールのルートには `.gitignore`・`.gitattributes`・`LICENSE`・`lefthook.yml`（`extends: [../maintenance/lefthook/submodule.yml]` だけ）がある。`skills/`・`site/` の README は切り出し時に作った最小のもの。`tools/`・`agent-compat/` は既存の README・AGENTS.md・CLAUDE.md。
   - サブモジュール単体で開いたときにコミット手順を使うには、`maintenance/plugin/skills/committing` を `.claude/skills/committing` の Junction で見せる（ラッパーは `../maintenance/...` を前提にしている）。
   - サブモジュールは detached HEAD で checkout される。開いたら `git switch main`（`just sub-sync`）。
+- 2026-11-10（08 完了時）: [progress/08-subfolder-results.md](progress/08-subfolder-results.md)。計画からの変更:
+  - 「`links-sync` を全サブモジュールに対して実行するレシピ」は作らず、フック用に `just sub-agent-hooks-install`／`sub-agent-hooks-update` をアンブレラの justfile に足した（`git submodule foreach` で各サブモジュールを project にして skill-tools を実行）。
+  - アンブレラで開いてサブモジュール内のファイルを読むと、サブモジュールの `.claude/skills` の Junction が `skills:committing` のようなディレクトリ別スキルとして遅延ロードされる（起動時には出ない）。中身は同じスキルで実害は小さいため、04 の設計は変えず repo-layout に書いた。
