@@ -97,7 +97,7 @@ Follow these task-specific instructions...
 注意:
 
 - 公式 docs では、同名の global skill と project skill がある場合は global skill が優先される。
-- このリポジトリでは Cline が使うエージェント用スキルが `.agents/skills/` に置かれている。既存スキルを増やす時は、まず周辺の慣例に合わせる。
+- このリポジトリでは Cline 用スキルが `.cline/skills/` に置かれている。既存スキルを増やす時は、まず周辺の慣例に合わせる。
 - チームで共有するプロジェクトスキルは、通常 `.cline/skills/` を version control するのが分かりやすい。
 
 ## frontmatter
