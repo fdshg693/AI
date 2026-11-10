@@ -1,5 +1,9 @@
 # Directory Update Log
 
+## 2026-11-10
+
+- **Update**: リポジトリ再編（`plans/repo-restructure/`）。`docs/repo-wide/` を `maintenance/docs/` へ移し、`docs/` は利用者向けの `integrations/` と `topics/` だけのバンドルにした。`index.md` の説明とセクションを合わせ、`maintenance/docs` と `agent-compat/docs/differences` はバンドル外の関連として残した。以下の旧エントリのパス（`docs/repo-wide/`・`meta-plugins/`・`claude-plugins/` 等）は当時のもの。
+
 ## 2026-10-14
 
 - **Update**: `docs/repo-meta/` を `docs/repo-wide/` に改名した。概念ドキュメント間の OKF リンクと、`meta` スキルが読む一覧の対象ディレクトリを追従させた。
