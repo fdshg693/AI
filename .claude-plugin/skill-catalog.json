@@ -113,12 +113,12 @@
     },
     {
       "path": "skills/plugins/ai-tools-knowledge/skills/copilot-writing-plugins",
-      "name": "writing-plugins",
+      "name": "copilot-writing-plugins",
       "description": "Use when creating, reviewing, installing, distributing, or troubleshooting a GitHub Copilot agent plugin for Copilot CLI, Copilot cloud agent, or VS Code. Covers plugin.json, bundled agents/skills/hooks/MCP/LSP, marketplace.json, enabledPlugins, local testing, host differences, and safe validation. Do not use for Claude Code plugins or VS Code extension API development."
     },
     {
       "path": "skills/plugins/ai-tools-knowledge/skills/copilot-writing-skills",
-      "name": "writing-skills",
+      "name": "copilot-writing-skills",
       "description": "Use when creating, editing, reviewing, or validating a GitHub Copilot Agent Skill — including its SKILL.md frontmatter, directory layout, instructions, scripts, resources, trigger description, tool permissions, and gh skill distribution. This skill is for writing skills that GitHub Copilot consumes, not Claude Code skills."
     },
     {
