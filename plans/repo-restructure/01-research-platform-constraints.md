@@ -1,6 +1,6 @@
 ---
 type: Plan Step
-status: ready
+status: implementing-done
 ---
 
 # Step 1: Junction・サブモジュール・各ツールの挙動の事前調査
@@ -53,7 +53,14 @@ Windows の Junction と Git サブモジュールを組み合わせたときに
 
 ## 調査結果（後続ステップから参照する）
 
-（未実施）
+詳細・出典・走査箇所の一覧は [progress/01-research-results.md](progress/01-research-results.md)。後続ステップへは本文へ反映済み。
+
+- **D の go/no-go: GO（構成は維持）。** Claude Code・Codex は `git-subdir`、Copilot は `github`+`path` で、アンブレラの marketplace からサブモジュール側リポジトリ（`AI-skills` 等）を直接指せる。Cursor の marketplace は他リポジトリを指せないが、現状ルートに Cursor 用 marketplace は無い。前提として **skill-tools の `GitHubSource` はサブモジュールを黙って読み飛ばす**ので、07 の前に対応が必須 → 07。
+- **A: Git は Junction を実ディレクトリとして辿る。** exclude 登録があれば `git clean -fdx/-fdX` で消えるのは Junction だけで参照先は無事。exclude が無いと、中身の一部が ignore のとき `clean` が参照先のファイルを消す。exclude があっても、同じパスを実ディレクトリとして追跡する別コミットとの `switch` で参照先が上書き・削除される。`stash -a` は Junction をコピーに化けさせる → 04。
+- **A4: サブモジュールの exclude は `git rev-parse --path-format=absolute --git-path info/exclude`（`.git/modules/<name>/info/exclude`）で解決でき、そこで有効。**
+- **B（実機 Claude Code 2.1.319）: Junction のスキル（個別・`.claude/skills` 全体とも）は発見される。** サブモジュールで起動すると親の `.claude/skills` は見えない（遡りが repo root で止まる）が、親の `CLAUDE.md` は読まれる。アンブレラで起動してもサブモジュール内の Junction スキルは二重にならない。親の `.claude/settings.json` は読まれない → 08。
+- **C: Python は `is_symlink()`／`os.path.islink()` が Junction で False、`os.walk(followlinks=False)`・`rglob` も辿る。** 安全なのは `Path.walk()` 既定、rg・prettier・ruff・`fs.globSync`・git の一覧系。pytest は祖先 Junction で止まらない。tinyglobby・fast-glob は既定で辿る。修正が要る走査箇所は `find_skill_md_files`、skill-tools の `installer.py`／`manifest.py`／`os.walk` の代替経路、agent-tooling の `rglob` 系、`sessions.py` の `islink` → 04。
+- **E: uv・pnpm ともサブモジュール内のメンバーをアンブレラの workspace で扱え、サブモジュール内からもアンブレラの workspace を見つける。** サブモジュール直下に `pyproject.toml`／`pnpm-workspace.yaml` を置くと無警告で二重管理になる。lefthook はサブモジュールごとに `install` が要り、`extends` で共通設定を取り込める（参照先が無ければ黙って無視） → 07・08。
 
 ## 進め方
 

@@ -1,13 +1,13 @@
 ---
 type: Plan
-status: planning-research
+status: implementing-in-progress
 ---
 
 ## 実装ステータス
 
-- [ ] [01-research-platform-constraints.md](01-research-platform-constraints.md) — Junction・サブモジュール・各ツールの挙動の事前調査
-- [ ] [02-research-inventory.md](02-research-inventory.md) — 全スキル・ツール・docs の分類表とパス参照の棚卸し
-- [ ] [03-fix-existing-inconsistencies.md](03-fix-existing-inconsistencies.md) — 移動前に既存の不整合を直す
+- [x] [01-research-platform-constraints.md](01-research-platform-constraints.md) — Junction・サブモジュール・各ツールの挙動の事前調査
+- [x] [02-research-inventory.md](02-research-inventory.md) — 全スキル・ツール・docs の分類表とパス参照の棚卸し
+- [x] [03-fix-existing-inconsistencies.md](03-fix-existing-inconsistencies.md) — 移動前に既存の不整合を直す
 - [ ] [04-links-tooling.md](04-links-tooling.md) — Junction マニフェスト仕様と作成・検証ツール、スキャナの Junction 除外
 - [ ] [05-semantic-reorg.md](05-semantic-reorg.md) — 単一リポジトリのまま意味的再編（git mv）
 - [ ] [06-agent-compat.md](06-agent-compat.md) — マルチ AI 対応の分離、ツール別書式サンプルと相違点ドキュメント
@@ -26,7 +26,7 @@ status: planning-research
 - 意味的に分ける: (a) レポジトリ都合（meta）と汎用、(b) tools 付属スキルと tools 非依存スキル、(c) マルチ AI 対応の仕組みとサンプル、(d) Claude Code スキルを主軸にし、他ツールとの相違点は別軸のドキュメントにまとめる。
 - 既存の不整合（実在しないパス参照、綴り誤り、矛盾する README 等）を解消する。
 
-## 目標の構成（ドラフト。01/02 の調査結果で確定させる）
+## 目標の構成（01/02 の調査結果で確定。スキル単位の対応表は [progress/02-mapping.md](progress/02-mapping.md)）
 
 ```text
 AI/                                 アンブレラ（fdshg693/AI のまま）
@@ -42,10 +42,10 @@ AI/                                 アンブレラ（fdshg693/AI のまま）
 ├─ skills/        [submodule]       Claude Code 汎用スキル（tools 非依存）
 │  └─ plugins/
 │     ├─ claude-code/               旧 claude-plugins/meta（Claude Code の知識・書き方）
-│     ├─ coding/ cicd/ topics/ others/ special/ subagents/ no-code/ web-lookup/
+│     ├─ coding/ cicd/ topics/ others/ special/ subagents/ no-code/ web-lookup/ doc-tools/
 │     └─ ai-tools-knowledge/        旧 codex/copilot/cursor/antigravity/cline/kilo の知識スキル（Claude Code スキルとして）
-├─ tools/         [submodule]       CLI 群（tools/<name> の平坦配置は維持）
-│  └─ _plugin/my-tools/skills/      tools 付属スキル（旧 claude-plugins/my-tools）
+├─ tools/         [submodule]       CLI 群（tools/<name> の平坦配置は維持。旧 tools/internal/ai-usage → tools/ai-usage）
+│  └─ _plugin/my-tools/skills/      tools 付属スキル（旧 claude-plugins/my-tools、skill-tools-cli・task-tracker・parallel-agent-worktree を含む）
 ├─ agent-compat/  [submodule]       このレポジトリのマルチ AI 対応
 │  ├─ agent-tooling/                フック・コンテキスト注入（旧 agent-tooling）
 │  ├─ distribution/                 各ツール向けマーケットプレイス・マニフェストの生成設定
@@ -56,7 +56,7 @@ AI/                                 アンブレラ（fdshg693/AI のまま）
 
 ## 実装ステップ
 
-0. **前提条件（2026-11-10 完了）**: `c:\C\ai` で `git init` し、secretlint で全ファイルに問題が無いことを確認して初回コミット `71336a9` を作成した。lefthook も導入済み。`.gitattributes` が LF に正規化するため、作業コピー内の CRLF のファイルは次に触れたときに LF の差分として出る。05 の移動差分と混ざらないよう、03 の前に `git add --renormalize .` を 1 コミットにしておく。
+0. **前提条件（2026-11-10 完了）**: `c:\C\ai` で `git init` し、secretlint で全ファイルに問題が無いことを確認して初回コミット `71336a9` を作成した。lefthook も導入済み。`.gitattributes` が LF に正規化するため、作業コピー内の CRLF のファイルは次に触れたときに LF の差分として出る。05 の移動差分と混ざらないよう、03 の前に `git add --renormalize .` を 1 コミットにしておく予定だったが、インデックスは既に全て LF で不要だった（03 で確認。CRLF は作業コピーだけで差分にならない）。
 1. [01-research-platform-constraints.md](01-research-platform-constraints.md) — Junction × Git／Claude Code／Python／rg 等の挙動、サブモジュール × マーケットプレイス／CI／uv・pnpm workspace の制約を調べる。観点 D は構成全体の go/no-go 判定
 2. [02-research-inventory.md](02-research-inventory.md) — 全 SKILL.md・tools・docs を分類し、移動先対応表とパス参照の一覧を作る（分類は 01 と並行可。移動先の確定は 01 の観点 D に依存）
 3. [03-fix-existing-inconsistencies.md](03-fix-existing-inconsistencies.md) — 移動前に壊れた参照・綴り誤り・空フォルダを直す（前提条件のあと、01/02 と並行可）
@@ -94,7 +94,7 @@ AI/                                 アンブレラ（fdshg693/AI のまま）
 - **git worktree**: 使わない。作業は直列で行う。links ツールは worktree を考慮しなくてよい（参照先がアンブレラ配下かの検査は、コピーや移動の事故対策として残す）。
 
 - **Git 管理**: `git init` で新しく始める（履歴は引き継がない）。07 の切り出しも履歴なしでよい。
-- **サブモジュールの粒度**: skills / tools / agent-compat / site の 4 つ。ただし 01 の go/no-go 判定で不可となった場合は、代替構成を添えて再確認する。
+- **サブモジュールの粒度**: skills / tools / agent-compat / site の 4 つ。ただし 01 の go/no-go 判定で不可となった場合は、代替構成を添えて再確認する。→ **01 の判定は GO（2026-11-10）**。集約 marketplace のエントリは `git-subdir`（Claude Code・Codex）／`github`+`path`（Copilot）でサブモジュール側リポジトリを直接指す。前提として skill-tools の GitHub ソースのサブモジュール対応が要る（07）。
 - **GitHub リポジトリ**: 「AI」の名前で public。
 
 ## 未決事項（ユーザー判断が必要）
@@ -117,8 +117,8 @@ AI/                                 アンブレラ（fdshg693/AI のまま）
 - `claude-plugins/**` → `skills/plugins/**`、`tools/_plugin/**`
 - `meta-plugins/**`、`tools/internal/**`、`docs/repo-wide/**` → `maintenance/**`
 - `codex-plugins/`、`copilot-plugins/`、`cursor-plugins/`、`_agents/`、`.cline/skills/`、`.kilo/skills/` → `skills/plugins/ai-tools-knowledge/` と `agent-compat/formats/`
-- `cline-plugins/personal-info`（Cline 用 AgentPlugin。行き先は 02 で決める）
-- ユーザー設定 `~/.claude/settings.json`（`extraKnownMarketplaces`、`statusLine` が旧パス `tools/internal/ai-usage` を参照）— リポジトリ外。ユーザーに確認してから変更する
+- `cline-plugins/personal-info` → `agent-compat/formats/cline/personal-info`（02 で決定）
+- ユーザー設定 `~/.claude/settings.json`（`extraKnownMarketplaces`、`statusLine` は既に存在しないパス `C:/CodeRoot/AI/tools/internal/ai-usage/...` を指している。ai-usage は `tools/ai-usage` へ移す）— リポジトリ外。ユーザーに確認してから変更する
 - `agent-tooling/` → `agent-compat/agent-tooling/`
 - `ai-tools.yaml` ほか SSOT yaml、`pyproject.toml`、`pnpm-workspace.yaml`、`lefthook.yml`、`justfile`、`.github/workflows/*.yml`
 - `tools/internal/plugin_meta/**` の生成器、`site/skills-site/scripts/**`、`tools/skill-tools`（パス既定値）
@@ -143,3 +143,12 @@ AI/                                 アンブレラ（fdshg693/AI のまま）
 - **TODO 化**: ステップ一覧の各項目を 1 TODO にする。05 は移動のまとまり（カテゴリ）ごとに 1 コミットへさらに分ける。各ステップの実行主体・粒度は各ステップファイルの「進め方」に書く。
 - **並行作業への配慮**: 他のエージェント・ユーザーが同時に作業する前提なので、05〜07 は事前にユーザーへ告知し、各バッチを短時間で `git mv` → 検査 → コミットまで終える。自分が行っていない変更は戻さない。
 - **外部向け操作**（GitHub リポジトリ作成・push・リダイレクト公開）はそのたびにユーザーの確認を取る。
+
+### コミット方針（全ステップ共通）
+
+- **いつ**: 各ステップの「進め方」の TODO 1 つが終わり、その TODO の検査が通った時点で 1 コミットする。検査が通らない途中状態はコミットしない。複数 TODO をまとめて 1 コミットにしない。各ステップのコミット単位は、そのステップの「進め方」の「コミット」に書く。
+- **プランの更新**: ステップの完了時に、`status`・実装ステータスのチェック・「実行中に判明した変更」・progress・後続ステップへの反映を、`docs(plans): ...` の 1 コミットにする。実装のコミットには混ぜない。
+- **生成物の残り**: lefthook が再生成・整形したファイルがコミット後に残ったら、直後に `chore(repo): sync generated files after hooks` で追加コミットする（`committing` スキルの手順 8）。
+- **手順**: `committing` スキルのラッパー（`meta-plugins/skills/committing/scripts/commit.py`、05 以降は `maintenance/plugin/...`）を使う。生の `git commit`・`--no-verify` は使わない。commitlint の制約で本文は 1 行 100 文字以内。件名・本文・`Co-Authored-By` 行は別々の `-m` で渡す。
+- **他人の変更**: 自分が作っていない変更（未ステージ・ステージ済みとも）はコミットに含めない。インデックスに他人のステージ済み変更があるときは `git diff --cached --binary -- <paths> > patch` で退避し、`git restore --staged -- <paths>` で外してからコミットし、終わったら `git apply --cached patch` で戻す。`git commit -- <paths>` はリネームの削除側を拾えないので使わない。
+- **push しない**: push はユーザーが明示したときだけ（07 の新リポジトリへの push もそのたびに確認する）。

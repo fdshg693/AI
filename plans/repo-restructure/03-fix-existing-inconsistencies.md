@@ -1,6 +1,6 @@
 ---
 type: Plan Step
-status: planning-breakdown
+status: implementing-done
 ---
 
 # Step 3: 移動前に既存の不整合を直す
@@ -19,6 +19,32 @@ status: planning-breakdown
 - 空・残骸のフォルダを削除する: `.kilo/skills/kilo-test-guide`、`.kilo/skills/using-kilo-cli`、`antigravity-plugins/`（ai-tools.yaml の readme ブロックから除いて README を再生成）。
 - `cline-plugins/` は空ではない（`personal-info` プラグイン）。ここでは触らず、02 の分類に従う。
 - CATALOG.md の位置の揺れ（`<plugin>/skills/CATALOG.md` と `<plugin>/CATALOG.md`）は 05 で統一するため、ここでは記録だけにする。
+
+02 の棚卸しで見つかったもの（詳細は [progress/02-mapping.md](progress/02-mapping.md) の「4. 03 へ回す既存の不整合」）:
+
+- 存在しないパス参照を直す:
+  - writing-skill-web の本文・README・web-patterns-reference.md（`claude-plugins/ai-code-tool`、`claude-plugins/web`）
+  - codex-cli-docs・cursor-cli-docs・cursor-docs の allowed-tools と本文（`claude-plugins/other-clis`）
+  - cline-cli-docs（`claude-plugins/ai-code-tool`）
+  - others/vscode-docs（`plugins/vscode/...`）
+  - `claude-plugins/my-tools/skills/tav-lit/extract_page.py:19`
+  - `writing-skill-web/tests/conftest.py:24`
+- ドキュメントのリンク・記述を直す:
+  - `docs/index.md` の `claude_sandbox/` → `topics/claude_sandbox/`
+  - `docs/integrations/{index,cline}.md` と `docs/integrations/justfile:57` の `cline-plugins/meta` → `cline-plugins/personal-info`
+  - `.cline/skills/cline-skill-writer/skills-reference.md:100` の事実誤り
+- メタ欄を直す（いずれも `meta.version` を上げる）:
+  - claude-code-memory の requires_skills `configuring-settings` → `claude-settings`
+  - aim-lib の name とフォルダ名の不一致（どちらに揃えるか決める）
+  - requires_repo_tools の記載漏れを補う: ms-digest・tav-digest（mslearn/tav、aim）、parallel-agent-worktree（tools/linear-cli）、vscode-copilot-docs（aim）
+  - `aim` を任意で使う docs スキルに注記する
+  - tav-lit の requires_skills と本文の矛盾
+  - kilo-cli-guide・kilo-memory-guide・kilo-skill-guide に requires_skills が無い
+- `meta.requires_repo_tools` に tools/ 以外の値（gh、uv、python、WebFetch、graphviz、flow.dot 等）が約 20 件ある。値を直すのか、欄の意味を `meta_field.yaml` で広げるのかを先にユーザーに確認する。
+- `ai-tools.yaml` の cursor `skills_layout: direct` が実体（`skills/` サブディレクトリ）と合わない。生成器を実行し、`cursor-plugins/meta/CATALOG.md` が更新されていないかを確かめてから直す。
+- copilot 側に混入した `agents/openai.yaml`（2 件）は 06 で削除するので、ここでは触らない。
+- `.cline/rules/README.md`（案内だけ）を削除する。
+- 改名の影響（`tools/scheule`）: タスクスケジューラへの登録は無い（02 で確認）。editable インストールも tools/scheule 配下には無い。
 
 ## 読むべきファイル
 
@@ -58,3 +84,8 @@ status: planning-breakdown
 
 - **実行主体**: メインがそのまま進める。削除対象の確認だけはユーザーに聞く。
 - **TODO 化**: 上の箇条書きの項目ごとに 1 TODO・1 コミット（`fix:`／`chore:`）。最後に `uv sync`、`just --justfile tools/internal/justfile precommit-check` 相当、`pnpm` の skills-site ビルドが通ることを確認する。
+
+## 実行中に判明した変更
+
+- 2026-11-10（02 完了時）: 02 の棚卸しで見つかった不整合（存在しないパス参照、壊れたリンク、メタ欄の誤り、cursor の `skills_layout`、空の README）を「やること」に追加した。
+- 2026-11-10（完了）: 全項目を実施。`requires_repo_tools` は自作ツールだけにし、外部コマンドは `dependencies` へ（`meta_field.yaml` も更新）。aim-lib の name を `aim-lib` に変更。vscode-docs・github-copilot-docs の downloader が存在しない共有モジュールを import していたので自己完結版に置き換えた。renormalize は不要だった。詳細・コミット一覧・検証は [progress/03-fix-results.md](progress/03-fix-results.md)。

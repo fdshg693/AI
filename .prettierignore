@@ -13,3 +13,6 @@
 
 # tools\internal\generate_skills_catalog_md.py の生成物
 **/CATALOG.md
+
+# plans の凍結スナップショット（読み取り専用。編集しない）
+plans/**/snapshot/

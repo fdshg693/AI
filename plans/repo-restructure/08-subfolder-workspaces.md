@@ -1,6 +1,6 @@
 ---
 type: Plan Step
-status: planning-research
+status: planning-breakdown
 ---
 
 # Step 8: サブモジュール単体で開くための Claude Code 用 Junction・指示ファイル
@@ -17,7 +17,7 @@ status: planning-research
   - 強く結びついた兄弟・上位フォルダ（例: `tools/` から `registry/`、`site/` から `registry/` と `skills/`）を `_umbrella/<name>` のような明示的な名前で
 - 各サブモジュールに `CLAUDE.md`（`@./AGENTS.md`）と `AGENTS.md` を置く。アンブレラ全体の規約のうち必要なものは、01 の結果に応じて `@` import か、Junction 経由のパスで読み込む。
 - フックは、サブモジュールごとに `just hooks-install`（skill-tools）を実行して入れる。`.claude/settings.json` は gitignore 対象の生成物なのでコミットしない。`.claude/hooks` の Junction は使わない（`.env`・`logs/`・`state/` を共有してしまい、サブモジュールでの `hooks-install` がアンブレラ側の実体を書き換えるため）。サブモジュール用のフック設定ファイル（`.claude/skill-tools.hooks.yaml` 相当）とレシピだけをコミットする。
-- アンブレラのプラグイン（`maintenance/plugin`）は、01 の観点 B の結果に応じて、`--plugin-dir`／`extraKnownMarketplaces`／`.claude/skills` Junction のいずれかで読み込む。
+- アンブレラのプラグイン（`maintenance/plugin`）のスキルは、`.claude/skills/<name>` の Junction で読み込む（01-B で動作確認済み）。`--plugin-dir` は補助手段として README に書く。
 - 各サブモジュールを実際に単体で開き、確認項目を満たすか検証する。
 
 ## 読むべきファイル
@@ -43,6 +43,14 @@ status: planning-research
 
 ## 決定事項・注意点／落とし穴
 
+- **Claude Code の読み込み範囲（01-B、実機 2.1.319 で確認）**:
+  - `.claude/skills/<name>` の Junction も、`.claude/skills` 全体の Junction もスキルとして発見・起動できる。よってアンブレラのスキルは `.claude/skills/<name>` の Junction で見せる方式を採る。`--plugin-dir`／`CLAUDE_CODE_PLUGIN_DIRS` は毎回の起動引数や環境変数が要り、`extraKnownMarketplaces`＋`enabledPlugins` は各ユーザーの install が要るので、補助手段として README に書くだけにする。
+  - サブモジュールで起動すると、親アンブレラの `.claude/skills`・`.claude/agents` は見えない（repo root ＝サブモジュールで遡りが止まる）。必要なものは必ず Junction で見せる。
+  - サブモジュールで起動しても、親アンブレラの `CLAUDE.md`（とその `@./AGENTS.md`）は自動で読まれる。**サブモジュールの `CLAUDE.md` から `@../...` で親を import しない**（二重読み込みになる。外部 import の承認プロンプトも出る）。サブモジュールの `AGENTS.md` には、アンブレラ全体の規約と重複しない、そのフォルダ固有のことだけを書く。単体 clone では親の指示が無くなるが、許容範囲（依頼どおり）。
+  - アンブレラで起動したとき、サブモジュール内 `.claude/skills` の Junction スキルは起動時には読まれず、二重にならない（ただしサブモジュール内のファイルを読むと遅延ロードされうる。確認項目で見る）。
+  - 親の `.claude/settings.json` は読まれない。サブモジュールごとに `just hooks-install` で生成する方式（本節の上の方針）で正しい。`${CLAUDE_PROJECT_DIR}` は起動ディレクトリ（サブモジュール）を指す想定なので、確認項目でフックから出力して確かめる。
+  - `.claude/rules/` の Junction・symlink も読まれる（symlink は公式に記載あり）。ただし参照先が作業ディレクトリ外だと外部 import 扱いで初回承認が要る。
+- **ワークスペース（01-E）**: サブモジュールで開いても `uv run`／pnpm はアンブレラの workspace と `.venv` を自動で使う。サブモジュール直下に `pyproject.toml`・`pnpm-workspace.yaml` を置かない（07 の決定）。単体 clone ではパッケージ単位の `uv run` で動く前提を AGENTS.md に書く。
 - Junction は Claude Code 用だけに限る（依頼の範囲）。他ツール向けの対応はしない。
 - Junction で見せるのは「そのフォルダの作業に必要なもの」だけ。アンブレラ全体を Junction で見せると、単体で開く意味が無くなるうえ、祖先参照の禁止にも反する。
 - アンブレラで開いたとき、サブモジュール内の `.claude/skills` Junction はスキルとして二重に見えないか確認する（Claude Code はネストした `.claude/skills` も読むことがある）。二重に見えるなら、04 の設計を見直す。
@@ -66,3 +74,8 @@ status: planning-research
 
 - **実行主体**: メインがサブモジュールごとに宣言を書き、`claude` を実際にそのフォルダで起動して確認項目を検証する（`claude -p` での非対話確認で足りる項目はそれで行う）。
 - **TODO 化**: サブモジュールごとに 1 TODO（宣言 → sync → 確認項目）。
+- **コミット**: サブモジュールごとに、確認項目が通った時点で (a) サブモジュール側に宣言（`.links.yaml`・`CLAUDE.md`／`AGENTS.md`・フック設定）の 1 コミット、続けて (b) アンブレラ側でポインタ更新の 1 コミット（2 段階コミット）。Junction と `.claude/settings.json` はコミットしない。ステップ完了時にプラン更新を 1 コミット（[コミット方針](00-overview.md#コミット方針全ステップ共通)）。
+
+## 実行中に判明した変更
+
+- 2026-11-10（01 完了時）: 01-B の実機確認から、アンブレラのスキルは `.claude/skills/<name>` の Junction で見せる方式に確定した。サブモジュールの `CLAUDE.md` から親を `@` import しない（親の `CLAUDE.md` は自動で読まれる）ことを「決定事項」に加え、status を `planning-breakdown` に進めた。

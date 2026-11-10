@@ -36,6 +36,9 @@ status: planning-research
 - 変更: `lefthook.yml`（アンブレラ側は集約生成物の再生成とポインタ更新の検査だけにする）
 - 変更: `pyproject.toml`／`pnpm-workspace.yaml`（members はアンブレラに残す。01 の結果で、サブモジュール単体の開発用 `pyproject.toml` を別に持つか決める）
 - 変更: `CONTRIBUTING.md`、`README.md`（clone 手順を `git clone --recurse-submodules` と `just links-sync` に）
+- 変更: `maintenance/scripts/plugin_meta/**`（marketplace 生成器。Claude・Codex は `git-subdir`、Copilot は `github`+`path` を出力）
+- 変更: `tools/skill-tools/skill_tools/source/__init__.py`（`GitHubSource` のサブモジュール対応）とそのテスト
+- 変更: `.github/workflows/tool-release.yml` と `repo-tools.yaml`／tools-site の公開インストール手順（タグと URL を `AI-tools` 側へ）
 
 ## 決定事項・注意点／落とし穴
 
@@ -45,7 +48,14 @@ status: planning-research
 - **集約生成物のずれ**: サブモジュールで SKILL.md を変えても、アンブレラの `skill-catalog.json` 等はポインタを更新するまで古いまま。アンブレラの pre-commit（ポインタ更新時）と CI で再生成・検査する。
 - **サブモジュールの detached HEAD**: 作業前に各サブモジュールでブランチを checkout する手順を README に書く。`just` レシピ（例: `just sub-status`、`just sub-sync`）を用意して、全サブモジュールの状態確認と更新を 1 コマンドにする。
 - **並行作業**: 切り出しの間はアンブレラへの他の push を止めてもらう。終了後、他のエージェント・ユーザーの未 push の作業は新構成への移植が必要になる。事前に告知する。
-- **CI の権限**: private サブモジュールなら checkout 用のトークン（deploy key か PAT）が要る。Azure Static Web Apps のデプロイと `tool-release.yml` のタグ付けがどちらのリポジトリで動くかを決める。
+- **CI の権限**: サブモジュールはすべて public（ユーザー回答）なので checkout 用のトークンは不要。Azure Static Web Apps のデプロイと `tool-release.yml` のタグ付けがどちらのリポジトリで動くかを決める。
+- **marketplace の source（01-D）**: 集約 marketplace はアンブレラが生成・所有し、各エントリはサブモジュール側リポジトリを直接指す。Claude Code（`.claude-plugin/marketplace.json`）と Codex（`.agents/plugins/marketplace.json`）は `{"source":"git-subdir","url":"https://github.com/fdshg693/AI-skills.git","path":"plugins/<name>"}`、Copilot（`.github/plugin/marketplace.json`）は `{"source":"github","repo":"fdshg693/AI-skills","path":"plugins/<name>"}`。相対パス＋サブモジュールも Claude Code v2.1.295 以降なら動くが、古い版・update 時の同期漏れ・EDR による `--recurse-submodules` 拒否があるので使わない。`owner/repo` 形式は SSH を試みるので https URL で書く。`ref`／`sha` で固定するかは本ステップで決める（固定するならポインタ更新時に生成器が書き換える）。
+- **Cursor（01-D）**: Cursor の marketplace は他リポジトリを指せない。現状ルートに Cursor 用 marketplace は無いので影響は無いが、作る場合はサブモジュール側に置く。
+- **skill-tools の GitHub ソース（01-D）**: `GitHubSource` は Trees API の `type: commit`（サブモジュール）を黙って捨てるため、切り出した瞬間に `skills/`・`tools/_plugin` 配下が GitHub ソースから見えなくなる。**`skills/` を切り出す前に**、`.gitmodules` を読んでサブモジュール側リポジトリのツリー・blob を gitlink の SHA で取りに行く対応と、未対応時にエラーにする変更、テストを入れる。リポジトリが増えて API 呼び出しも増えるので、トークン（`GITHUB_TOKEN`）対応も検討する。
+- **CI（01-D）**: サイトのビルドとリリースの `actions/checkout` に `submodules: recursive`。アンブレラ側の `paths:` はサブモジュールのパス自体（`skills`、`tools`、`site`）を列挙する（中身のパターンは gitlink 更新では発火しない見込み）。サブモジュール側への push だけではサイトが更新されないので、サブモジュール側から `repository_dispatch` で通知するかポインタ更新で足りるかを決める。`tool-release.yml` のタグは `AI-tools` 側に移すのが素直。公開インストール手順 `git+https://github.com/fdshg693/ai#subdirectory=tools/<name>` は `AI-tools` を指す URL に変える。
+- **ワークスペース（01-E）**: `pyproject.toml`／`pnpm-workspace.yaml` の members はアンブレラにだけ置き、サブモジュール直下には `pyproject.toml`・`pnpm-workspace.yaml`・lockfile を置かない（置くと無警告で別の `.venv`／lockfile ができて二重管理になる）。未初期化のサブモジュールではメンバーが黙って無視され lock から落ちるので、lock の前に `git submodule update --init` を必須にし、CI で `uv lock --check` を走らせる。`uv tool install --editable <sub>/<pkg>` はそのまま動く。
+- **lefthook（01-E）**: アンブレラのフックはサブモジュールのコミットで発火しない。各サブモジュールに薄い `lefthook.yml` を置き、`extends` でアンブレラ側の共通設定（例: `../maintenance/lefthook/common.yml`）を取り込む（単体 clone では黙って無視されるので方針と合う）。共通設定のジョブはルート相対パスに依存しない書き方にする。`git submodule foreach lefthook install` を just レシピにする。
+- **実験 TODO（01-D で未確認）**: テスト用 public リポジトリで、(1) gitlink の変更で `paths:` が発火するか、(2) `git-subdir` のエントリで `/plugin install` が通るか、(3) `uv tool install git+...#subdirectory=` がサブモジュールを初期化するか、を確かめてから本番の切り出しに入る。
 
 ## ルール更新ポイント
 
@@ -57,3 +67,8 @@ status: planning-research
 
 - **実行主体**: メインが 1 サブモジュールずつ進める（最初は依存の少ない `site/` で手順を検証し、次に `agent-compat/`、`tools/`、`skills/`）。外部操作のたびにユーザーへ確認する。
 - **TODO 化**: サブモジュールごとに (切り出し → 検査 → ユーザー確認 → push → submodule add → CI 確認) を 1 TODO。最後に lefthook と CI の全体確認を 1 TODO。
+- **コミット**: skill-tools の GitHub ソースのサブモジュール対応は、`skills/` を切り出す前に単独で 1 コミット。サブモジュールごとに、(a) 新リポジトリ側の初回コミット（切り出し直後、push 前）と、(b) アンブレラ側の 1 コミット（フォルダ削除 + `submodule add` + `.gitmodules` + 参照・CI の追従を同じコミットにする。分けると間の状態でパスが消える）。lefthook・CI の全体調整は最後に 1 コミット。ステップ完了時にプラン更新を 1 コミット（[コミット方針](00-overview.md#コミット方針全ステップ共通)）。
+
+## 実行中に判明した変更
+
+- 2026-11-10（01 完了時）: 01-D の go/no-go は GO。marketplace の source 形式、skill-tools `GitHubSource` のサブモジュール対応（切り出し前に必須）、CI・リリースの追従、ワークスペースと lefthook の置き方、事前の実験 TODO を「決定事項」「触るファイル」に反映した。サブモジュールは public なので CI トークンは不要と修正した。
