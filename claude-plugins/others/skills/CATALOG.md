@@ -44,13 +44,13 @@ allowed-tools: Bash(python claude-plugins/others/skills/vscode-docs/*.py *)
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
   tag: []
-  requires_repo_tools: WebFetch, Read, Grep
+  requires_repo_tools: none
   requires_env: none
-  dependencies: none
+  dependencies: python
   requires_install: none
   requires_hooks: none
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.4
+  version: 1.0.5
 ---

@@ -21,7 +21,7 @@ meta:
 
 - aim-lib
 ---
-name: using-aim-library
+name: aim-lib
 description: "`tools/aim` のグローバルインストール済み Python 実装をライブラリとして使い、OpenRouter 経由で AI モデルへ単発リクエストを送る方法を説明する。Python コードからプロンプトを送信したい、モデル略記を解決したい、応答本文を取り出したい場合に使う。CLI コマンドを実行する場合は `aim-cli` を使う。"
 meta:
   tag: []
@@ -33,7 +33,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.8
+  version: 1.0.9
 ---
 
 - aim2-cli
@@ -208,15 +208,15 @@ description: Microsoft Learn/Azure公式ドキュメントを`mslearn`で検索�
 # このスキルは上記2つを繋ぐ薄いオーケストレーション層で、自前のソースコードは持たない。
 meta:
   tag: []
-  requires_repo_tools: none
+  requires_repo_tools: mslearn, aim
   requires_env: OPENROUTER_API_KEY
-  dependencies: mslearn, aim-cli
+  dependencies: none
   requires_install: none
   requires_hooks: none
   requires_skills: ms-learn, aim-cli
   status: stable
   description: no description
-  version: 1.3.4
+  version: 1.3.5
 ---
 
 - ms-learn
@@ -348,15 +348,15 @@ description: tav`で`--topic`指定して収集した`pages/`(extract/crawl/sear
 # このスキルは上記2つを繋ぐ薄いオーケストレーション層で、自前のソースコードは持たない。
 meta:
   tag: []
-  requires_repo_tools: none
+  requires_repo_tools: tav, aim
   requires_env: OPENROUTER_API_KEY
-  dependencies: tav, aim-cli
+  dependencies: none
   requires_install: none
   requires_hooks: none
   requires_skills: tav-cli, aim-cli
   status: stable
   description: no description
-  version: 1.0.4
+  version: 1.0.5
 ---
 
 - tav-lib
@@ -405,10 +405,10 @@ meta:
   dependencies: tavily, python-dotenv
   requires_install: tavily, python-dotenv
   requires_hooks: none
-  requires_skills: tav-cli
+  requires_skills: none
   status: stable
   description: no description
-  version: 1.0.3
+  version: 1.0.4
 ---
 
 - textgraph

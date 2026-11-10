@@ -6,7 +6,7 @@ name: copilot-cli-docs
 description: Use when answering questions about the GitHub Copilot CLI (`copilot` command) — options, commands, help topics, MCP config, permissions, etc. Grounds answers in the CLI's own `--help` output instead of training-data memory, which may be stale.
 meta:
   tag: []
-  requires_repo_tools: Read, Grep
+  requires_repo_tools: none
   requires_env: none
   dependencies: python, copilot-cli
   requires_install: none
@@ -14,7 +14,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.3
+  version: 1.0.4
 ---
 
 - github-copilot-docs
@@ -23,15 +23,15 @@ name: github-copilot-docs
 description: Use when answering questions about GitHub Copilot (Copilot Chat, Copilot CLI, coding agent / cloud agent, agent skills, custom instructions, MCP integration, plans, billing, model access, IDE setup, troubleshooting, etc.). Grounds answers in the latest official docs (docs.github.com) instead of training-data memory, which may be stale.
 meta:
   tag: []
-  requires_repo_tools: WebFetch, Read, Grep, Bash, curl
+  requires_repo_tools: none
   requires_env: none
-  dependencies: python3
+  dependencies: python3, curl
   requires_install: none
   requires_hooks: none
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.4
+  version: 1.0.5
 ---
 
 - github-copilot-observability-docs
@@ -40,7 +40,7 @@ name: github-copilot-observability-docs
 description: Use when answering questions about GitHub Copilot logs, diagnostic logging, audit logs, usage metrics, agent activity monitoring, or OpenTelemetry for Copilot Chat in VS Code, Copilot CLI, Copilot SDK, or GitHub Enterprise. Grounds answers in the latest official GitHub and VS Code documentation instead of training-data memory, which may be stale.
 meta:
   tag: []
-  requires_repo_tools: WebFetch
+  requires_repo_tools: none
   requires_env: none
   dependencies: none
   requires_install: none
@@ -48,7 +48,7 @@ meta:
   requires_skills: github-copilot-docs, vscode-copilot-docs, copilot-cli-docs
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 - github-copilot-sdk-docs
@@ -57,7 +57,7 @@ name: github-copilot-sdk-docs
 description: Use when answering questions about the GitHub Copilot SDK (`@github/copilot-sdk` and its Python/Go/Rust/Java/.NET equivalents) — installation, authentication (GitHub OAuth, BYOK, Azure managed identity), sending/streaming messages, custom tools, hooks, custom agents, MCP integration, fleet mode, cloud/remote sessions, session persistence/limits, skills, plugin directories, usage & billing, deployment/scaling/multi-tenancy, or troubleshooting. Grounds answers in the latest official docs (docs.github.com) instead of training-data memory, which may be stale.
 meta:
   tag: []
-  requires_repo_tools: WebFetch
+  requires_repo_tools: none
   requires_env: none
   dependencies: none
   requires_install: none
@@ -65,7 +65,7 @@ meta:
   requires_skills: github-copilot-docs, github-copilot-observability-docs
   status: stable
   description: no description
-  version: 1.0.1
+  version: 1.0.2
 ---
 
 - vscode-copilot-docs
@@ -74,7 +74,7 @@ name: vscode-copilot-docs
 description: Use when answering questions about GitHub Copilot's presence inside VS Code itself (Copilot Chat, Agent mode/Agents window, agent customization, MCP servers, inline suggestions, custom instructions/prompt files, etc.). Grounds answers in a curated excerpt of code.visualstudio.com's official docs instead of training-data memory, which may be stale.
 meta:
   tag: []
-  requires_repo_tools: none
+  requires_repo_tools: aim
   requires_env: none
   dependencies: none
   requires_install: none
@@ -82,7 +82,7 @@ meta:
   requires_skills: vscode-docs,github-copilot-docs,aim-cli
   status: stable
   description: no description
-  version: 1.0.4
+  version: 1.0.5
 ---
 
 - writing-copilot-instructions

@@ -8,7 +8,7 @@ allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *) Bash(uv run ${CLAUDE_SKIL
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
   tag: []
-  requires_repo_tools: none
+  requires_repo_tools: aim
   requires_env: none
   dependencies: requests, typer
   requires_install: none
@@ -16,7 +16,7 @@ meta:
   requires_skills: none
   status: stable
   description: Official AI SDK docs snapshot (llms.txt / sitemap.md) plus search-docs and per-page .md fetch from ai-sdk.dev
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 - apify-docs
@@ -27,7 +27,7 @@ allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *) Bash(uv run ${CLAUDE_SKIL
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
   tag: []
-  requires_repo_tools: none
+  requires_repo_tools: aim
   requires_env: none
   dependencies: requests, typer
   requires_install: none
@@ -35,7 +35,7 @@ meta:
   requires_skills: none
   status: stable
   description: Apify docs snapshot (docs.apify.com / apify.com llms.txt + curated excerpt) with per-page .md fetch and public Store search
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 - ccusage-docs
@@ -52,7 +52,7 @@ description: Use when answering questions about ccusage (ccusage.com) — the lo
 allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *) Bash(uv run ${CLAUDE_SKILL_DIR}/*.py *)
 meta:
   tag: []
-  requires_repo_tools: none
+  requires_repo_tools: aim
   requires_env: none
   dependencies: requests, typer, PyYAML
   requires_install: none
@@ -60,7 +60,7 @@ meta:
   requires_skills: none
   status: stable
   description: Official site (llms.txt) plus bundled `ccusage --help` YAML. Former ccusage-cli-docs lives under cli-help.md / output/cli/.
-  version: 1.1.0
+  version: 1.1.1
 ---
 
 - codegraph-docs
@@ -77,15 +77,15 @@ allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *) Bash(uv run ${CLAUDE_SKIL
 # !`<command>` で起動時に必ずスナップショットを更新/確認する
 meta:
   tag: []
-  requires_repo_tools: gh
+  requires_repo_tools: none
   requires_env: none
-  dependencies: PyYAML
+  dependencies: PyYAML, gh
   requires_install: npm i -g @colbymchenry/codegraph
   requires_hooks: none
   requires_skills: none
   status: stable
   description: CodeGraph 公式docsミラー、CLI --help YAML、MCP/CLI 実行時判断
-  version: 1.0.3
+  version: 1.0.4
 ---
 
 - deepseek-harness-docs
@@ -135,15 +135,15 @@ allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *) Bash(uv run ${CLAUDE_SKIL
 # The pinned Markdown fallback is used only when a rendered page is insufficient.
 meta:
   tag: []
-  requires_repo_tools: uv
+  requires_repo_tools: none
   requires_env: none
-  dependencies: requests, typer
+  dependencies: requests, typer, uv
   requires_install: none
   requires_hooks: none
   requires_skills: none
   status: stable
   description: Current LiteLLM technical documentation indexed from the official sitemap
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 - ona-cli-docs
@@ -152,7 +152,7 @@ name: ona-cli-docs
 description: Use when constructing or explaining raw Ona official CLI (`ona` command) invocations -- e.g. `ona-run`'s `--command` needs a hand-built `ona environment exec`/`ona environment ssh` line, or a question is about `ona login`/personal access tokens, environment/automation subcommands, or CLI configuration. Grounds answers in a curated excerpt of ona.com's official docs (via the ona-docs skill's cached llms.txt) instead of training-data memory, which may be stale or reference the pre-rename "Gitpod" CLI.
 meta:
   tag: []
-  requires_repo_tools: none
+  requires_repo_tools: aim
   requires_env: none
   dependencies: none
   requires_install: none
@@ -160,7 +160,7 @@ meta:
   requires_skills: ona-docs
   status: experimental
   description: no description
-  version: 1.0.1
+  version: 1.0.2
 ---
 
 - ona-docs
@@ -171,7 +171,7 @@ allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *)
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
   tag: []
-  requires_repo_tools: none
+  requires_repo_tools: aim
   requires_env: none
   dependencies: requests, typer
   requires_install: none
@@ -179,7 +179,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.1
+  version: 1.0.2
 ---
 
 - openrouter-docs
@@ -210,15 +210,15 @@ allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/*.py *) Bash(uv run ${CLAUDE_SKIL
 # network access to vercel.com is required.
 meta:
   tag: []
-  requires_repo_tools: uv
+  requires_repo_tools: aim
   requires_env: none
-  dependencies: requests, typer
+  dependencies: requests, typer, uv
   requires_install: none
   requires_hooks: none
   requires_skills: none
   status: stable
   description: Vercel documentation snapshot (llms.txt / products.md / sitemap.md / taxonomy.json) plus per-page .md fetch from vercel.com
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 - writing-mermaid-diagrams

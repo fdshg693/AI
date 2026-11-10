@@ -12,7 +12,7 @@ description: "You MUST use this before any creative work - creating features, bu
 # 出力: docs/specs/<topic>-design.md
 meta:
   tag: []
-  requires_repo_tools: flow.dot
+  requires_repo_tools: none
   requires_env: none
   dependencies: none
   requires_install: none
@@ -20,7 +20,7 @@ meta:
   requires_skills: elements-of-style:writing-clearly-and-concisely
   status: stable
   description: no description
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 - merge-proposal
@@ -38,15 +38,15 @@ allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/merge_report.py *)
 # Python依存: pathspec (`.diffignore` にパターンを書く場合のみ)
 meta:
   tag: []
-  requires_repo_tools: git, python
+  requires_repo_tools: none
   requires_env: none
-  dependencies: pathspec
+  dependencies: pathspec, git, python
   requires_install: pathspec
   requires_hooks: none
   requires_skills: none
   status: experimental
   description: ブランチ取り込み前のコンフリクト解消案・取り込みレビュー・追従修正案の作成
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 - okf-spec
@@ -87,15 +87,15 @@ description: 複数のClaude Codeセッション（同一ローカル環境上�
 # を参照（本ファイルはそれらを前提としたオーケストレーションフローのみを扱う）。
 meta:
   tag: []
-  requires_repo_tools: none
+  requires_repo_tools: linear-cli
   requires_env: LINEAR_API_KEY
-  dependencies: linear-cli
+  dependencies: none
   requires_install: none
   requires_hooks: none
   requires_skills: linear-cli
   status: experimental
   description: no description
-  version: 2.0.2
+  version: 2.0.3
 ---
 
 - pr-check
@@ -156,15 +156,15 @@ allowed-tools: Bash(python plugins/review/skills/review/*.py *)
 # PRレビューのみ gh CLI(認証済み)が必須。無い場合はエラーで終了する
 meta:
   tag: []
-  requires_repo_tools: git, python, gh
+  requires_repo_tools: none
   requires_env: none
-  dependencies: pathspec
+  dependencies: pathspec, git, python, gh
   requires_install: pathspec
   requires_hooks: none
   requires_skills: none
   status: stable
   description: no description
-  version: 1.1.0
+  version: 1.1.1
 ---
 
 - systematic-debugging

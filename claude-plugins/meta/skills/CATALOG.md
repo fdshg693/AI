@@ -118,10 +118,10 @@ meta:
   dependencies: none
   requires_install: none
   requires_hooks: none
-  requires_skills: claude-code-docs, writing-rules, writing-hooks, configuring-settings
+  requires_skills: claude-code-docs, writing-rules, writing-hooks, claude-settings
   status: stable
   description: no description
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 - claude-code-openai-gateway
@@ -330,15 +330,15 @@ disable-model-invocation: true
 # 日常的な軽量スキル作成にはwriting-skillスキル（サブエージェント検証なし、低コスト）を使う
 meta:
   tag: []
-  requires_repo_tools: graphviz
+  requires_repo_tools: none
   requires_env: none
-  dependencies: none
+  dependencies: graphviz
   requires_install: none
   requires_hooks: none
   requires_skills: superpowers:test-driven-development,writing-skill
   status: stable
   description: no description
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 - writing-skill-web
@@ -359,15 +359,15 @@ description: Use when creating or editing a skill that needs web content — eit
 # 由来・scripts/のコピー前提テンプレートという性質・命名変更の経緯は同階層のREADME.md参照（人間のメンテナ向け）
 meta:
   tag: []
-  requires_repo_tools: uv, gh
+  requires_repo_tools: aim, tav
   requires_env: none
-  dependencies: requests, typer
+  dependencies: requests, typer, uv, gh
   requires_install: none
   requires_hooks: none
   requires_skills: writing-skill, tav-cli, tav-lit, aim-cli
   status: stable
   description: no description
-  version: 1.2.1
+  version: 1.2.2
 ---
 
 - writing-subagents

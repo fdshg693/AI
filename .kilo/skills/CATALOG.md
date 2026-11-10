@@ -30,9 +30,10 @@ meta:
   dependencies: none
   requires_install: none
   requires_hooks: none
+  requires_skills: none
   status: experimental
   description: Kilo CLI usage guide
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 - kilo-code-docs
@@ -66,9 +67,10 @@ meta:
   dependencies: none
   requires_install: none
   requires_hooks: none
+  requires_skills: none
   status: experimental
   description: Kiloの永続的な指示とコンテキストの使い分けガイド
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 - kilo-plugin-writer
@@ -101,7 +103,8 @@ meta:
   dependencies: none
   requires_install: none
   requires_hooks: none
+  requires_skills: none
   status: experimental
   description: Kilo Skillの設計と責務分離ガイド
-  version: 1.0.0
+  version: 1.0.1
 ---
