@@ -7,6 +7,7 @@ import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
+from agent_tooling.core.fs_links import find_files
 from agent_tooling.core.paths import normalize_repo_relative_path
 from agent_tooling.sources.agents_md import AgentsMdSource, collect_agents_md
 from agent_tooling.sources.claude_rules import ClaudeRuleSource, collect_claude_rules
@@ -209,7 +210,7 @@ def explain_context(
     # Rule parsing reads files, so reject external symlink sources before collection.
     rules_dir = root / ".claude" / "rules"
     if rules_dir.is_dir():
-        for rule_path in rules_dir.rglob("*.md"):
+        for rule_path in find_files(rules_dir, "*.md"):
             resolved = rule_path.resolve()
             if not resolved.is_relative_to(root):
                 raise ValueError(f"context source is outside repository: {rule_path}")

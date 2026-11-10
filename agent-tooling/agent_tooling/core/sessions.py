@@ -24,6 +24,8 @@ import tempfile
 import time
 from datetime import datetime, timezone
 
+from agent_tooling.core.fs_links import is_link_like
+
 SCHEMA_VERSION = 1
 DEFAULT_TTL_SECONDS = 12 * 60 * 60
 DIRECTORY_ENV = "AGENT_SESSIONS_DIR"
@@ -128,14 +130,14 @@ def registry_dir(directory=None):
 def _ensure_dir(directory):
     """Create the registry dir with 0700. Refuse symlinked directories."""
     try:
-        if os.path.islink(directory):
+        if is_link_like(directory):
             return False
         os.makedirs(directory, mode=0o700, exist_ok=True)
         if sys.platform != "win32":
             os.chmod(directory, 0o700)
     except OSError:
         return False
-    return not os.path.islink(directory)
+    return not is_link_like(directory)
 
 
 def _clean_session_id(session_id):

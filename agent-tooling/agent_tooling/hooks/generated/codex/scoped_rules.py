@@ -7,12 +7,14 @@ from __future__ import annotations
 
 import os
 import re
+import fnmatch
+import stat
+from pathlib import Path
 import json
 import hashlib
 import tempfile
 import ast
 from dataclasses import dataclass
-from pathlib import Path
 import sys
 
 # --- inlined from core/paths.py ---
@@ -313,6 +315,32 @@ def render_rule_context(found, heading, max_chars):
     return heading + "\n\n" + "\n".join(parts)
 
 
+# --- inlined from core/fs_links.py ---
+_MOUNT_POINT = getattr(stat, "IO_REPARSE_TAG_MOUNT_POINT", 0xA0000003)
+
+
+def is_link_like(path) -> bool:
+    """True for a symlink or a junction (never follows the link itself)."""
+    try:
+        st = os.lstat(path)
+    except OSError:
+        return False
+    if stat.S_ISLNK(st.st_mode):
+        return True
+    return getattr(st, "st_reparse_tag", 0) == _MOUNT_POINT
+
+
+def find_files(root: Path, pattern: str) -> list[Path]:
+    """Files under ``root`` whose name matches ``pattern``, not entering linked dirs."""
+    found = []
+    for dir_path, dir_names, file_names in os.walk(root):
+        dir_names[:] = [
+            name for name in dir_names if not is_link_like(os.path.join(dir_path, name))
+        ]
+        found.extend(Path(dir_path) / name for name in file_names if fnmatch.fnmatch(name, pattern))
+    return found
+
+
 # --- inlined from core/glob.py ---
 def glob_regex(pattern: str) -> re.Pattern[str]:
     pattern = pattern.replace("\\", "/")
@@ -597,7 +625,7 @@ def _rule_paths(root: Path) -> list[Path]:
     if not directory.is_dir():
         return []
     return sorted(
-        (path for path in directory.rglob("*.md") if path.is_file()),
+        (path for path in find_files(directory, "*.md") if path.is_file()),
         key=lambda p: p.relative_to(root).as_posix(),
     )
 

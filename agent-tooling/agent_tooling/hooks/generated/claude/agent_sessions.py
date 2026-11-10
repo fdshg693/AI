@@ -17,15 +17,44 @@ and register it as scenarios/agent_sessions/hook.yaml says. Registry dir is ``AG
 
 from __future__ import annotations
 
+import fnmatch
+import os
+import stat
+from pathlib import Path
 import hashlib
 import json
-import os
 import re
 import subprocess
 import sys
 import tempfile
 import time
 from datetime import datetime, timezone
+
+# --- inlined from core/fs_links.py ---
+_MOUNT_POINT = getattr(stat, "IO_REPARSE_TAG_MOUNT_POINT", 0xA0000003)
+
+
+def is_link_like(path) -> bool:
+    """True for a symlink or a junction (never follows the link itself)."""
+    try:
+        st = os.lstat(path)
+    except OSError:
+        return False
+    if stat.S_ISLNK(st.st_mode):
+        return True
+    return getattr(st, "st_reparse_tag", 0) == _MOUNT_POINT
+
+
+def find_files(root: Path, pattern: str) -> list[Path]:
+    """Files under ``root`` whose name matches ``pattern``, not entering linked dirs."""
+    found = []
+    for dir_path, dir_names, file_names in os.walk(root):
+        dir_names[:] = [
+            name for name in dir_names if not is_link_like(os.path.join(dir_path, name))
+        ]
+        found.extend(Path(dir_path) / name for name in file_names if fnmatch.fnmatch(name, pattern))
+    return found
+
 
 # --- inlined from core/sessions.py ---
 SCHEMA_VERSION = 1
@@ -132,14 +161,14 @@ def registry_dir(directory=None):
 def _ensure_dir(directory):
     """Create the registry dir with 0700. Refuse symlinked directories."""
     try:
-        if os.path.islink(directory):
+        if is_link_like(directory):
             return False
         os.makedirs(directory, mode=0o700, exist_ok=True)
         if sys.platform != "win32":
             os.chmod(directory, 0o700)
     except OSError:
         return False
-    return not os.path.islink(directory)
+    return not is_link_like(directory)
 
 
 def _clean_session_id(session_id):

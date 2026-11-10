@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from agent_tooling.core.fs_links import find_files
 from agent_tooling.core.glob import glob_regex
 from agent_tooling.core.paths import normalize_repo_relative_path
 from agent_tooling.hooks.common.rules import RuleValidationError, parse_rule
@@ -47,7 +48,7 @@ def _rule_paths(root: Path) -> list[Path]:
     if not directory.is_dir():
         return []
     return sorted(
-        (path for path in directory.rglob("*.md") if path.is_file()),
+        (path for path in find_files(directory, "*.md") if path.is_file()),
         key=lambda path: path.relative_to(root).as_posix(),
     )
 

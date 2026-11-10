@@ -73,6 +73,8 @@ import os
 
 import yaml
 
+from agent_tooling.core.fs_links import find_files
+
 from .common.paths import hook_dir, resolve_project_dir
 from .common.runtime import env_int, init_hook_context
 from .common.skill_frontmatter import read_frontmatter
@@ -132,7 +134,7 @@ def collect_skills(project_dir, roots, max_skills, warnings):
         root_path = (project_dir / root).resolve()
         if not root_path.is_dir():
             continue
-        for skill_md_path in sorted(root_path.rglob("SKILL.md")):
+        for skill_md_path in sorted(find_files(root_path, "SKILL.md")):
             entry = read_skill(skill_md_path)
             if entry is None or entry["name"] in by_name:
                 continue

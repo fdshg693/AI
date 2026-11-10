@@ -12,6 +12,8 @@ skill.
 
 import yaml
 
+from agent_tooling.core.fs_links import find_files
+
 
 def read_frontmatter(skill_md_path):
     try:
@@ -46,7 +48,7 @@ def find_skill_dir_by_name(name, roots):
     for root in roots:
         if not root.is_dir():
             continue
-        for skill_md in sorted(root.rglob("SKILL.md")):
+        for skill_md in sorted(find_files(root, "SKILL.md")):
             frontmatter = read_frontmatter(skill_md)
             if frontmatter is None:
                 continue
