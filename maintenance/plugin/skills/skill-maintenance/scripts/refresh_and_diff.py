@@ -51,7 +51,7 @@ class RunResult:
 def find_repo_root(script_path: Path) -> Path:
     """Resolve the repo root from this script's fixed location.
 
-    This script always lives at <repo_root>/claude-plugins/meta/skills/skill-maintenance/scripts/,
+    This script always lives at <repo_root>/maintenance/plugin/skills/skill-maintenance/scripts/,
     so the root is derived by a fixed number of parent hops rather than searching
     for a .git directory (this repo isn't always a git checkout).
     """
