@@ -12,6 +12,7 @@ resolution-markers = [
 members = [
     "agent-tooling",
     "agents-rules",
+    "ai-schedule",
     "ai-usage-cli",
     "aim-cli",
     "awsdocs-cli",
@@ -21,6 +22,7 @@ members = [
     "gdevdocs-cli",
     "grepapp-cli",
     "interactive-cli-wrapper",
+    "issue-agent",
     "model-list",
     "model-select",
     "mslearn-cli",
@@ -74,6 +76,23 @@ requires-dist = [{ name = "pyyaml" }]
 
 [package.metadata.requires-dev]
 dev = [{ name = "pytest", specifier = ">=8" }]
+
+[[package]]
+name = "ai-schedule"
+version = "0.1.0"
+source = { editable = "tools/schedule/ai-schedule" }
+dependencies = [
+    { name = "pydantic" },
+    { name = "pyyaml" },
+    { name = "typer" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "pydantic", specifier = ">=2" },
+    { name = "pyyaml", specifier = ">=6.0" },
+    { name = "typer", specifier = ">=0.12" },
+]
 
 [[package]]
 name = "ai-usage-cli"
@@ -822,6 +841,23 @@ dependencies = [
 requires-dist = [
     { name = "pyte" },
     { name = "pywinpty", marker = "sys_platform == 'win32'" },
+]
+
+[[package]]
+name = "issue-agent"
+version = "0.1.0"
+source = { editable = "tools/schedule/issue-agent" }
+dependencies = [
+    { name = "claude-agent-sdk" },
+    { name = "pydantic" },
+    { name = "python-dotenv" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "claude-agent-sdk" },
+    { name = "pydantic", specifier = ">=2" },
+    { name = "python-dotenv" },
 ]
 
 [[package]]

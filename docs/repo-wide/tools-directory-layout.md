@@ -9,7 +9,7 @@ status: stable
 
 # tools/配下のディレクトリ構成規約
 
-このリポジトリの`tools/`配下は、便利スクリプト・CLIごとに1ディレクトリを割り当てる方針で構成されている。新しいスクリプトを追加する際は、既存ツール（`tools/aim`、`tools/tav-cli`、`tools/schedule`等）と同じ形に揃える。
+このリポジトリの`tools/`配下は、便利スクリプト・CLIごとに1ディレクトリを割り当てる方針で構成されている。新しいスクリプトを追加する際は、既存ツール（`tools/aim`、`tools/tav-cli`、`tools/schedule/ai-schedule`等）と同じ形に揃える。
 
 ## 配置単位
 
@@ -36,7 +36,7 @@ status: stable
 ## 実装スタイルの選び方
 
 - **単一モジュール**: 小さく状態を持たないCLIなら1ファイル+`[tool.setuptools] py-modules = [...]`で十分（`tools/aim/aim_cli.py`）
-- **パッケージ+tests/**: 内部構造やユニットテストを持つ規模になったら、パッケージディレクトリ＋`tests/`に分ける（`tools/schedule/ai_schedule/*.py` + `tools/schedule/tests/`、`tools/tav-cli/tav_core/`）
+- **パッケージ+tests/**: 内部構造やユニットテストを持つ規模になったら、パッケージディレクトリ＋`tests/`に分ける（`tools/schedule/ai-schedule/ai_schedule/*.py` + `tools/schedule/ai-schedule/tests/`、`tools/tav-cli/tav_core/`）
 
 最初から過剰にパッケージ化せず、複雑さが増えたタイミングで単一モジュールからパッケージへ切り出す。
 

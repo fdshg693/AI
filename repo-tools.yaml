@@ -6,7 +6,7 @@
 # registered tool depends on it / it depends on another registered tool.
 # Do not list tools/internal/** (repo-maintenance scripts) or experimental /
 # one-off scripts that neither skills nor other tools reference
-# (e.g. tools/schedule).
+# (e.g. tools/schedule/ai-schedule).
 #
 # tools/internal/skill/check/check_skill_repo_tools.py cross-checks every
 # non-excluded SKILL.md's requires_repo_tools/requires_install against the

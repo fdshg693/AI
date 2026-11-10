@@ -61,7 +61,7 @@ AIコーディングツールの設定・ツールに関する個人の調査・
   - `get-settings/` — 設定取得補助
   - `infra/` — インフラ利用ツール（AI ログ管理等）
   - `sandbox/` — ISSUE駆動Dockerサンドボックスエージェント（GitHub ISSUEの`@sandbox`メンションをポーリングで検知しClaude Agent SDKに作業させる仕組み）
-  - `issue-agent/` — GitHub ISSUEのラベル駆動でgit worktree上にClaude Codeを起動し、実装からPR作成・ISSUE返信までを自動化するツール
+  - `schedule/` — Windows タスクスケジューラでジョブを定期実行する `ai-schedule` と、そこから呼ばれる `issue-agent`（GitHub ISSUEのラベル駆動でgit worktree上にClaude Codeを起動し、実装からPR作成・ISSUE返信までを自動化するツール）
   - `internal/` — マーケットプレイス/skill カタログ生成等の内部ツール群
 - [templates/](templates/) — ルールやスキル等をまとめて導入する際のテンプレート例（`cline_best/`, `planner/` 等）
 - [.vscode/](.vscode/) — VSCode における AI コーディングツール設定例
