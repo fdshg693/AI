@@ -12,8 +12,8 @@
 
 ```shell
 # リポジトリルートから起動する場合
-claude --plugin-dir ./meta-plugins
+claude --plugin-dir ./maintenance/plugin
 ```
 
 - スキル(`SKILL.md`)の変更はセッション中も即座に反映される。`agents/`や`hooks/`等を追加・変更した場合は`/reload-plugins`で反映するか再起動する。
-- 動作確認後、マニフェストや構成の妥当性は`claude plugin validate ./meta-plugins --strict`でチェックできる。
+- 動作確認後、マニフェストや構成の妥当性は`claude plugin validate ./maintenance/plugin --strict`でチェックできる。

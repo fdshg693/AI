@@ -16,7 +16,7 @@ meta:
   requires_skills: none
   status: experimental
   description: スキルまたは tools/ CLI 変更時の影響範囲列挙と設計正本への誘導
-  version: 1.0.8
+  version: 1.0.9
 ---
 
 # スキルまたは tools/ CLI を変えるとき
@@ -48,6 +48,7 @@ just --justfile maintenance/scripts/justfile skill-tool-impact --help
 
 3. **設計正本の該当節に従って直す** — [skill-tool-relations](../../../docs/skill-tool-relations.md)の「変更時に見る場所」。スキル変更なら「スキルを変える」、ツール変更なら「ツールを変える」。
 4. **辺そのものを変えたら検査に任せる** — `requires_tools` や workspace 依存の整合は lefthook の check 段（`maintenance/scripts precommit check`）が見る。同じ検査コマンドを手で先に叩かない。
+5. **下流が別のリポジトリにあればコミットを分ける** — `skills/` のスキルと `tools/` の CLI、`registry/` の登録は、それぞれ別のリポジトリ（サブモジュールとアンブレラ）に属する。直した下流はそのリポジトリごとにコミットし、最後にアンブレラでポインタを更新する（[committing](../committing/SKILL.md) の「サブモジュールの中を変えたとき」）。
 
 ## やらないこと
 

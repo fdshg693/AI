@@ -13,7 +13,7 @@ meta:
   requires_skills: none
   status: experimental
   description: no description
-  version: 1.1.11
+  version: 1.1.12
 ---
 
 !`python ${CLAUDE_SKILL_DIR}/scripts/list_repo_meta_docs.py`
@@ -43,6 +43,7 @@ meta:
    - このリポジトリの GitHub 設定（Actions シークレット、workflow 権限、Pages の Source） → `configuring-github`スキル（ワークフローの動きは`gh-actions-lifecycle`）
    - 新しいメンテナンスガイダンスをmaintenance/docs/の新規docにするか既存docに統合するかの判断 → `skill-improving-meta-skills`
    - このリポジトリの地図・どこに何があるか → `exploring-this-repo`スキル（索引に載るコードと載らない docs/スキルの振り分け）
+   - 新しいスキル・スクリプト・文書の置き場所、サブモジュールの運用、Junction（`.links.yaml`） → `repo-layout`
 3. 一覧のどれにも合致しなければ、無理に既存ドキュメントへ寄せない。新規ドキュメントとして追加すべきかの判断・配置基準は[skill-improving-meta-skills](../../../docs/skill-improving-meta-skills.md)と[writing-skill](../../../../skills/plugins/cc-knowledge/skills/writing-skill/SKILL.md)を使う。
 
 ## 一覧が期待と違うとき

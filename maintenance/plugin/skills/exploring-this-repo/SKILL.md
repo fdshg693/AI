@@ -15,7 +15,7 @@ meta:
   requires_skills: codegraph-docs, discovering-skills, meta
   status: experimental
   description: このリポジトリの地図（索引に載るコード vs 載らない docs/スキル/SSOT）と次の参照先
-  version: 1.0.6
+  version: 1.0.7
 ---
 
 !`python ${CLAUDE_SKILL_DIR}/scripts/snapshot_indexed_layout.py`
@@ -26,9 +26,18 @@ meta:
 
 フォルダの用途は索引から推測しない。[README.md](../../../../README.md) を `Read` する。
 
+## 大枠
+
+| 区分                   | パス                                                                | 中身                                                                   |
+| ---------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| サブモジュール（4 つ） | `skills/`・`tools/`・`agent-compat/`・`site/`                       | 汎用スキル、CLI と `_plugin/my-tools`、マルチ AI 対応、公開サイト      |
+| アンブレラ本体         | `maintenance/`・`registry/`・`docs/`・`plans/`、`.claude/` 等の設定 | 保守用プラグイン・スクリプト・規約、SSOT yaml、利用者向け docs、プラン |
+
+サブモジュールの中のファイルを変えたら、そのリポジトリでコミットしてからアンブレラでポインタを更新する 2 段階（[committing](../committing/SKILL.md)）。`git ls-files`・`git grep` はサブモジュールの中を返さないので、中を探すときはそのサブモジュールで実行するか `rg` を使う。
+
 ## 次にどれを見るか
 
-1. **索引に載っているディレクトリ**（`tools/`、各 `*-plugins/` のスクリプト、`agent-compat/agent-tooling/` のフック実装など）— パスを特定してから [codegraph-docs](../../../../skills/plugins/topics/skills/codegraph-docs/SKILL.md)。広い explore（「このリポジトリはどう動く」）はしない。コードの流れ・定義・呼び出し関係はこちら。
+1. **索引に載っているディレクトリ**（`tools/`、`skills/plugins/` のスクリプト、`maintenance/scripts/`、`agent-compat/agent-tooling/` のフック実装など）— パスを特定してから [codegraph-docs](../../../../skills/plugins/topics/skills/codegraph-docs/SKILL.md)。広い explore（「このリポジトリはどう動く」）はしない。コードの流れ・定義・呼び出し関係はこちら。
 2. **テキストのローカル参照**（Markdown / SKILL.md / `.txt` のファイルリンク、リンク切れ、あるテキストを直したときの inbound）— [textgraph](../../../../tools/_plugin/my-tools/skills/textgraph/SKILL.md)。広い grep の前に `textgraph impact`。
 3. **索引に無いトップレベル** — 中身の種類で振り分ける。
    - `SKILL.md` を探す / どのスキルを読むか → [discovering-skills](../discovering-skills/SKILL.md)
