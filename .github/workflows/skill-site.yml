@@ -8,7 +8,7 @@ on:
       # submodule pointer updates (gitlinks); patterns inside a submodule never match in the umbrella
       - 'site'
       - '.github/workflows/skill-site.yml'
-      - 'skills/plugins/**/skills/**'
+      - 'skills'
       - 'tools'
       - 'registry/ai-tools.yaml'
       - '.github/skills/**'
@@ -22,7 +22,7 @@ on:
       # submodule pointer updates (gitlinks); patterns inside a submodule never match in the umbrella
       - 'site'
       - '.github/workflows/skill-site.yml'
-      - 'skills/plugins/**/skills/**'
+      - 'skills'
       - 'tools'
       - 'registry/ai-tools.yaml'
       - '.github/skills/**'

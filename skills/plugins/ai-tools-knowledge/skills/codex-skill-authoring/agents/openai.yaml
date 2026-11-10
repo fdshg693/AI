@@ -1,4 +1,0 @@
-interface:
-  display_name: "Codex Skill Authoring"
-  short_description: "Create and review Codex skills."
-  default_prompt: "Use $codex-skill-authoring to create or review Codex skill."

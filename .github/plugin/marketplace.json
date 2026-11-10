@@ -13,7 +13,11 @@
       "name": "ai-tools-knowledge",
       "description": "Knowledge skills about AI coding tools (GitHub Copilot, Copilot CLI, VS Code Copilot, Codex, Cursor, Antigravity, Cline, Kilo Code): docs, CLIs, SDKs, instructions, skills and plugins.",
       "version": "1.0.0",
-      "source": "./skills/plugins/ai-tools-knowledge",
+      "source": {
+        "source": "github",
+        "repo": "fdshg693/AI-skills",
+        "path": "plugins/ai-tools-knowledge"
+      },
       "repository": "https://github.com/fdshg693/AI"
     }
   ]

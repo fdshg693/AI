@@ -42,7 +42,9 @@ CLI から実行する場合:
 claude plugin marketplace add /path/to/AI
 ```
 
-以降の手順（インストール・確認・管理）はリモート追加時と同じ。ただし clone 元のファイルを更新した場合の反映は GitHub からの再取得ではなく、後述の `/reload-plugins` で行う。
+以降の手順（インストール・確認・管理）はリモート追加時と同じ。
+
+プラグイン本体はサブモジュールのリポジトリ（[fdshg693/AI-skills](https://github.com/fdshg693/AI-skills)・[fdshg693/AI-tools](https://github.com/fdshg693/AI-tools)）にあり、`marketplace.json` の各エントリは `git-subdir` でそれらを指す。そのため、ローカルパスで追加しても、プラグインは各リポジトリの GitHub 上の既定ブランチから取得される。手元で編集中のスキルを試すには、サブモジュール側で push するか、`claude --plugin-dir skills/plugins/<name>` で直接読み込む。
 
 ## 2. プラグインをインストールする
 

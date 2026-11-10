@@ -28,19 +28,21 @@ Codex CLI では、マーケットプレイスの Git URL を直接登録でき�
 
 ```text
 ai-tools-knowledge
-└── skills/plugins/ai-tools-knowledge
+└── skills/plugins/ai-tools-knowledge（サブモジュール fdshg693/AI-skills の plugins/ai-tools-knowledge）
 ```
+
+`skills/` はサブモジュールなので、エントリの `source` は `git-subdir`（`https://github.com/fdshg693/AI-skills.git` の `plugins/ai-tools-knowledge`）で、プラグイン本体はそのリポジトリから取得される。
 
 プラグイン本体は Claude Code 向けと共通で、Codex 用のマニフェスト `.codex-plugin/plugin.json` を同じディレクトリに置いている。以前の `meta`（`codex-plugins/meta`）は廃止した。入れていた場合は `meta` を外して `ai-tools-knowledge` を入れ直す。
 
-`source.path` は `.agents/plugins/` からの相対パスではなく、レポジトリルートからの相対パスで解決される。
+`source` が `local` のエントリでは、`source.path` は `.agents/plugins/` からの相対パスではなく、レポジトリルートからの相対パスで解決される（現在の `ai-tools-knowledge` は `git-subdir`）。
 
 ## ChatGPT デスクトップアプリからインストールする
 
 1. このレポジトリを clone する。
 
    ```bash
-   git clone <このレポジトリのURL>
+   git clone --recurse-submodules <このレポジトリのURL>
    cd <レポジトリのディレクトリ>
    ```
 
@@ -85,10 +87,10 @@ codex
 
 ### sparse checkout を使う場合
 
-このレポジトリではマーケットプレイス定義とプラグイン本体が別のディレクトリにあるため、sparse checkout を使う場合は両方を取得対象にする。
+プラグイン本体は `git-subdir` で別リポジトリ（AI-skills）から取得されるため、sparse checkout ではマーケットプレイス定義だけを取得対象にすればよい。
 
 ```bash
-codex plugin marketplace add https://github.com/<OWNER>/<REPOSITORY>.git --sparse .agents/plugins --sparse skills/plugins/ai-tools-knowledge
+codex plugin marketplace add https://github.com/<OWNER>/<REPOSITORY>.git --sparse .agents/plugins
 ```
 
 `<OWNER>/<REPOSITORY>` は、このレポジトリを公開している GitHub の所有者名とレポジトリ名に置き換える。
@@ -144,7 +146,7 @@ ChatGPT デスクトップアプリでインストールした場合は、Plugin
 プラグインが見つからない場合は、次を確認する。
 
 - `.agents/plugins/marketplace.json` がレポジトリルートの配下に存在する
-- `marketplace.json` の `source.path` が `./skills/plugins/ai-tools-knowledge` になっている
+- `marketplace.json` の `source` が `git-subdir`（`https://github.com/fdshg693/AI-skills.git` の `plugins/ai-tools-knowledge`）になっていて、そのリポジトリを取得できる
 - ChatGPT デスクトップアプリを再起動したか、Codex CLI で `marketplace list` を実行したか
 - インストール後に新しいチャットまたは Codex セッションを開始したか
 

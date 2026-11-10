@@ -7,3 +7,6 @@
 [submodule "tools"]
 	path = tools
 	url = https://github.com/fdshg693/AI-tools.git
+[submodule "skills"]
+	path = skills
+	url = https://github.com/fdshg693/AI-skills.git

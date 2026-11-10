@@ -7,8 +7,9 @@
     {
       "name": "ai-tools-knowledge",
       "source": {
-        "source": "local",
-        "path": "./skills/plugins/ai-tools-knowledge"
+        "source": "git-subdir",
+        "url": "https://github.com/fdshg693/AI-skills.git",
+        "path": "plugins/ai-tools-knowledge"
       },
       "policy": {
         "installation": "AVAILABLE",

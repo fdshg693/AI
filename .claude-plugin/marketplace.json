@@ -11,77 +11,121 @@
   "plugins": [
     {
       "name": "ai-tools-knowledge",
-      "source": "./skills/plugins/ai-tools-knowledge",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/fdshg693/AI-skills.git",
+        "path": "plugins/ai-tools-knowledge"
+      },
       "description": "Knowledge skills about other AI coding tools (Codex, GitHub Copilot, Cursor, Antigravity, Cline, Kilo Code): docs, CLIs, SDKs, memory, skills and plugins",
       "version": "0.1.0",
       "strict": true
     },
     {
       "name": "cicd",
-      "source": "./skills/plugins/cicd",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/fdshg693/AI-skills.git",
+        "path": "plugins/cicd"
+      },
       "description": "CICD plugins for Claude",
       "version": "0.1.0",
       "strict": true
     },
     {
       "name": "cc-knowledge",
-      "source": "./skills/plugins/cc-knowledge",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/fdshg693/AI-skills.git",
+        "path": "plugins/cc-knowledge"
+      },
       "description": "Skills about Claude Code itself: docs, settings, and how to write skills, hooks, plugins and subagents",
       "version": "0.2.0",
       "strict": true
     },
     {
       "name": "coding",
-      "source": "./skills/plugins/coding",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/fdshg693/AI-skills.git",
+        "path": "plugins/coding"
+      },
       "description": "Coding plugins for Claude",
       "version": "0.1.0",
       "strict": true
     },
     {
       "name": "doc-tools",
-      "source": "./skills/plugins/doc-tools",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/fdshg693/AI-skills.git",
+        "path": "plugins/doc-tools"
+      },
       "description": "Document processing skills that bundle their own scripts (no tools/ install needed)",
       "version": "0.1.0",
       "strict": true
     },
     {
       "name": "no-code",
-      "source": "./skills/plugins/no-code",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/fdshg693/AI-skills.git",
+        "path": "plugins/no-code"
+      },
       "description": "Skill to use Claude Code for non coding tasks for whatever fancy reason you want to use it for.",
       "version": "0.1.0",
       "strict": true
     },
     {
       "name": "others",
-      "source": "./skills/plugins/others",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/fdshg693/AI-skills.git",
+        "path": "plugins/others"
+      },
       "description": "other plugins for Claude",
       "version": "0.1.0",
       "strict": true
     },
     {
       "name": "special",
-      "source": "./skills/plugins/special",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/fdshg693/AI-skills.git",
+        "path": "plugins/special"
+      },
       "description": "Unordinary skills. Only for Claude Code power users.",
       "version": "0.1.0",
       "strict": true
     },
     {
       "name": "subagents",
-      "source": "./skills/plugins/subagents",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/fdshg693/AI-skills.git",
+        "path": "plugins/subagents"
+      },
       "description": "Claude Code skill for using subagents",
       "version": "0.1.0",
       "strict": true
     },
     {
       "name": "topics",
-      "source": "./skills/plugins/topics",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/fdshg693/AI-skills.git",
+        "path": "plugins/topics"
+      },
       "description": "Focused Skill for specific topics, providing targeted information and insights.",
       "version": "0.1.0",
       "strict": true
     },
     {
       "name": "web-lookup",
-      "source": "./skills/plugins/web-lookup",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/fdshg693/AI-skills.git",
+        "path": "plugins/web-lookup"
+      },
       "description": "Web research skills that bundle their own scripts (no tools/ install needed)",
       "version": "0.2.0",
       "strict": true
