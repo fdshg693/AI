@@ -37,7 +37,7 @@ pre-commit:
             glob:
               - "*.md"
               - "**/*.md"
-            run: node ../node_modules/prettier/bin/prettier.cjs --write {staged_files}
+            run: node ../node_modules/prettier/bin/prettier.cjs --ignore-path ../.prettierignore --write {staged_files}
             stage_fixed: true
           - name: format Python with ruff
             glob:
