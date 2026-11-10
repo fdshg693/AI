@@ -91,6 +91,11 @@ FIX_TASKS = (
         ("registry/ai-tools.yaml",),
     ),
     Task(
+        "skills-plugin-index",
+        "plugin_meta.generate.generate_skills_plugin_index",
+        (),  # Explicit generation or CI --all; hooks validate without writing across repositories.
+    ),
+    Task(
         "registry-compat",
         "plugin_meta.generate.generate_registry_compat",
         (
@@ -141,7 +146,7 @@ PHASES = {"fix": FIX_TASKS, "check": CHECK_TASKS}
 
 def staged_files() -> list[PurePosixPath]:
     try:
-        staged = repo_git.staged_files(REPO_ROOT)
+        staged = repo_git.staged_files(REPO_ROOT, include_deleted=True)
     except RuntimeError as exc:
         print(exc, file=sys.stderr)
         raise SystemExit(1) from exc

@@ -100,9 +100,16 @@ def owner(root: Path, rel_posix: str) -> tuple[Path, str]:
     return root, rel_posix
 
 
-def _staged_in(repo: Path) -> list[str]:
+def _staged_in(repo: Path, *, include_deleted: bool = False) -> list[str]:
     result = subprocess.run(
-        ["git", "diff", "--name-only", "--cached", "--diff-filter=ACMR"],
+        [
+            "git",
+            "diff",
+            "--name-only",
+            "--cached",
+            "--no-renames",
+            f"--diff-filter={'ACDMR' if include_deleted else 'ACMR'}",
+        ],
         cwd=repo,
         env=_env_for(repo),
         capture_output=True,
@@ -116,16 +123,18 @@ def _staged_in(repo: Path) -> list[str]:
     return [line for line in result.stdout.splitlines() if line.strip()]
 
 
-def staged_files(root: Path) -> list[str]:
-    """Staged (ACMR) paths of the umbrella and every checked-out submodule.
+def staged_files(root: Path, *, include_deleted: bool = False) -> list[str]:
+    """Staged paths of the umbrella and every checked-out submodule.
 
     Submodule paths are prefixed with the submodule's path. The umbrella's own
     gitlink entries (e.g. ``skills`` after a pointer update) are kept as-is so
     tasks can glob on them.
     """
-    paths = _staged_in(root)
+    paths = _staged_in(root, include_deleted=include_deleted)
     for sub in submodule_paths(root):
-        paths.extend(f"{sub}/{path}" for path in _staged_in(root / sub))
+        paths.extend(
+            f"{sub}/{path}" for path in _staged_in(root / sub, include_deleted=include_deleted)
+        )
     return paths
 
 

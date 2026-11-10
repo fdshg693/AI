@@ -37,6 +37,10 @@ jobs:
       - name: uv.lock matches the workspace (members live in submodules)
         run: uv lock --check
 
+      - name: Test skills plugin index
+        working-directory: maintenance/scripts
+        run: uv run python -m unittest discover -s tests -p 'test_skills_plugin_index*.py'
+
       - name: Regenerate aggregate outputs
         working-directory: maintenance/scripts
         run: uv run python -m precommit fix --all
