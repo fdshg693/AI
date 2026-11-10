@@ -185,7 +185,7 @@ TAVILY_API_KEY が解決できません。
 
 ### `release: true`との違い
 
-`repo-tools.yaml`の`release: true`は、「mainへのpush時に`.github/workflows/tool-release.yml`がタグ+GitHub Releaseを作る対象」を表す。版数の存在や、自動patchバンプの対象かどうかとは別軸である。`release: false`でも first-class CLI なら版数を持ち、変更時に自動patchバンプされる。
+`repo-tools.yaml`の`release: true`は、「`tools/`サブモジュール（fdshg693/AI-tools）のmainへのpush時に、AI-toolsの`.github/workflows/tool-release.yml`がタグ+GitHub Releaseを作る対象」を表す。版数の存在や、自動patchバンプの対象かどうかとは別軸である。`release: false`でも first-class CLI なら版数を持ち、変更時に自動patchバンプされる。
 
 ## `--version` 契約
 

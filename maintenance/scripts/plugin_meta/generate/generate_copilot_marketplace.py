@@ -5,7 +5,8 @@ Each ``marketplace.sources`` entry is a plugin dir whose root ``plugin.json``
 (the Copilot / Agent Plugins manifest) is maintained with the plugin itself;
 this script only reads it. Marketplace-level fields (name, owner, metadata)
 come from ai-tools.yaml. The output is fully regenerated (not merged) on each
-run.
+run. Plugins inside a submodule get a ``github`` source (repo + path) pointing
+at the submodule's repository.
 """
 
 from __future__ import annotations
@@ -15,8 +16,17 @@ import sys
 from pathlib import Path
 
 from plugin_meta.util.ai_tools_config import REPO_ROOT, load_tool
+from plugin_meta.util.plugin_source import remote_plugin
 
 TOOL_KEY = "copilot"
+
+
+def copilot_source(rel_posix: str) -> str | dict:
+    remote = remote_plugin(REPO_ROOT, rel_posix)
+    if remote is not None:
+        # Inside a submodule: fetch from the submodule's repository.
+        return {"source": "github", "repo": remote.repo, "path": remote.path}
+    return f"./{rel_posix}"
 
 
 def plugin_entry(source: str) -> dict:
@@ -28,7 +38,7 @@ def plugin_entry(source: str) -> dict:
         "name": manifest["name"],
         "description": manifest.get("description", ""),
         "version": manifest.get("version", "1.0.0"),
-        "source": f"./{Path(source).as_posix()}",
+        "source": copilot_source(Path(source).as_posix()),
     }
     if "repository" in manifest:
         entry["repository"] = manifest["repository"]

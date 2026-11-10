@@ -74,10 +74,10 @@ tav search "Microsoft Fabric overview" --topic msfabric_overview
 
 ## タグ+Releaseによるバージョン管理
 
-対象パッケージについて、`.github/workflows/tool-release.yml` が main ブランチへの push をトリガーに、パッケージごとの git タグと GitHub Release を自動発行する。スケジュール実行ではなく「`pyproject.toml` のバージョンが上がった」ときだけ発行される（対象タグが既に存在する場合はサイレントにスキップ）。
+対象パッケージについて、`tools/` サブモジュール（[fdshg693/AI-tools](https://github.com/fdshg693/AI-tools)）の `.github/workflows/tool-release.yml` が、AI-tools の main ブランチへの push をトリガーに、パッケージごとの git タグと GitHub Release を自動発行する。スケジュール実行ではなく「`pyproject.toml` のバージョンが上がった」ときだけ発行される（対象タグが既に存在する場合はサイレントにスキップ）。
 
 - タグ命名規則: `<pyprojectのnameフィールド>-v<version>`（例: `aim-cli-v0.1.0`）
-- 対象パッケージの正本は `repo-tools.yaml` の `release: true` なエントリ（`tool-release.yml` の `discover` ジョブが動的に読む。詳細は [repo-tools-config](../../maintenance/docs/repo-tools-config.md) 参照）。以下の表は現状把握用の参考情報（8つ。ワークスペース内の兄弟パッケージに依存しないもののみ）
+- 対象パッケージの正本はアンブレラの `registry/repo-tools.yaml` の `release: true` なエントリ（`tool-release.yml` の `discover` ジョブがアンブレラの main から動的に読む。詳細は [repo-tools-config](../../maintenance/docs/repo-tools-config.md) 参照）。以下の表は現状把握用の参考情報（8つ。ワークスペース内の兄弟パッケージに依存しないもののみ）
 
   | パッケージ名   | ディレクトリ      |
   | -------------- | ----------------- |
@@ -95,12 +95,12 @@ tav search "Microsoft Fabric overview" --topic msfabric_overview
 - ピン留めインストール（対象8パッケージのみ）:
 
   ```bash
-  uv tool install "git+https://github.com/fdshg693/AI.git@<tag>#subdirectory=tools/<dir>"
+  uv tool install "git+https://github.com/fdshg693/AI-tools.git@<tag>#subdirectory=<dir>"
   # 例
-  uv tool install "git+https://github.com/fdshg693/AI.git@aim-cli-v0.1.0#subdirectory=tools/aim"
+  uv tool install "git+https://github.com/fdshg693/AI-tools.git@aim-cli-v0.1.0#subdirectory=aim"
   ```
 
-  `tools/<dir>` は上表の「ディレクトリ」列を使う。`justfile` の `*-git` レシピ（常に最新mainを追う）と異なり、`@<tag>` を固定することで特定バージョンにピン留めできる。
+  `<dir>` は上表の「ディレクトリ」列から先頭の `tools/` を除いたもの（AI-tools ではリポジトリ直下にある）。`justfile` の `*-git` レシピ（常に最新mainを追う）と異なり、`@<tag>` を固定することで特定バージョンにピン留めできる。
 
 ## 関連
 

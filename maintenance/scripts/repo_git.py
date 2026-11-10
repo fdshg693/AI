@@ -101,3 +101,28 @@ def add(root: Path, rel_posix: str) -> subprocess.CompletedProcess[str]:
         errors="replace",
         check=False,
     )
+
+
+def submodule_urls(root: Path) -> dict[str, str]:
+    """Posix path -> url for every submodule in ``.gitmodules`` (checked out or not)."""
+    gitmodules = root / ".gitmodules"
+    if not gitmodules.is_file():
+        return {}
+    result: dict[str, str] = {}
+    path: str | None = None
+    url: str | None = None
+    for line in [*gitmodules.read_text(encoding="utf-8").splitlines(), "["]:
+        stripped = line.strip()
+        if stripped.startswith("["):
+            if path and url:
+                result[path] = url
+            path = url = None
+            continue
+        key, sep, value = stripped.partition("=")
+        if not sep:
+            continue
+        if key.strip() == "path":
+            path = PurePosixPath(value.strip()).as_posix()
+        elif key.strip() == "url":
+            url = value.strip()
+    return result

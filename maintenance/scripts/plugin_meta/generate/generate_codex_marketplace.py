@@ -3,7 +3,8 @@ sources listed in ai-tools.yaml (``marketplace.sources``: plugin dirs carrying a
 ``.codex-plugin/plugin.json``).
 
 Plugin paths in the generated catalog are relative to the repository root, as
-required for a repo-scoped Codex marketplace.
+required for a repo-scoped Codex marketplace. Plugins inside a submodule get a
+``git-subdir`` source pointing at the submodule's repository instead.
 """
 
 from __future__ import annotations
@@ -12,8 +13,17 @@ import json
 from pathlib import Path
 
 from plugin_meta.util.ai_tools_config import REPO_ROOT, load_tool
+from plugin_meta.util.plugin_source import remote_plugin
 
 TOOL_KEY = "codex"
+
+
+def plugin_source(relative_plugin_dir: str) -> dict:
+    remote = remote_plugin(REPO_ROOT, relative_plugin_dir)
+    if remote is not None:
+        # Inside a submodule: fetch from the submodule's repository.
+        return {"source": "git-subdir", "url": remote.url, "path": remote.path}
+    return {"source": "local", "path": f"./{relative_plugin_dir}"}
 
 
 def manifest_entry(manifest_path: Path, default_category: str) -> dict:
@@ -24,10 +34,7 @@ def manifest_entry(manifest_path: Path, default_category: str) -> dict:
 
     return {
         "name": manifest["name"],
-        "source": {
-            "source": "local",
-            "path": f"./{relative_plugin_dir}",
-        },
+        "source": plugin_source(relative_plugin_dir),
         "policy": {
             "installation": "AVAILABLE",
             "authentication": "ON_INSTALL",

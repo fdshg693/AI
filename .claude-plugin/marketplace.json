@@ -88,7 +88,11 @@
     },
     {
       "name": "my-tools",
-      "source": "./tools/_plugin/my-tools",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/fdshg693/AI-tools.git",
+        "path": "_plugin/my-tools"
+      },
       "description": "Skill to use custom tools made by me",
       "version": "0.1.0",
       "strict": true

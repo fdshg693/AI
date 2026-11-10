@@ -4,3 +4,6 @@
 [submodule "agent-compat"]
 	path = agent-compat
 	url = https://github.com/fdshg693/AI-agent-compat.git
+[submodule "tools"]
+	path = tools
+	url = https://github.com/fdshg693/AI-tools.git

@@ -36,7 +36,8 @@
 # to render the public "installable tools" list (name + GitHub folder link
 # only, no install instructions).
 #
-# .github/workflows/tool-release.yml is a third consumer: entries with
+# tool-release.yml in the tools/ submodule (fdshg693/AI-tools) is a third
+# consumer (it downloads this file from the umbrella's main): entries with
 # `release: true` are the tag+GitHub Release targets (workspace-sibling-free
 # packages only). Entries without `release` (or with `release: false`) are
 # not release targets — see docs/integrations/cli-tools.md for why

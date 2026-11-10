@@ -1,6 +1,9 @@
 """Regenerate .claude-plugin/marketplace.json from the claude-code plugins
 listed in ai-tools.yaml.
 
+Plugins inside a submodule get a ``git-subdir`` source pointing at the
+submodule's repository (plugin_meta/util/plugin_source.py).
+
 Top-level marketplace fields (name, owner, metadata) and the plugin list come
 from ai-tools.yaml; the file is fully regenerated (not merged) on each run.
 """
@@ -12,11 +15,12 @@ import sys
 from pathlib import Path
 
 from plugin_meta.util.ai_tools_config import REPO_ROOT, load_tool
+from plugin_meta.util.plugin_source import remote_plugin
 
 TOOL_KEY = "claude-code"
 
 
-def manifest_entry(plugin_dir: Path, source: str) -> dict | None:
+def manifest_entry(plugin_dir: Path, source: str | dict) -> dict | None:
     manifest_path = plugin_dir / ".claude-plugin" / "plugin.json"
     if not manifest_path.is_file():
         print(
@@ -39,7 +43,12 @@ def discover_plugins(tool: dict) -> list[dict]:
     for plugin in tool["plugins"]:
         plugin_dir = REPO_ROOT / plugin["path"]
         rel_path = plugin_dir.relative_to(REPO_ROOT).as_posix()
-        source = "./" if rel_path == "." else f"./{rel_path}"
+        remote = remote_plugin(REPO_ROOT, rel_path)
+        if remote is not None:
+            # Inside a submodule: fetch from the submodule's repository (sparse).
+            source = {"source": "git-subdir", "url": remote.url, "path": remote.path}
+        else:
+            source = "./" if rel_path == "." else f"./{rel_path}"
         entry = manifest_entry(plugin_dir, source)
         if entry is not None:
             entries.append(entry)

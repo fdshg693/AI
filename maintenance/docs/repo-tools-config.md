@@ -34,7 +34,7 @@ status: stable
 
 ## 消費側3: タグ+Releaseの対象判定
 
-`.github/workflows/tool-release.yml`の`discover`ジョブも同じ`repo-tools.yaml`を読む。各エントリの`release: true`フィールドを見て、値が`true`のエントリの`path`一覧をタグ+GitHub Releaseの対象（`release`ジョブの`strategy.matrix.dir`）として動的に決定する。読み込みは`util/`の共有ローダを使わず、workflow内で完結する独立したPythonスニペット（`uv run --with pyyaml python -c "..."`）で行う——`maintenance/scripts/skill/AGENTS.md`が`util/`モジュールの新規消費者を`set/`・`check/`・`query/`に限っているため。
+`tools/`サブモジュール（fdshg693/AI-tools）の`.github/workflows/tool-release.yml`の`discover`ジョブも、アンブレラのmainから同じ`registry/repo-tools.yaml`を取得して読む。`path`の先頭の`tools/`を外したディレクトリ（AI-toolsのルート直下）を対象にする。各エントリの`release: true`フィールドを見て、値が`true`のエントリの`path`一覧をタグ+GitHub Releaseの対象（`release`ジョブの`strategy.matrix.dir`）として動的に決定する。読み込みは`util/`の共有ローダを使わず、workflow内で完結する独立したPythonスニペット（`uv run --with pyyaml python -c "..."`）で行う——`maintenance/scripts/skill/AGENTS.md`が`util/`モジュールの新規消費者を`set/`・`check/`・`query/`に限っているため。
 
 執筆時点の対象は`aim`/`grepapp`/`mslearn`/`tav`/`ctx7`の5エントリ（`tools/aim`・`tools/grepapp`・`tools/mslearn`・`tools/tav-cli`・`tools/ctx7`）。`my-agents`はworkspace内兄弟パッケージへ依存し単体インストールで壊れるため`release`未設定（対象外）——詳細は[docs/integrations/cli-tools.md](../../docs/integrations/cli-tools.md)参照。
 
