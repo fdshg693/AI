@@ -60,7 +60,7 @@ dev = [{ name = "pyyaml", specifier = ">=6.0" }]
 
 [[package]]
 name = "agents-rules"
-version = "0.1.2"
+version = "0.1.3"
 source = { editable = "tools/agents-rules" }
 dependencies = [
     { name = "pyyaml" },
@@ -830,7 +830,7 @@ wheels = [
 
 [[package]]
 name = "interactive-cli-wrapper"
-version = "0.1.2"
+version = "0.1.3"
 source = { editable = "tools/interactive-cli-wrapper" }
 dependencies = [
     { name = "pyte" },
