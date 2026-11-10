@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { createHash } from "node:crypto";
-import { readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
@@ -10,11 +10,12 @@ const configPath = path.join(distDir, "staticwebapp.config.json");
 
 function listHtmlFiles(dir) {
   const files = [];
-  for (const entry of readdirSync(dir)) {
-    const entryPath = path.join(dir, entry);
-    const stats = statSync(entryPath);
-    if (stats.isDirectory()) files.push(...listHtmlFiles(entryPath));
-    else if (entry.endsWith(".html")) files.push(entryPath);
+  // Dirent.isSymbolicLink() is true for junctions too; never walk into a link.
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    if (entry.isSymbolicLink()) continue;
+    const entryPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) files.push(...listHtmlFiles(entryPath));
+    else if (entry.name.endsWith(".html")) files.push(entryPath);
   }
   return files;
 }
