@@ -51,9 +51,10 @@ azure-url:
 # Sources live in agent-tooling; installed copies are gitignored. See .claude/hooks/AGENTS.md.
 hooks_cli := "uv run --project tools/skill-tools skill-tools hooks"
 hooks_config := ".claude/skill-tools.hooks.yaml"
+claude_hooks := "agent_sessions long_run_collector long_run_statement_collector stop_alert task_tracker_session"
 
 hooks-install *flags:
-    {{hooks_cli}} install --config {{hooks_config}} --agent claude agent_sessions long_run_collector long_run_statement_collector stop_alert task_tracker_session {{flags}}
+    {{hooks_cli}} install --config {{hooks_config}} --agent claude {{claude_hooks}} {{flags}}
     {{hooks_cli}} install --config {{hooks_config}} --agent codex nested_agents_md scoped_rules agent_sessions {{flags}}
     {{hooks_cli}} install --config {{hooks_config}} --agent kilo agent_sessions {{flags}}
 
@@ -99,3 +100,12 @@ sub-sync:
 # Install lefthook in every submodule (hooks come from maintenance/lefthook/submodule.yml)
 sub-hooks-install:
     git submodule foreach lefthook install
+
+# Install the umbrella's Claude Code hooks into every submodule, so a session opened in the
+# submodule alone runs them too (config: <submodule>/.claude/skill-tools.hooks.yaml; the
+# installed files are gitignored there). Pass --overwrite to reinstall.
+sub-agent-hooks-install *flags:
+    git submodule foreach 'uv run --project "$toplevel/tools/skill-tools" skill-tools hooks install --config .claude/skill-tools.hooks.yaml --agent claude {{claude_hooks}} {{flags}}'
+
+sub-agent-hooks-update *flags:
+    git submodule foreach 'uv run --project "$toplevel/tools/skill-tools" skill-tools hooks update --config .claude/skill-tools.hooks.yaml {{flags}}'

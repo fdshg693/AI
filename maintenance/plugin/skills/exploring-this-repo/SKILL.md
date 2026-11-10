@@ -15,7 +15,7 @@ meta:
   requires_skills: codegraph-docs, discovering-skills, meta
   status: experimental
   description: このリポジトリの地図（索引に載るコード vs 載らない docs/スキル/SSOT）と次の参照先
-  version: 1.0.5
+  version: 1.0.6
 ---
 
 !`python ${CLAUDE_SKILL_DIR}/scripts/snapshot_indexed_layout.py`
@@ -36,6 +36,10 @@ meta:
    - 何をどこに置くか（`skills/plugins/`・`tools/_plugin/`・`maintenance/`・`registry/` の境界） → [repo-layout](../../../docs/repo-layout.md)
    - YAML の意味（`registry/` の `ai-tools.yaml` / `repo-tools.yaml` / `meta_field.yaml` ほか） → そのファイルを `Read` し、対応する `maintenance/docs/` へ
 4. どれにも当てはまらなければ、README が指すそのフォルダの README / `docs/index.md` を `Read` する。リポジトリ全体を grep しない。
+
+## サブモジュールだけを開いているとき
+
+起動ディレクトリが `skills/`・`tools/`・`agent-compat/`・`site/` のどれかなら、このスキルは Junction で見せていないので通常は起動されない。アンブレラのルートは `..`（`.umbrella-root` がある場所）で、`.codegraph/` もアンブレラにしかない。地図はアンブレラ側で取り、そのサブモジュールの `AGENTS.md` と `.links.yaml`（`.claude/skills/` と `_umbrella/` に何が見えているか）を先に読む。サブモジュールの中から辿れるアンブレラのフォルダは `_umbrella/<name>` だけで、それ以外はアンブレラで開き直したほうが早い（[repo-layout](../../../docs/repo-layout.md#サブモジュールを単体で開く)）。
 
 ## やらないこと
 

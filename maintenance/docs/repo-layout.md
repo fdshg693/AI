@@ -1,7 +1,7 @@
 ---
 type: Repo Convention
 title: リポジトリ構成とJunctionの規約
-description: "Explains which submodules this umbrella has (skills / tools / agent-compat / site), which repository owns which generated file, how to clone, commit in a submodule and then update the pointer, and how this repository declares directory junctions in a committed `.links.yaml` instead of committing them, how `just links-sync` / `links-check` / `links-clean` create, verify and remove them (registering each in the owning repo's info/exclude first), which junctions are forbidden (pointing at an ancestor, into another junction, overlapping, outside the umbrella), why scanners must not walk into junctions, and the checkout hazard when a commit tracks files at a junction path. Use when cloning, committing inside a submodule, updating a submodule pointer, adding a junction, when `links-check` or the post-checkout warning fires, before checking out an old commit, or when writing code that walks the repository tree."
+description: "Explains which submodules this umbrella has (skills / tools / agent-compat / site), which repository owns which generated file, how to clone, open a submodule alone in Claude Code (skill junctions, `_umbrella/` folders, per-submodule hooks), commit in a submodule and then update the pointer, and how this repository declares directory junctions in a committed `.links.yaml` instead of committing them, how `just links-sync` / `links-check` / `links-clean` create, verify and remove them (registering each in the owning repo's info/exclude first), which junctions are forbidden (pointing at an ancestor, into another junction, overlapping, outside the umbrella), why scanners must not walk into junctions, and the checkout hazard when a commit tracks files at a junction path. Use when cloning, opening a submodule folder alone, committing inside a submodule, updating a submodule pointer, adding a junction, when `links-check` or the post-checkout warning fires, before checking out an old commit, or when writing code that walks the repository tree."
 tags: [repo-wide]
 status: draft
 ---
@@ -63,6 +63,24 @@ just links-sync          # .links.yaml の Junction を作る
 2. **アンブレラでポインタを更新する。** アンブレラで `git add <submodule>`（と、手順 1 で再生成されたアンブレラ側の生成物）をコミットする。gitlink の変更で marketplace・`skill-catalog.json` が再生成される。push はサブモジュールを先にする（アンブレラが未 push の commit を指さないように）。
 
 1 つの変更がサブモジュールとアンブレラの両方にまたがっても、アトミックにはコミットできない。サブモジュール → アンブレラの順に分けてコミットする。CI の [`umbrella-check.yml`](../../.github/workflows/umbrella-check.yml) が、生成物の再生成漏れと `uv lock --check` を検査する。
+
+### サブモジュールを単体で開く
+
+サブモジュールのフォルダだけを Claude Code で開いて作業できる（アンブレラ配下に clone されている前提）。開く前に、アンブレラのルートで次を 1 回ずつ実行する。
+
+```sh
+just links-sync               # 各サブモジュールの .links.yaml の Junction（スキルと _umbrella/）を作る
+just sub-agent-hooks-install  # アンブレラと同じ Claude Code フックを各サブモジュールに入れる
+```
+
+- **見えるもの**: 親の `CLAUDE.md`（とその `@./AGENTS.md`）は Claude Code が自動で読む。親の `.claude/skills`・`.claude/agents`・`.claude/settings.json` は読まない（サブモジュールが repo root になり、遡りが止まる）。そのため、そのフォルダの作業に要るアンブレラのスキル（`committing` など）を `.claude/skills/<name>` の Junction で見せる。
+- **何を見せるか**: 宣言は各サブモジュールの `.links.yaml` が正本で、このドキュメントには一覧を書かない。足すのは「そのフォルダの作業に要るもの」だけにする（アンブレラ全体を見せると単体で開く意味が無くなる）。スキルは `.claude/skills/<name>`、強く結びついたアンブレラのフォルダ（`registry/` など）は `_umbrella/<name>` という名前で見せる。
+- **アンブレラで開いたとき**: サブモジュールの `.claude/skills` は起動時には読まれない。サブモジュール内のファイルを読むと、`skills:committing`・`tools:committing` のようなディレクトリ別のスキルとして遅延ロードされる（中身は同じスキル。Claude Code 2.1 で確認）。
+- **`_umbrella/` の中身はアンブレラ（または別のサブモジュール）のファイル**。そこで直したら、コミットはそのファイルが属するリポジトリで行う。サブモジュールのコミットには入らない（Junction は exclude 済み）。
+- **指示ファイル**: サブモジュールの `CLAUDE.md` は `@./AGENTS.md` だけ。`@../...` で親を import しない（親は自動で読まれるので二重になる。外部 import の承認も出る）。サブモジュールの `AGENTS.md` には、アンブレラの規約と重複しない、そのフォルダ固有の責務だけを書く。
+- **フック**: 各サブモジュールの `.claude/skill-tools.hooks.yaml`（source はアンブレラ）をコミットし、入れたフックと `.claude/settings.json`・`.skill-tools/` は gitignore する。`.claude/hooks` を Junction で共有しない（`.env`・`logs/`・`state/` まで共有し、サブモジュールでのインストールがアンブレラの実体を書き換える）。カタログを再生成したら `just sub-agent-hooks-update`。
+- **ワークスペース**: `uv run`・pnpm はアンブレラの workspace と `.venv` をそのまま使う。サブモジュール直下に `pyproject.toml`・`pnpm-workspace.yaml` を置かない。
+- **単体で clone した場合**: `.links.yaml` の参照先が無いので Junction は作られず、親の指示・フック・lefthook も無い。Claude Code の起動自体はできる。`--plugin-dir <アンブレラ>/maintenance/plugin` を渡せば、Junction の代わりにメンテ用スキルを 1 セッションだけ読み込める。
 
 ### CI とリリース
 
