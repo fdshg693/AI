@@ -160,7 +160,7 @@ meta:
   requires_skills: ona-docs
   status: experimental
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 - ona-docs

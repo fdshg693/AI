@@ -21,11 +21,11 @@
 
 ## スキルの場所
 
-| スキル      | パス                                                |
-| ----------- | --------------------------------------------------- |
-| `aim-cli`   | `claude-plugins/my-tools/skills/aim-cli/SKILL.md`   |
-| `aim-lib`   | `claude-plugins/my-tools/skills/aim-lib/SKILL.md`   |
-| `my-agents` | `claude-plugins/my-tools/skills/my-agents/SKILL.md` |
+| スキル      | パス                                               |
+| ----------- | -------------------------------------------------- |
+| `aim-cli`   | `tools/_plugin/my-tools/skills/aim-cli/SKILL.md`   |
+| `aim-lib`   | `tools/_plugin/my-tools/skills/aim-lib/SKILL.md`   |
+| `my-agents` | `tools/_plugin/my-tools/skills/my-agents/SKILL.md` |
 
 ## この流れで足りないとき
 

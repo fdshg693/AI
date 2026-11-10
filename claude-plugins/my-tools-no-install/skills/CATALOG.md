@@ -23,6 +23,41 @@ meta:
   version: 1.0.0
 ---
 
+- tav-lit
+---
+name: tav-lit
+description: Fetch the raw text/markdown content of a single already-known URL via Tavily extract, or pull just the query-relevant chunks from that one page. Use when exactly one URL is already known and only its text (or a keyword-focused excerpt of it) is needed, via one minimal command. Results are always written to a Markdown file (never printed in full to the terminal) so large pages don't blow up context; only the file path is printed. Do not use for multiple/batch URLs, site maps or crawls, web-wide keyword search when the URL is unknown, or work whose results need to accumulate across many pages/tasks — that belongs to the `tav-cli` skill.
+
+# 前提条件(このスキル自体はセットアップ手順を提供しない):
+#   - tavily / python-dotenv がグローバルにインストール済みであること
+#     (`tools/tav-cli/README.md` の「前提条件」と同じ。未インストールならそちらを先に実施)
+#   - TAVILY_API_KEY が環境変数、またはこのスキルと同階層(extract_page.py と同じフォルダ)の
+#     .env に設定済みであること(カレントディレクトリからの上方探索はしない)
+#
+# 同じ .env で TAVILY_OUTPUT_DIR(結果 .md の出力先ベース、未設定時は temp/simple_tavily。
+# カレントディレクトリからの相対解決)・TAVILY_WRITE_LOG(監査ログ出力トグル、未設定=true。
+# ログは extract_page.py と同階層の logs/extract_page-log.json に実行のたび上書き)も設定できる。
+#
+# tav-cli への依存: なし(コードは完全に独立した単一スクリプト)。
+#   ただしライブラリの前提条件は tav-cli と共有する設計。TAVILY_API_KEY 自体は
+#   スキルごとに同階層の .env で個別に設定する。
+# このスキルは tav-cli の `tav extract` から「1 URL」のケースだけを切り出した軽量版。
+# detail プリセット・--topic トピックフォルダ・自己記述 result envelope・ExitCode/ResultKind
+# の型契約は意図的に持たない(1 URL のテキスト取得に対しては過剰なため)。結果ファイル・
+# 監査ログ自体は書くが、tav-cli のような複数タスクを跨いだ蓄積レイアウトは持たない。
+meta:
+  tag: []
+  requires_repo_tools: none
+  requires_env: TAVILY_API_KEY
+  dependencies: tavily, python-dotenv
+  requires_install: tavily, python-dotenv
+  requires_hooks: none
+  requires_skills: none
+  status: stable
+  description: no description
+  version: 1.0.4
+---
+
 - web-lookup
 ---
 name: web-lookup

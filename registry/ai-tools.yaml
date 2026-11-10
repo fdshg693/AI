@@ -24,6 +24,8 @@ tools:
       plugin_roots:
         - path: claude-plugins
           description: "Claude Code 用プラグイン本体"
+        - path: tools/_plugin
+          description: "tools/ の CLI に付属する Claude Code プラグイン（`my-tools`。CLI 前提の使い方スキル）"
         - path: .claude-plugin
           description: "上記プラグイン群をまとめるマーケットプレイス定義（`marketplace.json`）と skill カタログ（`skill-catalog.json`）"
     plugins:
@@ -36,7 +38,7 @@ tools:
       - path: claude-plugins/meta
         kind: plugin
         skills_layout: subdir
-      - path: claude-plugins/my-tools
+      - path: tools/_plugin/my-tools
         kind: plugin
         skills_layout: subdir
       - path: claude-plugins/my-tools-no-install

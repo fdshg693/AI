@@ -1,0 +1,9 @@
+{
+  "moves": [
+    ["claude-plugins/my-tools/skills/tav-lit", "claude-plugins/my-tools-no-install/skills/tav-lit"],
+    ["claude-plugins/my-tools", "tools/_plugin/my-tools"],
+    ["claude-plugins/coding/skills/task-tracker", "tools/_plugin/my-tools/skills/task-tracker"],
+    ["claude-plugins/coding/skills/parallel-agent-worktree", "tools/_plugin/my-tools/skills/parallel-agent-worktree"]
+  ],
+  "exclude": ["plans/repo-restructure/", "maintenance/scripts/reorg/", "docs/log.md"]
+}

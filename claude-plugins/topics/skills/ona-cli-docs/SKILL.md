@@ -11,12 +11,12 @@ meta:
   requires_skills: ona-docs
   status: experimental
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 # Ona 公式CLI（`ona`コマンド）リファレンス（抜粋版）
 
-`ona-run`（`claude-plugins/my-tools/skills/ona-run/`）のようなテンプレート型ラッパーでは表現できない、Ona公式CLI（`ona`コマンド）そのものの細かい使い方に答えるためのスキル。学習データの記憶ではなく、[ona-docs](../ona-docs/SKILL.md)スキルが取得済みの`docs/llms.txt`から抜粋した`output/cli-excerpt.md`を根拠に回答する。
+`ona-run`（`tools/_plugin/my-tools/skills/ona-run/`）のようなテンプレート型ラッパーでは表現できない、Ona公式CLI（`ona`コマンド）そのものの細かい使い方に答えるためのスキル。学習データの記憶ではなく、[ona-docs](../ona-docs/SKILL.md)スキルが取得済みの`docs/llms.txt`から抜粋した`output/cli-excerpt.md`を根拠に回答する。
 
 このスキルは**新規ダウンロードを行わない**。`output/cli-excerpt.md`が古い/見つからない場合は、まず[ona-docs](../ona-docs/SKILL.md)スキルの取得処理（`webref_cli.py download`）を実行して`docs/llms.txt`を最新化してから使う。
 

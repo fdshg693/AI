@@ -22,7 +22,7 @@ status: stable
 | 目的別の組合せ   | `skill-tools workflow list` / `workflow show <id>`                                                                                                     |
 | フックを扱う     | `skill-tools hooks list` / `install` / `installed` / `update` / `remove`                                                                               |
 
-取得元（source）はローカルclone（`source.type: local`）か GitHub（`source.type: github`、既定は `fdshg693/ai@main`）で、どちらでも同じ規約でリポジトリを読む。CLIの使い方・設定・終了コードの詳細は [tools/skill-tools/README.md](../../tools/skill-tools/README.md) と、コンパニオンスキル `claude-plugins/my-tools/skills/skill-tools-cli` が正本である。このドキュメントは「**skill-tools が読めるように、リポジトリ側が何をどう置いているか**」だけを扱う。
+取得元（source）はローカルclone（`source.type: local`）か GitHub（`source.type: github`、既定は `fdshg693/ai@main`）で、どちらでも同じ規約でリポジトリを読む。CLIの使い方・設定・終了コードの詳細は [tools/skill-tools/README.md](../../tools/skill-tools/README.md) と、コンパニオンスキル `tools/_plugin/my-tools/skills/skill-tools-cli` が正本である。このドキュメントは「**skill-tools が読めるように、リポジトリ側が何をどう置いているか**」だけを扱う。
 
 ## 前提: 探索範囲は登録済みのものだけ
 

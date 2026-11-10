@@ -32,7 +32,7 @@
     },
     {
       "name": "my-tools",
-      "source": "./claude-plugins/my-tools",
+      "source": "./tools/_plugin/my-tools",
       "description": "Skill to use custom tools made by me",
       "version": "0.1.0",
       "strict": true

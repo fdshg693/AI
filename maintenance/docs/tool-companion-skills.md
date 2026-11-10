@@ -1,7 +1,7 @@
 ---
 type: Design Decision
 title: ツールへの使い方スキル併設
-description: Explains the repository's pattern of pairing a tools/ convenience script with a SKILL.md that documents just its non-obvious usage decisions (e.g. claude-plugins/my-tools/skills/aim-cli for the `aim` CLI), so a human or agent isn't left guessing which flag/model/enum value to pick, and how usage feedback is stored with `skill-tools --fb` (one file per note under a configured fb root, gitignored) instead of a per-tool `--fb` flag. Use when adding a new tool under tools/ and deciding whether it needs a companion skill, when writing one, or when recording usage feedback about a skill, tool, or workflow.
+description: Explains the repository's pattern of pairing a tools/ convenience script with a SKILL.md that documents just its non-obvious usage decisions (e.g. tools/_plugin/my-tools/skills/aim-cli for the `aim` CLI), so a human or agent isn't left guessing which flag/model/enum value to pick, and how usage feedback is stored with `skill-tools --fb` (one file per note under a configured fb root, gitignored) instead of a per-tool `--fb` flag. Use when adding a new tool under tools/ and deciding whether it needs a companion skill, when writing one, or when recording usage feedback about a skill, tool, or workflow.
 tags: [tools, repo-wide]
 generated: { by: reference_agent/cursor-grok-4.7, at: 2026-10-13T04:10:00Z }
 status: stable
@@ -9,7 +9,7 @@ status: stable
 
 # ツールへの使い方スキル併設
 
-`tools/`配下のCLI・スクリプトは、必要に応じて対応する使い方スキル（例: `tools/aim`に対する`claude-plugins/my-tools/skills/aim-cli`）を持つ。人間・エージェントが実行方法に迷わないための補助であり、すべてのツールに機械的に用意するものではない。
+`tools/`配下のCLI・スクリプトは、必要に応じて対応する使い方スキル（例: `tools/aim`に対する`tools/_plugin/my-tools/skills/aim-cli`）を持つ。人間・エージェントが実行方法に迷わないための補助であり、すべてのツールに機械的に用意するものではない。
 
 ## 併設するかどうかの判断
 
@@ -21,7 +21,7 @@ status: stable
 
 ## 置き場所
 
-使い方スキルは`maintenance/plugin/skills/`ではなく、Claude Codeプラグイン配下（例: `claude-plugins/my-tools/skills/<tool-name>/`）に置き、`ai-tools.yaml`へ通常のスキルとして登録する（[ai-tools-config](./ai-tools-config.md)参照）。対象ツール自体がこのリポジトリ外でも使えるものである以上、スキルもマーケットプレイス・skills-siteの配布対象にする。`maintenance/plugin/`直下には置かない。
+使い方スキルは`maintenance/plugin/skills/`ではなく、Claude Codeプラグイン配下（例: `tools/_plugin/my-tools/skills/<tool-name>/`）に置き、`ai-tools.yaml`へ通常のスキルとして登録する（[ai-tools-config](./ai-tools-config.md)参照）。対象ツール自体がこのリポジトリ外でも使えるものである以上、スキルもマーケットプレイス・skills-siteの配布対象にする。`maintenance/plugin/`直下には置かない。
 
 ## 責務の境界: セットアップは扱わない
 

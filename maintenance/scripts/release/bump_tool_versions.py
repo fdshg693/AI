@@ -147,6 +147,8 @@ def staged_files() -> list[str]:
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         check=False,
     )
     if result.returncode != 0:
@@ -160,6 +162,7 @@ def _git_show(rel_posix_path: str) -> str | None:
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
+        encoding="utf-8",
         errors="replace",
         check=False,
     )
@@ -205,6 +208,8 @@ def bump_manifest(manifest: ToolManifest, *, dry_run: bool) -> str:
         cwd=REPO_ROOT / manifest.tool.path,
         capture_output=True,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         check=False,
     )
     if result.returncode != 0:
@@ -218,6 +223,8 @@ def bump_manifest(manifest: ToolManifest, *, dry_run: bool) -> str:
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         check=False,
     )
     if add_result.returncode != 0:

@@ -13,7 +13,7 @@ status: stable
 
 ## 役割分担
 
-- **`aim`**（[claude-plugins/my-tools/skills/aim-cli](../../claude-plugins/my-tools/skills/aim-cli/SKILL.md)） — systemプロンプトもマルチターンも扱わない単発CLI。`--prompt`内の`@path`でファイル/ディレクトリ内容を取り込む。`--parallel`で複数`--prompt`を並列に投げ、プロンプトごとの応答を返す（ステートレス、1回きり。例: ms-digestが`mslearn`の大量検索結果を並列にAI抽出する）。略記のSSOTは`tools/aim/models.json`（`aim --list-models`で確認）。モデル選択は`mini-m3`を基本線に、簡単すぎるタスクは`gpt-120b`、`mini-m3`で不十分なら`glm-5.2`/`gpt-luna`へエスカレーションする（判断基準は当該スキル参照）
+- **`aim`**（[tools/_plugin/my-tools/skills/aim-cli](../../tools/_plugin/my-tools/skills/aim-cli/SKILL.md)） — systemプロンプトもマルチターンも扱わない単発CLI。`--prompt`内の`@path`でファイル/ディレクトリ内容を取り込む。`--parallel`で複数`--prompt`を並列に投げ、プロンプトごとの応答を返す（ステートレス、1回きり。例: ms-digestが`mslearn`の大量検索結果を並列にAI抽出する）。略記のSSOTは`tools/aim/models.json`（`aim --list-models`で確認）。モデル選択は`mini-m3`を基本線に、簡単すぎるタスクは`gpt-120b`、`mini-m3`で不十分なら`glm-5.2`/`gpt-luna`へエスカレーションする（判断基準は当該スキル参照）
 
 ## このリポジトリ自身も実際に使っている
 
@@ -26,11 +26,11 @@ status: stable
 
 ## モデル階層の選び方
 
-固定のデフォルトではなくコスト/精度のトレードオフとして選ぶ。`mini-m3`から始め、本当に簡単で精度を求められないタスクだけ`gpt-120b`に下げ、`mini-m3`の応答が明らかに不十分な場合にのみ`glm-5.2`/`gpt-luna`へ上げる。使える略記は`aim --list-models`、判断基準は[aim-cli](../../claude-plugins/my-tools/skills/aim-cli/SKILL.md)を参照。
+固定のデフォルトではなくコスト/精度のトレードオフとして選ぶ。`mini-m3`から始め、本当に簡単で精度を求められないタスクだけ`gpt-120b`に下げ、`mini-m3`の応答が明らかに不十分な場合にのみ`glm-5.2`/`gpt-luna`へ上げる。使える略記は`aim --list-models`、判断基準は[aim-cli](../../tools/_plugin/my-tools/skills/aim-cli/SKILL.md)を参照。
 
 ## 関連
 
-- [claude-plugins/my-tools/skills/aim-cli](../../claude-plugins/my-tools/skills/aim-cli/SKILL.md) — `aim`自体の使い方・`@path`/`--parallel`・モデル選択方針
+- [tools/_plugin/my-tools/skills/aim-cli](../../tools/_plugin/my-tools/skills/aim-cli/SKILL.md) — `aim`自体の使い方・`@path`/`--parallel`・モデル選択方針
 - [skill-meta-fields](./skill-meta-fields.md) — このリポジトリ自身がaimを使っている例
 
 ## このドキュメントの位置づけ

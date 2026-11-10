@@ -28,18 +28,18 @@
 
 ## スキルの場所
 
-| スキル                        | パス                                                                  |
-| ----------------------------- | --------------------------------------------------------------------- |
-| `ms-learn`                    | `claude-plugins/my-tools/skills/ms-learn/SKILL.md`                    |
-| `ms-digest`                   | `claude-plugins/my-tools/skills/ms-digest/SKILL.md`                   |
-| `aws-docs`                    | `claude-plugins/my-tools/skills/aws-docs/SKILL.md`                    |
-| `gdev-docs`                   | `claude-plugins/my-tools/skills/gdev-docs/SKILL.md`                   |
-| `use-context`                 | `claude-plugins/my-tools/skills/use-context/SKILL.md`                 |
-| `inspecting-python-libraries` | `claude-plugins/my-tools/skills/inspecting-python-libraries/SKILL.md` |
-| `tav-cli`                     | `claude-plugins/my-tools/skills/tav-cli/SKILL.md`                     |
-| `tav-lit`                     | `claude-plugins/my-tools/skills/tav-lit/SKILL.md`                     |
-| `tav-digest`                  | `claude-plugins/my-tools/skills/tav-digest/SKILL.md`                  |
-| `aim-cli`                     | `claude-plugins/my-tools/skills/aim-cli/SKILL.md`                     |
+| スキル                        | パス                                                                 |
+| ----------------------------- | -------------------------------------------------------------------- |
+| `ms-learn`                    | `tools/_plugin/my-tools/skills/ms-learn/SKILL.md`                    |
+| `ms-digest`                   | `tools/_plugin/my-tools/skills/ms-digest/SKILL.md`                   |
+| `aws-docs`                    | `tools/_plugin/my-tools/skills/aws-docs/SKILL.md`                    |
+| `gdev-docs`                   | `tools/_plugin/my-tools/skills/gdev-docs/SKILL.md`                   |
+| `use-context`                 | `tools/_plugin/my-tools/skills/use-context/SKILL.md`                 |
+| `inspecting-python-libraries` | `tools/_plugin/my-tools/skills/inspecting-python-libraries/SKILL.md` |
+| `tav-cli`                     | `tools/_plugin/my-tools/skills/tav-cli/SKILL.md`                     |
+| `tav-lit`                     | `claude-plugins/my-tools-no-install/skills/tav-lit/SKILL.md`         |
+| `tav-digest`                  | `tools/_plugin/my-tools/skills/tav-digest/SKILL.md`                  |
+| `aim-cli`                     | `tools/_plugin/my-tools/skills/aim-cli/SKILL.md`                     |
 
 ## この流れで足りないとき
 

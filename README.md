@@ -18,6 +18,7 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 - **Claude Code**
   - [.claude/](.claude/) — このリポジトリ自体を Claude Code で開発するための設定（rules, workflows 等。hooks/ は skill-tools による自己インストール先）
   - [claude-plugins/](claude-plugins/) — Claude Code 用プラグイン本体
+  - [tools/_plugin/](tools/_plugin/) — tools/ の CLI に付属する Claude Code プラグイン（`my-tools`。CLI 前提の使い方スキル）
   - [.claude-plugin/](.claude-plugin/) — 上記プラグイン群をまとめるマーケットプレイス定義（`marketplace.json`）と skill カタログ（`skill-catalog.json`）
 
 - **Cline**
