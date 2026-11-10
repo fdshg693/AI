@@ -4,7 +4,7 @@
 ---
 name: codex-cli-docs
 description: Use when answering questions about the OpenAI Codex CLI (`codex` command) — options, subcommands, sandbox/approval policies, MCP config, etc. Grounds answers in the CLI's own `--help` output instead of training-data memory, which may be stale.
-allowed-tools: Bash(python claude-plugins/other-clis/skills/codex-cli-docs/*.py *)
+allowed-tools: Bash(python codex-plugins/meta/skills/codex-cli-docs/*.py *)
 # !`<command>`を使ってスクリプトを実行することで、確実にコマンドを実行できるようにする。
 meta:
   tag: []
@@ -16,7 +16,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.3
+  version: 1.0.4
 ---
 
 - codex-cli-use

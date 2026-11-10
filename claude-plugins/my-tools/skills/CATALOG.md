@@ -408,7 +408,7 @@ meta:
   requires_skills: tav-cli
   status: stable
   description: no description
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 - textgraph

@@ -31,7 +31,7 @@ meta:
   requires_skills: none
   status: stable
   description: no description
-  version: 1.0.3
+  version: 1.0.4
 ---
 
 - github-copilot-observability-docs
@@ -82,7 +82,7 @@ meta:
   requires_skills: vscode-docs,github-copilot-docs,aim-cli
   status: stable
   description: no description
-  version: 1.0.3
+  version: 1.0.4
 ---
 
 - writing-copilot-instructions

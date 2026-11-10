@@ -350,11 +350,10 @@ description: Use when creating or editing a skill that needs web content — eit
 
 # 依存関係:
 #   - writing-skillスキルへの依存: 必須の前提。name/description/本文構造などの一般原則はそちらに従う
-#   - tav-cli・tav-litスキル(claude-plugins/web/skills配下)への依存: 動的検索/取得が必要な場合はまずこれらを使う想定。クライアントを重複実装しない
+#   - tav-cli・tav-litスキル(claude-plugins/my-tools/skills配下)への依存: 動的検索/取得が必要な場合はまずこれらを使う想定。クライアントを重複実装しない
 #   - 実運用例(出自メモ。スキル作成に必要なテンプレートはすべてscripts/配下に同梱済みで、
 #     スキル外のフォルダを読みに行く必要はない):
-#     claude-plugins/ai-code-tool/skills/vscode-docs, github-copilot-docs, vscode-copilot-docs,
-#     claude-plugins/ai-code-tool/scripts/llms_txt_downloader.py,
+#     claude-plugins/others/skills/vscode-docs, copilot-plugins/meta/{github-copilot-docs,vscode-copilot-docs},
 #     claude-plugins/topics/skills/codegraph-docs, claude-plugins/cicd/skills/pr-agent-docs(GitHub取得の実例)
 #
 # 由来・scripts/のコピー前提テンプレートという性質・命名変更の経緯は同階層のREADME.md参照（人間のメンテナ向け）
@@ -368,7 +367,7 @@ meta:
   requires_skills: writing-skill, tav-cli, tav-lit, aim-cli
   status: stable
   description: no description
-  version: 1.2.0
+  version: 1.2.1
 ---
 
 - writing-subagents
