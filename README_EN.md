@@ -37,7 +37,6 @@ For the same tool, the "config the tool reads" (starts with `.`) and the "actual
   - [cursor-plugins/](cursor-plugins/) — Cursor plugins (`.cursor-plugin`, docs, skills under `meta/`)
 
 - **Antigravity**
-  - [antigravity-plugins/](antigravity-plugins/) — Root for Antigravity plugins (actual files under `_agents/plugins/`)
   - [_agents/](_agents/) — Storage location for Antigravity plugins (`_agents/plugins/`). Distinguished from `.agents/` (see `_agents/README.md`)
 
 <!-- END: ai-tools-section -->

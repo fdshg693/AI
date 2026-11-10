@@ -173,8 +173,6 @@ tools:
   antigravity:
     readme:
       plugin_roots:
-        - path: antigravity-plugins
-          description: "Antigravity 用プラグインのルート（実体は `_agents/plugins/` 配下に配置）"
         - path: _agents
           description: "Antigravity 用プラグイン格納場所（`_agents/plugins/`）。`.agents/` と使い分ける（`_agents/README.md` 参照）"
       config_dirs:
