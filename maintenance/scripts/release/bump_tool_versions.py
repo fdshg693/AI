@@ -32,6 +32,9 @@ from typing import Literal
 
 import yaml
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import repo_git  # noqa: E402
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
 REPO_TOOLS_YAML_PATH = REPO_ROOT / "registry" / "repo-tools.yaml"
 
@@ -142,33 +145,14 @@ def resolve_manifest(tool: RegisteredTool) -> ToolManifest:
 
 
 def staged_files() -> list[str]:
-    result = subprocess.run(
-        ["git", "diff", "--name-only", "--cached", "--diff-filter=ACMR"],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        check=False,
-    )
-    if result.returncode != 0:
+    try:
+        return repo_git.staged_files(REPO_ROOT)
+    except RuntimeError:
         return []
-    return [line for line in result.stdout.splitlines() if line.strip()]
 
 
 def _git_show(rel_posix_path: str) -> str | None:
-    result = subprocess.run(
-        ["git", "show", f"HEAD:{rel_posix_path}"],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        check=False,
-    )
-    if result.returncode != 0:
-        return None
-    return result.stdout
+    return repo_git.show(REPO_ROOT, "HEAD", rel_posix_path)
 
 
 def head_version(manifest: ToolManifest) -> str | None:
@@ -218,15 +202,7 @@ def bump_manifest(manifest: ToolManifest, *, dry_run: bool) -> str:
             f"{result.stderr.strip() or result.stdout.strip()}"
         )
 
-    add_result = subprocess.run(
-        ["git", "add", "--", manifest.manifest_rel_posix],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        check=False,
-    )
+    add_result = repo_git.add(REPO_ROOT, manifest.manifest_rel_posix)
     if add_result.returncode != 0:
         raise ToolVersionError(
             f"failed to stage {manifest.manifest_rel_posix}:\n"

@@ -24,6 +24,10 @@ pre-commit:
               - "repo-workflows.yaml"
               - "repo-hooks.yaml"
               - "tools/**"
+              # submodule pointer updates (gitlinks) refresh the umbrella's aggregate outputs
+              - "skills"
+              - "tools"
+              - "agent-compat"
             run: just --justfile maintenance/scripts/justfile precommit-fix
             stage_fixed: true
           - name: regenerate hook generated files

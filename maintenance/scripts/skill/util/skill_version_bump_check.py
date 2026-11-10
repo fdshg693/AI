@@ -8,9 +8,9 @@ exactly which files need a bump.
 from __future__ import annotations
 
 import re
-import subprocess
 from pathlib import Path
 
+import repo_git
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
@@ -19,28 +19,15 @@ _VERSION_LINE_RE = re.compile(r"^[ \t]*version:\s*.*$")
 
 
 def staged_skill_md_files() -> list[str]:
-    result = subprocess.run(
-        ["git", "diff", "--name-only", "--cached", "--diff-filter=ACMR"],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-    )
-    if result.returncode != 0:
+    try:
+        staged = repo_git.staged_files(REPO_ROOT)
+    except RuntimeError:
         return []
-    return [line for line in result.stdout.splitlines() if line.strip().endswith("SKILL.md")]
+    return [line for line in staged if line.strip().endswith("SKILL.md")]
 
 
 def _git_show(rev: str, rel_posix_path: str) -> str | None:
-    result = subprocess.run(
-        ["git", "show", f"{rev}:{rel_posix_path}"],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        errors="replace",
-    )
-    if result.returncode != 0:
-        return None
-    return result.stdout
+    return repo_git.show(REPO_ROOT, rev, rel_posix_path)
 
 
 def _frontmatter_span(text: str) -> tuple[int, int] | None:

@@ -12,6 +12,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import repo_git
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
 # cmd.exe is ~8191 chars; leave room for ``pnpm exec secretlint ...``.
 _MAX_BATCH_CHARS = 4000
@@ -25,17 +27,11 @@ _SECRETLINT = [
 
 
 def staged_files() -> list[str]:
-    result = subprocess.run(
-        ["git", "diff", "--name-only", "--cached", "--diff-filter=ACMR"],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    if result.returncode != 0:
-        print(result.stderr.strip() or result.stdout.strip(), file=sys.stderr)
-        raise SystemExit(result.returncode)
-    return [Path(line).as_posix() for line in result.stdout.splitlines() if line.strip()]
+    try:
+        return repo_git.staged_files(REPO_ROOT)
+    except RuntimeError as exc:
+        print(exc, file=sys.stderr)
+        raise SystemExit(1) from exc
 
 
 def batched(paths: list[str], *, max_chars: int = _MAX_BATCH_CHARS) -> list[list[str]]:

@@ -19,12 +19,13 @@ from __future__ import annotations
 
 import argparse
 import importlib
-import subprocess
 import sys
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
+
+import repo_git
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -42,6 +43,10 @@ class Task:
 
 
 SKILL_MD = ("**/SKILL.md",)
+# Submodule gitlinks as staged in the umbrella by a pointer update. The files
+# inside were already handled by the submodule's own pre-commit; the umbrella
+# only refreshes the aggregate outputs it owns (marketplaces, skill-catalog.json).
+GITLINKS = ("skills", "tools", "agent-compat")
 
 FIX_TASKS = (
     # SKILL.md meta defaults first: the catalog generators below read the frontmatter.
@@ -51,28 +56,28 @@ FIX_TASKS = (
     Task(
         "marketplace",
         "plugin_meta.generate.generate_marketplace",
-        ("**/.claude-plugin/plugin.json", "registry/ai-tools.yaml"),
+        ("**/.claude-plugin/plugin.json", "registry/ai-tools.yaml", *GITLINKS),
     ),
     Task(
         "codex-marketplace",
         "plugin_meta.generate.generate_codex_marketplace",
-        ("**/.codex-plugin/plugin.json", "registry/ai-tools.yaml"),
+        ("**/.codex-plugin/plugin.json", "registry/ai-tools.yaml", *GITLINKS),
     ),
     Task(
         "copilot-marketplace",
         "plugin_meta.generate.generate_copilot_marketplace",
-        ("**/plugin.json", "registry/ai-tools.yaml"),
+        ("**/plugin.json", "registry/ai-tools.yaml", *GITLINKS),
     ),
     Task(
         # Gitignored output: refreshing it never adds files to the commit.
         "workspace-copies",
         "plugin_meta.generate.generate_workspace_copies",
-        ("skills/plugins/ai-tools-knowledge/**", "registry/ai-tools.yaml"),
+        ("skills/plugins/ai-tools-knowledge/**", "registry/ai-tools.yaml", *GITLINKS),
     ),
     Task(
         "skill-catalog",
         "plugin_meta.generate.generate_skill_catalog",
-        ("**/skills/**", ".claude-plugin/marketplace.json", "registry/ai-tools.yaml"),
+        ("**/skills/**", ".claude-plugin/marketplace.json", "registry/ai-tools.yaml", *GITLINKS),
         after=("marketplace",),
     ),
     Task(
@@ -135,17 +140,12 @@ PHASES = {"fix": FIX_TASKS, "check": CHECK_TASKS}
 
 
 def staged_files() -> list[PurePosixPath]:
-    result = subprocess.run(
-        ["git", "diff", "--name-only", "--cached", "--diff-filter=ACMR"],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    if result.returncode != 0:
-        print(result.stderr.strip() or result.stdout.strip(), file=sys.stderr)
-        raise SystemExit(result.returncode)
-    return [PurePosixPath(line) for line in result.stdout.splitlines() if line.strip()]
+    try:
+        staged = repo_git.staged_files(REPO_ROOT)
+    except RuntimeError as exc:
+        print(exc, file=sys.stderr)
+        raise SystemExit(1) from exc
+    return [PurePosixPath(line) for line in staged]
 
 
 def matches(task: Task, paths: list[PurePosixPath]) -> bool:
