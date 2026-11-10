@@ -1,1 +1,0 @@
-"""Tool-independent hook scenarios."""

@@ -1,1 +1,0 @@
-"""Agent session registry scenario."""

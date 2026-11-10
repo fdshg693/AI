@@ -1,3 +1,0 @@
-Marker: everything under agent-compat/formats/ is a format sample for another AI tool.
-maintenance/scripts/skill/util/skill_frontmatter.py skips this tree, so sample SKILL.md
-files are never counted, backfilled or version-checked as skills.

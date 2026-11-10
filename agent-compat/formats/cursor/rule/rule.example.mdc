@@ -1,8 +1,0 @@
----
-globs: "src/**"
-alwaysApply: false
----
-
-# src/ rules
-
-- Prefer `unknown` over `any` at API boundaries.
