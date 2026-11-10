@@ -1,6 +1,6 @@
 ---
 type: Plan Step
-status: planning-breakdown
+status: implementing-done
 ---
 
 # Step 4: Junction マニフェスト仕様と links ツール、スキャナの Junction 除外
@@ -70,3 +70,4 @@ status: planning-breakdown
 ## 実行中に判明した変更
 
 - 2026-11-10（01 完了時）: 01-A・C の結果から、exclude 登録の必須化、checkout／switch 時の参照先破損への対策、Python の Junction 判定（`is_junction()`）、走査箇所の具体化と優先度を「決定事項」「読むべきファイル」に反映した。status を `planning-breakdown` に進めた。
+- 2026-11-10（04 完了時）: 実装した。詳細は [progress/04-links-results.md](progress/04-links-results.md)。links ツールと repo-layout は移動前の場所（`tools/internal/links/`、`docs/repo-wide/repo-layout.md`）に置いた。checkout 対策は手順＋lefthook `post-checkout` の事後警告。`is_link_like` は配布単位ごとに同じ実装を持つ（1 か所の util にはしない）。pytest はルート `conftest.py`。06 の生成コピーは Junction 判定では除外できないので 06 へ申し送った。

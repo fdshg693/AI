@@ -88,3 +88,4 @@ status: planning-research
 ## 実行中に判明した変更
 
 - 2026-11-10（02 完了時）: 02 の対応表（ユーザー確認済み）を反映した。変えたのは、バッチ 1〜4 の移動先、skill-tools の SSOT ファイル名固定への移行措置、名前空間の変更、追跡外ファイルとリポジトリ外参照の具体名、書き換えスクリプトの方針。
+- 2026-11-10（04 完了時）: 04 の成果物も移動対象に入る。`tools/internal/links/` → `maintenance/scripts/links/`（`skill/util/skill_frontmatter.py` と生成器 3 本が `from links.fs import ...` するので、tools/internal と一緒に動かせば import はそのまま）、`docs/repo-wide/repo-layout.md` → `maintenance/docs/repo-layout.md`。ルート `justfile` の `links-*`・`lefthook.yml` の `post-checkout` ジョブ・ルート `AGENTS.md`・`conftest.py` の docstring にあるパスを追従させる。実ディレクトリだったパスを Junction にするバッチでは、`links-check` が「過去に追跡されていたパス」を警告する（想定どおり）。

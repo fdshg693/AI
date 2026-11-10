@@ -8,7 +8,7 @@ status: implementing-in-progress
 - [x] [01-research-platform-constraints.md](01-research-platform-constraints.md) — Junction・サブモジュール・各ツールの挙動の事前調査
 - [x] [02-research-inventory.md](02-research-inventory.md) — 全スキル・ツール・docs の分類表とパス参照の棚卸し
 - [x] [03-fix-existing-inconsistencies.md](03-fix-existing-inconsistencies.md) — 移動前に既存の不整合を直す
-- [ ] [04-links-tooling.md](04-links-tooling.md) — Junction マニフェスト仕様と作成・検証ツール、スキャナの Junction 除外
+- [x] [04-links-tooling.md](04-links-tooling.md) — Junction マニフェスト仕様と作成・検証ツール、スキャナの Junction 除外
 - [ ] [05-semantic-reorg.md](05-semantic-reorg.md) — 単一リポジトリのまま意味的再編（git mv）
 - [ ] [06-agent-compat.md](06-agent-compat.md) — マルチ AI 対応の分離、ツール別書式サンプルと相違点ドキュメント
 - [ ] [07-submodule-split.md](07-submodule-split.md) — 履歴付きでサブモジュールへ切り出す

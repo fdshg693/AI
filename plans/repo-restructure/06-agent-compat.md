@@ -74,3 +74,4 @@ status: planning-research
 
 - 2026-11-10（01 完了時）: ワークスペース直下の他ツール用フォルダはコピー生成に決定し、マニフェスト同居の条件（Copilot の `plugin.json` はスキルを `skills/` 配下へ揃える）を「決定事項」に加えた。
 - 2026-11-10（02 完了時）: 「触るファイル」に、02 の対応表の具体的な移動と改名を追加した。追加したのは、agent-tooling の深さ +1 で直す箇所、`cline-plugins/personal-info` の行き先、`openai.yaml` の扱い、REFERENCES.md などの参照元。
+- 2026-11-10（04 完了時）: 04 のスキャナ除外は Junction（と symlink）の判定であり、`.cline/skills` などの**生成コピー**（実ディレクトリ）は除外できない。06 でコピー生成を入れるときは、`tools/internal/skill/util/skill_frontmatter.py` の走査（`EXCLUDED_DIRECTORY_NAMES` は名前だけ）にパスでの除外を足すなど、生成先を走査から外す仕組みを別に作る。skill-tools は git 一覧に従うので、生成先を ignore するかどうかで扱いが決まる。
