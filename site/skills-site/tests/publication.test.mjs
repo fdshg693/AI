@@ -379,5 +379,5 @@ test("zipFileName escapes a leading dot so the file isn't dropped by Azure SWA's
   const name = zipFileName(".claude/skills/foo/SKILL.md");
   assert.ok(!name.startsWith("."));
   assert.match(name, /^dot-claude--skills--foo--SKILL\.md--[0-9a-f]{12}\.zip$/);
-  assert.equal(zipFileName("claude-plugins/meta/skills/foo/SKILL.md").startsWith("."), false);
+  assert.equal(zipFileName("skills/plugins/cc-knowledge/skills/foo/SKILL.md").startsWith("."), false);
 });

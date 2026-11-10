@@ -37,7 +37,7 @@
 | --------------------------- | ------------------------------------------------------------------ |
 | `meta`                      | `maintenance/plugin/skills/meta/SKILL.md`                          |
 | `changing-skills-and-tools` | `maintenance/plugin/skills/changing-skills-and-tools/SKILL.md`     |
-| `test-driven-development`   | `claude-plugins/subagents/skills/test-driven-development/SKILL.md` |
+| `test-driven-development`   | `skills/plugins/subagents/skills/test-driven-development/SKILL.md` |
 
 ## この流れで足りないとき
 

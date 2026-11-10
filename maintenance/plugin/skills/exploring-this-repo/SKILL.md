@@ -15,7 +15,7 @@ meta:
   requires_skills: codegraph-docs, discovering-skills, meta
   status: experimental
   description: このリポジトリの地図（索引に載るコード vs 載らない docs/スキル/SSOT）と次の参照先
-  version: 1.0.3
+  version: 1.0.4
 ---
 
 !`python ${CLAUDE_SKILL_DIR}/scripts/snapshot_indexed_layout.py`
@@ -28,7 +28,7 @@ meta:
 
 ## 次にどれを見るか
 
-1. **索引に載っているディレクトリ**（`tools/`、各 `*-plugins/` のスクリプト、`agent-tooling/` のフック実装など）— パスを特定してから [codegraph-docs](../../../../claude-plugins/topics/skills/codegraph-docs/SKILL.md)。広い explore（「このリポジトリはどう動く」）はしない。コードの流れ・定義・呼び出し関係はこちら。
+1. **索引に載っているディレクトリ**（`tools/`、各 `*-plugins/` のスクリプト、`agent-tooling/` のフック実装など）— パスを特定してから [codegraph-docs](../../../../skills/plugins/topics/skills/codegraph-docs/SKILL.md)。広い explore（「このリポジトリはどう動く」）はしない。コードの流れ・定義・呼び出し関係はこちら。
 2. **テキストのローカル参照**（Markdown / SKILL.md / `.txt` のファイルリンク、リンク切れ、あるテキストを直したときの inbound）— [textgraph](../../../../tools/_plugin/my-tools/skills/textgraph/SKILL.md)。広い grep の前に `textgraph impact`。
 3. **索引に無いトップレベル** — 中身の種類で振り分ける。
    - `SKILL.md` を探す / どのスキルを読むか → [discovering-skills](../discovering-skills/SKILL.md)

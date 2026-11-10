@@ -1,0 +1,10 @@
+{
+  "moves": [
+    ["claude-plugins/my-tools-no-install/skills/doc-transcription", "skills/plugins/doc-tools/skills/doc-transcription"],
+    ["claude-plugins/my-tools-no-install", "skills/plugins/web-lookup"],
+    ["claude-plugins/meta", "skills/plugins/cc-knowledge"],
+    ["claude-plugins", "skills/plugins"]
+  ],
+  "exclude": ["plans/repo-restructure/", "maintenance/scripts/reorg/", "docs/log.md",
+              "ai-tools.yaml", "repo-tools.yaml", "repo-workflows.yaml", "repo-hooks.yaml"]
+}

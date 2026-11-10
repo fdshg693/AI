@@ -2897,7 +2897,7 @@ wheels = [
 [[package]]
 name = "writing-skill-web-templates"
 version = "0.1.0"
-source = { editable = "claude-plugins/meta/skills/writing-skill-web" }
+source = { editable = "skills/plugins/cc-knowledge/skills/writing-skill-web" }
 dependencies = [
     { name = "requests" },
     { name = "typer" },

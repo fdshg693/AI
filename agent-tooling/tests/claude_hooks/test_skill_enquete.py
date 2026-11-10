@@ -206,9 +206,9 @@ def _write_roots_config(hook_, roots):
 
 def test_e2e_skill_tool_invocation_resolves_name_and_records(install_hook):
     hook_ = install_hook("skill_usage_tracker")
-    skill_dir = hook_.project / "claude-plugins" / "meta" / "skills" / "on-disk-name"
+    skill_dir = hook_.project / "skills/plugins" / "meta" / "skills" / "on-disk-name"
     _write_skill(skill_dir, name="my-skill", auto_enquete=True)
-    _write_roots_config(hook_, ["claude-plugins/meta/skills"])
+    _write_roots_config(hook_, ["skills/plugins/cc-knowledge/skills"])
 
     assert hook_.run(_skill_payload("my-skill", "sess-4")).returncode == 0
     assert "my-skill" in load_state(state_path(hook_.hooks_dir, "sess-4"))["skills"]
@@ -216,9 +216,9 @@ def test_e2e_skill_tool_invocation_resolves_name_and_records(install_hook):
 
 def test_e2e_skill_tool_invocation_with_plugin_prefix(install_hook):
     hook_ = install_hook("skill_usage_tracker")
-    skill_dir = hook_.project / "claude-plugins" / "meta" / "skills" / "prefixed-skill"
+    skill_dir = hook_.project / "skills/plugins" / "meta" / "skills" / "prefixed-skill"
     _write_skill(skill_dir, name="prefixed-skill", auto_enquete=True)
-    _write_roots_config(hook_, ["claude-plugins/meta/skills"])
+    _write_roots_config(hook_, ["skills/plugins/cc-knowledge/skills"])
 
     assert hook_.run(_skill_payload("myplugin:prefixed-skill", "sess-5")).returncode == 0
     assert "prefixed-skill" in load_state(state_path(hook_.hooks_dir, "sess-5"))["skills"]

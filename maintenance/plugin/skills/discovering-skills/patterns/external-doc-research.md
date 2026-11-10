@@ -37,7 +37,7 @@
 | `use-context`                 | `tools/_plugin/my-tools/skills/use-context/SKILL.md`                 |
 | `inspecting-python-libraries` | `tools/_plugin/my-tools/skills/inspecting-python-libraries/SKILL.md` |
 | `tav-cli`                     | `tools/_plugin/my-tools/skills/tav-cli/SKILL.md`                     |
-| `tav-lit`                     | `claude-plugins/my-tools-no-install/skills/tav-lit/SKILL.md`         |
+| `tav-lit`                     | `skills/plugins/web-lookup/skills/tav-lit/SKILL.md`                  |
 | `tav-digest`                  | `tools/_plugin/my-tools/skills/tav-digest/SKILL.md`                  |
 | `aim-cli`                     | `tools/_plugin/my-tools/skills/aim-cli/SKILL.md`                     |
 

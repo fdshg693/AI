@@ -8,7 +8,7 @@ codex-plugins/meta/skills/codex-memory/SKILL.md section 2). Files read or
 edited outside that root->cwd path never get their local AGENTS.md
 pulled in automatically -- unlike Claude Code's CLAUDE.md, which loads a
 subdirectory's CLAUDE.md the moment Claude reads any file under it (see
-claude-plugins/meta/skills/claude-code-memory/memory.md line 31), Codex
+skills/plugins/cc-knowledge/skills/claude-code-memory/memory.md line 31), Codex
 has no dedicated "Read" tool: apply_patch is the only structured
 file-editing tool, and file reads normally go through arbitrary shell
 commands (Bash / exec_command). This hook fires on apply_patch and Bash

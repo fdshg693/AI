@@ -17,7 +17,7 @@ For the same tool, the "config the tool reads" (starts with `.`) and the "actual
 
 - **Claude Code**
   - [.claude/](.claude/) — Settings for developing this repository itself with Claude Code (rules, skills, hooks, scripts, workflows, etc.)
-  - [claude-plugins/](claude-plugins/) — Actual Claude Code plugins
+  - [skills/plugins/](skills/plugins/) — Actual Claude Code plugins
   - [.claude-plugin/](.claude-plugin/) — Marketplace definition (`marketplace.json`) and skill catalog (`skill-catalog.json`) that bundle the plugins above
 
 - **Cline**

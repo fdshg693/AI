@@ -16,7 +16,7 @@
   - 便利なスキル・関連スキルがたくさんこのレポジトリにあります。複雑なタスクには `maintenance\plugin\skills\discovering-skills\SKILL.md` を積極的に参照してください。
 - ツール・スキル変更時は `maintenance\plugin\skills\changing-skills-and-tools\SKILL.md` を参照。
 - このレポジトリ全体に関わるようなタスクには `maintenance\plugin\skills\meta\SKILL.md` を参照。
-- このリポジトリの全体像・「どこに何があるか」は `maintenance/plugin/skills/exploring-this-repo/SKILL.md`。コードの流れ・定義・呼び出し関係・影響範囲は、grep/Read の前に `codegraph_explore`（MCP）または `codegraph explore`（CLI）。地図は `codegraph status` と `codegraph files` が先。索引が無い／古いときは `codegraph init` または `codegraph sync`。`.codegraph/` はローカル索引で git 管理しない。詳細は `claude-plugins/topics/skills/codegraph-docs/SKILL.md`。
+- このリポジトリの全体像・「どこに何があるか」は `maintenance/plugin/skills/exploring-this-repo/SKILL.md`。コードの流れ・定義・呼び出し関係・影響範囲は、grep/Read の前に `codegraph_explore`（MCP）または `codegraph explore`（CLI）。地図は `codegraph status` と `codegraph files` が先。索引が無い／古いときは `codegraph init` または `codegraph sync`。`.codegraph/` はローカル索引で git 管理しない。詳細は `skills/plugins/topics/skills/codegraph-docs/SKILL.md`。
 
 ## AIツール/プラグイン設定のSSOT
 

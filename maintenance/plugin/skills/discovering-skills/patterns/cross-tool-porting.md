@@ -13,7 +13,7 @@
 
 | 対象ツール     | 執筆規約スキル                                     | 配置先                             |
 | -------------- | -------------------------------------------------- | ---------------------------------- |
-| Claude Code    | `writing-skill`（複雑なら`writing-skill-complex`） | `claude-plugins/*/skills/`         |
+| Claude Code    | `writing-skill`（複雑なら`writing-skill-complex`） | `skills/plugins/*/skills/`         |
 | Cursor         | `cursor-skill-use` / `cursor-plugin-use`           | `cursor-plugins/*/skills/`         |
 | Codex          | `codex-skill-authoring`                            | `codex-plugins/*/skills/`          |
 | GitHub Copilot | `writing-skills`（`copilot-plugins/meta/`配下）    | `copilot-plugins/*/`               |
@@ -24,8 +24,8 @@
 
 | スキル                      | パス                                                                  |
 | --------------------------- | --------------------------------------------------------------------- |
-| `writing-skill`             | `claude-plugins/meta/skills/writing-skill/SKILL.md`                   |
-| `writing-skill-complex`     | `claude-plugins/meta/skills/writing-skill-complex/SKILL.md`           |
+| `writing-skill`             | `skills/plugins/cc-knowledge/skills/writing-skill/SKILL.md`           |
+| `writing-skill-complex`     | `skills/plugins/cc-knowledge/skills/writing-skill-complex/SKILL.md`   |
 | `cursor-skill-use`          | `cursor-plugins/meta/skills/cursor-skill-use/SKILL.md`                |
 | `cursor-plugin-use`         | `cursor-plugins/meta/skills/cursor-plugin-use/SKILL.md`               |
 | `codex-skill-authoring`     | `codex-plugins/meta/skills/codex-skill-authoring/SKILL.md`            |

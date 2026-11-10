@@ -5,7 +5,7 @@ is only an index of page URLs with short descriptions. Full page content must
 be fetched per-URL (docs.github.com/api/article/body?pathname=...) or WebFetch.
 
 Standalone copy of the writing-skill-web template
-(claude-plugins/meta/skills/writing-skill-web/scripts/download_web_reference.py):
+(skills/plugins/cc-knowledge/skills/writing-skill-web/scripts/download_web_reference.py):
 writes a YAML frontmatter block (source + fetched_at) on top of the raw body
 and skips re-fetching while the cached file is fresh unless --force is given.
 Uses only the standard library so it runs with a plain `python`.

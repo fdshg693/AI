@@ -33,6 +33,8 @@ skill-tools はディレクトリを総なめして `SKILL.md` を拾うので�
 
 ## 入力契約（リポジトリ側が守るもの）
 
+**canonical ID の変更（2026-11 の再編）**: canonical ID はリポジトリ相対パスなので、`claude-plugins/` → `skills/plugins/`・`tools/_plugin/` の移動で全スキルの ID が変わった。他プロジェクトの `.skill-tools/manifest.json` は旧 ID を記録しているため、`update-skills` は「カタログから消えたスキル」として警告し、配置を残したまま更新しない。移行は `remove-skills <旧 ID>` のあと新 ID で `install-skills` し直す。`skill-tools --fb` の保存先はスキル名単位なので、名前を変えたスキル（`copilot-writing-plugins`・`copilot-writing-skills`）以外は影響しない。
+
 SSOT yaml は `registry/` に置く。skill-tools は `registry/<name>` を先に探し、無ければ source ルートの `<name>` を読む（`skill_tools/registry.py`）。yaml 内のパスはどちらに置いてもリポジトリルート相対。`registry/` を知らない旧版 skill-tools のために、`ai-tools.yaml`・`repo-tools.yaml`・`repo-workflows.yaml`・`repo-hooks.yaml` はルートにも生成コピーを置く（`maintenance/scripts/plugin_meta/generate/generate_registry_compat.py`。pre-commit が再生成する）。旧版の利用者がいなくなったら生成器ごと消す。
 
 ### 1. `ai-tools.yaml` — スキルの探索ルート
@@ -42,7 +44,7 @@ SSOT yaml は `registry/` に置く。skill-tools は `registry/<name>` を先�
 - `path` はリポジトリ相対の安全なパス。
 - `skills_layout` は必須で、`subdir`（`<path>/skills/*/SKILL.md`）か `direct`（`<path>/*/SKILL.md`）。
 - 同じルートを複数エントリで登録するとエラー。1つの `SKILL.md` が複数ルートに属してもエラー。
-- ルート配下の `SKILL.md` がすべてカタログに入る。canonical ID はリポジトリ相対の `SKILL.md` パス（例: `claude-plugins/coding/skills/testing/SKILL.md`）。
+- ルート配下の `SKILL.md` がすべてカタログに入る。canonical ID はリポジトリ相対の `SKILL.md` パス（例: `skills/plugins/coding/skills/testing/SKILL.md`）。
 
 新しいプラグインやスキルルートを足すときは、[ai-tools-config](./ai-tools-config.md) の手順どおり先に `ai-tools.yaml` を更新すれば skill-tools にも自動で載る。
 
@@ -54,7 +56,7 @@ SSOT yaml は `registry/` に置く。skill-tools は `registry/<name>` を先�
 - `name`・`description` が空でない文字列であること
 - `meta` があるなら mapping であること（`meta.status` は表示・検索結果の `status` に使う）
 
-検索用インデックスの埋め込み入力は `name` と `description` だけで、本文はローカルのlexical検索（BM25）にのみ使う。つまり **`description` の書き方がそのまま意味検索の当たりやすさになる**。書き方は `claude-plugins/meta/skills/writing-skill/bestpractices.md`、`meta:` フィールドは [skill-meta-fields](./skill-meta-fields.md) に従う。
+検索用インデックスの埋め込み入力は `name` と `description` だけで、本文はローカルのlexical検索（BM25）にのみ使う。つまり **`description` の書き方がそのまま意味検索の当たりやすさになる**。書き方は `skills/plugins/cc-knowledge/skills/writing-skill/bestpractices.md`、`meta:` フィールドは [skill-meta-fields](./skill-meta-fields.md) に従う。
 
 ### 3. `site/skills-site/site-overrides.yaml` — 公開除外
 

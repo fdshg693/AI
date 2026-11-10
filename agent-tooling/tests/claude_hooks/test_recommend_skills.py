@@ -97,10 +97,10 @@ def test_collect_skills_respects_max_skills_cap(tmp_path):
 
 
 def test_collect_skills_recurses_nested_plugin_layout(tmp_path):
-    root = tmp_path / "claude-plugins"
+    root = tmp_path / "skills/plugins"
     _write_skill(root / "pluginA" / "skills" / "foo", name="foo", description="foo desc")
     _write_skill(root / "pluginB" / "skills" / "bar", name="bar", description="bar desc")
-    skills = hook.collect_skills(tmp_path, ["claude-plugins"], max_skills=100, warnings=[])
+    skills = hook.collect_skills(tmp_path, ["skills/plugins"], max_skills=100, warnings=[])
     assert {s["name"] for s in skills} == {"foo", "bar"}
 
 

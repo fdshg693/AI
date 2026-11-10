@@ -23,9 +23,9 @@
 
 | スキル                  | パス                                                                                                |
 | ----------------------- | --------------------------------------------------------------------------------------------------- |
-| `writing-skill`         | `claude-plugins/meta/skills/writing-skill/SKILL.md`                                                 |
-| `writing-skill-complex` | `claude-plugins/meta/skills/writing-skill-complex/SKILL.md`                                         |
-| `writing-skill-web`     | `claude-plugins/meta/skills/writing-skill-web/SKILL.md`                                             |
+| `writing-skill`         | `skills/plugins/cc-knowledge/skills/writing-skill/SKILL.md`                                         |
+| `writing-skill-complex` | `skills/plugins/cc-knowledge/skills/writing-skill-complex/SKILL.md`                                 |
+| `writing-skill-web`     | `skills/plugins/cc-knowledge/skills/writing-skill-web/SKILL.md`                                     |
 | `audit-skills`          | `.claude/workflows/audit-skills.js`（ワークフロー。Skillツール経由で`/audit-skills`としても呼べる） |
 
 ## この流れで足りないとき

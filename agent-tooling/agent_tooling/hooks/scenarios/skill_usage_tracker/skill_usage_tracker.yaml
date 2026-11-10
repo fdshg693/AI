@@ -13,4 +13,4 @@
 # Read ツールで SKILL.md を直接読んだ場合はこの roots を使わない（読まれた
 # ファイルのパスから直接 frontmatter を読むため、名前解決が不要）。
 roots:
-  - claude-plugins
+  - skills/plugins

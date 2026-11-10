@@ -1,6 +1,6 @@
 # vscode-copilot-docs メンテナンス手順
 
-`output/copilot-excerpt.md` は、抽出元 llms.txt（VS Code 公式ドキュメントの索引、[vscode-docs](../../../claude-plugins/others/skills/vscode-docs/SKILL.md) スキルが24時間おきに再取得する）から GitHub Copilot 関連エントリを人手で抜粋した固定ファイルです。抽出元の実際のパスはこのディレクトリの直下にある **[config.yml](config.yml)** の `source` キーで定義されており、コード内にハードコードされていません（過去にリポジトリ再編でこのパスが追従できず参照が壊れた経緯があるため、ディレクトリを見ただけで抽出元が分かるようにしてある）。現在の `output/copilot-excerpt.md` は、この抜粋作業（LLM下書き→人手レビュー）が何らかの形で既に行われている前提のファイルです。ゼロから作り直したい場合（大幅な再編があり既存のキュレーションがほぼ使えなくなった場合など）は、下記の `generate_copilot_excerpt.py` で下書きを自動生成できます。
+`output/copilot-excerpt.md` は、抽出元 llms.txt（VS Code 公式ドキュメントの索引、[vscode-docs](../../../skills/plugins/others/skills/vscode-docs/SKILL.md) スキルが24時間おきに再取得する）から GitHub Copilot 関連エントリを人手で抜粋した固定ファイルです。抽出元の実際のパスはこのディレクトリの直下にある **[config.yml](config.yml)** の `source` キーで定義されており、コード内にハードコードされていません（過去にリポジトリ再編でこのパスが追従できず参照が壊れた経緯があるため、ディレクトリを見ただけで抽出元が分かるようにしてある）。現在の `output/copilot-excerpt.md` は、この抜粋作業（LLM下書き→人手レビュー）が何らかの形で既に行われている前提のファイルです。ゼロから作り直したい場合（大幅な再編があり既存のキュレーションがほぼ使えなくなった場合など）は、下記の `generate_copilot_excerpt.py` で下書きを自動生成できます。
 
 `check_copilot_excerpt.py` は SKILL.md からは呼び出されません。Claude がドキュメント質問に答えるたびに実行されるものではなく、**ユーザーが定期的に（例: 月1回、または vscode-docs 側の llms.txt を明示的に更新した後に）手動で実行して**、`copilot-excerpt.md` のタイトル・URL が抽出元とずれていないかを確認するためのスクリプトです。
 
@@ -15,7 +15,7 @@
 
 1. **抽出元を最新化する**（推奨）
 
-   [vscode-docs](../../../claude-plugins/others/skills/vscode-docs/SKILL.md) スキルの取得スクリプトを実行する（24時間以内に取得済みならスキップされる）。抽出元の正確なパスは [config.yml](config.yml) を参照。
+   [vscode-docs](../../../skills/plugins/others/skills/vscode-docs/SKILL.md) スキルの取得スクリプトを実行する（24時間以内に取得済みならスキップされる）。抽出元の正確なパスは [config.yml](config.yml) を参照。
 
 2. **検証スクリプトを実行する**
 

@@ -21,6 +21,6 @@ exclude:
 
   # Hide a single skill by its repository-relative SKILL.md path, e.g.:
   # skills:
-  #   - claude-plugins/others/skills/example-skill/SKILL.md
+  #   - skills/plugins/others/skills/example-skill/SKILL.md
   sources: []
   skills: []

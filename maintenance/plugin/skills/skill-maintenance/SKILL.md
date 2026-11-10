@@ -2,7 +2,7 @@
 # Claude CLI と Claude Code の取得スクリプト、および同ディレクトリ配下の他スキルに依存する。
 # 取得とファイル変更を伴うため、ユーザーが明示的に呼び出した場合だけ使う。
 name: skill-maintenance
-description: Maintains the Claude-related skills under `claude-plugins/meta/skills` by refreshing the Claude CLI help snapshot and Claude Code documentation snapshot, inspecting semantic changes, and updating affected skills. Use when explicitly checking whether those skills are stale after a Claude CLI or Claude Code documentation update.
+description: Maintains the Claude-related skills under `skills/plugins/cc-knowledge/skills` by refreshing the Claude CLI help snapshot and Claude Code documentation snapshot, inspecting semantic changes, and updating affected skills. Use when explicitly checking whether those skills are stale after a Claude CLI or Claude Code documentation update.
 disable-model-invocation: true
 allowed-tools: Bash(python ${CLAUDE_SKILL_DIR}/scripts/*.py *)
 meta:
@@ -15,14 +15,14 @@ meta:
   requires_skills: claude-cli-docs, claude-code-docs
   status: experimental
   description: no description
-  version: 1.0.5
+  version: 1.0.6
 ---
 
 !`python ${CLAUDE_SKILL_DIR}/scripts/refresh_and_diff.py`
 
 # スキルメンテナンス
 
-`claude-plugins/meta/skills` 配下の Claude 関連スキルを、現在の Claude CLI と Claude Code 公式ドキュメントに追随させる。対象のスナップショットを更新し、意味のある差分に関係するスキルだけを修正する。
+`skills/plugins/cc-knowledge/skills` 配下の Claude 関連スキルを、現在の Claude CLI と Claude Code 公式ドキュメントに追随させる。対象のスナップショットを更新し、意味のある差分に関係するスキルだけを修正する。
 
 ## 手順
 
@@ -62,7 +62,7 @@ meta:
 
    1. **`CATALOG.md` で候補を絞り込む**
 
-      `claude-plugins/meta/skills/CATALOG.md` を読み、要約中のキーワード（フラグ名、サブコマンド名、設定名、機能名、ドキュメント URL/slug）を各スキルエントリの `name`・`description`・コメント行と照合する。一致または関連が疑われるスキルをすべて候補としてリストアップする。判断に迷う場合は候補から外さず含める（この段階では過剰に拾ってよい）。
+      `skills/plugins/cc-knowledge/skills/CATALOG.md` を読み、要約中のキーワード（フラグ名、サブコマンド名、設定名、機能名、ドキュメント URL/slug）を各スキルエントリの `name`・`description`・コメント行と照合する。一致または関連が疑われるスキルをすべて候補としてリストアップする。判断に迷う場合は候補から外さず含める（この段階では過剰に拾ってよい）。
 
       - CLI 由来の差分は `claude-cli-docs` と `claude-cli-use`、および `claude` コマンドの仕様に言及するスキルを優先的に候補に入れる。
       - Claude Code ドキュメント由来の差分は、該当 URL/slug や機能名に言及するスキルを優先的に候補に入れる。
@@ -70,7 +70,7 @@ meta:
 
    2. **候補スキルの `SKILL.md` と `README.md` を読んで確定する**
 
-      1で挙げた候補それぞれについて、`claude-plugins/meta/skills/<候補名>/SKILL.md`（存在すれば同ディレクトリの `README.md` も）を実際に読み、差分の内容が本文中の説明・手順・コマンド例・参照先と矛盾するか、古くなっているかを個別に確認する。
+      1で挙げた候補それぞれについて、`skills/plugins/cc-knowledge/skills/<候補名>/SKILL.md`（存在すれば同ディレクトリの `README.md` も）を実際に読み、差分の内容が本文中の説明・手順・コマンド例・参照先と矛盾するか、古くなっているかを個別に確認する。
 
       - 実際に影響がある（記述が古い・矛盾する）と確認できたスキルだけを更新対象として確定する。
       - 候補ではあったが読んだ結果影響がないと判断したスキルは、その理由を挙げる。

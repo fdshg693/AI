@@ -7,4 +7,4 @@
 # 実体は vscode-docs スキルが取得・保持しているファイル。vscode-docs 自体が
 # 再取得すればこのパスの中身は更新されるが、パス自体（どのスキルの output/llms.txt を
 # 見るか）が変わった場合はここを直す。
-source: claude-plugins/others/skills/vscode-docs/output/llms.txt
+source: skills/plugins/others/skills/vscode-docs/output/llms.txt

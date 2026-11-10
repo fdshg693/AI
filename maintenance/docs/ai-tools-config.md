@@ -11,7 +11,7 @@ status: stable
 
 このリポジトリ自身（AIコーディングツールの設定・プラグイン群）をメンテナンスするための規約。**ユーザーのプロジェクトではなく、このリポジトリ自体の構造**を対象とする。
 
-> **このドキュメントの位置づけ**: `maintenance/plugin/` はリポジトリ直下に置かれ、`claude-plugins/` 配下のプラグイン群とは異なり**意図的に`ai-tools.yaml`へ登録しない**。`ai-tools.yaml`に登録されたプラグインは`.claude-plugin/marketplace.json`（他人がこのリポジトリをmarketplaceとして追加すればインストール可能）とskills-siteの公開カタログの両方に載る。skills-siteは`ai-tools.yaml`登録ルート配下しかスキャンしないため、`ai-tools.yaml`へ登録しない限りエラーにも公開対象にもならない。`maintenance/plugin`はこのリポジトリ以外では意味を持たない内容（`maintenance/scripts/`のパス等が前提）のため、どちらにも載せない。新しいドキュメントをこの下に追加する場合も、`ai-tools.yaml`へは登録しないこと。逆に、`ai-tools.yaml`には登録しつつskills-siteだけから外したい場合は`site/skills-site/site-overrides.yaml`を使う（`.claude/rules/skill-publication.md`参照）。
+> **このドキュメントの位置づけ**: `maintenance/plugin/` はリポジトリ直下に置かれ、`skills/plugins/` 配下のプラグイン群とは異なり**意図的に`ai-tools.yaml`へ登録しない**。`ai-tools.yaml`に登録されたプラグインは`.claude-plugin/marketplace.json`（他人がこのリポジトリをmarketplaceとして追加すればインストール可能）とskills-siteの公開カタログの両方に載る。skills-siteは`ai-tools.yaml`登録ルート配下しかスキャンしないため、`ai-tools.yaml`へ登録しない限りエラーにも公開対象にもならない。`maintenance/plugin`はこのリポジトリ以外では意味を持たない内容（`maintenance/scripts/`のパス等が前提）のため、どちらにも載せない。新しいドキュメントをこの下に追加する場合も、`ai-tools.yaml`へは登録しないこと。逆に、`ai-tools.yaml`には登録しつつskills-siteだけから外したい場合は`site/skills-site/site-overrides.yaml`を使う（`.claude/rules/skill-publication.md`参照）。
 
 ## SSOT: `ai-tools.yaml`
 
@@ -59,8 +59,8 @@ just --justfile maintenance/scripts/justfile skill-versions            # meta.ve
 
 ## 新しいClaude Codeプラグインを追加する手順
 
-1. `claude-plugins/<name>/.claude-plugin/plugin.json`（`name`/`version`/`description`）と、必要なら `claude-plugins/<name>/skills/<skill>/SKILL.md` を作成
-2. `ai-tools.yaml` の `tools.claude-code.plugins` に `- path: claude-plugins/<name>` / `kind: plugin` / `skills_layout: subdir` を追記（**アルファベット順**を維持）
+1. `skills/plugins/<name>/.claude-plugin/plugin.json`（`name`/`version`/`description`）と、必要なら `skills/plugins/<name>/skills/<skill>/SKILL.md` を作成
+2. `ai-tools.yaml` の `tools.claude-code.plugins` に `- path: skills/plugins/<name>` / `kind: plugin` / `skills_layout: subdir` を追記（**アルファベット順**を維持）
 3. `.claude-plugin/marketplace.json` と `.claude-plugin/skill-catalog.json`、対象プラグインの `skills/CATALOG.md` を再生成（上記コマンド、またはコミット時のlefthookに任せる）
 
 Codex/Copilotプラグインを追加する場合も同様に、まず該当ツールの `plugins`（Copilotは`kind: plugin`エントリが単一である前提、`generate_copilot_marketplace.py`参照）を `ai-tools.yaml` に追記してから再生成する。

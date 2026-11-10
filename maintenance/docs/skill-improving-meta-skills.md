@@ -19,9 +19,9 @@ status: draft
 
 ## Claude Code側のメタスキル
 
-Claude Codeの `claude-plugins/meta/skills/` 配下には、スキルの品質を保つためのメタスキルが別途存在する。これらは `maintenance/docs/` ではなくClaude Codeのスキル機構に依存するため、そちらに残る。
+Claude Codeの `skills/plugins/cc-knowledge/skills/` 配下には、スキルの品質を保つためのメタスキルが別途存在する。これらは `maintenance/docs/` ではなくClaude Codeのスキル機構に依存するため、そちらに残る。
 
-- [claude-plugins/meta/skills/writing-skill](../../claude-plugins/meta/skills/writing-skill/SKILL.md)（+ `writing-skill-complex`） — 新規作成・編集・評価。あらゆる`SKILL.md`が満たすべきチェックリストの一次情報源
+- [skills/plugins/cc-knowledge/skills/writing-skill](../../skills/plugins/cc-knowledge/skills/writing-skill/SKILL.md)（+ `writing-skill-complex`） — 新規作成・編集・評価。あらゆる`SKILL.md`が満たすべきチェックリストの一次情報源
 - [maintenance/plugin/skills/skill-maintenance](../plugin/skills/skill-maintenance/SKILL.md) — Claude CLI/Claude Code公式ドキュメントのスナップショットを更新し、意味のある差分を検出して依存スキルへ伝播させる
 - `audit-skills`（Workflow） — 多数のスキルを一括でベストプラクティス採点する
 
@@ -39,11 +39,11 @@ Cline（`cline-skill-writer`）、Codex（`codex-skill-authoring`）、Copilot�
 
 ## メタ的な知識自体もベストプラクティスに従う
 
-`maintenance/docs/` 配下のドキュメントだからといって特別扱いはしない。内容がSKILL.mdの品質に関わるものであれば[writing-skill](../../claude-plugins/meta/skills/writing-skill/SKILL.md)のチェックリストを、SSOT・生成パターンに関わるものであれば[repo-ssot-pattern](./repo-ssot-pattern.md)の指針を参照する。
+`maintenance/docs/` 配下のドキュメントだからといって特別扱いはしない。内容がSKILL.mdの品質に関わるものであれば[writing-skill](../../skills/plugins/cc-knowledge/skills/writing-skill/SKILL.md)のチェックリストを、SSOT・生成パターンに関わるものであれば[repo-ssot-pattern](./repo-ssot-pattern.md)の指針を参照する。
 
 ## 関連
 
-- [writing-skill](../../claude-plugins/meta/skills/writing-skill/SKILL.md) — 新規作成・編集・評価の共通チェックリスト（SKILL.md向け）
+- [writing-skill](../../skills/plugins/cc-knowledge/skills/writing-skill/SKILL.md) — 新規作成・編集・評価の共通チェックリスト（SKILL.md向け）
 - [skill-meta-fields](./skill-meta-fields.md) / [skill-md-commits](./skill-md-commits.md) — `meta:`ブロックというこのリポジトリ独自の観点に絞った知識（docs化済み）
 - [claude-code-first-skills](./claude-code-first-skills.md) — 他ツールのメタスキルとの棲み分け
 - [repo-ssot-pattern](./repo-ssot-pattern.md) — 同じ「ドリフトを防ぐ」発想を生成ファイル側に適用したもの

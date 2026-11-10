@@ -17,7 +17,7 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 
 - **Claude Code**
   - [.claude/](.claude/) — このリポジトリ自体を Claude Code で開発するための設定（rules, workflows 等。hooks/ は skill-tools による自己インストール先）
-  - [claude-plugins/](claude-plugins/) — Claude Code 用プラグイン本体
+  - [skills/plugins/](skills/plugins/) — Claude Code 用プラグイン本体
   - [tools/_plugin/](tools/_plugin/) — tools/ の CLI に付属する Claude Code プラグイン（`my-tools`。CLI 前提の使い方スキル）
   - [.claude-plugin/](.claude-plugin/) — 上記プラグイン群をまとめるマーケットプレイス定義（`marketplace.json`）と skill カタログ（`skill-catalog.json`）
 
@@ -51,7 +51,7 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 
 - [agent-tooling/](agent-tooling/) — 複数AIコーディングツール向けのコンテキスト探索・フックアダプター・生成成果物を共有する配布可能なPythonパッケージ。
 - [maintenance/plugin/](maintenance/plugin/) — このリポジトリ自体のメンテ用 Claude Code プラグイン（生成ファイルの再生成手順など）。配布用スキルではなくレポジトリ固有のため、マーケットプレイスやスキル公開サイトには含めず `ai-tools.yaml` にも記載しない。詳細は [maintenance/plugin/README.md](maintenance/plugin/README.md) 参照。
-- [docs/](docs/) — AIツールを問わずリポジトリ全体で参照する知識（メンテナンス規約・設計判断・運用知識、他ツール環境への導入手順）を [OKF (Open Knowledge Format)](claude-plugins/coding/skills/okf-spec/) の概念ドキュメントとしてまとめたバンドル。詳細は [docs/index.md](docs/index.md) 参照。
+- [docs/](docs/) — AIツールを問わずリポジトリ全体で参照する知識（メンテナンス規約・設計判断・運用知識、他ツール環境への導入手順）を [OKF (Open Knowledge Format)](skills/plugins/coding/skills/okf-spec/) の概念ドキュメントとしてまとめたバンドル。詳細は [docs/index.md](docs/index.md) 参照。
 - [tools/](tools/) — リポジトリ管理・運用を支える便利ツール群。役割ごとの索引は [tools/README.md](tools/README.md)。主なサブフォルダ:
   - `aim/`, `aim2/` — モデル呼び出し CLI とその周辺ツール（`aim` は OpenRouter 専用 Python 実装、`aim2` は複数プロバイダ直接接続の Node.js 実装）
   - `claude-wrapper/`, `cline-wrapper/`, `codex-wrapper/`, `copilot-wrapper/`, `cursor-wrapper/` — 各 AI ツール向けラッパー
@@ -83,6 +83,7 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 
 ## その他
 
+- 2026-11 の再編でプラグインの置き場所と一部のプラグイン名（`meta` → `cc-knowledge`、`my-tools-no-install` → `web-lookup`／`doc-tools` ほか）が変わった。インストール済みの利用者向けの対応表は [docs/integrations/claude-code.md](docs/integrations/claude-code.md) にある。
 - `lefthook.yml` — コミット時などに走る Git hooks の設定（`pre-commit` での各種再生成・整形・secretlint、`commit-msg` での commitlint）。
 - `mise.toml` — [mise](https://mise.jdx.dev/) によるツールバージョン管理（node / pnpm / terraform / uv をこのリポジトリ用にpin）。
 - `pyproject.toml` — uv workspace のルート定義（`tools/aim` 等、Python パッケージ群をまとめて管理）。
@@ -93,6 +94,6 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 - `AGENTS.md` / `CLAUDE.md` — 各 AI ツール向けのリポジトリ全体指示ファイル（README と同等の構成概観を記載）。
 - [registry/](registry/) — SSOT yaml（`ai-tools.yaml`・`repo-tools.yaml`・`meta_field.yaml`・`skill-tags.yaml`・`repo-workflows.yaml`・`repo-hooks.yaml`）。ルート直下の `ai-tools.yaml`・`repo-tools.yaml`・`repo-workflows.yaml`・`repo-hooks.yaml` は、`registry/` を知らない旧 skill-tools 向けの生成コピー（手編集しない）。
 - `registry/repo-hooks.yaml` — skill-tools が読むエージェントフックカタログ（agent-tooling が生成する `catalog.json`）の所在。フックの配布・自己インストール（`just hooks-install`）は [maintenance/docs/hook-distribution.md](maintenance/docs/hook-distribution.md) 参照。
-- `.codegraph/` — CodeGraph のローカル知識グラフ（gitignore）。導入後は `codegraph init`。詳細は `claude-plugins/topics/skills/codegraph-docs/`。
+- `.codegraph/` — CodeGraph のローカル知識グラフ（gitignore）。導入後は `codegraph init`。詳細は `skills/plugins/topics/skills/codegraph-docs/`。
 
   Azure Static Web Appsへのリソース作成は [site/skills-site/infra/](site/skills-site/infra/) のBicepで管理し、通常の公開更新はmainへのpushからGitHub Actionsで行う。ローカルの検証・Azure操作はリポジトリ直下のjustfileを使う。

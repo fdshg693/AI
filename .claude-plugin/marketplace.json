@@ -11,71 +11,78 @@
   "plugins": [
     {
       "name": "cicd",
-      "source": "./claude-plugins/cicd",
+      "source": "./skills/plugins/cicd",
       "description": "CICD plugins for Claude",
       "version": "0.1.0",
       "strict": true
     },
     {
+      "name": "cc-knowledge",
+      "source": "./skills/plugins/cc-knowledge",
+      "description": "Skills about Claude Code itself: docs, settings, and how to write skills, hooks, plugins and subagents",
+      "version": "0.2.0",
+      "strict": true
+    },
+    {
       "name": "coding",
-      "source": "./claude-plugins/coding",
+      "source": "./skills/plugins/coding",
       "description": "Coding plugins for Claude",
       "version": "0.1.0",
       "strict": true
     },
     {
-      "name": "meta",
-      "source": "./claude-plugins/meta",
-      "description": "Meta skills for developing and maintaining Claude Code itself",
-      "version": "0.1.0",
-      "strict": true
-    },
-    {
-      "name": "my-tools",
-      "source": "./tools/_plugin/my-tools",
-      "description": "Skill to use custom tools made by me",
-      "version": "0.1.0",
-      "strict": true
-    },
-    {
-      "name": "my-tools-no-install",
-      "source": "./claude-plugins/my-tools-no-install",
-      "description": "Skill to use custom tools (but no installation) made by me",
+      "name": "doc-tools",
+      "source": "./skills/plugins/doc-tools",
+      "description": "Document processing skills that bundle their own scripts (no tools/ install needed)",
       "version": "0.1.0",
       "strict": true
     },
     {
       "name": "no-code",
-      "source": "./claude-plugins/no-code",
+      "source": "./skills/plugins/no-code",
       "description": "Skill to use Claude Code for non coding tasks for whatever fancy reason you want to use it for.",
       "version": "0.1.0",
       "strict": true
     },
     {
       "name": "others",
-      "source": "./claude-plugins/others",
+      "source": "./skills/plugins/others",
       "description": "other plugins for Claude",
       "version": "0.1.0",
       "strict": true
     },
     {
       "name": "special",
-      "source": "./claude-plugins/special",
+      "source": "./skills/plugins/special",
       "description": "Unordinary skills. Only for Claude Code power users.",
       "version": "0.1.0",
       "strict": true
     },
     {
       "name": "subagents",
-      "source": "./claude-plugins/subagents",
+      "source": "./skills/plugins/subagents",
       "description": "Claude Code skill for using subagents",
       "version": "0.1.0",
       "strict": true
     },
     {
       "name": "topics",
-      "source": "./claude-plugins/topics",
+      "source": "./skills/plugins/topics",
       "description": "Focused Skill for specific topics, providing targeted information and insights.",
+      "version": "0.1.0",
+      "strict": true
+    },
+    {
+      "name": "web-lookup",
+      "source": "./skills/plugins/web-lookup",
+      "description": "Web research skills that bundle their own scripts (no tools/ install needed)",
+      "version": "0.2.0",
+      "strict": true
+    },
+    {
+      "name": "my-tools",
+      "source": "./tools/_plugin/my-tools",
+      "description": "Skill to use custom tools made by me",
       "version": "0.1.0",
       "strict": true
     }

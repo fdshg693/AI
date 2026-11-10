@@ -133,20 +133,22 @@ def main() -> int:
     targets = [
         Target(
             "Claude CLI help",
-            repo_root / "claude-plugins/meta/skills/claude-cli-docs/generate_claude_help_yaml.py",
-            repo_root / "claude-plugins/meta/skills/claude-cli-docs/output/help_result.yaml",
+            repo_root
+            / "skills/plugins/cc-knowledge/skills/claude-cli-docs/generate_claude_help_yaml.py",
+            repo_root
+            / "skills/plugins/cc-knowledge/skills/claude-cli-docs/output/help_result.yaml",
         ),
         Target(
             "Claude Code reference",
             repo_root
-            / "claude-plugins/meta/skills/claude-code-docs/download_claude_code_reference.py",
-            repo_root / "claude-plugins/meta/skills/claude-code-docs/output/llms.txt",
+            / "skills/plugins/cc-knowledge/skills/claude-code-docs/download_claude_code_reference.py",
+            repo_root / "skills/plugins/cc-knowledge/skills/claude-code-docs/output/llms.txt",
         ),
         Target(
             "Claude Code full reference",
             repo_root
-            / "claude-plugins/meta/skills/claude-code-docs/download_claude_code_reference.py",
-            repo_root / "claude-plugins/meta/skills/claude-code-docs/output/llms-full.txt",
+            / "skills/plugins/cc-knowledge/skills/claude-code-docs/download_claude_code_reference.py",
+            repo_root / "skills/plugins/cc-knowledge/skills/claude-code-docs/output/llms-full.txt",
         ),
     ]
 

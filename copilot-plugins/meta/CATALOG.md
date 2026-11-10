@@ -82,7 +82,7 @@ meta:
   requires_skills: vscode-docs,github-copilot-docs,aim-cli
   status: stable
   description: no description
-  version: 1.0.5
+  version: 1.0.6
 ---
 
 - writing-copilot-instructions

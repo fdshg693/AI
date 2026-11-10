@@ -101,4 +101,4 @@ GitHub Actionsの .github/workflows/skill-site.yml は、Pull Requestではカ�
 
 ### Openrouter
 
-`Openrouter` について詳細に調べたい場合は、WEB検索でなくまず `claude-plugins\topics\skills\openrouter-docs\SKILL.md` を確認する
+`Openrouter` について詳細に調べたい場合は、WEB検索でなくまず `skills\plugins\topics\skills\openrouter-docs\SKILL.md` を確認する

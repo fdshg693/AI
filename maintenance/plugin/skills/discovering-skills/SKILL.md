@@ -2,7 +2,7 @@
 # 前提: skill-tools が導入済み（`uv tool install --editable tools/skill-tools`）であること。
 # 詳細は tools/skill-tools/README.md 参照。同梱のmeta-plugins/agents/skill-search.mdサブエージェントを併用する。
 name: discovering-skills
-description: Searches this repository's full skill catalog via the skill-search agent and its skill-tools search CLI before starting non-trivial work here, and folds genuinely relevant hits into the task's TODO as explicit skill-loading steps. Use when starting a multi-step task inside this repo (features under claude-plugins/, cursor-plugins/, codex-plugins/, copilot-plugins/, cline-plugins/, _agents/, tools/, docs/, maintenance/plugin/ etc.), when unsure whether an existing skill already covers the task, or when the current session's auto-suggested Skill-tool listing seems incomplete — that listing only reflects whichever marketplace/plugin dirs happen to be loaded this session, while the index covers every SKILL.md in the repo regardless.
+description: Searches this repository's full skill catalog via the skill-search agent and its skill-tools search CLI before starting non-trivial work here, and folds genuinely relevant hits into the task's TODO as explicit skill-loading steps. Use when starting a multi-step task inside this repo (features under skills/plugins/, cursor-plugins/, codex-plugins/, copilot-plugins/, cline-plugins/, _agents/, tools/, docs/, maintenance/plugin/ etc.), when unsure whether an existing skill already covers the task, or when the current session's auto-suggested Skill-tool listing seems incomplete — that listing only reflects whichever marketplace/plugin dirs happen to be loaded this session, while the index covers every SKILL.md in the repo regardless.
 meta:
   tag: []
   requires_repo_tools: tools/skill-tools, maintenance/plugin/agents/skill-search.md
@@ -13,12 +13,12 @@ meta:
   requires_skills: none
   status: experimental
   description: no description
-  version: 1.0.7
+  version: 1.0.8
 ---
 
 # リポジトリ内スキルの発見・TODOへの組み込み
 
-このリポジトリには`claude-plugins/`だけでなく`cursor-plugins/`・`codex-plugins/`・`copilot-plugins/`・`cline-plugins/`・`_agents/`・`maintenance/plugin/`などに90件超のスキルが分散している。今のセッションでAIに自動提案されるSkillツール一覧は、そのセッションで実際にロードされているマーケットプレイス/プラグインディレクトリ次第で変わり、関連スキルが存在するのに一覧に出てこないことがある。このスキルは、その隙間を`skill-tools search`（ローカル本文語彙と意味検索のハイブリッド検索）で埋め、見つけたスキルをTODOの中の適切な位置に明示的に組み込む。
+このリポジトリには`skills/plugins/`だけでなく`cursor-plugins/`・`codex-plugins/`・`copilot-plugins/`・`cline-plugins/`・`_agents/`・`maintenance/plugin/`などに90件超のスキルが分散している。今のセッションでAIに自動提案されるSkillツール一覧は、そのセッションで実際にロードされているマーケットプレイス/プラグインディレクトリ次第で変わり、関連スキルが存在するのに一覧に出てこないことがある。このスキルは、その隙間を`skill-tools search`（ローカル本文語彙と意味検索のハイブリッド検索）で埋め、見つけたスキルをTODOの中の適切な位置に明示的に組み込む。
 
 ## 手順
 

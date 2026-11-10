@@ -26,41 +26,44 @@ tools:
         - path: .claude
           description: "このリポジトリ自体を Claude Code で開発するための設定（rules, workflows 等。hooks/ は skill-tools による自己インストール先）"
       plugin_roots:
-        - path: claude-plugins
+        - path: skills/plugins
           description: "Claude Code 用プラグイン本体"
         - path: tools/_plugin
           description: "tools/ の CLI に付属する Claude Code プラグイン（`my-tools`。CLI 前提の使い方スキル）"
         - path: .claude-plugin
           description: "上記プラグイン群をまとめるマーケットプレイス定義（`marketplace.json`）と skill カタログ（`skill-catalog.json`）"
     plugins:
-      - path: claude-plugins/cicd
+      - path: skills/plugins/cicd
         kind: plugin
         skills_layout: subdir
-      - path: claude-plugins/coding
+      - path: skills/plugins/cc-knowledge
         kind: plugin
         skills_layout: subdir
-      - path: claude-plugins/meta
+      - path: skills/plugins/coding
+        kind: plugin
+        skills_layout: subdir
+      - path: skills/plugins/doc-tools
+        kind: plugin
+        skills_layout: subdir
+      - path: skills/plugins/no-code
+        kind: plugin
+        skills_layout: subdir
+      - path: skills/plugins/others
+        kind: plugin
+        skills_layout: subdir
+      - path: skills/plugins/special
+        kind: plugin
+        skills_layout: subdir
+      - path: skills/plugins/subagents
+        kind: plugin
+        skills_layout: subdir
+      - path: skills/plugins/topics
+        kind: plugin
+        skills_layout: subdir
+      - path: skills/plugins/web-lookup
         kind: plugin
         skills_layout: subdir
       - path: tools/_plugin/my-tools
-        kind: plugin
-        skills_layout: subdir
-      - path: claude-plugins/my-tools-no-install
-        kind: plugin
-        skills_layout: subdir
-      - path: claude-plugins/no-code
-        kind: plugin
-        skills_layout: subdir
-      - path: claude-plugins/others
-        kind: plugin
-        skills_layout: subdir
-      - path: claude-plugins/special
-        kind: plugin
-        skills_layout: subdir
-      - path: claude-plugins/subagents
-        kind: plugin
-        skills_layout: subdir
-      - path: claude-plugins/topics
         kind: plugin
         skills_layout: subdir
     marketplace:

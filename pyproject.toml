@@ -1,6 +1,6 @@
 # Virtual workspace root (no [project] table): this repo isn't itself a
 # distributable package, it just groups the Python packages scattered under
-# tools/ and claude-plugins/*/skills/ so uv can manage them together.
+# tools/ and skills/plugins/*/skills/ so uv can manage them together.
 #
 # (A) CLI as a global command (replaces `pip install -e <path>`):
 #     uv tool install --editable <path-to-package>
@@ -27,7 +27,7 @@ members = [
     "tools/ona-run",
     "tools/openrouter/model-select",
     "tools/openrouter/model-list",
-    "claude-plugins/meta/skills/writing-skill-web",
+    "skills/plugins/cc-knowledge/skills/writing-skill-web",
     "tools/skill-tools",
     "tools/textgraph",
     "tools/vscode-profiles",

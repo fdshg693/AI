@@ -7,7 +7,7 @@ on:
     paths:
       - 'site/skills-site/**'
       - '.github/workflows/skill-site.yml'
-      - 'claude-plugins/**/skills/**'
+      - 'skills/plugins/**/skills/**'
       - 'tools/_plugin/**/skills/**'
       - 'registry/ai-tools.yaml'
       - 'codex-plugins/**/skills/**'
@@ -25,7 +25,7 @@ on:
     paths:
       - 'site/skills-site/**'
       - '.github/workflows/skill-site.yml'
-      - 'claude-plugins/**/skills/**'
+      - 'skills/plugins/**/skills/**'
       - 'tools/_plugin/**/skills/**'
       - 'registry/ai-tools.yaml'
       - 'codex-plugins/**/skills/**'

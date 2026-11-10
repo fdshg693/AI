@@ -1,7 +1,7 @@
 ---
 type: AI Tool
 title: Claude Code へのプラグイン導入方法
-description: Explains how to add this repository's claude-plugins/ marketplace (seiwan-marketplace) to a user's own Claude Code environment — via /plugin marketplace add (GitHub or a local clone path), installing individual plugins, and auto-provisioning teammates via .claude/settings.json's extraKnownMarketplaces/enabledPlugins. Use when installing or updating this repo's Claude Code plugins into an external environment.
+description: Explains how to add this repository's skills/plugins/ marketplace (seiwan-marketplace) to a user's own Claude Code environment — via /plugin marketplace add (GitHub or a local clone path), installing individual plugins, and auto-provisioning teammates via .claude/settings.json's extraKnownMarketplaces/enabledPlugins. Use when installing or updating this repo's Claude Code plugins into an external environment.
 tags: [claude-code]
 generated: { by: reference_agent/claude-sonnet-5, at: 2026-08-09T15:58:38Z }
 status: stable
@@ -9,7 +9,7 @@ status: stable
 
 # Claude Code へのプラグイン導入方法
 
-このレポジトリの [`claude-plugins/`](../../claude-plugins/) 以下にある自作プラグイン（skills, subagents など）を、自分の Claude Code 環境に取り込む方法を記載する。
+このレポジトリの [`skills/plugins/`](../../skills/plugins/) 以下にある自作プラグイン（skills, subagents など）を、自分の Claude Code 環境に取り込む方法を記載する。
 
 配信は [`.claude-plugin/marketplace.json`](../../.claude-plugin/marketplace.json) で定義されたマーケットプレイス経由で行う。
 マーケットプレイス名は `seiwan-marketplace`、リポジトリは https://github.com/fdshg693/AI 。
@@ -60,6 +60,21 @@ CLI から特定スコープ（例: プロジェクト単位）にインスト�
 claude plugin install <plugin-name>@seiwan-marketplace --scope project
 ```
 
+### 2026-11 のプラグイン名・名前空間の変更
+
+リポジトリ再編でプラグインの置き場所が `claude-plugins/` から `skills/plugins/` と `tools/_plugin/` に移り、次の名前が変わった。以前にインストールした利用者は、旧プラグインをアンインストールして新しい名前で入れ直す（スキルの呼び出し名 `<plugin>:<skill>` も変わる）。
+
+| 旧                                         | 新                                 |
+| ------------------------------------------ | ---------------------------------- |
+| `meta`                                     | `cc-knowledge`                     |
+| `my-tools-no-install`（web-lookup）        | `web-lookup`                       |
+| `my-tools-no-install`（doc-transcription） | `doc-tools`                        |
+| `my-tools:tav-lit`                         | `web-lookup:tav-lit`               |
+| `coding:task-tracker`                      | `my-tools:task-tracker`            |
+| `coding:parallel-agent-worktree`           | `my-tools:parallel-agent-worktree` |
+
+ほかのプラグイン名（`cicd`・`coding`・`my-tools`・`no-code`・`others`・`special`・`subagents`・`topics`）は変わらない。
+
 ## 3. 確認・管理
 
 ```
@@ -91,9 +106,9 @@ claude plugin install <plugin-name>@seiwan-marketplace --scope project
 }
 ```
 
-## 補足: `my-tool` プラグインの前提ツール
+## 補足: `my-tools` プラグインの前提ツール
 
-`my-tool` プラグイン内の skill は 自作 CLI のインストール済を前提にしていることが多い。
+`my-tools` プラグイン（`tools/_plugin/my-tools`）内の skill は 自作 CLI のインストール済を前提にしていることが多い。
 事前に [cli-tools](cli-tools.md) の手順でインストールしておくこと。
 
 ## 関連
