@@ -60,7 +60,7 @@ dev = [{ name = "pyyaml", specifier = ">=6.0" }]
 
 [[package]]
 name = "agents-rules"
-version = "0.1.1"
+version = "0.1.2"
 source = { editable = "tools/agents-rules" }
 dependencies = [
     { name = "pyyaml" },
@@ -2397,7 +2397,7 @@ wheels = [
 
 [[package]]
 name = "skill-tools"
-version = "0.5.2"
+version = "0.5.3"
 source = { editable = "tools/skill-tools" }
 dependencies = [
     { name = "pathspec" },
