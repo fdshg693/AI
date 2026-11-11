@@ -6,7 +6,8 @@ in-process instead, in a fixed dependency order:
 
     fix   — SKILL.md meta defaults -> generated catalogs/marketplaces -> tool
             manifest version bumps (all write files; lefthook re-stages them)
-    check — read-only checks (SKILL.md version bump, repo-tools consistency)
+    check — read-only checks (SKILL.md version bump, repo-tools consistency,
+            local config files tracked/ignored)
 
 Each task still runs only when a staged path matches its globs (the same globs
 lefthook used per job). `--all` ignores the staged list and runs every task,
@@ -138,6 +139,15 @@ CHECK_TASKS = (
             "tools/**/package.json",
         ),
         call="argv",
+    ),
+    Task(
+        # Checks the whole index of every repository, not the staged diff: a
+        # .gitignore edit, an example rename or a new config file can each change
+        # the result, so it runs on every commit.
+        "local-configs-check",
+        "check.check_local_configs",
+        ("**",),
+        call="list",
     ),
 )
 

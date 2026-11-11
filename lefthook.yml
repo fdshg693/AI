@@ -73,11 +73,9 @@ pre-commit:
           - name: validate skills plugin index
             run: uv run python maintenance/scripts/precommit/skills_plugin_index.py umbrella
           - name: maintenance/scripts precommit check
-            glob:
-              - "**/SKILL.md"
-              - "registry/repo-tools.yaml"
-              - "tools/**/pyproject.toml"
-              - "tools/**/package.json"
+            # No glob: local-configs-check runs on every commit (including
+            # deletion-only ones, which lefthook's glob would skip). Per-task
+            # globs are matched inside precommit/__main__.py.
             run: just --justfile maintenance/scripts/justfile precommit-check
           - name: scan staged files for secrets
             glob:

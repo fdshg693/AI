@@ -41,6 +41,14 @@ jobs:
         working-directory: maintenance/scripts
         run: uv run python -m unittest discover -s tests -p 'test_skills_plugin_index*.py'
 
+      - name: Test local config check
+        working-directory: maintenance/scripts
+        run: uv run pytest -q tests/test_check_local_configs.py tests/test_repo_git.py
+
+      - name: Local config files are untracked and only examples are committed
+        working-directory: maintenance/scripts
+        run: uv run python -m check.check_local_configs
+
       - name: Regenerate aggregate outputs
         working-directory: maintenance/scripts
         run: uv run python -m precommit fix --all
