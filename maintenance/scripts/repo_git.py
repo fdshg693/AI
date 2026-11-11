@@ -138,6 +138,65 @@ def staged_files(root: Path, *, include_deleted: bool = False) -> list[str]:
     return paths
 
 
+def _tracked_in(repo: Path) -> list[str]:
+    result = subprocess.run(
+        ["git", "ls-files", "-z"],
+        cwd=repo,
+        env=_env_for(repo),
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        check=False,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(result.stderr.strip() or result.stdout.strip())
+    return [path for path in result.stdout.split("\0") if path]
+
+
+def tracked_files(root: Path) -> list[str]:
+    """Index entries (``git ls-files``) of the umbrella and every checked-out submodule.
+
+    Paths are umbrella-relative; submodule entries carry the submodule path as
+    prefix. The umbrella's gitlinks (``skills`` etc.) are listed as-is.
+    """
+    paths = _tracked_in(root)
+    for sub in submodule_paths(root):
+        paths.extend(f"{sub}/{path}" for path in _tracked_in(root / sub))
+    return paths
+
+
+def ignored_files(root: Path, rel_paths: list[str]) -> set[str]:
+    """Subset of umbrella-relative ``rel_paths`` that the owning repository ignores.
+
+    Uses ``git check-ignore --no-index`` so a tracked file is still reported when
+    a pattern matches it. One call per owning repository.
+    """
+    by_repo: dict[Path, list[tuple[str, str]]] = {}
+    for rel in rel_paths:
+        repo, inner = owner(root, rel)
+        by_repo.setdefault(repo, []).append((rel, inner))
+    ignored: set[str] = set()
+    for repo, pairs in by_repo.items():
+        result = subprocess.run(
+            ["git", "check-ignore", "--no-index", "--stdin", "-z"],
+            cwd=repo,
+            env=_env_for(repo),
+            input="".join(f"{inner}\0" for _, inner in pairs),
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            check=False,
+        )
+        # 0: some paths ignored, 1: none ignored, anything else: error.
+        if result.returncode not in (0, 1):
+            raise RuntimeError(result.stderr.strip() or result.stdout.strip())
+        hits = {path for path in result.stdout.split("\0") if path}
+        ignored.update(rel for rel, inner in pairs if inner in hits)
+    return ignored
+
+
 def show(root: Path, rev: str, rel_posix: str) -> str | None:
     """``git show <rev>:<path>`` in the repository owning the path, or None."""
     repo, inner = owner(root, rel_posix)

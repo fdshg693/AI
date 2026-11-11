@@ -121,3 +121,37 @@ def test_submodule_hook_index_is_not_passed_to_umbrella(
     ).stdout.strip()
     monkeypatch.setenv("GIT_INDEX_FILE", index)
     assert sorted(repo_git.staged_files(root)) == ["sub/a.txt", "top.txt"]
+
+
+def test_tracked_files_lists_umbrella_and_submodule_index(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root, sub = _umbrella_with_staged_sub(tmp_path)
+    (sub / "new.txt").write_text("new\n", encoding="utf-8")
+    git(sub, "add", "new.txt")
+    (root / "untracked.txt").write_text("x\n", encoding="utf-8")
+    expected = [".gitmodules", "sub", "top.txt", "sub/a.txt", "sub/new.txt"]
+    assert repo_git.tracked_files(root) == expected
+
+    # Called from the submodule's pre-commit: the umbrella must still list its own index.
+    index = subprocess.run(
+        ["git", "rev-parse", "--path-format=absolute", "--git-path", "index"],
+        cwd=sub,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    monkeypatch.setenv("GIT_INDEX_FILE", index)
+    assert repo_git.tracked_files(root) == expected
+
+
+def test_ignored_files_checks_each_owner_even_when_tracked(tmp_path: Path) -> None:
+    root, sub = _umbrella_with_staged_sub(tmp_path)
+    (root / ".gitignore").write_text("local.json\n", encoding="utf-8")
+    (sub / ".gitignore").write_text("a.txt\nsecret.toml\n", encoding="utf-8")
+
+    paths = ["local.json", "top.txt", "sub/a.txt", "sub/secret.toml", "sub/local.json"]
+    # sub/a.txt is tracked but matches a pattern; sub/local.json is not ignored
+    # by the submodule (the umbrella's .gitignore does not apply inside it).
+    assert repo_git.ignored_files(root, paths) == {"local.json", "sub/a.txt", "sub/secret.toml"}
+    assert repo_git.ignored_files(root, []) == set()
