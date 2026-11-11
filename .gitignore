@@ -55,3 +55,7 @@ fb/
 /.cline/skills/
 /.kilo/skills/
 /_agents/plugins/antigravity-meta/
+
+# ローカル設定の実体は共有しない（example をコミットし、clone 後にコピーする）
+.codex/config.toml
+.mcp.json

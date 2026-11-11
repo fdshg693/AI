@@ -19,6 +19,7 @@ just hooks-install && just sub-agent-hooks-install
 - `just links-sync` — `.links.yaml` で宣言した Junction を作る（[repo-layout](maintenance/docs/repo-layout.md)）
 - `just agent-compat-sync` — Cline・Kilo Code・Antigravity 向けのスキルのコピーを作る
 - `just hooks-install`／`just sub-agent-hooks-install` — エージェントフックをアンブレラと各サブモジュールに入れる（[hook-distribution](maintenance/docs/hook-distribution.md)）
+- ローカル設定は example だけをコミットしている。必要に応じて `.codex/config.example.toml` → `.codex/config.toml`、`.mcp.json.example` → `.mcp.json`、`tools/aim2/models.json.example` → `tools/aim2/models.json` をコピーする（pull で実体が消えたときも同じ）
 
 pull のあとは `just sub-init`。サブモジュールの中でコミットしてからアンブレラでポインタを更新する 2 段階の手順は [repo-layout](maintenance/docs/repo-layout.md#サブモジュール) を参照。
 

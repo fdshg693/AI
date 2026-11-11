@@ -19,6 +19,7 @@ just hooks-install && just sub-agent-hooks-install
 - `just links-sync` — Create the Junctions declared in `.links.yaml` ([repo-layout](maintenance/docs/repo-layout.md))
 - `just agent-compat-sync` — Create the skill copies for Cline, Kilo Code, and Antigravity
 - `just hooks-install` / `just sub-agent-hooks-install` — Install the agent hooks in the umbrella and in each submodule ([hook-distribution](maintenance/docs/hook-distribution.md))
+- Local config files are committed only as examples. Copy `.codex/config.example.toml` → `.codex/config.toml`, `.mcp.json.example` → `.mcp.json`, and `tools/aim2/models.json.example` → `tools/aim2/models.json` as needed (also when a pull removed the real file)
 
 After a pull, run `just sub-init`. For the two-step flow (commit inside the submodule, then update the pointer in the umbrella), see [repo-layout](maintenance/docs/repo-layout.md#サブモジュール).
 
