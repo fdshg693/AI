@@ -92,6 +92,11 @@ skill-repo-tools-check:
 tool-env-loading-check:
     uv run python -m check.check_tool_env_loading
 
+# Fail if a local config file (registry/local-configs.yaml) is tracked or not
+# gitignored, or its example is missing. Checks the index of every repository.
+local-configs-check *args:
+    uv run python -m check.check_local_configs {{ args }}
+
 # Scan currently staged files with secretlint. Batches argv so Windows
 # leftover pre-commit does not hit CreateProcess command-line limits.
 scan-staged-secrets:

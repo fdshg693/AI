@@ -1,0 +1,53 @@
+# Local configuration files: commit the example, keep the real file untracked.
+#
+# Checked by maintenance/scripts/check/check_local_configs.py against the index
+# (`git ls-files`) of the umbrella and every checked-out submodule, at pre-commit
+# (`precommit check`) and in CI (umbrella-check.yml). Paths are umbrella-relative,
+# also for files inside submodules. Globs use PurePosixPath.full_match semantics.
+# See maintenance/docs/repo-layout.md ("ローカル設定ファイル").
+#
+# - local_configs: the real file must be untracked and gitignored; the example
+#   must be tracked. Only list files whose real copy lives inside the repository
+#   (templates for ~/.config/... such as tools/gdevdocs/config.example.toml are
+#   not listed).
+# - deny_patterns: a tracked file matching one of these fails unless it is listed
+#   in allow_tracked. Example names (`X.example.Y` / `X.Y.example`) never match.
+# - allow_tracked: files that match deny_patterns but are meant to be shared
+#   (no machine-specific values, no secrets). Give the reason.
+version: 1
+
+local_configs:
+  - path: .codex/config.toml
+    example: .codex/config.example.toml
+    reason: Codex project config (MCP servers); may get machine-specific edits.
+  - path: .mcp.json
+    example: .mcp.json.example
+    reason: Claude Code project MCP servers; may get machine-specific edits.
+  - path: .vscode/settings.json
+    example: .vscode/settings.example.jsonc
+    reason: Per-machine VS Code workspace settings.
+  - path: tools/aim/models.json
+    example: tools/aim/models.json.example
+    reason: Per-machine model list for aim.
+  - path: tools/aim2/models.json
+    example: tools/aim2/models.json.example
+    reason: Per-machine model list for aim2.
+
+deny_patterns:
+  - "**/.env"
+  - "**/.env.*"
+  - "**/.mcp.json"
+  - "**/mcp.json"
+  - "**/settings.json"
+  - "**/settings.local.json"
+  - "**/local.settings.json"
+  - "**/config.toml"
+  - "**/models.json"
+
+allow_tracked:
+  - path: .cursor/mcp.json
+    reason: Only the codegraph server via ${workspaceFolder}; no machine-specific values.
+  - path: .github/copilot/settings.json
+    reason: Shared Copilot settings that register this repository's marketplace.
+  - path: tools/sandbox/docker/claude-settings/settings.json
+    reason: Baked into the sandbox Docker image; part of the image definition.
