@@ -41,9 +41,10 @@ tav search "Microsoft Fabric overview" --topic msfabric_overview
 
 - 詳細なコマンド・設定形式・安全性は [tools/skill-tools/README.md](../../tools/skill-tools/README.md) を参照。
 - インストール: リポジトリルートから `just -f docs/integrations/justfile skill-tools-local`（clone済み）または `just -f docs/integrations/justfile skill-tools-git`（clone不要）。
-- インストールレシピは `skill-tools config init` も実行し、グローバル設定ファイルを作成する。対象プロジェクトの `skill-tools.yaml` はグローバル設定への差分として source / index / destination を上書きできる。
+- インストールレシピは `skill-tools config init` も実行し、グローバル設定ファイルを作成する。対象プロジェクトの `skill-tools.yaml`（既定は CWD、`--project-dir <path>` を付けたときはそのディレクトリのもの）はグローバル設定への差分として source / index / destination を上書きできる。
 - `skill-tools list-skills` で source path（local なら絶対パス、GitHub なら blob URL）を確認して、`skill-tools install-skills <source path または一意な名前>` で導入する。`skill-tools install-skills self` は skill-tools 自身のコンパニオンスキル（`self_skill` 設定、既定は `skill-tools-cli`）を入れる。
-- 既定では `.claude/skills/<skill-name>/` に展開する。`skill-tools.yaml` にリポジトリ相対 canonical ID ごとの `destination` を指定すれば `.agents/skills/` や `Docs/` などへ変更できる。
+- 既定ではプロジェクトの `.claude/skills/<skill-name>/` に展開する。`skill-tools.yaml` にリポジトリ相対 canonical ID ごとの `destination` を指定すれば `.agents/skills/` や `Docs/` などへ変更できる。
+- 全プロジェクト共通で使うスキルは `skill-tools install-skills --global <skill>` でユーザー全体の場所（既定は `~/.claude/skills/`、target ごとに `global_destination` で変更）へ入れる。`--global` ではプロジェクトの `skill-tools.yaml` を読まず、`installed-skills` / `update-skills` / `remove-skills` にも `--global` を付けて管理する。ホームをプロジェクトにした `install-skills` / `update-skills` は止まるので、ユーザー全体へは `--global` を使う。
 - ローカル source の `install-skills` はスキル同梱の生成物（`.venv`、`__pycache__`、`node_modules` 等）を同梱しない。除外/包含は source の `tools/skill-tools/.gitignore` と `tools/skill-tools/.skill-tools` の `include:` で決まり、`.env` は既定除外（コピーさせたい場合だけ利用者が追記する）。優先順位は [tools/skill-tools/README.md](../../tools/skill-tools/README.md) の「バンドルコピーの除外/包含ポリシー」を参照。
 - `skill-tools build-index` は CLI 専用のグローバルキャッシュを作成し、`skill-tools search --query "<検索語>"` は CWD に依存せずその snapshot を検索する。GitHub source は build 時に解決済み commit SHA へ固定する。
 - インデックスは既定で7日間キャッシュされ、その間の `build-index` は再生成せずスキップする。強制的に作り直すなら `skill-tools build-index --force`（日数を変えるなら `--max-age-days N`、`0` は常に再生成）。再生成時も `name` / `description` が変わっていないスキルは前回のベクトルを再利用し、`embedded: N, reused: M` として件数が出る。
