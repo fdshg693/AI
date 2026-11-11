@@ -81,7 +81,7 @@ The following four are separate repositories; the umbrella only holds their comm
   - [maintenance/plugin/](maintenance/plugin/) — Claude Code plugin for maintenance (commit steps, repository map, how to change skills and tools, etc.). [maintenance/plugin/README.md](maintenance/plugin/README.md)
   - [maintenance/scripts/](maintenance/scripts/) — Scripts for catalog/marketplace generation, SKILL.md meta filling, pre-commit, and Junctions (`links`)
   - [maintenance/docs/](maintenance/docs/index.md) — Maintenance conventions and design decisions (OKF concept docs). Layout and boundary conventions are in [repo-layout](maintenance/docs/repo-layout.md)
-- [registry/](registry/) — SSOT yaml files (`ai-tools.yaml`, `repo-tools.yaml`, `meta_field.yaml`, `skill-tags.yaml`, `repo-workflows.yaml`, `repo-hooks.yaml`)
+- [registry/](registry/) — SSOT yaml files (`ai-tools.yaml`, `repo-tools.yaml`, `meta_field.yaml`, `skill-tags.yaml`, `repo-workflows.yaml`, `repo-hooks.yaml`, `local-configs.yaml`)
 - [docs/](docs/index.md) — Knowledge bundle for users ([OKF](skills/plugins/coding/skills/okf-spec/)), including setup guides for other environments in [docs/integrations/](docs/integrations/)
 - [plans/](plans/) — Implementation plans
 - [.vscode/](.vscode/) — Example VSCode settings for AI coding tools

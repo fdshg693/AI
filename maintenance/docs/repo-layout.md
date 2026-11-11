@@ -111,6 +111,25 @@ just sub-agent-hooks-install  # アンブレラと同じ Claude Code フック�
 - サイトの公開（Azure Static Web Apps・GitHub Pages）はアンブレラで動く。サブモジュールへの push だけではサイトは更新されず、アンブレラのポインタ更新で動く。
 - CLI のタグと GitHub Release は AI-tools の `tool-release.yml` が作る（対象はアンブレラの `registry/repo-tools.yaml` を読んで決める）。`git+https://github.com/fdshg693/AI-tools.git#subdirectory=<name>` でインストールする。
 
+## ローカル設定ファイル
+
+マシンごとに書き換える設定ファイル（`.json`・`.toml`・`.env` など）は、実体をコミットせず gitignore し、example（`X.example.Y` または `X.Y.example`）だけをコミットする。clone した人は example をコピーして使う。対象と例外は [`registry/local-configs.yaml`](../../registry/local-configs.yaml) で宣言し、[`check_local_configs.py`](../scripts/check/check_local_configs.py) が pre-commit（`precommit check`）と CI（`umbrella-check.yml`）で検査する（手動では `just --justfile maintenance/scripts/justfile local-configs-check`）。
+
+検査するのは、アンブレラと全サブモジュールの index（`git ls-files`）。
+
+1. `local_configs` に宣言した実体が追跡されておらず、gitignore されている（持ち主のリポジトリの `git check-ignore --no-index` で判定）
+2. `local_configs` に宣言した example が追跡されている
+3. 名前の規約: 追跡中の example の名前から `example` を除いた実体（`config.example.toml` → `config.toml`）が追跡されていない。gitignore までは求めない（`src.example.md` のような、ローカル設定ではないサンプルもあるため）
+4. 名前のパターン: 追跡中のファイルが `deny_patterns` に一致したら、`allow_tracked` に無い限りエラー。example の名前は対象外
+
+あわせて、`allow_tracked` にあるのに追跡されていないパス（古い宣言）もエラーにする。
+
+- 宣言はサブモジュールの中のファイルも含めてアンブレラ相対のパスで書く。サブモジュールだけを clone した場合は検査が走らない。
+- リポジトリの外に実体を置く雛形（`tools/gdevdocs/config.example.toml` は `~/.config/...` 用）は `local_configs` に宣言しない。名前の規約（検査 3）は自動で効く。
+- `allow_tracked` に足してよいのは、マシン固有の値も秘密も含まず、共有すること自体が目的のファイルだけ（マーケットプレイスを登録する `.github/copilot/settings.json`、Docker イメージに焼き込む設定など）。理由を `reason` に書く。それ以外は example にする。
+- 全リポジトリの index を見るので、あるサブモジュールに違反があると、別のリポジトリのコミットも止まる。違反は常にゼロに保つ前提とする。
+- 実体の追跡を外すコミットを pull すると、他の clone では git が実体を作業ツリーから消す。README の「取得」節の手順で example からコピーし直す。
+
 ## Junction はコミットせず `.links.yaml` で宣言する
 
 Git は Junction を実ディレクトリとして辿り、参照先の中身を通常ファイルとしてステージしてしまう。そこで Junction 自体はコミットせず、各リポジトリのルートに置く `.links.yaml` に宣言をコミットする。
