@@ -475,6 +475,11 @@
       "description": "Use when answering questions about OpenRouter (openrouter.ai) — the unified API for routing requests across many LLM providers/models, its Agent SDK, Client SDKs (TypeScript/Python/Go), REST API reference, model routing/variants (:nitro, :online, :thinking, etc.), plugins, guardrails, presets, workspaces, pricing/BYOK, or integrating OpenRouter with coding agents (Claude Code, Cursor, Codex CLI, etc.). Grounds answers in the latest official docs (openrouter.ai/docs) instead of training-data memory, which may be stale."
     },
     {
+      "path": "skills/plugins/topics/skills/replit-docs",
+      "name": "replit-docs",
+      "description": "Use when answering questions about Replit, including Agent modes, tools, checkpoints, Skills and project instructions, connected repositories, environments, publishing, deployment pricing, secrets, monitoring, and troubleshooting. Grounds answers in official Replit documentation rather than potentially outdated product knowledge."
+    },
+    {
       "path": "skills/plugins/topics/skills/vercel-docs",
       "name": "vercel-docs",
       "description": "Use when answering questions about Vercel — deployments, builds, Vercel Functions and Fluid compute, runtimes, Routing Middleware, CDN/caching/ISR, environment variables, domains/DNS, the Vercel CLI, the Vercel REST API/SDK, AI Gateway, Sandbox, storage (Blob/KV/Edge Config/Postgres), observability, firewall/WAF, and other products documented on vercel.com/docs. Grounds answers in the latest official Vercel documentation instead of training-data memory, which may be stale or predate product changes, aliases, and deprecations."
