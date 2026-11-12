@@ -122,13 +122,17 @@ branch-status *args:
 branch-list *args:
     just --justfile maintenance/scripts/justfile branch-list {{args}}
 
-# Create a branch and switch to it everywhere (--from BASE)
-branch-new name *args:
-    just --justfile maintenance/scripts/justfile branch-new {{name}} {{args}}
+# Show or set this machine/worktree's working branch name (umbrella.workBranch, not committed)
+branch-work *args:
+    just --justfile maintenance/scripts/justfile branch-work {{args}}
 
-# Switch everywhere, tracking origin/<name> when only the remote has it (--create, --no-fetch)
-branch-switch name *args:
-    just --justfile maintenance/scripts/justfile branch-switch {{name}} {{args}}
+# Create a branch and switch to it everywhere; name defaults to the working branch (--from BASE)
+branch-new *args:
+    just --justfile maintenance/scripts/justfile branch-new {{args}}
+
+# Switch everywhere, tracking origin/<name>; name defaults to the working branch (--create, --no-fetch)
+branch-switch *args:
+    just --justfile maintenance/scripts/justfile branch-switch {{args}}
 
 # Delete a branch wherever it exists; refuses main and unmerged branches (--force, --remote)
 branch-delete name *args:

@@ -17,7 +17,7 @@ meta:
   requires_skills: changing-skills-and-tools
   status: experimental
   description: このリポジトリ固有のgit commit手順（lefthook前提、要約ラッパー同梱、スキル/ツール変更時の下流確認）
-  version: 1.1.10
+  version: 1.1.11
 ---
 
 # このリポジトリでのコミット
@@ -28,7 +28,7 @@ meta:
 
 ## 手順
 
-0. **作業ブランチにいることを確かめる** — `main`への直接コミットは`pre-commit`がブロックする（アンブレラと全サブモジュール）。`git branch --show-current`が`main`なら、ユーザーに確認してから`just branch-new <name>`か`just branch-switch <name>`で全リポジトリを作業ブランチへ移す。ブロックを`LEFTHOOK_EXCLUDE`や`--no-verify`で外さない。
+0. **作業ブランチにいることを確かめる** — `main`への直接コミットは`pre-commit`がブロックする（アンブレラと全サブモジュール）。`git branch --show-current`が`main`なら、ユーザーに確認してから`just branch-switch`（名前を省くとアンブレラの`umbrella.workBranch`。未設定なら`just branch-work`で何も出ないので、ユーザーに名前を聞いて`just branch-work <name>`）で全リポジトリを作業ブランチへ移す。ブロックを`LEFTHOOK_EXCLUDE`や`--no-verify`で外さない。
 1. **現状を読む** — 次を並列で取る。自分が覚えていない変更はステージしない（[AGENTS.md](../../../../AGENTS.md)）。
    - `git status`
    - `git diff` と `git diff --staged`
@@ -60,7 +60,7 @@ meta:
 
 `skills/`・`tools/`・`agent-compat/`・`site/`・`workflow/` はサブモジュール（[repo-layout](../../../docs/repo-layout.md#サブモジュール)）。中のファイルはアンブレラからはコミットできない。次の 2 段階に分ける。
 
-1. **サブモジュールでコミットする** — そのフォルダへ移り、上の手順 1〜8 をそのリポジトリで行う。detached HEAD なら先に `just branch-switch <作業ブランチ>`（アンブレラと同じ名前のブランチ）。ラッパーは `python ../maintenance/plugin/skills/committing/scripts/commit.py -m "..."`。フックは `maintenance/lefthook/submodule.yml` から来る（未導入なら `just sub-hooks-install`）。
+1. **サブモジュールでコミットする** — そのフォルダへ移り、上の手順 1〜8 をそのリポジトリで行う。detached HEAD なら先に `just branch-switch`（`umbrella.workBranch` の名前。アンブレラと同じ名前のブランチ）。ラッパーは `python ../maintenance/plugin/skills/committing/scripts/commit.py -m "..."`。フックは `maintenance/lefthook/submodule.yml` から来る（未導入なら `just sub-hooks-install`）。
 2. **アンブレラでポインタを更新する** — アンブレラのルートで `git status` を見る。サブモジュールのパス（`M skills` 等）と、手順 1 のフックが再生成したアンブレラ側の生成物（`.claude-plugin/marketplace.json`・`skill-catalog.json` 等）だけをステージしてラッパーでコミットする。件名は `chore(repo): update <submodule> pointer` か、変更の意味が分かる件名にする。
 
 アンブレラ側のファイル（`registry/`・`maintenance/` 等）も同じ変更に含まれるなら、手順 2 のコミットに一緒に入れる。push する場合は、ユーザーの指示があってから、サブモジュールを先に push する。

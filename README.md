@@ -11,12 +11,14 @@ git clone --recurse-submodules https://github.com/fdshg693/AI.git
 cd AI
 lefthook install && just sub-hooks-install
 just links-sync
+just branch-work <端末ごとの作業ブランチ名> && just branch-switch --create
 just agent-compat-sync
 just hooks-install && just sub-agent-hooks-install
 ```
 
 - `lefthook install`／`just sub-hooks-install` — アンブレラと各サブモジュールに Git hooks を入れる
 - `just links-sync` — `.links.yaml` で宣言した Junction を作る（[repo-layout](maintenance/docs/repo-layout.md)）
+- `just branch-work <name> && just branch-switch --create` — この端末の作業ブランチ名（`windows` など）を git config に記録し、全リポジトリをそのブランチにする（[branch-and-pr-workflow](maintenance/docs/branch-and-pr-workflow.md#作業ブランチ名を設定する)）
 - `just agent-compat-sync` — Cline・Kilo Code・Antigravity 向けのスキルのコピーを作る
 - `just hooks-install`／`just sub-agent-hooks-install` — エージェントフックをアンブレラと各サブモジュールに入れる（[hook-distribution](maintenance/docs/hook-distribution.md)）
 
