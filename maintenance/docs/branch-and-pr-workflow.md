@@ -29,7 +29,13 @@ status: draft
    just branch-push     # サブモジュール → アンブレラの順に push
    ```
 
-2. **変更のあるサブモジュールで PR を出してマージする。** `main` との差があるサブモジュールだけが対象（`git -C <submodule> log --oneline origin/main..HEAD` が空でないもの）。
+   `just branch-status` は `origin/<作業ブランチ>` との差しか出さない。`main` との差（PR を出す対象）は別に見る。
+
+   ```sh
+   git fetch origin && git submodule foreach --quiet 'git fetch --quiet origin && echo "$name: $(git rev-list --count origin/main..HEAD) ahead"'
+   ```
+
+2. **変更のあるサブモジュールで PR を出してマージする。** `main` との差があるサブモジュールだけが対象（上の `ahead` が 0 でないもの）。コミットが複数あるときは `--fill` のタイトル（直近の件名かブランチ名）が全体を表さないので、`--title` で付け直す。
 
    ```sh
    cd <submodule>
@@ -48,7 +54,9 @@ status: draft
 
    アンブレラで `chore(repo): update <submodule> pointer` としてコミットし（`committing` スキルのラッパーを使う）、`just branch-push`。
 
-4. **アンブレラで PR を出してマージする。** 本文に、先にマージしたサブモジュールの PR を列挙する。CI の `umbrella-check.yml` が生成物の再生成漏れと `uv lock --check` を検査するので、通ってからマージする。
+   merge commit でマージしていれば、作業ブランチの commit は手順 2 の時点で `main` から辿れるので、ポインタを動かさなくてもアンブレラの `main` が壊れることはない。それでもここで合わせるのは、後で「mainの更新を取り込む」と各サブモジュールの HEAD がマージ commit に進み、ポインタとずれる（`just sub-status` が警告する）ため。その更新を別の PR に回さず、このアンブレラ PR に含める。
+
+4. **アンブレラで PR を出してマージする。** 本文に、先にマージしたサブモジュールの PR を列挙する。手順 2 と並行して先に draft で出しておき、ポインタ更新を push してから `gh pr ready` にしてもよい。CI の `umbrella-check.yml` が生成物の再生成漏れと `uv lock --check` を検査するので、通ってからマージする。
 
    ```sh
    gh pr create --base main --head windows --fill
@@ -66,7 +74,7 @@ PR は **merge commit**（`gh pr merge --merge`）でマージする。squash・
 - 作業ブランチに `main` を fast-forward で取り込めず、同じ変更が 2 系統の履歴に分かれる。
 - アンブレラが指していたサブモジュールの commit が `main` から辿れなくなる。
 
-squash・rebase でマージしてしまったら、下の「ブランチを切り直す」で作業ブランチを `main` から作り直す。
+GitHub のリポジトリ設定では squash・rebase も許可されたまま（全リポジトリ）なので、Web UI のマージボタンの既定に注意する。squash・rebase でマージしてしまったら、下の「ブランチを切り直す」で作業ブランチを `main` から作り直す。
 
 ## mainの更新を取り込む
 
