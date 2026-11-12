@@ -10,3 +10,6 @@
 [submodule "skills"]
 	path = skills
 	url = https://github.com/fdshg693/AI-skills.git
+[submodule "workflow"]
+	path = workflow
+	url = https://github.com/fdshg693/AI-workflow.git

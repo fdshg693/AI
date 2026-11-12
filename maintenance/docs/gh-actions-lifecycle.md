@@ -13,7 +13,7 @@ status: stable
 
 このリポジトリは[MIT License](../../LICENSE)で、誰でも自由にFork・改変・再配布してよい。一方でここで説明するGitHub Actions駆動の自動化（issue/PR bot、skills-siteのデプロイ）は第三者には開放していない設定になっている（後述の`author_association`ガードとFork PRでのシークレット非公開）。コントリビュート方法とこの制限の位置づけは[CONTRIBUTING.md](../../CONTRIBUTING.md)を参照。
 
-サブモジュール（skills / tools / agent-compat / site）はアンブレラのワークフローから`actions/checkout`の`submodules: recursive`で取得する。`paths:`フィルタはサブモジュールの中のパターンでは発火しないので、サブモジュールのパス（gitlink）を書く。生成物の再生成漏れと`uv lock --check`は`umbrella-check.yml`が検査する。CLIのタグ+GitHub Releaseはアンブレラではなく`tools/`サブモジュール（fdshg693/AI-tools）の`tool-release.yml`が作る（[repo-layout](./repo-layout.md#ci-とリリース)）。
+サブモジュール（skills / tools / agent-compat / site / workflow）はアンブレラのワークフローから`actions/checkout`の`submodules: recursive`で取得する。`paths:`フィルタはサブモジュールの中のパターンでは発火しないので、サブモジュールのパス（gitlink）を書く。生成物の再生成漏れと`uv lock --check`は`umbrella-check.yml`が検査する。CLIのタグ+GitHub Releaseはアンブレラではなく`tools/`サブモジュール（fdshg693/AI-tools）の`tool-release.yml`が作る（[repo-layout](./repo-layout.md#ci-とリリース)）。
 
 大きく2系統に分かれる。
 

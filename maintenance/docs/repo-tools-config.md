@@ -26,7 +26,7 @@ status: stable
 - `maintenance/plugin/**` — このディレクトリの`SKILL.md`は`requires_repo_tools`を「CLI依存」ではなく「このメタスキルが説明するファイル」の意味で流用しているため（[tool-companion-skills](./tool-companion-skills.md)参照）
 - `maintenance/scripts/**` — リポジトリ保守用の内部スクリプトで、スキル利用者がインストールする対象ではないため
 
-`repo-tools.yaml`冒頭のコメントにある通り、**スキルからも他ツールからも参照されていないツールは登録不要**（例: 執筆時点の`tools/schedule/ai-schedule`）。スキル未参照でも、他ツールから依存される／他ツールに依存する first-class ツールは載せる。
+`repo-tools.yaml`冒頭のコメントにある通り、**スキルからも他ツールからも参照されていないツールは登録不要**（例: 執筆時点の`tools/ai-usage`）。スキル未参照でも、他ツールから依存される／他ツールに依存する first-class ツールは載せる。
 
 ## 消費側2: skills-siteの公開表示
 

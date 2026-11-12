@@ -7,7 +7,7 @@
 - Claude Rule の source は `.claude/rules/`、ネストした `AGENTS.md` の注入は `agent-compat/agent-tooling/agent_tooling/hooks/scenarios/nested_agents_md/` が担当する。両者は独立した入力契約として扱うこと。`.claude/rules/` は現在存在しないが、任意の入力として参照を残している（無ければ Claude Rule の注入が何もしないだけ）。
 - エージェントフックの正本は `agent-compat/agent-tooling/agent_tooling/hooks/`。`.claude/hooks/` はインストール先なので直接編集しない。フックの追加・変更は `maintenance/docs/hook-distribution.md` から辿る。
 - Junction は各リポジトリのルートの `.links.yaml` で宣言し、`just links-sync` で作る。直接 `mklink /J` しない。Junction を `rm -rf`／`Remove-Item -Recurse` で消さず `just links-clean` を使う。リポジトリを走査するコードは Junction を辿らない。詳細は `maintenance/docs/repo-layout.md`。
-- `skills/`・`tools/`・`agent-compat/`・`site/` はサブモジュール。中のファイルを変えたら、そのサブモジュールの中でコミットしてから、アンブレラで `git add <submodule>` してポインタを更新する（2 段階。詳細は `maintenance/docs/repo-layout.md` の「サブモジュール」）。作業前に detached HEAD なら `git switch main` する。
+- `skills/`・`tools/`・`agent-compat/`・`site/`・`workflow/` はサブモジュール。中のファイルを変えたら、そのサブモジュールの中でコミットしてから、アンブレラで `git add <submodule>` してポインタを更新する（2 段階。詳細は `maintenance/docs/repo-layout.md` の「サブモジュール」）。作業前に detached HEAD なら `git switch main` する。
 - あなた以外のエージェント・ユーザーがこのレポジトリで同時作業することは頻繁に起こります。
   - 自分が行った覚えのない変更を勝手に戻さないように心がけてください。明らかに戻すべき変更である場合のみ、ユーザーの同意の上で、削除を行ってください。
 

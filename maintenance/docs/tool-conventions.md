@@ -100,7 +100,7 @@ from dotenv import load_dotenv
 ENV_PATH = Path(__file__).resolve().parent / ".env"
 
 # パッケージ化したツール: ツールディレクトリ直下
-# 例: tools/schedule/issue-agent/issue_agent/environment.py -> tools/schedule/issue-agent/.env
+# 例: tools/tav-cli/tav_core/environment.py -> tools/tav-cli/.env
 # ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
 ```
 

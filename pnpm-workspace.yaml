@@ -2,8 +2,8 @@ packages:
   - "site/skills-site"
   - "site/skills-site/api"
   - "site/tools-site"
-  - "tools/cline-wrapper"
-  - "tools/copilot-wrapper"
+  - "workflow/cline-wrapper"
+  - "workflow/copilot-wrapper"
   - "tools/linear-cli"
   - "tools/aim2"
 allowBuilds:

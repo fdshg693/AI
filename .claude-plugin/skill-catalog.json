@@ -455,6 +455,11 @@
       "description": "Use when answering questions about LangChain, LangGraph, LangSmith, or langchain-ai's Python/JavaScript SDKs and integration packages (chat models, agents, tools, retrieval/RAG, checkpointers, MCP adapters, etc.) — API signatures, parameters, return types, which package/class to use, or deprecated-vs-current patterns (e.g. LLMChain/AgentExecutor vs create_agent). Grounds answers in the latest official API reference (reference.langchain.com) instead of training-data memory, which may be stale."
     },
     {
+      "path": "skills/plugins/topics/skills/linear-docs",
+      "name": "linear-docs",
+      "description": "Use when answering questions about Linear, the linear.app issue tracker and product planning tool — issues, projects, cycles, initiatives, roadmaps, triage, intake, views, labels, workflows, SLAs, customer requests, Linear Agents and automation, integrations (GitHub, GitLab, Slack, Zendesk, etc.), workspace administration, importers, the Linear GraphQL API, the @linear/sdk TypeScript SDK, webhooks, OAuth apps, agent development, and the Linear MCP server. Grounds answers in the latest official Linear documentation instead of training-data memory. Not for linear algebra or other uses of the word \"linear\"."
+    },
+    {
       "path": "skills/plugins/topics/skills/litellm-docs",
       "name": "litellm-docs",
       "description": "Use when answering questions about LiteLLM SDK or LiteLLM Proxy/Gateway documentation — routing and load balancing, providers and model configuration, authentication, budgets, guardrails, observability, pass-through endpoints, or API usage. Grounds answers in current official pages under docs.litellm.ai/docs instead of training-data memory, which may be stale."

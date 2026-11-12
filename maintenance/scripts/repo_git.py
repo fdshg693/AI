@@ -13,6 +13,7 @@ submodule that is not checked out is skipped.
 
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 from pathlib import Path, PurePosixPath
@@ -44,10 +45,59 @@ def owner(root: Path, rel_posix: str) -> tuple[Path, str]:
     return root, rel_posix
 
 
+# Set by git for hooks; they pin every git call to the committing repository.
+_REPO_ENV_VARS = (
+    "GIT_DIR",
+    "GIT_INDEX_FILE",
+    "GIT_WORK_TREE",
+    "GIT_PREFIX",
+    "GIT_COMMON_DIR",
+    "GIT_OBJECT_DIRECTORY",
+)
+
+
+def _git_dir_of(repo: Path) -> Path | None:
+    dot_git = repo / ".git"
+    if dot_git.is_dir():
+        return dot_git.resolve()
+    if dot_git.is_file():
+        text = dot_git.read_text(encoding="utf-8", errors="replace").strip()
+        if text.startswith("gitdir:"):
+            return (repo / text[len("gitdir:") :].strip()).resolve()
+    return None
+
+
+def _git_env(repo: Path) -> dict[str, str] | None:
+    """Environment for a git call in ``repo``.
+
+    A hook of a commit made inside a submodule inherits ``GIT_DIR`` /
+    ``GIT_INDEX_FILE`` pointing at that submodule, so ``git diff --cached`` run
+    in the umbrella (or another submodule) would read the committing
+    submodule's index. Keep them only for the repository they belong to (its
+    index may be a temporary one, e.g. ``git commit -a``); drop them elsewhere.
+    Returns None (inherit unchanged) when nothing needs dropping.
+    """
+    hook_git_dir = os.environ.get("GIT_DIR")
+    if not hook_git_dir:
+        return None
+    if _git_dir_of(repo) == Path(hook_git_dir).resolve():
+        return None
+    env = dict(os.environ)
+    for key in _REPO_ENV_VARS:
+        env.pop(key, None)
+    return env
+
+
+def _env_kwargs(repo: Path) -> dict[str, dict[str, str]]:
+    env = _git_env(repo)
+    return {} if env is None else {"env": env}
+
+
 def _staged_in(repo: Path) -> list[str]:
     result = subprocess.run(
         ["git", "diff", "--name-only", "--cached", "--diff-filter=ACMR"],
         cwd=repo,
+        **_env_kwargs(repo),
         capture_output=True,
         text=True,
         encoding="utf-8",
@@ -78,6 +128,7 @@ def show(root: Path, rev: str, rel_posix: str) -> str | None:
     result = subprocess.run(
         ["git", "show", f"{rev}:{inner}"],
         cwd=repo,
+        **_env_kwargs(repo),
         capture_output=True,
         text=True,
         encoding="utf-8",
@@ -95,6 +146,7 @@ def add(root: Path, rel_posix: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         ["git", "add", "--", inner],
         cwd=repo,
+        **_env_kwargs(repo),
         capture_output=True,
         text=True,
         encoding="utf-8",

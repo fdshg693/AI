@@ -80,7 +80,7 @@ dev = [{ name = "pytest", specifier = ">=8" }]
 [[package]]
 name = "ai-schedule"
 version = "0.1.0"
-source = { editable = "tools/schedule/ai-schedule" }
+source = { editable = "workflow/schedule/ai-schedule" }
 dependencies = [
     { name = "pydantic" },
     { name = "pyyaml" },
@@ -464,7 +464,7 @@ wheels = [
 [[package]]
 name = "claude-wrapper"
 version = "0.1.0"
-source = { editable = "tools/claude-wrapper" }
+source = { editable = "workflow/claude-wrapper" }
 dependencies = [
     { name = "claude-agent-sdk" },
 ]
@@ -583,7 +583,7 @@ wheels = [
 [[package]]
 name = "cursor-wrapper"
 version = "0.1.0"
-source = { editable = "tools/cursor-wrapper" }
+source = { editable = "workflow/cursor-wrapper" }
 dependencies = [
     { name = "cursor-sdk" },
 ]
@@ -846,7 +846,7 @@ requires-dist = [
 [[package]]
 name = "issue-agent"
 version = "0.1.0"
-source = { editable = "tools/schedule/issue-agent" }
+source = { editable = "workflow/schedule/issue-agent" }
 dependencies = [
     { name = "claude-agent-sdk" },
     { name = "pydantic" },
@@ -2365,7 +2365,7 @@ wheels = [
 [[package]]
 name = "sandbox-orchestrator"
 version = "0.1.0"
-source = { editable = "tools/sandbox/orchestrator" }
+source = { editable = "workflow/sandbox/orchestrator" }
 dependencies = [
     { name = "pyjwt", extra = ["crypto"] },
 ]
@@ -2397,7 +2397,7 @@ wheels = [
 
 [[package]]
 name = "skill-tools"
-version = "0.5.7"
+version = "0.6.0"
 source = { editable = "tools/skill-tools" }
 dependencies = [
     { name = "pathspec" },

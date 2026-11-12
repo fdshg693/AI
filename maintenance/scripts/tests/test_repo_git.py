@@ -72,3 +72,36 @@ def test_uninitialized_submodule_is_skipped(tmp_path: Path) -> None:
     (root / "sub").mkdir()
     assert repo_git.submodule_paths(root) == []
     assert repo_git.staged_files(root) == []
+
+
+def test_staged_files_ignore_hook_env_of_a_submodule_commit(tmp_path: Path, monkeypatch) -> None:
+    """A hook of a commit inside a submodule inherits GIT_DIR/GIT_INDEX_FILE for
+    that submodule; the umbrella's own git calls must not read its index."""
+    upstream = tmp_path / "upstream"
+    init_repo(upstream)
+    (upstream / "a.txt").write_text("v1\n", encoding="utf-8")
+    git(upstream, "add", "a.txt")
+    git(upstream, "commit", "-q", "-m", "init")
+
+    root = tmp_path / "umbrella"
+    init_repo(root)
+    git(root, "submodule", "add", "-q", str(upstream), "sub")
+    git(root, "commit", "-q", "-m", "init")
+
+    sub = root / "sub"
+    (sub / "a.txt").write_text("v2\n", encoding="utf-8")
+    git(sub, "add", "a.txt")
+
+    sub_git_dir = subprocess.run(
+        ["git", "rev-parse", "--absolute-git-dir"],
+        cwd=sub,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    monkeypatch.setenv("GIT_DIR", sub_git_dir)
+    monkeypatch.setenv("GIT_INDEX_FILE", str(Path(sub_git_dir) / "index"))
+    monkeypatch.setenv("GIT_PREFIX", "")
+
+    assert repo_git.staged_files(root) == ["sub/a.txt"]
+    assert repo_git.show(root, "HEAD", "sub/a.txt") == "v1\n"

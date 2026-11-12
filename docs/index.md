@@ -9,7 +9,7 @@ okf_version: "0.2"
 # セクション
 
 - [integrations](integrations/) — このリポジトリの成果物（プラグイン・CLIツール）を自分の環境へ取り込むための導入手順群（もとリポジトリ直下の `integrations/` フォルダから移行）
-- [claude_sandbox](topics/claude_sandbox/) — `tools/sandbox`（ISSUE駆動Dockerサンドボックスエージェント）の運用中に得た調査結果・既知の不具合
+- [claude_sandbox](topics/claude_sandbox/) — `workflow/sandbox`（ISSUE駆動Dockerサンドボックスエージェント）の運用中に得た調査結果・既知の不具合
 
 # 関連（バンドル外）
 

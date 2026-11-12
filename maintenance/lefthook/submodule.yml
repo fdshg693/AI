@@ -1,4 +1,4 @@
-# Shared git hooks for the submodules (skills / tools / agent-compat / site).
+# Shared git hooks for the submodules (skills / tools / agent-compat / site / workflow).
 # Each submodule's lefthook.yml only has `extends: [../maintenance/lefthook/submodule.yml]`;
 # in a standalone clone (no umbrella) the extends target is missing and lefthook
 # silently runs nothing. Install with `just sub-hooks-install` from the umbrella.
