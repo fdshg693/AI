@@ -49,14 +49,14 @@ azure-url:
 
 # Self-install this repository's hooks with the bundled skill-tools.
 # Sources live in agent-tooling; installed copies are gitignored. See .claude/hooks/AGENTS.md.
+# Which hooks to install is a per-machine choice: copy .claude/skill-tools.hooks.example.yaml to
+# the gitignored .claude/skill-tools.hooks.yaml and edit hooks.install. hooks-install runs
+# `skill-tools hooks sync`, so it also removes managed hooks dropped from that list.
 hooks_cli := "uv run --project tools/skill-tools skill-tools hooks"
 hooks_config := ".claude/skill-tools.hooks.yaml"
-claude_hooks := "agent_sessions long_run_collector long_run_statement_collector stop_alert task_tracker_session"
 
 hooks-install *flags:
-    {{hooks_cli}} install --config {{hooks_config}} --agent claude {{claude_hooks}} {{flags}}
-    {{hooks_cli}} install --config {{hooks_config}} --agent codex nested_agents_md scoped_rules agent_sessions {{flags}}
-    {{hooks_cli}} install --config {{hooks_config}} --agent kilo agent_sessions {{flags}}
+    {{hooks_cli}} sync --config {{ if path_exists(hooks_config) == "true" { hooks_config } else { error(hooks_config + " is missing. Copy .claude/skill-tools.hooks.example.yaml to it and edit hooks.install first") } }} {{flags}}
 
 hooks-update *flags:
     {{hooks_cli}} update --config {{hooks_config}} {{flags}}
@@ -101,14 +101,15 @@ sub-sync:
 sub-hooks-install:
     git submodule foreach lefthook install
 
-# Install the umbrella's Claude Code hooks into every submodule, so a session opened in the
-# submodule alone runs them too (config: <submodule>/.claude/skill-tools.hooks.yaml; the
-# installed files are gitignored there). Pass --overwrite to reinstall.
+# Install agent hooks into every submodule, so a session opened in the submodule alone runs
+# them too. Each submodule chooses its own hooks in the gitignored
+# <submodule>/.claude/skill-tools.hooks.yaml (copy .claude/skill-tools.hooks.example.yaml there);
+# a submodule without it is skipped. Runs `skill-tools hooks sync` like hooks-install.
 sub-agent-hooks-install *flags:
-    git submodule foreach 'uv run --project "$toplevel/tools/skill-tools" skill-tools hooks install --config .claude/skill-tools.hooks.yaml --agent claude {{claude_hooks}} {{flags}}'
+    git submodule foreach 'if [ -f .claude/skill-tools.hooks.yaml ]; then uv run --project "$toplevel/tools/skill-tools" skill-tools hooks sync --config .claude/skill-tools.hooks.yaml {{flags}}; else echo skip: no .claude/skill-tools.hooks.yaml, copy .claude/skill-tools.hooks.example.yaml there; fi'
 
 sub-agent-hooks-update *flags:
-    git submodule foreach 'uv run --project "$toplevel/tools/skill-tools" skill-tools hooks update --config .claude/skill-tools.hooks.yaml {{flags}}'
+    git submodule foreach 'if [ -f .claude/skill-tools.hooks.yaml ]; then uv run --project "$toplevel/tools/skill-tools" skill-tools hooks update --config .claude/skill-tools.hooks.yaml {{flags}}; else echo skip: no .claude/skill-tools.hooks.yaml; fi'
 
 # --- branches: the same branch name across the umbrella and every submodule ---
 # Umbrella branches never create/switch/delete submodule branches; these do it in one step.

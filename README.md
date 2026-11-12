@@ -13,6 +13,7 @@ lefthook install && just sub-hooks-install
 just links-sync
 just branch-work <端末ごとの作業ブランチ名> && just branch-switch --create
 just agent-compat-sync
+cp .claude/skill-tools.hooks.example.yaml .claude/skill-tools.hooks.yaml  # 必要なら hooks.install を編集
 just hooks-install && just sub-agent-hooks-install
 ```
 
@@ -20,7 +21,7 @@ just hooks-install && just sub-agent-hooks-install
 - `just links-sync` — `.links.yaml` で宣言した Junction を作る（[repo-layout](maintenance/docs/repo-layout.md)）
 - `just branch-work <name> && just branch-switch --create` — この端末の作業ブランチ名（`windows` など）を git config に記録し、全リポジトリをそのブランチにする（[branch-and-pr-workflow](maintenance/docs/branch-and-pr-workflow.md#作業ブランチ名を設定する)）
 - `just agent-compat-sync` — Cline・Kilo Code・Antigravity 向けのスキルのコピーを作る
-- `just hooks-install`／`just sub-agent-hooks-install` — エージェントフックをアンブレラと各サブモジュールに入れる（[hook-distribution](maintenance/docs/hook-distribution.md)）
+- `cp .claude/skill-tools.hooks.example.yaml ...`／`just hooks-install`／`just sub-agent-hooks-install` — エージェントフックをアンブレラと各サブモジュールに入れる。入れるフックは gitignore したローカルの設定（`hooks.install`）で選び、git にはサンプルだけがある。サブモジュールはそれぞれの `.claude/` で同じようにコピーしたものだけが対象（[hook-distribution](maintenance/docs/hook-distribution.md)）
 
 pull のあとは `just sub-init`。サブモジュールの中でコミットしてからアンブレラでポインタを更新する 2 段階の手順は [repo-layout](maintenance/docs/repo-layout.md#サブモジュール) を参照。
 

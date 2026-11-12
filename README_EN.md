@@ -13,6 +13,7 @@ lefthook install && just sub-hooks-install
 just links-sync
 just branch-work <this-machine's-branch> && just branch-switch --create
 just agent-compat-sync
+cp .claude/skill-tools.hooks.example.yaml .claude/skill-tools.hooks.yaml  # edit hooks.install if needed
 just hooks-install && just sub-agent-hooks-install
 ```
 
@@ -20,7 +21,7 @@ just hooks-install && just sub-agent-hooks-install
 - `just links-sync` — Create the Junctions declared in `.links.yaml` ([repo-layout](maintenance/docs/repo-layout.md))
 - `just branch-work <name> && just branch-switch --create` — Record this machine's working branch name (e.g. `windows`) in git config and put every repository on it ([branch-and-pr-workflow](maintenance/docs/branch-and-pr-workflow.md))
 - `just agent-compat-sync` — Create the skill copies for Cline, Kilo Code, and Antigravity
-- `just hooks-install` / `just sub-agent-hooks-install` — Install the agent hooks in the umbrella and in each submodule ([hook-distribution](maintenance/docs/hook-distribution.md))
+- `cp .claude/skill-tools.hooks.example.yaml ...` / `just hooks-install` / `just sub-agent-hooks-install` — Install the agent hooks in the umbrella and in each submodule. Pick the hooks in the gitignored local config (`hooks.install`); git only has the sample. A submodule is included only after you copy its sample the same way under its `.claude/` ([hook-distribution](maintenance/docs/hook-distribution.md))
 
 After a pull, run `just sub-init`. For the two-step flow (commit inside the submodule, then update the pointer in the umbrella), see [repo-layout](maintenance/docs/repo-layout.md#サブモジュール).
 

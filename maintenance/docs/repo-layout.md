@@ -98,7 +98,7 @@ just hooks-install && just sub-agent-hooks-install  # エージェントフッ�
 
 ```sh
 just links-sync               # 各サブモジュールの .links.yaml の Junction（スキルと _umbrella/）を作る
-just sub-agent-hooks-install  # アンブレラと同じ Claude Code フックを各サブモジュールに入れる
+just sub-agent-hooks-install  # 各サブモジュールの .claude/skill-tools.hooks.yaml に書いたフックを入れる（無ければ飛ばす）
 ```
 
 - **見えるもの**: 親の `CLAUDE.md`（とその `@./AGENTS.md`）は Claude Code が自動で読む。親の `.claude/skills`・`.claude/agents`・`.claude/settings.json` は読まない（サブモジュールが repo root になり、遡りが止まる）。そのため、そのフォルダの作業に要るアンブレラのスキル（`committing` など）を `.claude/skills/<name>` の Junction で見せる。
@@ -106,7 +106,7 @@ just sub-agent-hooks-install  # アンブレラと同じ Claude Code フック�
 - **アンブレラで開いたとき**: サブモジュールの `.claude/skills` は起動時には読まれない。サブモジュール内のファイルを読むと、`skills:committing`・`tools:committing` のようなディレクトリ別のスキルとして遅延ロードされる（中身は同じスキル。Claude Code 2.1 で確認）。
 - **`_umbrella/` の中身はアンブレラ（または別のサブモジュール）のファイル**。そこで直したら、コミットはそのファイルが属するリポジトリで行う。サブモジュールのコミットには入らない（Junction は exclude 済み）。
 - **指示ファイル**: サブモジュールの `CLAUDE.md` は `@./AGENTS.md` だけ。`@../...` で親を import しない（親は自動で読まれるので二重になる。外部 import の承認も出る）。サブモジュールの `AGENTS.md` には、アンブレラの規約と重複しない、そのフォルダ固有の責務だけを書く。
-- **フック**: 各サブモジュールの `.claude/skill-tools.hooks.yaml`（source はアンブレラ）をコミットし、入れたフックと `.claude/settings.json`・`.skill-tools/` は gitignore する。`.claude/hooks` を Junction で共有しない（`.env`・`logs/`・`state/` まで共有し、サブモジュールでのインストールがアンブレラの実体を書き換える）。カタログを再生成したら `just sub-agent-hooks-update`。
+- **フック**: 各サブモジュールはサンプル `.claude/skill-tools.hooks.example.yaml`（source はアンブレラ）だけをコミットする。使う人がそれを `.claude/skill-tools.hooks.yaml`（gitignore）にコピーして `hooks.install` を編集し、`just sub-agent-hooks-install`（`skill-tools hooks sync`）で入れる。入れたフックと `.claude/settings.json`・`.skill-tools/` も gitignore する。`.claude/hooks` を Junction で共有しない（`.env`・`logs/`・`state/` まで共有し、サブモジュールでのインストールがアンブレラの実体を書き換える）。カタログを再生成したら `just sub-agent-hooks-update`。
 - **ワークスペース**: `uv run`・pnpm はアンブレラの workspace と `.venv` をそのまま使う。サブモジュール直下に `pyproject.toml`・`pnpm-workspace.yaml` を置かない。
 - **単体で clone した場合**: `.links.yaml` の参照先が無いので Junction は作られず、親の指示・フック・lefthook も無い。Claude Code の起動自体はできる。`--plugin-dir <アンブレラ>/maintenance/plugin` を渡せば、Junction の代わりにメンテ用スキルを 1 セッションだけ読み込める。
 
