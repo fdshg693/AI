@@ -4,7 +4,7 @@ A personal research/experiment repository about AI coding tool configurations an
 
 ## Getting the repository
 
-`skills/`, `tools/`, `agent-compat/`, and `site/` are submodules ([AI-skills](https://github.com/fdshg693/AI-skills), [AI-tools](https://github.com/fdshg693/AI-tools), [AI-agent-compat](https://github.com/fdshg693/AI-agent-compat), [AI-site](https://github.com/fdshg693/AI-site)). Clone with the submodules.
+`skills/`, `tools/`, `agent-compat/`, `site/`, and `workflow/` are submodules ([AI-skills](https://github.com/fdshg693/AI-skills), [AI-tools](https://github.com/fdshg693/AI-tools), [AI-agent-compat](https://github.com/fdshg693/AI-agent-compat), [AI-site](https://github.com/fdshg693/AI-site), [AI-workflow](https://github.com/fdshg693/AI-workflow)). Clone with the submodules.
 
 ```sh
 git clone --recurse-submodules https://github.com/fdshg693/AI.git
@@ -65,7 +65,7 @@ Skill bodies live in one place only, as Claude Code plugins (`skills/plugins/`, 
 
 ### Submodules
 
-The following four are separate repositories; the umbrella only holds their commit pointers. When you change files inside one, commit inside the submodule first, then update the pointer in the umbrella ([repo-layout "Submodules"](maintenance/docs/repo-layout.md#サブモジュール)). You can work by opening just the submodule folder, but generation, checks, and workspaces live in the umbrella, so clone and use it from the umbrella.
+The following five are separate repositories; the umbrella only holds their commit pointers. When you change files inside one, commit inside the submodule first, then update the pointer in the umbrella ([repo-layout "Submodules"](maintenance/docs/repo-layout.md#サブモジュール)). You can work by opening just the submodule folder, but generation, checks, and workspaces live in the umbrella, so clone and use it from the umbrella.
 
 - [skills/](skills/) ([AI-skills](https://github.com/fdshg693/AI-skills)) — Claude Code plugins that do not depend on tools (`skills/plugins/<name>`). Knowledge skills about other AI tools are also kept here as Claude Code skills, in [skills/plugins/ai-tools-knowledge/](skills/plugins/ai-tools-knowledge/)
 - [tools/](tools/) ([AI-tools](https://github.com/fdshg693/AI-tools)) — CLIs (one directory per tool) and the plugin of usage skills that assume them, [tools/\_plugin/my-tools/](tools/_plugin/my-tools/). The role index is [tools/README.md](tools/README.md)
@@ -73,6 +73,7 @@ The following four are separate repositories; the umbrella only holds their comm
 - [site/](site/) ([AI-site](https://github.com/fdshg693/AI-site)) — Public sites
   - [site/skills-site/](site/skills-site/) — Astro static site that collects registered skills across tools (Azure Static Web Apps). It publishes only skill bodies, metadata, and distribution ZIPs. Steps are in [site/skills-site/AGENTS.md](site/skills-site/AGENTS.md)
   - [site/tools-site/](site/tools-site/) — VitePress site of install and usage notes for [repo-tools.yaml](registry/repo-tools.yaml) entries with `release: true` (GitHub Pages). [site/tools-site/README.md](site/tools-site/README.md)
+- [workflow/](workflow/) ([AI-workflow](https://github.com/fdshg693/AI-workflow)) — Customizable workflows that go beyond plain CLI use: CLI wrappers for AI coding tools (`claude-wrapper`, etc.), the issue-driven Docker sandbox [workflow/sandbox/](workflow/sandbox/), and scheduled runs in [workflow/schedule/](workflow/schedule/). Not listed in `repo-tools.yaml`. [workflow/README.md](workflow/README.md)
 
 ### Repository operations (umbrella itself)
 
@@ -96,12 +97,12 @@ The following four are separate repositories; the umbrella only holds their comm
 ## Other
 
 - The 2026-11 restructure changed plugin locations and some plugin names (`meta` → `cc-knowledge`, `my-tools-no-install` → `web-lookup` / `doc-tools`, and others). A mapping table for existing users is in [docs/integrations/claude-code.md](docs/integrations/claude-code.md).
-- `.gitmodules` — Declares the four submodules above. Managed with `just sub-init` / `sub-sync` / `sub-status`. `just branch-*` creates, switches, pushes and deletes one working branch across the umbrella and every submodule (see repo-layout).
+- `.gitmodules` — Declares the five submodules above. Managed with `just sub-init` / `sub-sync` / `sub-status`. `just branch-*` creates, switches, pushes and deletes one working branch across the umbrella and every submodule (see repo-layout).
 - `.links.yaml` / `.umbrella-root` — Junction declarations (placed at each repository root and created with `just links-sync`; the Junctions themselves are not committed) and the marker for the umbrella root. See [repo-layout](maintenance/docs/repo-layout.md) for details.
 - `lefthook.yml` — Git hooks configuration that runs on commit, etc. (various regeneration/formatting/secretlint on `pre-commit`, commitlint on `commit-msg`). The submodule side is `maintenance/lefthook/submodule.yml`.
 - `mise.toml` — Tool version management via [mise](https://mise.jdx.dev/) (pins node / pnpm / terraform / uv for this repository).
 - `pyproject.toml` — Root definition of the uv workspace (manages Python packages such as `tools/aim` together).
-- `pnpm-workspace.yaml` / `package.json` / `pnpm-lock.yaml` — Root definition of the pnpm workspace (`site/skills-site`, `tools/cline-wrapper`) and its lockfile.
+- `pnpm-workspace.yaml` / `package.json` / `pnpm-lock.yaml` — Root definition of the pnpm workspace (`site/skills-site`, `workflow/cline-wrapper`, `workflow/copilot-wrapper`) and its lockfile.
 - `.prettierrc.json` / `.prettierignore` — Formatting settings.
 - `commitlint.config.js` — Lint settings for commit messages ([Conventional Commits](https://www.conventionalcommits.org/), `@commitlint/config-conventional`).
 - `.secretlintrc.json` — Secret detection settings for staged files ([secretlint](https://github.com/secretlint/secretlint) `@secretlint/secretlint-rule-preset-recommend`).

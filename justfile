@@ -82,7 +82,7 @@ links-check *args:
 links-clean *args:
     just --justfile maintenance/scripts/justfile links-clean {{args}}
 
-# --- submodules (skills / tools / agent-compat / site). See maintenance/docs/repo-layout.md ---
+# --- submodules (skills / tools / agent-compat / site / workflow). See maintenance/docs/repo-layout.md ---
 
 # Clone/checkout every submodule at the commit the umbrella records (run after clone and pull)
 sub-init:

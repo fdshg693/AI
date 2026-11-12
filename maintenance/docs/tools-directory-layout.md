@@ -1,7 +1,7 @@
 ---
 type: Repo Convention
 title: tools/配下のディレクトリ構成規約
-description: Explains the directory conventions this repo uses for convenience scripts under tools/ — one directory per tool (or a grouping subfolder for related tools, e.g. tools/schedule/), its own README/AGENTS.md/CLAUDE.md import chain, turning it into a globally installable CLI via a package manifest entrypoint, and the expectation that first-class tools expose version metadata and --version. Use when adding a new script/tool to tools/, deciding whether it needs its own subfolder or a real package, or wiring up its CLAUDE.md.
+description: Explains the directory conventions this repo uses for convenience scripts under tools/ — one directory per tool (or a grouping subfolder for related tools, e.g. tools/openrouter/), its own README/AGENTS.md/CLAUDE.md import chain, turning it into a globally installable CLI via a package manifest entrypoint, and the expectation that first-class tools expose version metadata and --version. Use when adding a new script/tool to tools/, deciding whether it needs its own subfolder or a real package, or wiring up its CLAUDE.md.
 tags: [tools, repo-wide]
 generated: { by: reference_agent/cline-glm-5.2, at: 2026-08-09T14:39:30Z }
 status: stable
@@ -9,13 +9,14 @@ status: stable
 
 # tools/配下のディレクトリ構成規約
 
-このリポジトリの`tools/`配下は、便利スクリプト・CLIごとに1ディレクトリを割り当てる方針で構成されている。新しいスクリプトを追加する際は、既存ツール（`tools/aim`、`tools/tav-cli`、`tools/schedule/ai-schedule`等）と同じ形に揃える。
+このリポジトリの`tools/`配下は、便利スクリプト・CLIごとに1ディレクトリを割り当てる方針で構成されている。新しいスクリプトを追加する際は、既存ツール（`tools/aim`、`tools/tav-cli`、`tools/openrouter/model-select`等）と同じ形に揃える。
 
 ## 配置単位
 
 - 基本は`tools/`直下に1ツール1ディレクトリ（`tools/aim`、`tools/ctx7`、`tools/mslearn`、`tools/my-agents`等）
-- 関連する複数ツールをまとめたい場合は1段グループ化する（`tools/schedule/`は`ai-schedule`とそこから定期実行される`issue-agent`をまとめる、`tools/ai-usage`はこのリポジトリ内部専用ツール群の1つ）
-- Pythonパッケージ化が不要なディレクトリもある（`tools/infra`はBicep+スクリプト、`tools/sandbox`は実験用）。すべてを無理に`uv`ワークスペースへ載せる必要はない（判断基準は[uv-workspace](./uv-workspace.md)参照）
+- 関連する複数ツールをまとめたい場合は1段グループ化する（`tools/openrouter/`はOpenRouterのモデル一覧`model-list`とモデル選定`model-select`をまとめる、`tools/ai-usage`はこのリポジトリ内部専用ツール群の1つ）
+- Pythonパッケージ化が不要なディレクトリもある（`tools/infra`はBicep+スクリプト）。すべてを無理に`uv`ワークスペースへ載せる必要はない（判断基準は[uv-workspace](./uv-workspace.md)参照）
+- AI の SDK/CLI を組み合わせて手元でカスタマイズして使うワークフロー（CLI ラッパー、サンドボックス、定期実行など）は`tools/`ではなく`workflow/`サブモジュールに置く（[repo-layout](./repo-layout.md#置き場所の判定基準)）
 
 ## 役割索引
 
@@ -36,7 +37,7 @@ status: stable
 ## 実装スタイルの選び方
 
 - **単一モジュール**: 小さく状態を持たないCLIなら1ファイル+`[tool.setuptools] py-modules = [...]`で十分（`tools/aim/aim_cli.py`）
-- **パッケージ+tests/**: 内部構造やユニットテストを持つ規模になったら、パッケージディレクトリ＋`tests/`に分ける（`tools/schedule/ai-schedule/ai_schedule/*.py` + `tools/schedule/ai-schedule/tests/`、`tools/tav-cli/tav_core/`）
+- **パッケージ+tests/**: 内部構造やユニットテストを持つ規模になったら、パッケージディレクトリ＋`tests/`に分ける（`tools/openrouter/model-select/model_select/*.py` + `tools/openrouter/model-select/tests/`、`tools/tav-cli/tav_core/`）
 
 最初から過剰にパッケージ化せず、複雑さが増えたタイミングで単一モジュールからパッケージへ切り出す。
 
