@@ -45,6 +45,10 @@ skills-catalog-md:
 readme-tools-section:
     uv run python -m plugin_meta.generate.generate_readme_tools_section
 
+# Regenerate the skills submodule's plugin index
+skills-plugin-index:
+    uv run python -m plugin_meta.generate.generate_skills_plugin_index
+
 # Regenerate the root compatibility copies of registry/*.yaml read by older skill-tools
 registry-compat:
     uv run python -m plugin_meta.generate.generate_registry_compat
@@ -52,7 +56,7 @@ registry-compat:
 # Regenerate all generated marketplace and skill catalog files.
 # AGENTS.md -> Cline/Copilot/Antigravity rules are not generated here; run the
 # tools/agents-rules CLI (`uv run agents-rules`) explicitly when needed.
-generate: marketplace codex-marketplace copilot-marketplace workspace-copies skill-catalog skills-catalog-md readme-tools-section registry-compat
+generate: marketplace codex-marketplace copilot-marketplace workspace-copies skill-catalog skills-catalog-md readme-tools-section skills-plugin-index registry-compat
 
 # --- skill/set, skill/check, skill/query: SKILL.md frontmatter and relation graph ---
 
@@ -87,6 +91,11 @@ skill-repo-tools-check:
 # (cwd or parent .env search). Not wired into lefthook.
 tool-env-loading-check:
     uv run python -m check.check_tool_env_loading
+
+# Fail if a local config file (registry/local-configs.yaml) is tracked or not
+# gitignored, or its example is missing. Checks the index of every repository.
+local-configs-check *args:
+    uv run python -m check.check_local_configs {{ args }}
 
 # Scan currently staged files with secretlint. Batches argv so Windows
 # leftover pre-commit does not hit CreateProcess command-line limits.

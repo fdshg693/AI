@@ -148,9 +148,16 @@ def test_run_bumps_python_and_node_once_and_stages_manifests(
     monkeypatch.setattr(module, "REPO_TOOLS_YAML_PATH", repo / "repo-tools.yaml")
 
     def fake_run(
-        command, cwd=None, capture_output=False, text=False, encoding=None, errors=None, check=False
+        command,
+        cwd=None,
+        capture_output=False,
+        text=False,
+        encoding=None,
+        errors=None,
+        check=False,
+        env=None,
     ):
-        del capture_output, text, encoding, errors, check
+        del capture_output, text, encoding, errors, check, env
         if command[:2] == ["git", "show"]:
             rel_path = command[2].split(":", 1)[1]
             content = head_files.get(rel_path)
@@ -229,9 +236,16 @@ def test_run_skips_when_manifest_version_already_changed(
     monkeypatch.setattr(module, "REPO_TOOLS_YAML_PATH", repo / "repo-tools.yaml")
 
     def fake_run(
-        command, cwd=None, capture_output=False, text=False, encoding=None, errors=None, check=False
+        command,
+        cwd=None,
+        capture_output=False,
+        text=False,
+        encoding=None,
+        errors=None,
+        check=False,
+        env=None,
     ):
-        del cwd, capture_output, text, encoding, errors, check
+        del cwd, capture_output, text, encoding, errors, check, env
         if command[:2] == ["git", "show"]:
             rel_path = command[2].split(":", 1)[1]
             return subprocess.CompletedProcess(command, 0, head_files[rel_path], "")
@@ -268,9 +282,16 @@ def test_main_supports_dry_run(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, 
     monkeypatch.setattr(module, "REPO_TOOLS_YAML_PATH", repo / "repo-tools.yaml")
 
     def fake_run(
-        command, cwd=None, capture_output=False, text=False, encoding=None, errors=None, check=False
+        command,
+        cwd=None,
+        capture_output=False,
+        text=False,
+        encoding=None,
+        errors=None,
+        check=False,
+        env=None,
     ):
-        del cwd, capture_output, text, encoding, errors, check
+        del cwd, capture_output, text, encoding, errors, check, env
         if command[:2] == ["git", "show"]:
             rel_path = command[2].split(":", 1)[1]
             assert rel_path == "tools/interactive-cli-wrapper/pyproject.toml"

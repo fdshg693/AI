@@ -6,6 +6,7 @@
 - `./.../SKILL.md`のような形式であっても、あなたがスキルとして呼び出せるとは限りません。その場合は、ファイルとして直接Readしてください。
 - Claude Rule の source は `.claude/rules/`、ネストした `AGENTS.md` の注入は `agent-compat/agent-tooling/agent_tooling/hooks/scenarios/nested_agents_md/` が担当する。両者は独立した入力契約として扱うこと。`.claude/rules/` は現在存在しないが、任意の入力として参照を残している（無ければ Claude Rule の注入が何もしないだけ）。
 - エージェントフックの正本は `agent-compat/agent-tooling/agent_tooling/hooks/`。`.claude/hooks/` はインストール先なので直接編集しない。フックの追加・変更は `maintenance/docs/hook-distribution.md` から辿る。
+- ローカル設定ファイル（`.json`・`.toml`・`.env` など）は example（`*.example.*`／`*.example`）だけをコミットし、実体は gitignore する。新しく足したら `registry/local-configs.yaml` に宣言する（pre-commit と CI が検査。詳細は `maintenance/docs/repo-layout.md` の「ローカル設定ファイル」）。
 - Junction は各リポジトリのルートの `.links.yaml` で宣言し、`just links-sync` で作る。直接 `mklink /J` しない。Junction を `rm -rf`／`Remove-Item -Recurse` で消さず `just links-clean` を使う。リポジトリを走査するコードは Junction を辿らない。詳細は `maintenance/docs/repo-layout.md`。
 - `skills/`・`tools/`・`agent-compat/`・`site/`・`workflow/` はサブモジュール。中のファイルを変えたら、そのサブモジュールの中でコミットしてから、アンブレラで `git add <submodule>` してポインタを更新する（2 段階。詳細は `maintenance/docs/repo-layout.md` の「サブモジュール」）。作業前に detached HEAD なら `git switch main` する。
 - あなた以外のエージェント・ユーザーがこのレポジトリで同時作業することは頻繁に起こります。
@@ -21,7 +22,7 @@
 
 ## AIツール/プラグイン設定のSSOT
 
-- AIツール・プラグイン・マーケットプレイス・スキルカタログの所在は `registry/ai-tools.yaml` がSSOT。SSOT yaml（`ai-tools` / `repo-tools` / `meta_field` / `skill-tags` / `repo-workflows` / `repo-hooks`）は `registry/` に置く。ルート直下の同名 yaml 4 本は旧 skill-tools 向けの生成コピーで、手編集しない。
+- AIツール・プラグイン・マーケットプレイス・スキルカタログの所在は `registry/ai-tools.yaml` がSSOT。SSOT yaml（`ai-tools` / `repo-tools` / `meta_field` / `skill-tags` / `repo-workflows` / `repo-hooks` / `local-configs`）は `registry/` に置く。ルート直下の同名 yaml 4 本は旧 skill-tools 向けの生成コピーで、手編集しない。
 - 新しいプラグインを追加・削除したら、先に `registry/ai-tools.yaml` を更新する。
 - `./README.md` の `<!-- BEGIN: ai-tools-section -->`〜`<!-- END: ai-tools-section -->` は `maintenance/scripts/plugin_meta/generate/generate_readme_tools_section.py` が `ai-tools.yaml` の `readme` ブロックから生成する。手編集しない。
 

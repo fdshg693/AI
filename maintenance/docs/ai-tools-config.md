@@ -37,6 +37,7 @@ status: stable
 | `.claude-plugin/skill-catalog.json`                               | `generate_skill_catalog.py`        |
 | 各プラグインの `skills/CATALOG.md`                                | `generate_skills_catalog_md.py`    |
 | `README.md` の `<!-- BEGIN/END: ai-tools-section -->` 節          | `generate_readme_tools_section.py` |
+| `skills/README.md` のプラグイン一覧                               | `generate_skills_plugin_index.py`  |
 
 いずれも `maintenance/scripts/plugin_meta/generate/generate_*.py` にあり、`from plugin_meta.util.ai_tools_config import REPO_ROOT, load_tool` で設定を読み、対象ファイルを**丸ごと再生成**（マージではない）する。
 
@@ -55,6 +56,7 @@ just --justfile maintenance/scripts/justfile copilot-marketplace
 just --justfile maintenance/scripts/justfile skill-catalog
 just --justfile maintenance/scripts/justfile skills-catalog-md
 just --justfile maintenance/scripts/justfile readme-tools-section
+just --justfile maintenance/scripts/justfile skills-plugin-index
 just --justfile maintenance/scripts/justfile generate                 # 上記すべてをまとめて実行
 just --justfile maintenance/scripts/justfile skill-versions            # meta.versionが空のSKILL.mdに1.0.0を補完
 ```
@@ -65,7 +67,11 @@ just --justfile maintenance/scripts/justfile skill-versions            # meta.ve
 
 1. `skills/plugins/<name>/.claude-plugin/plugin.json`（`name`/`version`/`description`）と、必要なら `skills/plugins/<name>/skills/<skill>/SKILL.md` を作成
 2. `ai-tools.yaml` の `tools.claude-code.plugins` に `- path: skills/plugins/<name>` / `kind: plugin` / `skills_layout: subdir` を追記（**アルファベット順**を維持）
-3. `.claude-plugin/marketplace.json` と `.claude-plugin/skill-catalog.json`、対象プラグインの `skills/CATALOG.md` を再生成（上記コマンド、またはコミット時のlefthookに任せる）
+3. 両側の入力を作業ツリーに揃え、`skills-plugin-index` を実行する。登録一覧は `registry/ai-tools.yaml`、名前と説明は各 Claude manifest が正本。未登録ディレクトリや欠落はエラーになる。
+4. registry を変更した場合はアンブレラ側で先にステージし、`skills` 側で manifest と README を確認・ステージ・コミットする。その後アンブレラ側で registry、生成物と skills gitlink をコミットする。削除・移動や registry のみの変更も同じ順序で扱う。
+5. `.claude-plugin/marketplace.json` と `.claude-plugin/skill-catalog.json`、対象プラグインの `skills/CATALOG.md` を再生成する。
+
+一覧はサブモジュールにあるためフックが他リポジトリを自動ステージすることはない。両側の入力に未ステージ変更や未追跡ファイルがある場合、または一覧がインデックスと一致しない場合はコミットを拒否する。再生成して差分を確認し、上記順序で収録する。
 
 Codex/Copilot のマーケットプレイスに載せる場合は、プラグインディレクトリにそのツールのマニフェストを置き、該当ツールの `marketplace.sources` に追記してから再生成する。Cline・Kilo・Antigravity に見せる場合は `workspace_copies` の `include` を広げる。
 

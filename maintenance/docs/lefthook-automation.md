@@ -19,6 +19,7 @@ status: stable
 - `meta.version`が未バンプのままステージされた`SKILL.md`があればコミットをブロック（[skill-meta-fields](./skill-meta-fields.md) / [skill-md-commits](./skill-md-commits.md)参照）
 - `repo-tools.yaml`との整合チェック（スキルの`requires_repo_tools`/`requires_install`、およびツール同士の`requires_tools`。`library`辺はworkspace依存と一致）。`**/SKILL.md`・`repo-tools.yaml`・`tools/**/pyproject.toml`がトリガー。影響範囲の列挙（`skill-tool-impact`）はlefthookに繋がない。直すかどうかは判断が要るため、スキル/`tools/` を含むコミットでは[committing](../plugin/skills/committing/SKILL.md)がエージェントに叩かせる（[skill-tool-relations](./skill-tool-relations.md)）
 - `repo-tools.yaml`登録ツールの各フォルダに変更があれば、対応するマニフェスト（Pythonは`pyproject.toml`、Nodeは`package.json`）のpatchバージョンを自動で1つ上げて同じコミットに含める。すでにversionを手動変更しているコミットでは追加バンプしない（[repo-tools-config](./repo-tools-config.md)の消費側4参照）
+- ローカル設定ファイルの検査（`registry/local-configs.yaml`。実体が追跡されず gitignore されていること、example が追跡されていること、`deny_patterns` に一致する追跡ファイルが無いこと）。ステージ済みの差分ではなく全リポジトリの index を見るので、毎コミット走る（lefthook のジョブに `glob` を付けない）。CI（`umbrella-check.yml`）でも同じ検査を走らせる（[repo-layout](./repo-layout.md#ローカル設定ファイル)）
 - ステージ済みMarkdownのPrettier整形、ステージ済みPythonの`ruff format`整形、ステージ済みファイルのsecretlint
 - Windowsでは`{staged_files}`の展開がCreateProcessのコマンドライン長制限に当たることがある。マニフェスト自動バンプとsecretlintはgitのステージ済み一覧をスクリプト側で読む（secretlintは分割実行）
 

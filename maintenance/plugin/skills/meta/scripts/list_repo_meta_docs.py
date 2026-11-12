@@ -59,7 +59,7 @@ def main() -> int:
     entries: list[tuple[str, str]] = []
     errors: list[str] = []
     for doc_path in sorted(docs_dir.glob("*.md")):
-        if doc_path.name == "index.md":
+        if doc_path.name in {"index.md", "README.md", "AGENTS.md"}:
             continue
         try:
             text = doc_path.read_text(encoding="utf-8")

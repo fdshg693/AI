@@ -103,6 +103,7 @@ just sub-agent-hooks-install  # アンブレラと同じ Claude Code フック�
 - **何を見せるか**: 宣言は各サブモジュールの `.links.yaml` が正本で、このドキュメントには一覧を書かない。足すのは「そのフォルダの作業に要るもの」だけにする（アンブレラ全体を見せると単体で開く意味が無くなる）。スキルは `.claude/skills/<name>`、強く結びついたアンブレラのフォルダ（`registry/` など）は `_umbrella/<name>` という名前で見せる。
 - **アンブレラで開いたとき**: サブモジュールの `.claude/skills` は起動時には読まれない。サブモジュール内のファイルを読むと、`skills:committing`・`tools:committing` のようなディレクトリ別のスキルとして遅延ロードされる（中身は同じスキル。Claude Code 2.1 で確認）。
 - **`_umbrella/` の中身はアンブレラ（または別のサブモジュール）のファイル**。そこで直したら、コミットはそのファイルが属するリポジトリで行う。サブモジュールのコミットには入らない（Junction は exclude 済み）。
+- **`plans/` は全サブモジュールで共有**: 各サブモジュール直下の `plans/` はアンブレラの `plans/` を参照する。作成・変更したプランはアンブレラに属する。
 - **指示ファイル**: サブモジュールの `CLAUDE.md` は `@./AGENTS.md` だけ。`@../...` で親を import しない（親は自動で読まれるので二重になる。外部 import の承認も出る）。サブモジュールの `AGENTS.md` には、アンブレラの規約と重複しない、そのフォルダ固有の責務だけを書く。
 - **フック**: 各サブモジュールの `.claude/skill-tools.hooks.yaml`（source はアンブレラ）をコミットし、入れたフックと `.claude/settings.json`・`.skill-tools/` は gitignore する。`.claude/hooks` を Junction で共有しない（`.env`・`logs/`・`state/` まで共有し、サブモジュールでのインストールがアンブレラの実体を書き換える）。カタログを再生成したら `just sub-agent-hooks-update`。
 - **ワークスペース**: `uv run`・pnpm はアンブレラの workspace と `.venv` をそのまま使う。サブモジュール直下に `pyproject.toml`・`pnpm-workspace.yaml` を置かない。
@@ -113,6 +114,25 @@ just sub-agent-hooks-install  # アンブレラと同じ Claude Code フック�
 - アンブレラのワークフローは `actions/checkout` に `submodules: recursive` を付ける。`paths:` はサブモジュールの中のパターンでは発火しない（アンブレラから見えるのは gitlink だけ）ので、`skills`・`tools`・`site` のようにサブモジュールのパスそのものを書く。
 - サイトの公開（Azure Static Web Apps・GitHub Pages）はアンブレラで動く。サブモジュールへの push だけではサイトは更新されず、アンブレラのポインタ更新で動く。
 - CLI のタグと GitHub Release は AI-tools の `tool-release.yml` が作る（対象はアンブレラの `registry/repo-tools.yaml` を読んで決める）。`git+https://github.com/fdshg693/AI-tools.git#subdirectory=<name>` でインストールする。
+
+## ローカル設定ファイル
+
+マシンごとに書き換える設定ファイル（`.json`・`.toml`・`.env` など）は、実体をコミットせず gitignore し、example（`X.example.Y` または `X.Y.example`）だけをコミットする。clone した人は example をコピーして使う。対象と例外は [`registry/local-configs.yaml`](../../registry/local-configs.yaml) で宣言し、[`check_local_configs.py`](../scripts/check/check_local_configs.py) が pre-commit（`precommit check`）と CI（`umbrella-check.yml`）で検査する（手動では `just --justfile maintenance/scripts/justfile local-configs-check`）。
+
+検査するのは、アンブレラと全サブモジュールの index（`git ls-files`）。
+
+1. `local_configs` に宣言した実体が追跡されておらず、gitignore されている（持ち主のリポジトリの `git check-ignore --no-index` で判定）
+2. `local_configs` に宣言した example が追跡されている
+3. 名前の規約: 追跡中の example の名前から `example` を除いた実体（`config.example.toml` → `config.toml`）が追跡されていない。gitignore までは求めない（`src.example.md` のような、ローカル設定ではないサンプルもあるため）
+4. 名前のパターン: 追跡中のファイルが `deny_patterns` に一致したら、`allow_tracked` に無い限りエラー。example の名前は対象外
+
+あわせて、`allow_tracked` にあるのに追跡されていないパス（古い宣言）もエラーにする。
+
+- 宣言はサブモジュールの中のファイルも含めてアンブレラ相対のパスで書く。サブモジュールだけを clone した場合は検査が走らない。
+- リポジトリの外に実体を置く雛形（`tools/gdevdocs/config.example.toml` は `~/.config/...` 用）は `local_configs` に宣言しない。名前の規約（検査 3）は自動で効く。
+- `allow_tracked` に足してよいのは、マシン固有の値も秘密も含まず、共有すること自体が目的のファイルだけ（マーケットプレイスを登録する `.github/copilot/settings.json`、Docker イメージに焼き込む設定など）。理由を `reason` に書く。それ以外は example にする。
+- 全リポジトリの index を見るので、あるサブモジュールに違反があると、別のリポジトリのコミットも止まる。違反は常にゼロに保つ前提とする。
+- 実体の追跡を外すコミットを pull すると、他の clone では git が実体を作業ツリーから消す。README の「取得」節の手順で example からコピーし直す。
 
 ## Junction はコミットせず `.links.yaml` で宣言する
 
@@ -131,11 +151,11 @@ links:
 
 ## 操作は `just links-*` だけで行う
 
-| レシピ             | 内容                                                                                                                                                                                        |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `just links-sync`  | 宣言を検証し、各パスを所有リポジトリの `info/exclude` の管理ブロックへ `/path/` 形式で書いてから Junction を作る。参照先が違う Junction は張り直し、宣言から消えたものは外す。              |
-| `just links-check` | 欠けている・参照先が違う・exclude に無い・宣言に無い Junction、アンブレラ外を指す Junction、Junction のパスの下に追跡ファイルがある状態をエラーにする。過去に追跡されていたパスは警告する。 |
-| `just links-clean` | 宣言と管理ブロックにある Junction を外し（参照先は消さない）、管理ブロックを空にする。                                                                                                      |
+| レシピ             | 内容                                                                                                                                                                                                                                         |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `just links-sync`  | 宣言を検証し、各パスを所有リポジトリの `info/exclude` の管理ブロックへ `/path` 形式（末尾 `/` なし。mac/Linux のシンボリックリンクにも一致させる）で書いてから Junction を作る。参照先が違う Junction は張り直し、宣言から消えたものは外す。 |
+| `just links-check` | 欠けている・参照先が違う・exclude に無い・宣言に無い Junction、アンブレラ外を指す Junction、Junction のパスの下に追跡ファイルがある状態をエラーにする。過去に追跡されていたパスは警告する。                                                  |
+| `just links-clean` | 宣言と管理ブロックにある Junction を外し（参照先は消さない）、管理ブロックを空にする。                                                                                                                                                       |
 
 実体は [`maintenance/scripts/links/`](../scripts/links/)。`--dry-run`（sync・clean）と `--quiet` を渡せる。
 

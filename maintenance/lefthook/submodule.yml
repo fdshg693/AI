@@ -57,6 +57,8 @@ pre-commit:
       group:
         parallel: true
         jobs:
+          - name: validate skills plugin index
+            run: uv run --project .. python ../maintenance/scripts/precommit/skills_plugin_index.py submodule
           - name: maintenance/scripts precommit check
             run: just --justfile ../maintenance/scripts/justfile precommit-check
           - name: scan staged files for secrets

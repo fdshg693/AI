@@ -6,7 +6,8 @@ in-process instead, in a fixed dependency order:
 
     fix   — SKILL.md meta defaults -> generated catalogs/marketplaces -> tool
             manifest version bumps (all write files; lefthook re-stages them)
-    check — read-only checks (SKILL.md version bump, repo-tools consistency)
+    check — read-only checks (SKILL.md version bump, repo-tools consistency,
+            local config files tracked/ignored)
 
 Each task still runs only when a staged path matches its globs (the same globs
 lefthook used per job). `--all` ignores the staged list and runs every task,
@@ -91,6 +92,11 @@ FIX_TASKS = (
         ("registry/ai-tools.yaml",),
     ),
     Task(
+        "skills-plugin-index",
+        "plugin_meta.generate.generate_skills_plugin_index",
+        (),  # Explicit generation or CI --all; hooks validate without writing across repositories.
+    ),
+    Task(
         "registry-compat",
         "plugin_meta.generate.generate_registry_compat",
         (
@@ -134,6 +140,15 @@ CHECK_TASKS = (
         ),
         call="argv",
     ),
+    Task(
+        # Checks the whole index of every repository, not the staged diff: a
+        # .gitignore edit, an example rename or a new config file can each change
+        # the result, so it runs on every commit.
+        "local-configs-check",
+        "check.check_local_configs",
+        ("**",),
+        call="list",
+    ),
 )
 
 PHASES = {"fix": FIX_TASKS, "check": CHECK_TASKS}
@@ -141,7 +156,7 @@ PHASES = {"fix": FIX_TASKS, "check": CHECK_TASKS}
 
 def staged_files() -> list[PurePosixPath]:
     try:
-        staged = repo_git.staged_files(REPO_ROOT)
+        staged = repo_git.staged_files(REPO_ROOT, include_deleted=True)
     except RuntimeError as exc:
         print(exc, file=sys.stderr)
         raise SystemExit(1) from exc

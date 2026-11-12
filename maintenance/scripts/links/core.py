@@ -264,7 +264,9 @@ def validate_static(links: list[Link], repos: list[Path]) -> None:
 
 
 def exclude_pattern(link: Link) -> str:
-    return f"/{link.path}/"
+    # No trailing "/": that matches directories only, i.e. Windows junctions but not
+    # the symlinks the same declaration becomes on macOS/Linux.
+    return f"/{link.path}"
 
 
 def read_block(path: Path) -> list[str]:
