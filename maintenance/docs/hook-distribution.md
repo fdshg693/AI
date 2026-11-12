@@ -56,6 +56,23 @@ skill-tools hooks list / install / installed / update / remove
 
 旧構成からの移行手順（旧エントリの除去と `just hooks-install --overwrite`）は `.claude/hooks/AGENTS.md` に書いてある。
 
+## グローバルインストール（全プロジェクトで効かせるフック）
+
+プロジェクトをまたいで効かせたいフック（通知の `notify` など）は、リポジトリ直下で `--global` を付けて入れる。設定ファイル（`--config`）は要らず、source はこのクローンを指定する。
+
+```sh
+uv run --project tools/skill-tools skill-tools hooks install --global --source local --repo . --agent claude,codex,kilo notify --dry-run
+uv run --project tools/skill-tools skill-tools hooks install --global --source local --repo . --agent claude,codex,kilo notify
+uv run --project tools/skill-tools skill-tools hooks installed --global
+```
+
+- 配置先と登録ファイルは `~/.claude/hooks/` と `~/.claude/settings.json`、`~/.codex/hooks/` と `~/.codex/hooks.json`、`~/.config/kilo/plugin/`（登録なし）。agent-tooling 側を変えたら `generate` のあと `hooks update --global`
+- 同じフックをプロジェクトとグローバルの両方に入れない（二重に発火し、skill-tools は検出しない）。`stop_alert` と `notify` は Claude の Stop で重なり、Kilo の `stop_alert` と `notify` も重なるので、どちらか一方にする
+- `~/.claude/settings.json` は実行中の Claude Code も書き換える。競合すると skill-tools は何も書かずに終了コード `4` で止まるので、Claude Code を閉じてやり直す
+- Codex は `hooks.json` を変えたら `/hooks` で再信頼する
+- macOS の通知ヘルパーはエージェントごとに `just --justfile agent-compat/agent-tooling/justfile notify-helper-mac <claude|codex|kilo>` でビルドし、初回だけ表示される `authorize` コマンドで通知を許可する
+- グローバル設定を別の仕組み（例: dotfiles をミラーする同期スクリプト）でも管理しているなら、skill-tools で入れたあとに配置物と登録ファイルをそちらへ書き戻す。書き戻さないと、次の同期で消える
+
 ## フックを足す・変えるとき
 
 1. `scenarios/<id>/hook.yaml` と `adapters/<agent>/<id>.py` を書き、`build/build.py` の `ENTRIES` に登録する（書き方・ビルド契約は [agent-compat/agent-tooling/agent_tooling/hooks/AGENTS.md](../../agent-compat/agent-tooling/agent_tooling/hooks/AGENTS.md)）
