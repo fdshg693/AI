@@ -81,7 +81,7 @@ just hooks-install && just sub-agent-hooks-install  # エージェントフッ�
 - 状態を変えるレシピは全リポジトリを先に検査し、1 つでも引っかかれば何も変えない（途中まで切り替わった状態を残さない）。
 - `main` への直接コミットは `pre-commit` がブロックする（アンブレラと全サブモジュール。merge・rebase 中は除く）。作業は必ずブランチで行う。
 - 作業ブランチにいる間は `just sub-sync` を使わない（全サブモジュールを `main` に戻す）。
-- マージはサブモジュールが先。サブモジュールの作業ブランチを `main` にマージして push し、アンブレラのポインタをその `main` の commit に合わせてからアンブレラをマージする。
+- マージはサブモジュールが先で、`main` へは PR 経由だけ。ブランチ名の決め方・PR の順番・マージ方式・`main` の取り込み・切り直しは [branch-and-pr-workflow](./branch-and-pr-workflow.md)。
 
 ### コミットは 2 段階
 
@@ -175,5 +175,6 @@ Python の `Path.is_symlink()`／`os.path.islink()` は Junction で False を�
 
 ## 関連
 
+- [branch-and-pr-workflow](./branch-and-pr-workflow.md) — ブランチ運用と `main` への PR 手順
 - [justfile-conventions](./justfile-conventions.md) — `links-*` レシピの置き方
 - [lefthook-automation](./lefthook-automation.md) — `post-checkout` の警告
