@@ -49,5 +49,5 @@ allow_tracked:
     reason: Only the codegraph server via ${workspaceFolder}; no machine-specific values.
   - path: .github/copilot/settings.json
     reason: Shared Copilot settings that register this repository's marketplace.
-  - path: tools/sandbox/docker/claude-settings/settings.json
+  - path: workflow/sandbox/docker/claude-settings/settings.json
     reason: Baked into the sandbox Docker image; part of the image definition.

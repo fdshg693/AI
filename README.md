@@ -4,7 +4,7 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 
 ## 取得
 
-`skills/`・`tools/`・`agent-compat/`・`site/` はサブモジュール（[AI-skills](https://github.com/fdshg693/AI-skills)・[AI-tools](https://github.com/fdshg693/AI-tools)・[AI-agent-compat](https://github.com/fdshg693/AI-agent-compat)・[AI-site](https://github.com/fdshg693/AI-site)）。サブモジュールごと clone する。
+`skills/`・`tools/`・`agent-compat/`・`site/`・`workflow/` はサブモジュール（[AI-skills](https://github.com/fdshg693/AI-skills)・[AI-tools](https://github.com/fdshg693/AI-tools)・[AI-agent-compat](https://github.com/fdshg693/AI-agent-compat)・[AI-site](https://github.com/fdshg693/AI-site)・[AI-workflow](https://github.com/fdshg693/AI-workflow)）。サブモジュールごと clone する。
 
 ```sh
 git clone --recurse-submodules https://github.com/fdshg693/AI.git
@@ -66,7 +66,7 @@ pull のあとは `just sub-init`。サブモジュールの中でコミット�
 
 ### サブモジュール
 
-次の 4 つは別リポジトリで、アンブレラはコミットのポインタだけを持つ。中のファイルを変えたら、サブモジュールの中でコミットしてからアンブレラでポインタを更新する（[repo-layout の「サブモジュール」](maintenance/docs/repo-layout.md#サブモジュール)）。サブモジュールのフォルダだけを開いても作業できるが、生成・検査・ワークスペースはアンブレラにあるので、アンブレラから clone して使う。
+次の 5 つは別リポジトリで、アンブレラはコミットのポインタだけを持つ。中のファイルを変えたら、サブモジュールの中でコミットしてからアンブレラでポインタを更新する（[repo-layout の「サブモジュール」](maintenance/docs/repo-layout.md#サブモジュール)）。サブモジュールのフォルダだけを開いても作業できるが、生成・検査・ワークスペースはアンブレラにあるので、アンブレラから clone して使う。
 
 - [skills/](skills/)（[AI-skills](https://github.com/fdshg693/AI-skills)） — tools に依存しない Claude Code 用プラグイン群（`skills/plugins/<name>`）。他の AI ツールについての知識スキルも Claude Code スキルとして [skills/plugins/ai-tools-knowledge/](skills/plugins/ai-tools-knowledge/) に置く
 - [tools/](tools/)（[AI-tools](https://github.com/fdshg693/AI-tools)） — CLI 群（1 ツール 1 ディレクトリ）と、それらを前提にした使い方スキルのプラグイン [tools/\_plugin/my-tools/](tools/_plugin/my-tools/)。役割ごとの索引は [tools/README.md](tools/README.md)
@@ -74,6 +74,7 @@ pull のあとは `just sub-init`。サブモジュールの中でコミット�
 - [site/](site/)（[AI-site](https://github.com/fdshg693/AI-site)） — 公開サイト
   - [site/skills-site/](site/skills-site/) — 登録済みのスキルを横断収集する Astro の静的サイト（Azure Static Web Apps）。公開するのはスキルの本文・メタデータ・配布 ZIP だけ。手順は [site/skills-site/AGENTS.md](site/skills-site/AGENTS.md)
   - [site/tools-site/](site/tools-site/) — [repo-tools.yaml](registry/repo-tools.yaml) の `release: true` ツールのインストール/使い方をまとめた VitePress サイト（GitHub Pages）。[site/tools-site/README.md](site/tools-site/README.md)
+- [workflow/](workflow/)（[AI-workflow](https://github.com/fdshg693/AI-workflow)） — 単なる CLI 利用を超えた、手元でカスタマイズして使うワークフロー。AI コーディングツールの CLI ラッパー（`claude-wrapper` 等）、ISSUE 駆動の Docker サンドボックス [workflow/sandbox/](workflow/sandbox/)、定期実行の [workflow/schedule/](workflow/schedule/)。`repo-tools.yaml` には載せない。[workflow/README.md](workflow/README.md)
 
 ### リポジトリ運用（アンブレラ本体）
 
@@ -97,12 +98,12 @@ pull のあとは `just sub-init`。サブモジュールの中でコミット�
 ## その他
 
 - 2026-11 の再編でプラグインの置き場所と一部のプラグイン名（`meta` → `cc-knowledge`、`my-tools-no-install` → `web-lookup`／`doc-tools` ほか）が変わった。インストール済みの利用者向けの対応表は [docs/integrations/claude-code.md](docs/integrations/claude-code.md) にある。
-- `.gitmodules` — 上記 4 つのサブモジュールの宣言。`just sub-init`／`sub-sync`／`sub-status` で扱う。全リポジトリで同じ名前の作業ブランチを作る・切り替える・push・削除するのは `just branch-*`（[repo-layout](maintenance/docs/repo-layout.md#作業ブランチアンブレラとサブモジュールで揃える)）。
+- `.gitmodules` — 上記 5 つのサブモジュールの宣言。`just sub-init`／`sub-sync`／`sub-status` で扱う。全リポジトリで同じ名前の作業ブランチを作る・切り替える・push・削除するのは `just branch-*`（[repo-layout](maintenance/docs/repo-layout.md#作業ブランチアンブレラとサブモジュールで揃える)）。
 - `.links.yaml` / `.umbrella-root` — Junction の宣言（各リポジトリのルートに置き、`just links-sync` で作る。Junction 自体はコミットしない）と、アンブレラのルートの目印。詳細は [repo-layout](maintenance/docs/repo-layout.md)。
 - `lefthook.yml` — コミット時などに走る Git hooks の設定（`pre-commit` での各種再生成・整形・secretlint、`commit-msg` での commitlint）。サブモジュール側は `maintenance/lefthook/submodule.yml`。
 - `mise.toml` — [mise](https://mise.jdx.dev/) によるツールバージョン管理（node / pnpm / terraform / uv をこのリポジトリ用にpin）。
 - `pyproject.toml` — uv workspace のルート定義（`tools/aim` 等、Python パッケージ群をまとめて管理）。
-- `pnpm-workspace.yaml` / `package.json` / `pnpm-lock.yaml` — pnpm workspace のルート定義（`site/skills-site`, `tools/cline-wrapper`）とロックファイル。
+- `pnpm-workspace.yaml` / `package.json` / `pnpm-lock.yaml` — pnpm workspace のルート定義（`site/skills-site`, `workflow/cline-wrapper`, `workflow/copilot-wrapper`）とロックファイル。
 - `.prettierrc.json` / `.prettierignore` — フォーマット設定。
 - `commitlint.config.js` — コミットメッセージのlint設定（[Conventional Commits](https://www.conventionalcommits.org/)、`@commitlint/config-conventional`）。
 - `.secretlintrc.json` — ステージ済みファイルのシークレット検知設定（[secretlint](https://github.com/secretlint/secretlint) `@secretlint/secretlint-rule-preset-recommend`）。

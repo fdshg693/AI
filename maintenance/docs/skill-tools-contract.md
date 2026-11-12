@@ -30,6 +30,9 @@ skill-tools はディレクトリを総なめして `SKILL.md` を拾うので�
 
 - `maintenance/plugin/` のようにSSOTへ意図的に載せていない領域は対象外（[ai-tools-config](./ai-tools-config.md)参照）。
 - source・index・配置先をCWDやコード位置から推測しない。どのリポジトリを読むかは設定ファイルで明示する。
+- 配置先のルートと、プロジェクトの `skill-tools.yaml` を探す場所は「スコープ」で決まる。既定のスコープは CWD のプロジェクトで、`--project-dir <path>` を付けると指定したディレクトリになる（manifest もそのルートの `.skill-tools/` に置く）。`--project-dir` を付けたときは CWD の `skill-tools.yaml` を読まない。`--config` / `SKILL_TOOLS_CONFIG` を使うとスコープ側の yaml も読まない（単一ファイルの契約のまま）。
+- `--global` はユーザー全体のスコープで、ルートはホーム、配置先はホーム相対の `global_destination`（target ごとに上書き可、既定 `.claude/skills`）。プロジェクトの `skill-tools.yaml` は読まない（どこから実行しても同じ結果）。manifest・journal は `~/.skill-tools/` ではなく `SKILL_TOOLS_HOME/global`（無ければ Windows は `%LOCALAPPDATA%\skill-tools\global`、それ以外は `$XDG_STATE_HOME/skill-tools/global`）に置く。キャッシュ領域には置かない。
+- ホーム、またはその祖先をプロジェクトのルートにした `install-skills` / `update-skills` は終了コード `2` で止め、`--global` を案内する（同じファイルを2つの manifest が管理するのを防ぐ）。`installed-skills` / `remove-skills` は移行のため止めない。
 
 ## 入力契約（リポジトリ側が守るもの）
 

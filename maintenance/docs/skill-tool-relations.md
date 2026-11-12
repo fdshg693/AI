@@ -34,7 +34,7 @@ flowchart LR
 ツールが他のリポジトリ内ツールに依存していても、スキルグラフからは取れない。依存は次のような場所に散在していた。
 
 - `pyproject.toml` の workspace 依存（`my-agents` の `dependencies` にある `mslearn-cli` / `tav-cli`）
-- グループフォルダ（`tools/schedule/` は `ai-schedule` とそこから呼ばれる `issue-agent`、という説明が [tools-directory-layout](./tools-directory-layout.md) にあるだけ）
+- グループフォルダ（`tools/openrouter/` は `model-list` と `model-select` をまとめる、という説明が [tools-directory-layout](./tools-directory-layout.md) にあるだけ）
 - README / AGENTS.md の散文
 - スキル経由の推論（後述のとおり損失がある）
 

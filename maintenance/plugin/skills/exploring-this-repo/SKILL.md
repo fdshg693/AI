@@ -15,7 +15,7 @@ meta:
   requires_skills: codegraph-docs, discovering-skills, meta
   status: experimental
   description: このリポジトリの地図（索引に載るコード vs 載らない docs/スキル/SSOT）と次の参照先
-  version: 1.0.7
+  version: 1.0.8
 ---
 
 !`python ${CLAUDE_SKILL_DIR}/scripts/snapshot_indexed_layout.py`
@@ -28,10 +28,10 @@ meta:
 
 ## 大枠
 
-| 区分                   | パス                                                                | 中身                                                                   |
-| ---------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| サブモジュール（4 つ） | `skills/`・`tools/`・`agent-compat/`・`site/`                       | 汎用スキル、CLI と `_plugin/my-tools`、マルチ AI 対応、公開サイト      |
-| アンブレラ本体         | `maintenance/`・`registry/`・`docs/`・`plans/`、`.claude/` 等の設定 | 保守用プラグイン・スクリプト・規約、SSOT yaml、利用者向け docs、プラン |
+| 区分                   | パス                                                                | 中身                                                                                                                                   |
+| ---------------------- | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| サブモジュール（5 つ） | `skills/`・`tools/`・`agent-compat/`・`site/`・`workflow/`          | 汎用スキル、CLI と `_plugin/my-tools`、マルチ AI 対応、公開サイト、カスタマイズして使うワークフロー（CLI ラッパー・sandbox・schedule） |
+| アンブレラ本体         | `maintenance/`・`registry/`・`docs/`・`plans/`、`.claude/` 等の設定 | 保守用プラグイン・スクリプト・規約、SSOT yaml、利用者向け docs、プラン                                                                 |
 
 サブモジュールの中のファイルを変えたら、そのリポジトリでコミットしてからアンブレラでポインタを更新する 2 段階（[committing](../committing/SKILL.md)）。`git ls-files`・`git grep` はサブモジュールの中を返さないので、中を探すときはそのサブモジュールで実行するか `rg` を使う。
 
@@ -48,7 +48,7 @@ meta:
 
 ## サブモジュールだけを開いているとき
 
-起動ディレクトリが `skills/`・`tools/`・`agent-compat/`・`site/` のどれかなら、このスキルは Junction で見せていないので通常は起動されない。アンブレラのルートは `..`（`.umbrella-root` がある場所）で、`.codegraph/` もアンブレラにしかない。地図はアンブレラ側で取り、そのサブモジュールの `AGENTS.md` と `.links.yaml`（`.claude/skills/` と `_umbrella/` に何が見えているか）を先に読む。サブモジュールの中から辿れるアンブレラのフォルダは `_umbrella/<name>` だけで、それ以外はアンブレラで開き直したほうが早い（[repo-layout](../../../docs/repo-layout.md#サブモジュールを単体で開く)）。
+起動ディレクトリが `skills/`・`tools/`・`agent-compat/`・`site/`・`workflow/` のどれかなら、このスキルは Junction で見せていないので通常は起動されない。アンブレラのルートは `..`（`.umbrella-root` がある場所）で、`.codegraph/` もアンブレラにしかない。地図はアンブレラ側で取り、そのサブモジュールの `AGENTS.md` と `.links.yaml`（`.claude/skills/` と `_umbrella/` に何が見えているか）を先に読む。サブモジュールの中から辿れるアンブレラのフォルダは `_umbrella/<name>` だけで、それ以外はアンブレラで開き直したほうが早い（[repo-layout](../../../docs/repo-layout.md#サブモジュールを単体で開く)）。
 
 ## やらないこと
 
