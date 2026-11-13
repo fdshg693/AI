@@ -335,13 +335,16 @@ def _merged(repo: Path, name: str) -> bool:
 def push(root: Path, only: list[str] | None = None) -> int:
     """Push the current branch of each target, submodules first, setting upstream."""
     targets = select(repos(root), only)
-    detached = [r.label for r in targets if current_branch(r.path) is None]
-    if detached:
-        raise BranchError(f"detached HEAD in: {', '.join(detached)} (switch to a branch first)")
+    detached = [r for r in targets if current_branch(r.path) is None]
+    blocking = [r.label for r in detached if not _detached_skippable(root, r)]
+    if blocking:
+        raise BranchError(f"detached HEAD in: {', '.join(blocking)} (switch to a branch first)")
     ordered = [r for r in targets if not r.is_umbrella] + [r for r in targets if r.is_umbrella]
 
     def act(repo: Repo) -> str:
         branch = current_branch(repo.path)
+        if branch is None:
+            return "detached HEAD, pointer unchanged and on origin: skipped"
         up = upstream_counts(repo.path)
         if up is not None and up[2] == 0:
             return f"{branch}: nothing to push"
@@ -355,6 +358,26 @@ def push(root: Path, only: list[str] | None = None) -> int:
         print("umbrella not pushed: fix the submodule push first", file=sys.stderr)
         return code
     return _run_all([r for r in ordered if r.is_umbrella], act, "push")
+
+
+def _detached_skippable(root: Path, repo: Repo) -> bool:
+    """A detached submodule needs no push if the umbrella does not move its pointer.
+
+    That is: the pointer in the umbrella's index and HEAD both equal the
+    submodule's HEAD, and that commit is already on a remote-tracking branch
+    (so the umbrella never points at an unpushed commit).
+    """
+    if repo.is_umbrella:
+        return False
+    head = git(repo.path, "rev-parse", "HEAD").stdout.strip()
+    staged = git(root, "ls-files", "--stage", "--", repo.label).stdout.split()
+    committed = git(root, "ls-tree", "HEAD", "--", repo.label).stdout.split()
+    recorded = staged[1] if len(staged) >= 2 else ""
+    in_head = committed[2] if len(committed) >= 3 else ""
+    if not (head == recorded == in_head):
+        return False
+    remotes = git(repo.path, "branch", "-r", "--contains", head, check=False)
+    return remotes.returncode == 0 and bool(remotes.stdout.strip())
 
 
 def pull(root: Path, only: list[str] | None = None) -> int:

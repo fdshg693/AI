@@ -138,3 +138,23 @@ def test_only_limits_submodules(setup: tuple[Path, Path]) -> None:
     with pytest.raises(core.BranchError):
         core.select(core.repos(pc1), ["missing"])
     assert [r.label for r in core.select(core.repos(pc1), ["sub"])] == [core.UMBRELLA_LABEL, "sub"]
+
+
+def test_push_skips_detached_submodule_with_unchanged_pointer(setup: tuple[Path, Path]) -> None:
+    pc1, _ = setup
+    git(pc1 / "sub", "switch", "-q", "--detach")
+    commit(pc1, "u.txt", "u\n")
+    assert core.push(pc1) == 0
+    assert git(pc1, "ls-remote", "--heads", "origin", "main").split()[0] == git(
+        pc1, "rev-parse", "HEAD"
+    )
+
+
+def test_push_refuses_detached_submodule_with_moved_pointer(setup: tuple[Path, Path]) -> None:
+    pc1, _ = setup
+    git(pc1 / "sub", "switch", "-q", "--detach")
+    commit(pc1 / "sub", "d.txt", "d\n")
+    git(pc1, "add", "sub")
+    git(pc1, "commit", "-q", "-m", "bump sub")
+    with pytest.raises(core.BranchError):
+        core.push(pc1)
