@@ -2397,7 +2397,7 @@ wheels = [
 
 [[package]]
 name = "skill-tools"
-version = "0.6.3"
+version = "0.6.4"
 source = { editable = "tools/skill-tools" }
 dependencies = [
     { name = "pathspec" },
