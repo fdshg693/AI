@@ -1,2 +1,8 @@
 # textgraph: skip test fixtures (string literals like "alpha.md") in check --scripts.
 scripts_exclude = ["**/tests/**"]
+exclude = [
+  # openai/codex-action README transcribed verbatim (relative links are based on the upstream repo).
+  ".github/workflows/references/**",
+  # Sample plan: [[article-domain]] / [[pagination]] point at fictional conventions on purpose.
+  "plans/references/tag-popularity-sort.md",
+]

@@ -39,7 +39,13 @@ def build_tool_block(tool_key: str, tool: dict[str, Any]) -> list[str]:
     for entries in tool["readme"].values():
         for entry in entries:
             path = entry["path"]
-            lines.append(f"  - [{path}/]({path}/) — {entry['description']}")
+            link = entry.get("link", True)
+            if not isinstance(link, bool):
+                sys.exit(
+                    f"ai-tools.yaml: {tool_key} readme entry {path!r}: link must be a bool, got {link!r}"
+                )
+            label = f"[{path}/]({path}/)" if link else f"`{path}/`"
+            lines.append(f"  - {label} — {entry['description']}")
     return lines
 
 

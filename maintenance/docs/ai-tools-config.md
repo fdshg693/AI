@@ -18,6 +18,7 @@ status: stable
 `registry/ai-tools.yaml` が、「どのAIツールがどのプラグインを持ち、マーケットプレイス定義・スキルカタログがどこにあるか」の単一の情報源（SSOT）。
 
 - 各ツール（`claude-code` / `cline` / `kilo` / `codex` / `copilot` / `cursor` / `antigravity`）ごとに `plugins`（スキルルートとして登録するプラグイン一覧）、`marketplace`（出力先・メタデータ・`sources`）、`workspace_copies`、`skill_catalog`、`readme`（README生成用の説明文）等を持つ
+- `readme` の各項目は `path`・`description` と、省略可能な `link`（bool、省略時 `true`）を持つ。`link: false` の項目は README でリンクにせずコード表記で出す。生成しないと存在しないフォルダ（`.clinerules`・`.agents/rules`）に使い、リンク切れを防ぐ。リンクにするかを生成器がディスクを見て決めないのは、端末ごとに生成結果が変わるため。bool 以外の値は生成器がエラーで止める
 - `plugins` の `path` は**スキルの実体**を指す。同じスキルルートは 1 つのツールにしか登録できない（skill-tools が重複を拒否する）。他ツールの知識スキルは Claude Code プラグイン `skills/plugins/ai-tools-knowledge` として `claude-code` に登録し、他ツールの `plugins` は空にする
 - `marketplace.sources`（Codex・Copilot）: そのツールのマーケットプレイスに載せるプラグインディレクトリ。各ディレクトリはそのツールのマニフェスト（Codex は `.codex-plugin/plugin.json`、Copilot はルートの `plugin.json`）をプラグインと一緒に持ち、手で保守する。生成器はそれを読んでマーケットプレイスだけを作る。Cursor の `.cursor-plugin/plugin.json` も同じディレクトリに置く（マーケットプレイスは生成しない）
 - `workspace_copies`（Cline・Kilo・Antigravity）: ワークスペース直下からしかスキルを読まないツール向けのコピー。`from` のスキルのうちフォルダ名が `include` に合うものを `output_dir` へコピーし、`plugin_json` があれば `output_dir` の親に書く。出力は gitignore 済みで、目印の `.agent-compat-copy` を置く（`find_skill_md_files` はこれがあるディレクトリを走査しない）。clone 直後と知識スキルの編集後に `just agent-compat-sync`（pre-commit も実行する）

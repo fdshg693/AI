@@ -46,7 +46,7 @@ Skill bodies live in one place only, as Claude Code plugins (`skills/plugins/`, 
 
 - **Cline**
   - [.cline/](.cline/) — Cline settings. `.cline/skills/` is a gitignored copy of `skills/plugins/ai-tools-knowledge` made by `just agent-compat-sync` (do not edit by hand)
-  - [.clinerules/](.clinerules/) — Output folder for the rule files Cline reads, generated from `AGENTS.md` by the `tools/coding-agent/agents-rules` CLI (`agents-rules -t cline`). Absent until generated. Do not edit by hand
+  - `.clinerules/` — Output folder for the rule files Cline reads, generated from `AGENTS.md` by the `tools/coding-agent/agents-rules` CLI (`agents-rules -t cline`). Absent until generated. Do not edit by hand
 
 - **Kilo Code**
   - [.kilo/](.kilo/) — Kilo Code (CLI/TUI/VS Code extension) settings. `.kilo/skills/` is a gitignored copy of `skills/plugins/ai-tools-knowledge` made by `just agent-compat-sync`. `.kilo/plugin/` is where agent-tooling installs its hooks
@@ -62,7 +62,7 @@ Skill bodies live in one place only, as Claude Code plugins (`skills/plugins/`, 
 
 - **Antigravity**
   - [_agents/](_agents/) — Antigravity workspace plugins (`_agents/plugins/`). `antigravity-meta` is a gitignored copy of `skills/plugins/ai-tools-knowledge` made by `just agent-compat-sync`. Used separately from `.agents/` (see `_agents/README.md`)
-  - [.agents/rules/](.agents/rules/) — Workspace Rules read by Antigravity, generated from `AGENTS.md` by the `tools/coding-agent/agents-rules` CLI (see `.agents/README.md`). Do not edit by hand
+  - `.agents/rules/` — Workspace Rules read by Antigravity, generated from `AGENTS.md` by the `tools/coding-agent/agents-rules` CLI (see `.agents/README.md`). Do not edit by hand
 
 <!-- END: ai-tools-section -->
 

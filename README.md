@@ -46,7 +46,7 @@ pull のあとは `just sub-init`。サブモジュールの中でコミット�
 
 - **Cline**
   - [.cline/](.cline/) — Cline 用設定。`.cline/skills/` は `skills/plugins/ai-tools-knowledge` から `just agent-compat-sync` で作る gitignore 済みのコピー（手編集しない）
-  - [.clinerules/](.clinerules/) — Cline が読むルールファイルの出力先。`AGENTS.md` から `tools/coding-agent/agents-rules` CLI（`agents-rules -t cline`）で生成する。未生成なら存在しない。手編集しない
+  - `.clinerules/` — Cline が読むルールファイルの出力先。`AGENTS.md` から `tools/coding-agent/agents-rules` CLI（`agents-rules -t cline`）で生成する。未生成なら存在しない。手編集しない
 
 - **Kilo Code**
   - [.kilo/](.kilo/) — Kilo Code（CLI/TUI/VS Code拡張）の設定。`.kilo/skills/` は `skills/plugins/ai-tools-knowledge` から `just agent-compat-sync` で作る gitignore 済みのコピー。`.kilo/plugin/` は agent-tooling のフック配置先
@@ -62,7 +62,7 @@ pull のあとは `just sub-init`。サブモジュールの中でコミット�
 
 - **Antigravity**
   - [_agents/](_agents/) — Antigravity のワークスペースプラグイン置き場（`_agents/plugins/`）。`antigravity-meta` は `skills/plugins/ai-tools-knowledge` から `just agent-compat-sync` で作る gitignore 済みのコピー。`.agents/` と使い分ける（`_agents/README.md` 参照）
-  - [.agents/rules/](.agents/rules/) — Antigravity が読むワークスペース Rules。`AGENTS.md` から `tools/coding-agent/agents-rules` CLI で生成する（`.agents/README.md` 参照）。手編集しない
+  - `.agents/rules/` — Antigravity が読むワークスペース Rules。`AGENTS.md` から `tools/coding-agent/agents-rules` CLI で生成する（`.agents/README.md` 参照）。手編集しない
 
 <!-- END: ai-tools-section -->
 
