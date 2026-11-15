@@ -11,6 +11,12 @@ Order follows the two-step commit: pushes go to submodules before the umbrella
 (the umbrella must never point at an unpushed commit); pulls go to the umbrella
 first.
 
+Each machine (or worktree) keeps one fixed working branch name, stored in the
+umbrella's per-worktree git config under ``umbrella.workBranch``. It is never
+committed, so every clone and worktree can name its own. ``new`` and ``switch``
+fall back to it when no name is given, and ``status`` flags repositories that
+are not on it.
+
 Submodules are taken from ``.gitmodules`` (only checked-out ones). The
 umbrella's ``git switch`` does not touch submodule working trees (no
 ``submodule.recurse``), so switching each repository explicitly is safe.
@@ -28,6 +34,7 @@ from repo_git import submodule_paths
 REMOTE = "origin"
 UMBRELLA_LABEL = "(umbrella)"
 ALWAYS_PROTECTED = frozenset({"main", "master"})
+WORK_BRANCH_KEY = "umbrella.workBranch"
 
 
 class BranchError(Exception):
@@ -82,6 +89,52 @@ def select(all_repos: list[Repo], only: list[str] | None) -> list[Repo]:
         )
     wanted = {name.rstrip("/\\") for name in only}
     return [r for r in all_repos if r.is_umbrella or r.label in wanted]
+
+
+# --- working branch (per-worktree config) ----------------------------------
+
+
+def work_branch(root: Path) -> str | None:
+    """The working branch name configured for this umbrella worktree, if any."""
+    value = git(root, "config", "--get", WORK_BRANCH_KEY, check=False).stdout.strip()
+    return value or None
+
+
+def resolve_name(root: Path, name: str | None) -> str:
+    """``name`` if given, else the configured working branch."""
+    if name:
+        return name
+    configured = work_branch(root)
+    if configured is None:
+        raise BranchError(
+            f"no branch name given and {WORK_BRANCH_KEY} is not set"
+            " (set it once per machine/worktree: just branch-work NAME)"
+        )
+    return configured
+
+
+def set_work_branch(root: Path, name: str) -> None:
+    """Store ``name`` in the umbrella's per-worktree config (enables worktreeConfig)."""
+    if git(root, "check-ref-format", "--branch", name, check=False).returncode != 0:
+        raise BranchError(f"invalid branch name: '{name}'")
+    if name in protected(root):
+        raise BranchError(f"'{name}' is a protected branch; pick a machine-specific name")
+    git(root, "config", "extensions.worktreeConfig", "true")
+    git(root, "config", "--worktree", WORK_BRANCH_KEY, name)
+
+
+def work(root: Path, name: str | None = None) -> int:
+    """Show the working branch, or set it when ``name`` is given."""
+    if name:
+        set_work_branch(root, name)
+        print(f"{WORK_BRANCH_KEY} = {name} (this worktree only)")
+        return 0
+    configured = work_branch(root)
+    if configured is None:
+        print(f"{WORK_BRANCH_KEY} is not set (just branch-work NAME)", file=sys.stderr)
+        return 1
+    print(configured)
+    return 0
 
 
 # --- queries ---------------------------------------------------------------
@@ -174,6 +227,11 @@ def _run_all(targets: list[Repo], action, verb: str) -> int:
 
 
 def status(root: Path, only: list[str] | None = None) -> int:
+    expected = work_branch(root)
+    if expected is None:
+        print("work branch: not set (just branch-work NAME)\n")
+    else:
+        print(f"work branch: {expected}\n")
     for repo in select(repos(root), only):
         branch = current_branch(repo.path)
         if branch is None:
@@ -181,6 +239,8 @@ def status(root: Path, only: list[str] | None = None) -> int:
             parts = [f"(detached {sha})"]
         else:
             parts = [branch]
+        if expected is not None and branch != expected:
+            parts[0] += f" (not {expected})"
         up = upstream_counts(repo.path) if branch else None
         if up is None:
             parts.append("no upstream" if branch else "")

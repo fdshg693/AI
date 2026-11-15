@@ -1,0 +1,43 @@
+# Sample of the skill-tools config that self-installs this repository's agent hooks.
+#
+# Only this sample is committed. To use it:
+#   cp .claude/skill-tools.hooks.example.yaml .claude/skill-tools.hooks.yaml
+#   (edit hooks.install: add/remove hook ids per agent; `skill-tools hooks list --all` lists them)
+#   just hooks-install
+# `just hooks-install` runs `skill-tools hooks sync`: it installs the listed hooks and removes
+# managed hooks you dropped from the list. Re-run it after editing the list. Existing hooks are
+# refreshed with `just hooks-update`.
+#
+# Do not rename the local copy to a root-level skill-tools.yaml: a CWD skill-tools.yaml is
+# merged into every skill-tools command run from the repo root and would switch their default
+# source/index. The root justfile passes the file explicitly with --config, which is not merged
+# with the user's global config.
+#
+# Relative paths are resolved against this file's directory.
+source:
+  type: local
+  path: ..
+
+hooks:
+  agents:
+    claude:
+      destination: .claude/hooks
+      settings_file: project # or local (.claude/settings.local.json)
+    codex:
+      destination: .codex/hooks
+    kilo:
+      destination: .kilo/plugin
+  # Recommended set. Delete an agent's key to install nothing for it.
+  install:
+    claude:
+      - agent_sessions
+      - long_run_collector
+      - long_run_statement_collector
+      - stop_alert
+      - task_tracker_session
+    codex:
+      - nested_agents_md
+      - scoped_rules
+      - agent_sessions
+    kilo:
+      - agent_sessions

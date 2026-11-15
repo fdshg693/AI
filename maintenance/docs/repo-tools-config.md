@@ -11,7 +11,7 @@ status: stable
 
 ## SSOT: `repo-tools.yaml`
 
-[`registry/repo-tools.yaml`](../../registry/repo-tools.yaml)が、「`SKILL.md`の`meta.requires_repo_tools`/`meta.requires_install`が参照してよい、`tools/`配下の自作CLIツール」と、ツール同士の依存（`requires_tools`）の単一の情報源（SSOT）。各エントリは`path`（`tools/`配下のディレクトリ）、`install`（インストールコマンド）、`description`（ツール概要の取得元を示す`<repo相対path>[#<dotted key>]` locator。例`tools/aim/pyproject.toml#project.description`）を持つ。概要本文はここに書かず、locatorが指す先（各ツールのマニフェスト、無ければREADME）をSSOTとする（[tool-conventions](./tool-conventions.md)）。他の登録ツールに依存するときは`requires_tools`（キーは同ファイルのツール名、値は`library` / `subprocess` / `family`）を書く。辺の意味は[skill-tool-relations](./skill-tool-relations.md)。
+[`registry/repo-tools.yaml`](../../registry/repo-tools.yaml)が、「`SKILL.md`の`meta.requires_repo_tools`/`meta.requires_install`が参照してよい、`tools/`配下の自作CLIツール」と、ツール同士の依存（`requires_tools`）の単一の情報源（SSOT）。各エントリは`path`（`tools/`配下のディレクトリ）、`install`（インストールコマンド）、`description`（ツール概要の取得元を示す`<repo相対path>[#<dotted key>]` locator。例`tools/llm/aim/pyproject.toml#project.description`）を持つ。概要本文はここに書かず、locatorが指す先（各ツールのマニフェスト、無ければREADME）をSSOTとする（[tool-conventions](./tool-conventions.md)）。他の登録ツールに依存するときは`requires_tools`（キーは同ファイルのツール名、値は`library` / `subprocess` / `family`）を書く。辺の意味は[skill-tool-relations](./skill-tool-relations.md)。
 
 版数はここには置かない。Pythonは各ツールの`pyproject.toml`、Nodeは`package.json`がSSOTであり、公開CLIの`--version`もその値を返す。詳細は[tool-conventions](./tool-conventions.md)。
 
@@ -26,7 +26,7 @@ status: stable
 - `maintenance/plugin/**` — このディレクトリの`SKILL.md`は`requires_repo_tools`を「CLI依存」ではなく「このメタスキルが説明するファイル」の意味で流用しているため（[tool-companion-skills](./tool-companion-skills.md)参照）
 - `maintenance/scripts/**` — リポジトリ保守用の内部スクリプトで、スキル利用者がインストールする対象ではないため
 
-`repo-tools.yaml`冒頭のコメントにある通り、**スキルからも他ツールからも参照されていないツールは登録不要**（例: 執筆時点の`tools/ai-usage`）。スキル未参照でも、他ツールから依存される／他ツールに依存する first-class ツールは載せる。
+`repo-tools.yaml`冒頭のコメントにある通り、**スキルからも他ツールからも参照されていないツールは登録不要**（例: 執筆時点の`tools/coding-agent/ai-usage`）。スキル未参照でも、他ツールから依存される／他ツールに依存する first-class ツールは載せる。
 
 ## 消費側2: skills-siteの公開表示
 
@@ -36,7 +36,7 @@ status: stable
 
 `tools/`サブモジュール（fdshg693/AI-tools）の`.github/workflows/tool-release.yml`の`discover`ジョブも、アンブレラのmainから同じ`registry/repo-tools.yaml`を取得して読む。`path`の先頭の`tools/`を外したディレクトリ（AI-toolsのルート直下）を対象にする。各エントリの`release: true`フィールドを見て、値が`true`のエントリの`path`一覧をタグ+GitHub Releaseの対象（`release`ジョブの`strategy.matrix.dir`）として動的に決定する。読み込みは`util/`の共有ローダを使わず、workflow内で完結する独立したPythonスニペット（`uv run --with pyyaml python -c "..."`）で行う——`maintenance/scripts/skill/AGENTS.md`が`util/`モジュールの新規消費者を`set/`・`check/`・`query/`に限っているため。
 
-執筆時点の対象は`aim`/`grepapp`/`mslearn`/`tav`/`ctx7`の5エントリ（`tools/aim`・`tools/grepapp`・`tools/mslearn`・`tools/tav-cli`・`tools/ctx7`）。`my-agents`はworkspace内兄弟パッケージへ依存し単体インストールで壊れるため`release`未設定（対象外）——詳細は[docs/integrations/cli-tools.md](../../docs/integrations/cli-tools.md)参照。
+執筆時点の対象は`aim`/`grepapp`/`mslearn`/`tav`/`ctx7`の5エントリ（`tools/llm/aim`・`tools/web-research/grepapp`・`tools/web-research/mslearn`・`tools/web-research/tav-cli`・`tools/web-research/ctx7`）。`my-agents`はworkspace内兄弟パッケージへ依存し単体インストールで壊れるため`release`未設定（対象外）——詳細は[docs/integrations/cli-tools.md](../../docs/integrations/cli-tools.md)参照。
 
 この`release`フラグは消費側1（チェック対象可否）・消費側2（skills-site公開可否）とは無関係な独立した軸。あるツールがチェック対象・公開対象であっても、タグ+Releaseの対象とは限らない。
 
@@ -46,7 +46,7 @@ status: stable
 
 ただし、現在のマニフェストversionがすでに`HEAD`と異なる場合は、自動バンプしない。手動minor/majorや、同コミットで明示したversion変更を尊重するためである。新規マニフェストや、初めてversionを導入したマニフェストも同様に、初期versionだけで止まる。
 
-再ステージは`lefthook.yml`の`stage_fixed`に任せず、スクリプト自身が更新したマニフェストを`git add`で明示的にステージする。`stage_fixed`はジョブ自身の`glob`にマッチし、かつ元々ステージ済みだったファイルしか再ステージしない（例: `tools/aim/README.md`だけをステージしたコミットでは、`tools/aim/pyproject.toml`はそのどちらにも該当せず、`stage_fixed`では拾われない——実機検証済み）。消費側3と同じくworkflow内蔵スニペット方式を踏襲し、`skill/util/repo_tools_registry.py`は使わない（`maintenance/scripts/skill/AGENTS.md`参照）。
+再ステージは`lefthook.yml`の`stage_fixed`に任せず、スクリプト自身が更新したマニフェストを`git add`で明示的にステージする。`stage_fixed`はジョブ自身の`glob`にマッチし、かつ元々ステージ済みだったファイルしか再ステージしない（例: `tools/llm/aim/README.md`だけをステージしたコミットでは、`tools/llm/aim/pyproject.toml`はそのどちらにも該当せず、`stage_fixed`では拾われない——実機検証済み）。消費側3と同じくworkflow内蔵スニペット方式を踏襲し、`skill/util/repo_tools_registry.py`は使わない（`maintenance/scripts/skill/AGENTS.md`参照）。
 
 これにより、登録済み first-class CLI はコミットのたびに（そのフォルダに変更があれば）patchバージョンが維持される。一方で、mainへのpush時に新しいタグ+Releaseを発行するのは、引き続き消費側3の`release: true`集合だけである。
 

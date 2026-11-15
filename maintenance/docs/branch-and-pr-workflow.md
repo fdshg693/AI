@@ -1,7 +1,7 @@
 ---
 type: Repo Convention
 title: ブランチ運用とmainへのPR手順（サブモジュール込み）
-description: "Explains how this umbrella and its submodules are branched and merged: `main` is the default branch everywhere, each machine keeps one fixed working branch name (e.g. `windows`) used with the same name in the umbrella and every submodule, changes reach `main` only through pull requests (submodule PRs first, then a pointer update, then the umbrella PR), PRs are merged with a merge commit so the working branch can fast-forward afterwards, `main` is brought back into the working branch after every merge, and a messy working branch is deleted and recut from `main`. Use when opening a PR to main, merging one, deciding the working branch name on a new machine or worktree, bringing an updated main back into the working branch, or when a working branch has diverged and needs to be recut."
+description: "Explains how this umbrella and its submodules are branched and merged: `main` is the default branch everywhere, each machine keeps one fixed working branch name (e.g. `windows`), recorded in the umbrella's per-worktree git config `umbrella.workBranch` and used with the same name in the umbrella and every submodule, changes reach `main` only through pull requests (submodule PRs first, then a pointer update, then the umbrella PR), PRs are merged with a merge commit so the working branch can fast-forward afterwards, `main` is brought back into the working branch after every merge, and a messy working branch is deleted and recut from `main`. Use when opening a PR to main, merging one, deciding or recording the working branch name (`umbrella.workBranch`) on a new machine or worktree, bringing an updated main back into the working branch, or when a working branch has diverged and needs to be recut."
 tags: [repo-wide]
 status: draft
 ---
@@ -14,9 +14,24 @@ status: draft
 
 - **`main` がメインブランチ。** アンブレラも全サブモジュールも既定ブランチは `main`。`main` への直接コミットは `pre-commit` がブロックする。
 - **作業ブランチは端末ごとに 1 つの固定名。** `windows` のように端末（環境）ごとに名前を決め、作業のたびに新しいブランチを切らず、その名前を使い続ける。他の端末・エージェントと名前が重ならないようにする（例: `windows`・`windows2`・`claude-cloud`）。
+- **作業ブランチ名は git config に置く。** アンブレラの worktree 単位の config `umbrella.workBranch` に記録する（コミットされない）。手順のコマンドはこの値を使い、ブランチ名を直書きしない。設定方法は次節。
 - **アンブレラと全サブモジュールで同じ名前にする。** アンブレラが `windows` ならサブモジュールも `windows`。名前がずれると、どのポインタがどのブランチの commit かが追えなくなる。作るのも切り替えるのも `just branch-new` / `just branch-switch` で全リポジトリまとめて行う。
 - **並行して別の作業をしたいときは、ブランチを増やさず作業場所を増やす。** 別の端末を使うか、git worktree で別の作業ツリーを作り、そこに別の固定名（`windows2` など）を割り当てる。1 つの作業ツリーで複数のブランチを行き来しない。
 - **`main` へは PR 経由でだけ入れる。** ローカルで `main` にマージして push しない。
+
+## 作業ブランチ名を設定する
+
+新しい端末で clone したとき、または git worktree を作ったときに 1 回だけ行う。
+
+```sh
+just branch-work windows     # umbrella.workBranch を設定（この worktree だけ）
+just branch-switch --create  # 全リポジトリを作業ブランチへ（無ければ origin/windows を追跡、それも無ければ今の HEAD から作る）
+just branch-status           # 先頭に "work branch: windows"。外れているリポジトリには "(not windows)" が付く
+```
+
+- 値は `git config --worktree` で `.git/config.worktree`（追加の worktree では `.git/worktrees/<name>/config.worktree`）に入る。`just branch-work` が `extensions.worktreeConfig` を有効にする。
+- 新しめの git は `git worktree add` で元の worktree の `config.worktree` をコピーするので、追加した worktree では名前が元と同じになる。そのまま使わず `just branch-work windows2` のように付け直す。
+- 今の値は `just branch-work`（未設定なら終了コード 1）。以下の手順では `WB=$(git config umbrella.workBranch)` で取り出して使う。
 
 ## mainへのPR手順
 
@@ -29,11 +44,18 @@ status: draft
    just branch-push     # サブモジュール → アンブレラの順に push
    ```
 
-2. **変更のあるサブモジュールで PR を出してマージする。** `main` との差があるサブモジュールだけが対象（`git -C <submodule> log --oneline origin/main..HEAD` が空でないもの）。
+   `just branch-status` は `origin/<作業ブランチ>` との差しか出さない。`main` との差（PR を出す対象）は別に見る。
 
    ```sh
+   git fetch origin && git submodule foreach --quiet 'git fetch --quiet origin && echo "$name: $(git rev-list --count origin/main..HEAD) ahead"'
+   ```
+
+2. **変更のあるサブモジュールで PR を出してマージする。** `main` との差があるサブモジュールだけが対象（上の `ahead` が 0 でないもの）。コミットが複数あるときは `--fill` のタイトル（直近の件名かブランチ名）が全体を表さないので、`--title` で付け直す。
+
+   ```sh
+   WB=$(git config umbrella.workBranch)   # アンブレラで取り出しておく
    cd <submodule>
-   gh pr create --base main --head windows --fill
+   gh pr create --base main --head "$WB" --fill
    gh pr merge --merge     # マージ方式は下の「マージ方式」
    ```
 
@@ -48,10 +70,12 @@ status: draft
 
    アンブレラで `chore(repo): update <submodule> pointer` としてコミットし（`committing` スキルのラッパーを使う）、`just branch-push`。
 
-4. **アンブレラで PR を出してマージする。** 本文に、先にマージしたサブモジュールの PR を列挙する。CI の `umbrella-check.yml` が生成物の再生成漏れと `uv lock --check` を検査するので、通ってからマージする。
+   merge commit でマージしていれば、作業ブランチの commit は手順 2 の時点で `main` から辿れるので、ポインタを動かさなくてもアンブレラの `main` が壊れることはない。それでもここで合わせるのは、後で「mainの更新を取り込む」と各サブモジュールの HEAD がマージ commit に進み、ポインタとずれる（`just sub-status` が警告する）ため。その更新を別の PR に回さず、このアンブレラ PR に含める。
+
+4. **アンブレラで PR を出してマージする。** 本文に、先にマージしたサブモジュールの PR を列挙する。手順 2 と並行して先に draft で出しておき、ポインタ更新を push してから `gh pr ready` にしてもよい。CI の `umbrella-check.yml` が生成物の再生成漏れと `uv lock --check` を検査するので、通ってからマージする。
 
    ```sh
-   gh pr create --base main --head windows --fill
+   gh pr create --base main --head "$WB" --fill
    gh pr merge --merge
    ```
 
@@ -66,7 +90,7 @@ PR は **merge commit**（`gh pr merge --merge`）でマージする。squash・
 - 作業ブランチに `main` を fast-forward で取り込めず、同じ変更が 2 系統の履歴に分かれる。
 - アンブレラが指していたサブモジュールの commit が `main` から辿れなくなる。
 
-squash・rebase でマージしてしまったら、下の「ブランチを切り直す」で作業ブランチを `main` から作り直す。
+GitHub のリポジトリ設定では squash・rebase も許可されたまま（全リポジトリ）なので、Web UI のマージボタンの既定に注意する。squash・rebase でマージしてしまったら、下の「ブランチを切り直す」で作業ブランチを `main` から作り直す。
 
 ## mainの更新を取り込む
 
@@ -91,15 +115,16 @@ just branch-push
 取り込みの merge commit が重なった、squash でマージされた、試行錯誤の commit が残ったなどで作業ブランチが汚くなったら、直さずに消して `main` から切り直す。
 
 ```sh
-just branch-status                          # 未 push・未マージの commit が無いことを確かめる
+WB=$(git config umbrella.workBranch)
+just branch-status                        # 未 push・未マージの commit が無いことを確かめる
 just branch-switch main
-just branch-delete windows --remote --force # 未マージ扱いでも消す（中身が main に入っていることを確かめてから）
-git fetch origin && just sub-init           # main とポインタの指す commit を最新にする
-just branch-new windows --from origin/main
+just branch-delete "$WB" --remote --force # 未マージ扱いでも消す（中身が main に入っていることを確かめてから）
+git fetch origin && just sub-init         # main とポインタの指す commit を最新にする
+just branch-new --from origin/main        # 名前を省くと umbrella.workBranch
 just branch-push
 ```
 
-- `--force` は、作業ブランチの変更がすべて `main` に入っている（squash 済みを含む）ときだけ使う。`git log origin/main..windows` に残っている commit の中身を確かめてから消す。
+- `--force` は、作業ブランチの変更がすべて `main` に入っている（squash 済みを含む）ときだけ使う。`git log "origin/main..$WB"` に残っている commit の中身を確かめてから消す。
 - 他の端末が同じ名前のブランチを使っていないこと（端末ごとに固定名にしている理由）。
 
 ## 関連

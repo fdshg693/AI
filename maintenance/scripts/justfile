@@ -55,7 +55,7 @@ registry-compat:
 
 # Regenerate all generated marketplace and skill catalog files.
 # AGENTS.md -> Cline/Copilot/Antigravity rules are not generated here; run the
-# tools/agents-rules CLI (`uv run agents-rules`) explicitly when needed.
+# tools/coding-agent/agents-rules CLI (`uv run agents-rules`) explicitly when needed.
 generate: marketplace codex-marketplace copilot-marketplace workspace-copies skill-catalog skills-catalog-md readme-tools-section skills-plugin-index registry-compat
 
 # --- skill/set, skill/check, skill/query: SKILL.md frontmatter and relation graph ---
@@ -145,7 +145,7 @@ links-post-checkout:
 # Fail with a hint; lefthook's pre-commit runs this only on main (only: ref), so direct commits
 # to main are blocked in the umbrella and every submodule. Merges and rebases are skipped.
 guard-main-branch:
-    @echo "Direct commits to main are blocked. Work on a branch (just branch-new NAME / just branch-switch NAME) and merge it into main."
+    @echo "Direct commits to main are blocked. Work on a branch (just branch-switch; name defaults to umbrella.workBranch, set with just branch-work NAME) and merge it into main."
     @exit 1
 
 # --- branches: one branch name across the umbrella and every submodule (see maintenance/docs/repo-layout.md) ---
@@ -158,13 +158,17 @@ branch-status *args:
 branch-list *args:
     uv run python -m branches list {{ args }}
 
-# Create a branch and switch to it everywhere (--from BASE, --only SUB...)
-branch-new name *args:
-    uv run python -m branches new {{ name }} {{ args }}
+# Show or set this machine/worktree's working branch name (umbrella.workBranch, not committed)
+branch-work *args:
+    uv run python -m branches work {{ args }}
 
-# Switch everywhere, tracking origin/<name> when only the remote has it (--create, --no-fetch, --only SUB...)
-branch-switch name *args:
-    uv run python -m branches switch {{ name }} {{ args }}
+# Create a branch and switch to it everywhere; name defaults to the working branch (--from BASE, --only SUB...)
+branch-new *args:
+    uv run python -m branches new {{ args }}
+
+# Switch everywhere, tracking origin/<name>; name defaults to the working branch (--create, --no-fetch, --only SUB...)
+branch-switch *args:
+    uv run python -m branches switch {{ args }}
 
 # Delete a branch wherever it exists; refuses main and unmerged branches (--force, --remote)
 branch-delete name *args:

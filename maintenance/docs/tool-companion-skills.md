@@ -9,7 +9,7 @@ status: stable
 
 # ツールへの使い方スキル併設
 
-`tools/`配下のCLI・スクリプトは、必要に応じて対応する使い方スキル（例: `tools/aim`に対する`tools/_plugin/my-tools/skills/aim-cli`）を持つ。人間・エージェントが実行方法に迷わないための補助であり、すべてのツールに機械的に用意するものではない。
+`tools/`配下のCLI・スクリプトは、必要に応じて対応する使い方スキル（例: `tools/llm/aim`に対する`tools/_plugin/my-tools/skills/aim-cli`）を持つ。人間・エージェントが実行方法に迷わないための補助であり、すべてのツールに機械的に用意するものではない。
 
 ## 併設するかどうかの判断
 
@@ -17,7 +17,7 @@ status: stable
 
 - どのenum値・フラグを選ぶべきかの判断基準（`aim-cli`スキルのモデル選択表とエスカレーション方針: `minimax-m3`を基本線に、簡単すぎるタスクは`gpt-oss-120b`、力不足なら`glm-5.2`/`gpt-5.6-luna`へ）
 - 出力フォーマットや終了コードの意味論で、扱いを誤ると後続処理に影響するもの
-- ログファイルの意味論（例: `tools/aim/logs/<trace.tool>/<日付>.jsonl`は応答本文を含まず`cost`/`*_tokens`のみ記録、という制約を知らないと誤った前提で後続処理を組んでしまう）
+- ログファイルの意味論（例: `tools/llm/aim/logs/<trace.tool>/<日付>.jsonl`は応答本文を含まず`cost`/`*_tokens`のみ記録、という制約を知らないと誤った前提で後続処理を組んでしまう）
 
 ## 置き場所
 
@@ -37,7 +37,7 @@ status: stable
 ```yaml
 meta:
   requires_repo_tools: aim
-  requires_install: uv tool install --editable tools/aim
+  requires_install: uv tool install --editable tools/llm/aim
   requires_env: OPENROUTER_API_KEY
 ```
 

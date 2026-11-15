@@ -1,4 +1,4 @@
-"""CLI: ``python -m branches status|list|new|switch|delete|push|pull``.
+"""CLI: ``python -m branches status|list|work|new|switch|delete|push|pull``.
 
 Runs on the umbrella and every checked-out submodule. ``--only SUB ...`` limits
 the submodules (the umbrella is always included).
@@ -21,9 +21,13 @@ def main(argv: list[str] | None = None) -> int:
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
-    def add(name: str, help_: str, *, branch: bool = False) -> argparse.ArgumentParser:
+    def add(
+        name: str, help_: str, *, branch: bool = False, optional: bool = False
+    ) -> argparse.ArgumentParser:
         p = sub.add_parser(name, help=help_)
-        if branch:
+        if optional:
+            p.add_argument("name", nargs="?", help=f"branch name (default: {core.WORK_BRANCH_KEY})")
+        elif branch:
             p.add_argument("name", help="branch name")
         p.add_argument(
             "--only", nargs="+", metavar="SUB", help="only these submodules (plus the umbrella)"
@@ -32,9 +36,11 @@ def main(argv: list[str] | None = None) -> int:
 
     add("status", "branch, upstream, dirty and pointer state of every repository")
     add("list", "local branches across repositories")
-    p = add("new", "create a branch and switch to it everywhere", branch=True)
+    w = sub.add_parser("work", help=f"show or set this worktree's {core.WORK_BRANCH_KEY}")
+    w.add_argument("name", nargs="?", help="set it to this name")
+    p = add("new", "create a branch and switch to it everywhere", optional=True)
     p.add_argument("--from", dest="base", help="start point (default: each repository's HEAD)")
-    p = add("switch", "switch everywhere (local or origin/<name>)", branch=True)
+    p = add("switch", "switch everywhere (local or origin/<name>)", optional=True)
     p.add_argument("--create", action="store_true", help="create it where it does not exist")
     p.add_argument("--no-fetch", action="store_true", help="do not fetch origin first")
     p = add("delete", "delete a branch everywhere it exists", branch=True)
@@ -50,10 +56,13 @@ def main(argv: list[str] | None = None) -> int:
             return core.status(root, args.only)
         if args.command == "list":
             return core.list_branches(root, args.only)
+        if args.command == "work":
+            return core.work(root, args.name)
         if args.command == "new":
-            return core.new(root, args.name, args.only, args.base)
+            return core.new(root, core.resolve_name(root, args.name), args.only, args.base)
         if args.command == "switch":
-            return core.switch(root, args.name, args.only, args.create, not args.no_fetch)
+            name = core.resolve_name(root, args.name)
+            return core.switch(root, name, args.only, args.create, not args.no_fetch)
         if args.command == "delete":
             return core.delete(root, args.name, args.only, args.force, args.remote)
         if args.command == "push":

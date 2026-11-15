@@ -338,6 +338,11 @@
       "description": "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements, and design before implementation, and ends after writing the approved spec."
     },
     {
+      "path": "skills/plugins/coding/skills/gh-pr",
+      "name": "gh-pr",
+      "description": "gh で現在のブランチのPRを作成・状態確認・マージし、GitHub Actions の run の一覧・詳細取得・手動実行・追跡を行う。Actions の失敗原因の調査は cicd プラグインの diagnosing-actions を使う。"
+    },
+    {
       "path": "skills/plugins/coding/skills/merge-proposal",
       "name": "merge-proposal",
       "description": "現在のブランチに別ブランチを取り込む(マージする)前に、git merge-tree で作業ツリーを触らずにマージを試算し、(1)コンフリクト解消案、(2)取り込み内容のレビューと修正案、(3)取り込みを受けて現在のブランチが行うべき追従修正、の3つの提案ファイルを出力する。どれを行うかはユーザーが絞れる(例としてコンフリクト解消案だけ)。提案までで止まり、実際のmerge/rebase・コンフリクト解消の適用・コミットなど、その後のマージ作業は扱わない。「mainを取り込む前にコンフリクトを確認して」「developをマージしたら何が起きるか見て」「mainの変更を取り込む提案を出して」「コンフリクト解消案だけ出して」のような依頼に使う。"
@@ -346,11 +351,6 @@
       "path": "skills/plugins/coding/skills/okf-spec",
       "name": "okf-spec",
       "description": "Use when finding, reading, authoring, or answering questions about Open Knowledge Format (OKF) bundles or concept documents — a markdown+YAML-frontmatter convention (GoogleCloudPlatform/knowledge-catalog) for knowledge that AI agents write and consume. Grounds answers in a periodically re-fetched snapshot of the official spec instead of training-data memory, which may be stale or predate v0.2's provenance/trust/lifecycle/attestation fields."
-    },
-    {
-      "path": "skills/plugins/coding/skills/pr-check",
-      "name": "pr-check",
-      "description": "PRの作成・状態確認・レビュー依頼・GitHub Actions操作を行う"
     },
     {
       "path": "skills/plugins/coding/skills/proposing-flow",
@@ -467,7 +467,7 @@
     {
       "path": "skills/plugins/topics/skills/ona-cli-docs",
       "name": "ona-cli-docs",
-      "description": "Use when constructing or explaining raw Ona official CLI (`ona` command) invocations -- e.g. `ona-run`'s `--command` needs a hand-built `ona environment exec`/`ona environment ssh` line, or a question is about `ona login`/personal access tokens, environment/automation subcommands, or CLI configuration. Grounds answers in a curated excerpt of ona.com's official docs (via the ona-docs skill's cached llms.txt) instead of training-data memory, which may be stale or reference the pre-rename \"Gitpod\" CLI."
+      "description": "Use when constructing or explaining raw Ona official CLI (`ona` command) invocations -- e.g. a hand-built `ona environment exec`/`ona environment ssh` line, or a question about `ona login`/personal access tokens, environment/automation subcommands, or CLI configuration. Grounds answers in a curated excerpt of ona.com's official docs (via the ona-docs skill's cached llms.txt) instead of training-data memory, which may be stale or reference the pre-rename \"Gitpod\" CLI."
     },
     {
       "path": "skills/plugins/topics/skills/ona-docs",
@@ -516,7 +516,7 @@
     {
       "path": "tools/_plugin/my-tools/skills/aim-lib",
       "name": "aim-lib",
-      "description": "`tools/aim` のグローバルインストール済み Python 実装をライブラリとして使い、OpenRouter 経由で AI モデルへ単発リクエストを送る方法を説明する。Python コードからプロンプトを送信したい、モデル略記を解決したい、応答本文を取り出したい場合に使う。CLI コマンドを実行する場合は `aim-cli` を使う。"
+      "description": "`tools/llm/aim` のグローバルインストール済み Python 実装をライブラリとして使い、OpenRouter 経由で AI モデルへ単発リクエストを送る方法を説明する。Python コードからプロンプトを送信したい、モデル略記を解決したい、応答本文を取り出したい場合に使う。CLI コマンドを実行する場合は `aim-cli` を使う。"
     },
     {
       "path": "tools/_plugin/my-tools/skills/aim2-cli",
@@ -569,11 +569,6 @@
       "description": "YAML定義のLangchainエージェントを実行・一覧表示・新規作成する `my-agents` CLIの使い方を説明する。カスタムエージェントにプロンプトを投げて答えさせたい、既存のエージェント設定YAMLを確認したい、使えるツールを確認した上で新しいエージェント設定YAMLを作りたい場合に使う。"
     },
     {
-      "path": "tools/_plugin/my-tools/skills/ona-run",
-      "name": "ona-run",
-      "description": "リポジトリURL（またはOnaプロジェクトID）とタスク内容を指定してOnaの環境（コンテナ）を作成・起動し、その中でAIエージェントCLI等のタスクを実行して完了後に停止する`ona-run` CLIツールの使い方を説明する。`--agent`/`--command`の選び方、`--cleanup`モードの選び方、終了コード・stderrマーカーの意味を判断したい場合に使う。"
-    },
-    {
       "path": "tools/_plugin/my-tools/skills/parallel-agent-worktree",
       "name": "parallel-agent-worktree",
       "description": "複数のClaude Codeセッション（同一ローカル環境上で並行して動くエージェント）が、Linearの未着手issueをタスクキューとして使い、それぞれ別のgit worktreeで衝突なく1タスクずつ分担して作業を進めるためのスキル。Linear issueの検索→claim→worktree作業→完了報告までの一連の流れを自然言語指示で進めたい場合に使う。タスクグループ（Linear Project + `.linear-cli/config.json`の`project`既定値）単位でアクティブな未着手issueを絞り込み、依存関係（`depends_on`）を持つissue群は同じブランチ・worktreeを再利用しながら順番に実装する。専用のトラッキングissue1件で「どの環境がどのworktreeを使用中か」を追跡し、空き状況を判定可能にする。専用オーケストレーター（常駐プロセス等）は前提とせず、1タスクのcommit・push完了をもって処理は完結する（次のタスクへ自動で継続しない）。"
@@ -601,12 +596,12 @@
     {
       "path": "tools/_plugin/my-tools/skills/tav-lib",
       "name": "tav-lib",
-      "description": "`tools/tav-cli` のグローバルインストール済み Python 実装をライブラリとして使い、Tavily 経由で Web 検索・URL 本文抽出・サイトマップ・クロール・リサーチを行う方法を説明する。Python コードから Tavily API を呼び出したい、`--detail` プリセットを適用した結果を取り出したい場合に使う。CLI コマンドを実行する場合は `tav-cli` を使う。"
+      "description": "`tools/web-research/tav-cli` のグローバルインストール済み Python 実装をライブラリとして使い、Tavily 経由で Web 検索・URL 本文抽出・サイトマップ・クロール・リサーチを行う方法を説明する。Python コードから Tavily API を呼び出したい、`--detail` プリセットを適用した結果を取り出したい場合に使う。CLI コマンドを実行する場合は `tav-cli` を使う。"
     },
     {
       "path": "tools/_plugin/my-tools/skills/textgraph",
       "name": "textgraph",
-      "description": "Explains when to use the `textgraph` CLI for local file-link graphs in text files. Use when deciding among status, impact, and check, when editing Markdown or SKILL.md and needing inbound references, when choosing whether `fix --apply` is safe, when choosing `check --scripts` for script-comment links, or when falling back to grep for YAML or imports."
+      "description": "Explains when to use the `textgraph` CLI for local file-link graphs in text files. Use when deciding among status, impact, and check, when editing Markdown or SKILL.md and needing inbound references, when moving files and comparing link breakage before and after with `check --baseline`, when choosing whether `fix --apply` is safe, when choosing `check --scripts` for script-comment links, or when falling back to grep for YAML or imports."
     },
     {
       "path": "tools/_plugin/my-tools/skills/use-context",

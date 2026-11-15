@@ -43,8 +43,8 @@ def split_meta_csv(value: object) -> tuple[str, ...]:
 def path_appears_in(text: str, registered_path: str) -> bool:
     """True if ``registered_path`` is a path-bounded substring of ``text``.
 
-    ``tools/aim`` matches ``uv tool install --editable tools/aim`` and
-    ``tools/aim/README.md``, but not ``tools/aim2/...``.
+    ``tools/llm/aim`` matches ``uv tool install --editable tools/llm/aim`` and
+    ``tools/llm/aim/README.md``, but not ``tools/llm/aim2/...``.
     """
     if not registered_path:
         return False

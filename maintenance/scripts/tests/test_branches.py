@@ -138,3 +138,31 @@ def test_only_limits_submodules(setup: tuple[Path, Path]) -> None:
     with pytest.raises(core.BranchError):
         core.select(core.repos(pc1), ["missing"])
     assert [r.label for r in core.select(core.repos(pc1), ["sub"])] == [core.UMBRELLA_LABEL, "sub"]
+
+
+def test_work_branch_is_per_worktree_and_used_as_default(setup: tuple[Path, Path]) -> None:
+    pc1, _ = setup
+    assert core.work_branch(pc1) is None
+    with pytest.raises(core.BranchError):
+        core.resolve_name(pc1, None)
+    with pytest.raises(core.BranchError):
+        core.set_work_branch(pc1, "main")
+
+    core.set_work_branch(pc1, "pc1")
+    assert core.work_branch(pc1) == "pc1"
+    assert core.resolve_name(pc1, None) == "pc1"
+    assert core.resolve_name(pc1, "other") == "other"
+    # Stored in the worktree config, not the shared .git/config.
+    assert git(pc1, "config", "--worktree", "--get", core.WORK_BRANCH_KEY) == "pc1"
+    assert "workbranch" not in (pc1 / ".git" / "config").read_text(encoding="utf-8").lower()
+
+    wt = pc1.parent / "pc1-wt"
+    git(pc1, "worktree", "add", "-q", "-b", "scratch", str(wt))
+    # Recent git copies config.worktree into a new worktree; renaming it there stays local.
+    core.set_work_branch(wt, "pc1-wt")
+    assert core.work_branch(wt) == "pc1-wt"
+    assert core.work_branch(pc1) == "pc1"
+
+    assert core.new(pc1, core.resolve_name(pc1, None)) == 0
+    assert branch(pc1) == "pc1"
+    assert branch(pc1 / "sub") == "pc1"

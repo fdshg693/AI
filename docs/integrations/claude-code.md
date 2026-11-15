@@ -62,22 +62,7 @@ CLI から特定スコープ（例: プロジェクト単位）にインスト�
 claude plugin install <plugin-name>@seiwan-marketplace --scope project
 ```
 
-### 2026-11 のプラグイン名・名前空間の変更
-
-リポジトリ再編でプラグインの置き場所が `claude-plugins/` から `skills/plugins/` と `tools/_plugin/` に移り、次の名前が変わった。以前にインストールした利用者は、旧プラグインをアンインストールして新しい名前で入れ直す（スキルの呼び出し名 `<plugin>:<skill>` も変わる）。
-
-| 旧                                         | 新                                 |
-| ------------------------------------------ | ---------------------------------- |
-| `meta`                                     | `cc-knowledge`                     |
-| `my-tools-no-install`（web-lookup）        | `web-lookup`                       |
-| `my-tools-no-install`（doc-transcription） | `doc-tools`                        |
-| `my-tools:tav-lit`                         | `web-lookup:tav-lit`               |
-| `coding:task-tracker`                      | `my-tools:task-tracker`            |
-| `coding:parallel-agent-worktree`           | `my-tools:parallel-agent-worktree` |
-
-ほかのプラグイン名（`cicd`・`coding`・`my-tools`・`no-code`・`others`・`special`・`subagents`・`topics`）は変わらない。
-
-Codex・Cursor・Antigravity・Cline・Kilo・Copilot の使い方を説明するスキル（`codex-docs`・`cursor-skill-use` など）は、新しいプラグイン `ai-tools-knowledge` として Claude Code からも入れられる。Codex・Copilot のマーケットプレイスでも、旧 `meta` プラグインに代わってこのプラグインを配布する。
+Codex・Cursor・Antigravity・Cline・Kilo・Copilot の使い方を説明するスキル（`codex-docs`・`cursor-skill-use` など）は、プラグイン `ai-tools-knowledge` として Claude Code からも入れられる。Codex・Copilot のマーケットプレイスでもこのプラグインを配布する。
 
 ## 3. 確認・管理
 

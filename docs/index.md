@@ -13,5 +13,5 @@ okf_version: "0.2"
 
 # 関連（バンドル外）
 
-- [maintenance/docs](../maintenance/docs/index.md) — このリポジトリ自身のメンテナンスに関する概念ドキュメント群（2026-11 の再編で `docs/repo-wide/` から移動）
+- [maintenance/docs](../maintenance/docs/index.md) — このリポジトリ自身のメンテナンスに関する概念ドキュメント群
 - [agent-compat/docs/differences](../agent-compat/docs/differences/index.md) — Claude Code を基準にした、他の AI コーディングツールでの書き方の相違点

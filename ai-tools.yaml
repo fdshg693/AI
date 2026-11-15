@@ -102,7 +102,8 @@ tools:
         - path: .cline
           description: "Cline 用設定。`.cline/skills/` は `skills/plugins/ai-tools-knowledge` から `just agent-compat-sync` で作る gitignore 済みのコピー（手編集しない）"
         - path: .clinerules
-          description: "Cline が読むルールファイルの出力先。`AGENTS.md` から `tools/agents-rules` CLI（`agents-rules -t cline`）で生成する。未生成なら存在しない。手編集しない"
+          link: false # 未生成なら存在しないのでリンクにしない
+          description: "Cline が読むルールファイルの出力先。`AGENTS.md` から `tools/coding-agent/agents-rules` CLI（`agents-rules -t cline`）で生成する。未生成なら存在しない。手編集しない"
     plugins: []
     workspace_copies:
       - from: skills/plugins/ai-tools-knowledge/skills
@@ -175,7 +176,8 @@ tools:
         - path: _agents
           description: "Antigravity のワークスペースプラグイン置き場（`_agents/plugins/`）。`antigravity-meta` は `skills/plugins/ai-tools-knowledge` から `just agent-compat-sync` で作る gitignore 済みのコピー。`.agents/` と使い分ける（`_agents/README.md` 参照）"
         - path: .agents/rules
-          description: "Antigravity が読むワークスペース Rules。`AGENTS.md` から `tools/agents-rules` CLI で生成する（`.agents/README.md` 参照）。手編集しない"
+          link: false # 未生成なら存在しないのでリンクにしない
+          description: "Antigravity が読むワークスペース Rules。`AGENTS.md` から `tools/coding-agent/agents-rules` CLI で生成する（`.agents/README.md` 参照）。手編集しない"
     plugins: []
     workspace_copies:
       - from: skills/plugins/ai-tools-knowledge/skills

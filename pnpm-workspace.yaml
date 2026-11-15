@@ -5,7 +5,7 @@ packages:
   - "workflow/cline-wrapper"
   - "workflow/copilot-wrapper"
   - "tools/linear-cli"
-  - "tools/aim2"
+  - "tools/llm/aim2"
 allowBuilds:
   esbuild: true
   koffi: true

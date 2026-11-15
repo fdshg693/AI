@@ -1,7 +1,7 @@
 ---
 type: Repo Convention
 title: tools/配下のディレクトリ構成規約
-description: Explains the directory conventions this repo uses for convenience scripts under tools/ — one directory per tool (or a grouping subfolder for related tools, e.g. tools/openrouter/), its own README/AGENTS.md/CLAUDE.md import chain, turning it into a globally installable CLI via a package manifest entrypoint, and the expectation that first-class tools expose version metadata and --version. Use when adding a new script/tool to tools/, deciding whether it needs its own subfolder or a real package, or wiring up its CLAUDE.md.
+description: Explains the directory conventions this repo uses for convenience scripts under tools/ — one directory per tool, either directly under tools/ or inside one level of category folder (llm/, coding-agent/, web-research/, openrouter/), its own README/AGENTS.md/CLAUDE.md import chain, turning it into a globally installable CLI via a package manifest entrypoint, and the expectation that first-class tools expose version metadata and --version. Use when adding a new script/tool to tools/, deciding which category folder it belongs in or whether it needs a real package, or wiring up its CLAUDE.md.
 tags: [tools, repo-wide]
 generated: { by: reference_agent/cline-glm-5.2, at: 2026-08-09T14:39:30Z }
 status: stable
@@ -9,22 +9,26 @@ status: stable
 
 # tools/配下のディレクトリ構成規約
 
-このリポジトリの`tools/`配下は、便利スクリプト・CLIごとに1ディレクトリを割り当てる方針で構成されている。新しいスクリプトを追加する際は、既存ツール（`tools/aim`、`tools/tav-cli`、`tools/openrouter/model-select`等）と同じ形に揃える。
+このリポジトリの`tools/`配下は、便利スクリプト・CLIごとに1ディレクトリを割り当てる方針で構成されている。新しいスクリプトを追加する際は、既存ツール（`tools/llm/aim`、`tools/web-research/tav-cli`、`tools/openrouter/model-select`等）と同じ形に揃える。
 
 ## 配置単位
 
-- 基本は`tools/`直下に1ツール1ディレクトリ（`tools/aim`、`tools/ctx7`、`tools/mslearn`、`tools/my-agents`等）
-- 関連する複数ツールをまとめたい場合は1段グループ化する（`tools/openrouter/`はOpenRouterのモデル一覧`model-list`とモデル選定`model-select`をまとめる、`tools/ai-usage`はこのリポジトリ内部専用ツール群の1つ）
-- Pythonパッケージ化が不要なディレクトリもある（`tools/infra`はBicep+スクリプト）。すべてを無理に`uv`ワークスペースへ載せる必要はない（判断基準は[uv-workspace](./uv-workspace.md)参照）
+- 1ツール1ディレクトリ。置き場所は`tools/<name>`か、1段のカテゴリフォルダの中の`tools/<category>/<name>`のどちらか。カテゴリは1段まで（`tools/<category>/<sub>/<name>`にはしない）
+- 現行のカテゴリと振り分け基準:
+  - `llm/` — AIモデル・エージェントを呼び出すツール（`aim`・`aim2`・`my-agents`）
+  - `coding-agent/` — AIコーディングエージェントの運用に関わるツール（`agents-rules`・`ai-usage`）
+  - `web-research/` — Web・公式ドキュメント・公開コードを調べるツール（`awsdocs`・`grepapp`・`gdevdocs`・`mslearn`・`tav-cli`・`ctx7`）
+  - `openrouter/` — OpenRouterのモデル一覧・選定の補助（`model-list`・`model-select`）。モデルを呼び出すのではないので`llm/`とは分ける
+- どのカテゴリにも当てはまらないCLIは`tools/<name>`に置く（`skill-tools`・`textgraph`・`pyinspect`等）。同じ性質のツールが複数そろったら新しいカテゴリを作ってよい。そのときは本節に1行足す
+- Pythonパッケージ化が不要なディレクトリもある。すべてを無理に`uv`ワークスペースへ載せる必要はない（判断基準は[uv-workspace](./uv-workspace.md)参照）
 - AI の SDK/CLI を組み合わせて手元でカスタマイズして使うワークフロー（CLI ラッパー、サンドボックス、定期実行など）は`tools/`ではなく`workflow/`サブモジュールに置く（[repo-layout](./repo-layout.md#置き場所の判定基準)）
+- ツールではないインフラ定義（IaC・Docker 構成・運用スクリプト）は`tools/`ではなく`infra/`サブモジュールに置く（[repo-layout](./repo-layout.md#置き場所の判定基準)）
 
 ## 役割索引
 
 人間向けの役割索引は [tools/README.md](../../tools/README.md)。使い方は各ディレクトリの README に書く。
 
-`repo-tools.yaml` に載る CLI のディレクトリは `tools/<name>` のまま動かす。公開インストールパス（`uv tool install --editable tools/<name>` など）と `repo-tools.yaml` の `path` が、この平坦な配置を契約にしている。
-
-関連ツールを1段グループ化する既存例外（`maintenance/scripts/`、`tools/openrouter/`）は維持する。
+`repo-tools.yaml` の `path` と公開インストールパス（`uv tool install --editable tools/<category>/<name>` など）は、ツールの実際の置き場所に合わせる。ディレクトリを動かすと利用者のインストールパスが変わる（破壊的変更）。動かしたら `repo-tools.yaml`・ルートの `pyproject.toml`／`pnpm-workspace.yaml` を同時に直し、[docs/integrations/cli-tools.md](../../docs/integrations/cli-tools.md) に入れ直しの注記を残す。`repo-tools.yaml` のキー・パッケージ名・コマンド名は、動かしても変えない。
 
 ## 各ツールディレクトリの最低限の構成
 
@@ -36,8 +40,8 @@ status: stable
 
 ## 実装スタイルの選び方
 
-- **単一モジュール**: 小さく状態を持たないCLIなら1ファイル+`[tool.setuptools] py-modules = [...]`で十分（`tools/aim/aim_cli.py`）
-- **パッケージ+tests/**: 内部構造やユニットテストを持つ規模になったら、パッケージディレクトリ＋`tests/`に分ける（`tools/openrouter/model-select/model_select/*.py` + `tools/openrouter/model-select/tests/`、`tools/tav-cli/tav_core/`）
+- **単一モジュール**: 小さく状態を持たないCLIなら1ファイル+`[tool.setuptools] py-modules = [...]`で十分（`tools/llm/aim/aim_cli.py`）
+- **パッケージ+tests/**: 内部構造やユニットテストを持つ規模になったら、パッケージディレクトリ＋`tests/`に分ける（`tools/openrouter/model-select/model_select/*.py` + `tools/openrouter/model-select/tests/`、`tools/web-research/tav-cli/tav_core/`）
 
 最初から過剰にパッケージ化せず、複雑さが増えたタイミングで単一モジュールからパッケージへ切り出す。
 

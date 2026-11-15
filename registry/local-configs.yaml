@@ -26,11 +26,11 @@ local_configs:
   - path: .vscode/settings.json
     example: .vscode/settings.example.jsonc
     reason: Per-machine VS Code workspace settings.
-  - path: tools/aim/models.json
-    example: tools/aim/models.json.example
+  - path: tools/llm/aim/models.json
+    example: tools/llm/aim/models.json.example
     reason: Per-machine model list for aim.
-  - path: tools/aim2/models.json
-    example: tools/aim2/models.json.example
+  - path: tools/llm/aim2/models.json
+    example: tools/llm/aim2/models.json.example
     reason: Per-machine model list for aim2.
 
 deny_patterns:
