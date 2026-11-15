@@ -100,7 +100,6 @@ The following six are separate repositories; the umbrella only holds their commi
 
 ## Other
 
-- The 2026-11 restructure changed plugin locations and some plugin names (`meta` → `cc-knowledge`, `my-tools-no-install` → `web-lookup` / `doc-tools`, and others). A mapping table for existing users is in [docs/integrations/claude-code.md](docs/integrations/claude-code.md).
 - `.gitmodules` — Declares the six submodules above. Managed with `just sub-init` / `sub-sync` / `sub-status`. `just branch-*` creates, switches, pushes and deletes one working branch across the umbrella and every submodule (see repo-layout).
 - `.links.yaml` / `.umbrella-root` — Junction declarations (placed at each repository root and created with `just links-sync`; the Junctions themselves are not committed) and the marker for the umbrella root. See [repo-layout](maintenance/docs/repo-layout.md) for details.
 - `lefthook.yml` — Git hooks configuration that runs on commit, etc. (various regeneration/formatting/secretlint on `pre-commit`, commitlint on `commit-msg`). The submodule side is `maintenance/lefthook/submodule.yml`.

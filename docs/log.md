@@ -1,5 +1,9 @@
 # Directory Update Log
 
+## 2026-11-15
+
+- **Update**: `docs/integrations/claude-code.md` — 2026-11 再編の旧→新プラグイン名の対応表と節見出しを消し、`ai-tools-knowledge` の説明だけをインストール手順の末尾に残した。`index.md` の `maintenance/docs` の行から「`docs/repo-wide/` から移動」の注記を消した。
+
 ## 2026-11-10
 
 - **Update**: リポジトリ再編（`plans/repo-restructure/`）。`docs/repo-wide/` を `maintenance/docs/` へ移し、`docs/` は利用者向けの `integrations/` と `topics/` だけのバンドルにした。`index.md` の説明とセクションを合わせ、`maintenance/docs` と `agent-compat/docs/differences` はバンドル外の関連として残した。以下の旧エントリのパス（`docs/repo-wide/`・`meta-plugins/`・`claude-plugins/` 等）は当時のもの。
