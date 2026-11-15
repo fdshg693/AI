@@ -18,8 +18,6 @@ status: stable
 - **local**（`*-local` レシピ）: リポジトリを clone 済みの開発者向け。エディタブルインストール（`uv tool install --editable`、`pip install -e` の代替）なので、ソースを編集すれば即座に反映される。
 - **git**（`*-git` レシピ）: リポジトリを clone せずに手軽に入れたい場合向け。`uv tool install "git+<repo_url>#subdirectory=..."` でGitHub上のソースを直接インストールする。エディタブルではないため、更新を取り込むには同じコマンドを再実行する。`docs\integrations\justfile` 内の `repo_url` を実際のリポジトリURLに置き換えてから使うこと。
 
-> 2026-11 の再編で一部の CLI が 1 段のカテゴリフォルダへ移った（`tools/aim` → `tools/llm/aim`、`tools/tav-cli` → `tools/web-research/tav-cli`、`tools/agents-rules` → `tools/coding-agent/agents-rules` など。対応は [registry/repo-tools.yaml](../../registry/repo-tools.yaml) の `path`）。旧パスで editable インストールした人は、新しいパスで `uv tool install --editable tools/<category>/<name> --force` を実行して入れ直す必要がある（旧パスのインストールはソースが見つからず壊れる）。`*-git` レシピは新しいパスに更新済みなので再実行すればよい。タグでピン留めするときの `subdirectory=` は、そのタグの時点での置き場所に合わせる（再編前に打たれたタグは旧パス、再編後のタグは新パス）。
-
 ## 1. aim CLI
 
 - `tools\llm\aim\README.md` を参照。
@@ -98,7 +96,7 @@ tav search "Microsoft Fabric overview" --topic msfabric_overview
   uv tool install "git+https://github.com/fdshg693/AI-tools.git@aim-cli-v0.1.0#subdirectory=aim"
   ```
 
-  `<dir>` は上表の「ディレクトリ」列から先頭の `tools/` を除いたもの（AI-tools ではリポジトリ直下にある）。`justfile` の `*-git` レシピ（常に最新mainを追う）と異なり、`@<tag>` を固定することで特定バージョンにピン留めできる。
+  `<dir>` は上表の「ディレクトリ」列から先頭の `tools/` を除いたもの（AI-tools ではリポジトリ直下にある）。ただし `subdirectory=` はそのタグの時点の置き場所に合わせる（2026-11 の再編より前のタグは、カテゴリフォルダの無い旧パス。上の例の `aim` がそれ）。`justfile` の `*-git` レシピ（常に最新mainを追う）と異なり、`@<tag>` を固定することで特定バージョンにピン留めできる。
 
 ## 関連
 
