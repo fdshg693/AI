@@ -2475,7 +2475,7 @@ wheels = [
 
 [[package]]
 name = "textgraph"
-version = "0.1.2"
+version = "0.1.3"
 source = { editable = "tools/textgraph" }
 
 [package.dev-dependencies]
