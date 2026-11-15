@@ -20,8 +20,9 @@ status: stable
   - `web-research/` — Web・公式ドキュメント・公開コードを調べるツール（`awsdocs`・`grepapp`・`gdevdocs`・`mslearn`・`tav-cli`・`ctx7`）
   - `openrouter/` — OpenRouterのモデル一覧・選定の補助（`model-list`・`model-select`）。モデルを呼び出すのではないので`llm/`とは分ける
 - どのカテゴリにも当てはまらないCLIは`tools/<name>`に置く（`skill-tools`・`textgraph`・`pyinspect`等）。同じ性質のツールが複数そろったら新しいカテゴリを作ってよい。そのときは本節に1行足す
-- Pythonパッケージ化が不要なディレクトリもある（`tools/infra`はBicep+スクリプト）。すべてを無理に`uv`ワークスペースへ載せる必要はない（判断基準は[uv-workspace](./uv-workspace.md)参照）
+- Pythonパッケージ化が不要なディレクトリもある。すべてを無理に`uv`ワークスペースへ載せる必要はない（判断基準は[uv-workspace](./uv-workspace.md)参照）
 - AI の SDK/CLI を組み合わせて手元でカスタマイズして使うワークフロー（CLI ラッパー、サンドボックス、定期実行など）は`tools/`ではなく`workflow/`サブモジュールに置く（[repo-layout](./repo-layout.md#置き場所の判定基準)）
+- ツールではないインフラ定義（IaC・Docker 構成・運用スクリプト）は`tools/`ではなく`infra/`サブモジュールに置く（[repo-layout](./repo-layout.md#置き場所の判定基準)）
 
 ## 役割索引
 
