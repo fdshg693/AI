@@ -33,6 +33,7 @@ pre-commit:
               - "repo-workflows.yaml"
               - "repo-hooks.yaml"
               - "tools/**"
+              - "maintenance/docs/*.md"
               # submodule pointer updates (gitlinks) refresh the umbrella's aggregate outputs
               - "skills"
               - "tools"
