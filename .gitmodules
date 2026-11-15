@@ -13,3 +13,6 @@
 [submodule "workflow"]
 	path = workflow
 	url = https://github.com/fdshg693/AI-workflow.git
+[submodule "infra"]
+	path = infra
+	url = https://github.com/fdshg693/AI-infra.git
