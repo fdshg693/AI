@@ -29,6 +29,9 @@
 
 tools:
   claude-code:
+    skills_plugin_index:
+      root: skills/plugins
+      output_path: skills/README.md
     readme:
       config_dirs:
         - path: .claude

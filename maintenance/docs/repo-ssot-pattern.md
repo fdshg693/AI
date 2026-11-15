@@ -13,12 +13,13 @@ status: stable
 
 ## 現在のSSOT
 
-| SSOT                                                | 扱う事実                                                                                                 | 詳細ドキュメント                            |
-| --------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| [`ai-tools.yaml`](../../registry/ai-tools.yaml)     | どのツールがどのプラグインを持つか、各ツールのマーケットプレイス/スキルカタログ/README節の生成元         | [ai-tools-config](./ai-tools-config.md)     |
-| [`meta_field.yaml`](../../registry/meta_field.yaml) | `SKILL.md`frontmatterの`meta:`各サブフィールドの意味・書式・デフォルト値                                 | [skill-meta-fields](./skill-meta-fields.md) |
-| [`repo-tools.yaml`](../../registry/repo-tools.yaml) | スキルがCLIインストール前提として依存する`tools/`配下ツールの名前とパスの対応                            | [repo-tools-config](./repo-tools-config.md) |
-| [`repo-hooks.yaml`](../../registry/repo-hooks.yaml) | 配布するエージェントフックのカタログ（agent-tooling が `hook.yaml` 群から生成する `catalog.json`）の所在 | [hook-distribution](./hook-distribution.md) |
+| SSOT                                                      | 扱う事実                                                                                                        | 詳細ドキュメント                                     |
+| --------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| [`ai-tools.yaml`](../../registry/ai-tools.yaml)           | どのツールがどのプラグインを持つか、各ツールのマーケットプレイス/スキルカタログ/README節の生成元                | [ai-tools-config](./ai-tools-config.md)              |
+| [`meta_field.yaml`](../../registry/meta_field.yaml)       | `SKILL.md`frontmatterの`meta:`各サブフィールドの意味・書式・デフォルト値                                        | [skill-meta-fields](./skill-meta-fields.md)          |
+| [`repo-tools.yaml`](../../registry/repo-tools.yaml)       | スキルがCLIインストール前提として依存する`tools/`配下ツールの名前とパスの対応                                   | [repo-tools-config](./repo-tools-config.md)          |
+| [`repo-hooks.yaml`](../../registry/repo-hooks.yaml)       | 配布するエージェントフックのカタログ（agent-tooling が `hook.yaml` 群から生成する `catalog.json`）の所在        | [hook-distribution](./hook-distribution.md)          |
+| [`local-configs.yaml`](../../registry/local-configs.yaml) | コミットしないローカル設定ファイルと example の対応、追跡を禁じる名前のパターンと例外（生成ではなく検査の入力） | [repo-layout](./repo-layout.md#ローカル設定ファイル) |
 
 SSOT yaml は `registry/` にまとめる（サブモジュール単体で開いたときも Junction 1 本で参照できるように）。ルート直下の `ai-tools.yaml`・`repo-tools.yaml`・`repo-workflows.yaml`・`repo-hooks.yaml` は旧 skill-tools 向けの生成コピーで、SSOT ではない（[skill-tools-contract](./skill-tools-contract.md)参照）。
 

@@ -22,6 +22,7 @@ just hooks-install && just sub-agent-hooks-install
 - `just branch-work <name> && just branch-switch --create` — この端末の作業ブランチ名（`windows` など）を git config に記録し、全リポジトリをそのブランチにする（[branch-and-pr-workflow](maintenance/docs/branch-and-pr-workflow.md#作業ブランチ名を設定する)）
 - `just agent-compat-sync` — Cline・Kilo Code・Antigravity 向けのスキルのコピーを作る
 - `cp .claude/skill-tools.hooks.example.yaml ...`／`just hooks-install`／`just sub-agent-hooks-install` — エージェントフックをアンブレラと各サブモジュールに入れる。入れるフックは gitignore したローカルの設定（`hooks.install`）で選び、git にはサンプルだけがある。サブモジュールはそれぞれの `.claude/` で同じようにコピーしたものだけが対象（[hook-distribution](maintenance/docs/hook-distribution.md)）
+- ローカル設定は example だけをコミットしている。必要に応じて `.codex/config.example.toml` → `.codex/config.toml`、`.mcp.json.example` → `.mcp.json`、`tools/llm/aim2/models.json.example` → `tools/llm/aim2/models.json` をコピーする（pull で実体が消えたときも同じ）
 
 pull のあとは `just sub-init`。サブモジュールの中でコミットしてからアンブレラでポインタを更新する 2 段階の手順は [repo-layout](maintenance/docs/repo-layout.md#サブモジュール) を参照。
 
@@ -85,7 +86,7 @@ pull のあとは `just sub-init`。サブモジュールの中でコミット�
   - [maintenance/plugin/](maintenance/plugin/) — 保守用の Claude Code プラグイン（コミット手順、リポジトリの地図、スキル・ツールの変更手順など）。[maintenance/plugin/README.md](maintenance/plugin/README.md)
   - [maintenance/scripts/](maintenance/scripts/) — カタログ・マーケットプレイスの生成、SKILL.md の meta 補完、pre-commit、Junction（`links`）のスクリプト
   - [maintenance/docs/](maintenance/docs/index.md) — 保守の規約・設計判断（OKF 概念ドキュメント）。構成と境界の規約は [repo-layout](maintenance/docs/repo-layout.md)
-- [registry/](registry/) — SSOT yaml（`ai-tools.yaml`・`repo-tools.yaml`・`meta_field.yaml`・`skill-tags.yaml`・`repo-workflows.yaml`・`repo-hooks.yaml`）
+- [registry/](registry/) — SSOT yaml（`ai-tools.yaml`・`repo-tools.yaml`・`meta_field.yaml`・`skill-tags.yaml`・`repo-workflows.yaml`・`repo-hooks.yaml`・`local-configs.yaml`）
 - [docs/](docs/index.md) — 利用者向けの知識バンドル（[OKF](skills/plugins/coding/skills/okf-spec/)）。他の環境への導入手順 [docs/integrations/](docs/integrations/) など
 - [plans/](plans/) — 実装プラン
 - [.vscode/](.vscode/) — VSCode における AI コーディングツール設定例

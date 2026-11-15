@@ -27,7 +27,7 @@
         "url": "https://github.com/fdshg693/AI-skills.git",
         "path": "plugins/cicd"
       },
-      "description": "CICD plugins for Claude",
+      "description": "Skills for GitHub Actions diagnosis, agentic workflows, issue triage and PR-Agent",
       "version": "0.1.0",
       "strict": true
     },
@@ -49,7 +49,7 @@
         "url": "https://github.com/fdshg693/AI-skills.git",
         "path": "plugins/coding"
       },
-      "description": "Coding plugins for Claude",
+      "description": "Skills for brainstorming, debugging, code review, pull requests and development workflows",
       "version": "0.1.0",
       "strict": true
     },
@@ -71,7 +71,7 @@
         "url": "https://github.com/fdshg693/AI-skills.git",
         "path": "plugins/no-code"
       },
-      "description": "Skill to use Claude Code for non coding tasks for whatever fancy reason you want to use it for.",
+      "description": "Skills for non-coding tasks, including French language learning",
       "version": "0.1.0",
       "strict": true
     },
@@ -82,7 +82,7 @@
         "url": "https://github.com/fdshg693/AI-skills.git",
         "path": "plugins/others"
       },
-      "description": "other plugins for Claude",
+      "description": "Skills for GitHub content retrieval and VS Code documentation",
       "version": "0.1.0",
       "strict": true
     },
@@ -93,7 +93,7 @@
         "url": "https://github.com/fdshg693/AI-skills.git",
         "path": "plugins/special"
       },
-      "description": "Unordinary skills. Only for Claude Code power users.",
+      "description": "Skills for grouping and managing Claude Code skills and commands",
       "version": "0.1.0",
       "strict": true
     },
@@ -104,7 +104,7 @@
         "url": "https://github.com/fdshg693/AI-skills.git",
         "path": "plugins/subagents"
       },
-      "description": "Claude Code skill for using subagents",
+      "description": "Skills for parallel agent dispatch, subagent-driven development and test-driven development",
       "version": "0.1.0",
       "strict": true
     },
@@ -115,7 +115,7 @@
         "url": "https://github.com/fdshg693/AI-skills.git",
         "path": "plugins/topics"
       },
-      "description": "Focused Skill for specific topics, providing targeted information and insights.",
+      "description": "Topic-specific documentation skills for AI services, developer tools and Mermaid diagrams",
       "version": "0.1.0",
       "strict": true
     },

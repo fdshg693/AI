@@ -20,6 +20,61 @@ from pathlib import Path, PurePosixPath
 
 _PATH_LINE_RE = re.compile(r"^\s*path\s*=\s*(.+?)\s*$")
 
+# Repository-local variables a git hook exports (``git rev-parse --local-env-vars``).
+# They describe the repository whose hook is running (e.g. GIT_INDEX_FILE=.git/index,
+# relative), so a git command run in another repository (umbrella <-> submodule)
+# must not inherit them.
+_LOCAL_GIT_ENV = (
+    "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+    "GIT_COMMON_DIR",
+    "GIT_CONFIG",
+    "GIT_CONFIG_COUNT",
+    "GIT_CONFIG_PARAMETERS",
+    "GIT_DIR",
+    "GIT_GRAFT_FILE",
+    "GIT_IMPLICIT_WORK_TREE",
+    "GIT_INDEX_FILE",
+    "GIT_INTERNAL_SUPER_PREFIX",
+    "GIT_NO_REPLACE_OBJECTS",
+    "GIT_OBJECT_DIRECTORY",
+    "GIT_PREFIX",
+    "GIT_REPLACE_REF_BASE",
+    "GIT_SHALLOW_FILE",
+    "GIT_WORK_TREE",
+)
+
+
+def _git_dir(repo: Path) -> Path | None:
+    clean = {k: v for k, v in os.environ.items() if k not in _LOCAL_GIT_ENV}
+    result = subprocess.run(
+        ["git", "rev-parse", "--absolute-git-dir"],
+        cwd=repo,
+        env=clean,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return Path(result.stdout.strip()).resolve() if result.returncode == 0 else None
+
+
+def _env_for(repo: Path) -> dict[str, str] | None:
+    """Environment for git in ``repo``.
+
+    Inherited (None) when no hook index is set or it belongs to ``repo`` (keeps a
+    temporary index such as ``git commit -a`` uses); otherwise the hook-local
+    variables are dropped so the command sees ``repo``'s own index.
+    """
+    index = os.environ.get("GIT_INDEX_FILE")
+    if not index:
+        return None
+    index_path = Path(index)
+    if not index_path.is_absolute():
+        index_path = repo / index_path
+    git_dir = _git_dir(repo)
+    if git_dir is not None and index_path.resolve().parent == git_dir:
+        return None
+    return {k: v for k, v in os.environ.items() if k not in _LOCAL_GIT_ENV}
+
 
 def submodule_paths(root: Path) -> list[str]:
     """Posix paths (umbrella-relative) of checked-out submodules, longest first."""
@@ -45,59 +100,18 @@ def owner(root: Path, rel_posix: str) -> tuple[Path, str]:
     return root, rel_posix
 
 
-# Set by git for hooks; they pin every git call to the committing repository.
-_REPO_ENV_VARS = (
-    "GIT_DIR",
-    "GIT_INDEX_FILE",
-    "GIT_WORK_TREE",
-    "GIT_PREFIX",
-    "GIT_COMMON_DIR",
-    "GIT_OBJECT_DIRECTORY",
-)
-
-
-def _git_dir_of(repo: Path) -> Path | None:
-    dot_git = repo / ".git"
-    if dot_git.is_dir():
-        return dot_git.resolve()
-    if dot_git.is_file():
-        text = dot_git.read_text(encoding="utf-8", errors="replace").strip()
-        if text.startswith("gitdir:"):
-            return (repo / text[len("gitdir:") :].strip()).resolve()
-    return None
-
-
-def _git_env(repo: Path) -> dict[str, str] | None:
-    """Environment for a git call in ``repo``.
-
-    A hook of a commit made inside a submodule inherits ``GIT_DIR`` /
-    ``GIT_INDEX_FILE`` pointing at that submodule, so ``git diff --cached`` run
-    in the umbrella (or another submodule) would read the committing
-    submodule's index. Keep them only for the repository they belong to (its
-    index may be a temporary one, e.g. ``git commit -a``); drop them elsewhere.
-    Returns None (inherit unchanged) when nothing needs dropping.
-    """
-    hook_git_dir = os.environ.get("GIT_DIR")
-    if not hook_git_dir:
-        return None
-    if _git_dir_of(repo) == Path(hook_git_dir).resolve():
-        return None
-    env = dict(os.environ)
-    for key in _REPO_ENV_VARS:
-        env.pop(key, None)
-    return env
-
-
-def _env_kwargs(repo: Path) -> dict[str, dict[str, str]]:
-    env = _git_env(repo)
-    return {} if env is None else {"env": env}
-
-
-def _staged_in(repo: Path) -> list[str]:
+def _staged_in(repo: Path, *, include_deleted: bool = False) -> list[str]:
     result = subprocess.run(
-        ["git", "diff", "--name-only", "--cached", "--diff-filter=ACMR"],
+        [
+            "git",
+            "diff",
+            "--name-only",
+            "--cached",
+            "--no-renames",
+            f"--diff-filter={'ACDMR' if include_deleted else 'ACMR'}",
+        ],
         cwd=repo,
-        **_env_kwargs(repo),
+        env=_env_for(repo),
         capture_output=True,
         text=True,
         encoding="utf-8",
@@ -109,17 +123,78 @@ def _staged_in(repo: Path) -> list[str]:
     return [line for line in result.stdout.splitlines() if line.strip()]
 
 
-def staged_files(root: Path) -> list[str]:
-    """Staged (ACMR) paths of the umbrella and every checked-out submodule.
+def staged_files(root: Path, *, include_deleted: bool = False) -> list[str]:
+    """Staged paths of the umbrella and every checked-out submodule.
 
     Submodule paths are prefixed with the submodule's path. The umbrella's own
     gitlink entries (e.g. ``skills`` after a pointer update) are kept as-is so
     tasks can glob on them.
     """
-    paths = _staged_in(root)
+    paths = _staged_in(root, include_deleted=include_deleted)
     for sub in submodule_paths(root):
-        paths.extend(f"{sub}/{path}" for path in _staged_in(root / sub))
+        paths.extend(
+            f"{sub}/{path}" for path in _staged_in(root / sub, include_deleted=include_deleted)
+        )
     return paths
+
+
+def _tracked_in(repo: Path) -> list[str]:
+    result = subprocess.run(
+        ["git", "ls-files", "-z"],
+        cwd=repo,
+        env=_env_for(repo),
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        check=False,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(result.stderr.strip() or result.stdout.strip())
+    return [path for path in result.stdout.split("\0") if path]
+
+
+def tracked_files(root: Path) -> list[str]:
+    """Index entries (``git ls-files``) of the umbrella and every checked-out submodule.
+
+    Paths are umbrella-relative; submodule entries carry the submodule path as
+    prefix. The umbrella's gitlinks (``skills`` etc.) are listed as-is.
+    """
+    paths = _tracked_in(root)
+    for sub in submodule_paths(root):
+        paths.extend(f"{sub}/{path}" for path in _tracked_in(root / sub))
+    return paths
+
+
+def ignored_files(root: Path, rel_paths: list[str]) -> set[str]:
+    """Subset of umbrella-relative ``rel_paths`` that the owning repository ignores.
+
+    Uses ``git check-ignore --no-index`` so a tracked file is still reported when
+    a pattern matches it. One call per owning repository.
+    """
+    by_repo: dict[Path, list[tuple[str, str]]] = {}
+    for rel in rel_paths:
+        repo, inner = owner(root, rel)
+        by_repo.setdefault(repo, []).append((rel, inner))
+    ignored: set[str] = set()
+    for repo, pairs in by_repo.items():
+        result = subprocess.run(
+            ["git", "check-ignore", "--no-index", "--stdin", "-z"],
+            cwd=repo,
+            env=_env_for(repo),
+            input="".join(f"{inner}\0" for _, inner in pairs),
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            check=False,
+        )
+        # 0: some paths ignored, 1: none ignored, anything else: error.
+        if result.returncode not in (0, 1):
+            raise RuntimeError(result.stderr.strip() or result.stdout.strip())
+        hits = {path for path in result.stdout.split("\0") if path}
+        ignored.update(rel for rel, inner in pairs if inner in hits)
+    return ignored
 
 
 def show(root: Path, rev: str, rel_posix: str) -> str | None:
@@ -128,7 +203,7 @@ def show(root: Path, rev: str, rel_posix: str) -> str | None:
     result = subprocess.run(
         ["git", "show", f"{rev}:{inner}"],
         cwd=repo,
-        **_env_kwargs(repo),
+        env=_env_for(repo),
         capture_output=True,
         text=True,
         encoding="utf-8",
@@ -146,7 +221,7 @@ def add(root: Path, rel_posix: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         ["git", "add", "--", inner],
         cwd=repo,
-        **_env_kwargs(repo),
+        env=_env_for(repo),
         capture_output=True,
         text=True,
         encoding="utf-8",

@@ -61,7 +61,7 @@ def test_sync_check_clean(tmp_path: Path) -> None:
     report = core.sync(root)
     assert not report.errors
     assert is_link_like(link) and not link.is_symlink()
-    assert "/sub/.claude/skills/" in core.read_block(core.exclude_file(root))
+    assert "/sub/.claude/skills" in core.read_block(core.exclude_file(root))
     assert not core.check(root).errors
     status = subprocess.run(
         ["git", "-C", str(root), "status", "--porcelain", "--untracked-files=all"],
@@ -78,3 +78,20 @@ def test_sync_check_clean(tmp_path: Path) -> None:
     assert not link.exists()
     assert (root / "shared" / "skills" / "a" / "SKILL.md").is_file()
     assert core.read_block(core.exclude_file(root)) == []
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="symlinks stand in for junctions off Windows")
+def test_sync_symlink_is_ignored_by_git(tmp_path: Path) -> None:
+    # A trailing "/" in the exclude pattern matched junctions only; symlinks showed as untracked.
+    root = make_umbrella(tmp_path, VALID)
+    report = core.sync(root)
+    assert not report.errors
+    assert (root / "sub" / ".claude" / "skills").is_symlink()
+    status = subprocess.run(
+        ["git", "-C", str(root), "status", "--porcelain", "--untracked-files=all"],
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout
+    assert "sub/" not in status
+    assert not core.check(root).errors

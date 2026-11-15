@@ -1,6 +1,7 @@
 """Regenerate the concept-doc list in maintenance/docs/index.md.
 
-Each maintenance/docs/*.md (except index.md) contributes one line,
+Each maintenance/docs/*.md (except index.md and the AGENTS.md / CLAUDE.md /
+README.md directory entry files) contributes one line,
 `- [<stem>](<stem>.md) — <description>`, read from its frontmatter
 `description`, in file-name order. Only the part between the
 `<!-- BEGIN: maintenance-docs-index -->` / `<!-- END: maintenance-docs-index -->`
@@ -23,6 +24,8 @@ import yaml
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DOCS_DIR_REL = Path("maintenance") / "docs"
 INDEX_NAME = "index.md"
+# Directory entry files, not concept docs.
+SKIP_NAMES = frozenset({INDEX_NAME, "AGENTS.md", "CLAUDE.md", "README.md"})
 BEGIN_MARKER = "<!-- BEGIN: maintenance-docs-index -->"
 END_MARKER = "<!-- END: maintenance-docs-index -->"
 GENERATED_NOTE = (
@@ -56,7 +59,7 @@ def build_list(docs_dir: Path) -> str:
     lines: list[str] = []
     errors: list[str] = []
     for doc_path in sorted(docs_dir.glob("*.md"), key=lambda p: p.name):
-        if doc_path.name == INDEX_NAME:
+        if doc_path.name in SKIP_NAMES:
             continue
         try:
             description = read_description(doc_path)
