@@ -93,7 +93,7 @@ tav search "Microsoft Fabric overview" --topic msfabric_overview
   ```bash
   uv tool install "git+https://github.com/fdshg693/AI-tools.git@<tag>#subdirectory=<dir>"
   # 例
-  uv tool install "git+https://github.com/fdshg693/AI-tools.git@aim-cli-v0.1.0#subdirectory=aim"
+  uv tool install "git+https://github.com/fdshg693/AI-tools.git@aim-cli-v0.1.12#subdirectory=aim"
   ```
 
   `<dir>` は上表の「ディレクトリ」列から先頭の `tools/` を除いたもの（AI-tools ではリポジトリ直下にある）。ただし `subdirectory=` はそのタグの時点の置き場所に合わせる（2026-11 の再編より前のタグは、カテゴリフォルダの無い旧パス。上の例の `aim` がそれ）。`justfile` の `*-git` レシピ（常に最新mainを追う）と異なり、`@<tag>` を固定することで特定バージョンにピン留めできる。
