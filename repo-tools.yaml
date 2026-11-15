@@ -125,10 +125,6 @@ tools:
     path: tools/linear-cli
     install: "cd tools/linear-cli && pnpm add -g ."
     description: tools/linear-cli/README.md
-  ona-run:
-    path: tools/ona-run
-    install: "uv tool install --editable tools/ona-run"
-    description: tools/ona-run/README.md
   skill-tools:
     path: tools/skill-tools
     install: "uv tool install --editable tools/skill-tools"
