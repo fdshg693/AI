@@ -46,7 +46,7 @@ Skill bodies live in one place only, as Claude Code plugins (`skills/plugins/`, 
 
 - **Cline**
   - [.cline/](.cline/) — Cline settings. `.cline/skills/` is a gitignored copy of `skills/plugins/ai-tools-knowledge` made by `just agent-compat-sync` (do not edit by hand)
-  - [.clinerules/](.clinerules/) — Output folder for the rule files Cline reads, generated from `AGENTS.md` by the `tools/agents-rules` CLI (`agents-rules -t cline`). Absent until generated. Do not edit by hand
+  - [.clinerules/](.clinerules/) — Output folder for the rule files Cline reads, generated from `AGENTS.md` by the `tools/coding-agent/agents-rules` CLI (`agents-rules -t cline`). Absent until generated. Do not edit by hand
 
 - **Kilo Code**
   - [.kilo/](.kilo/) — Kilo Code (CLI/TUI/VS Code extension) settings. `.kilo/skills/` is a gitignored copy of `skills/plugins/ai-tools-knowledge` made by `just agent-compat-sync`. `.kilo/plugin/` is where agent-tooling installs its hooks
@@ -62,7 +62,7 @@ Skill bodies live in one place only, as Claude Code plugins (`skills/plugins/`, 
 
 - **Antigravity**
   - [_agents/](_agents/) — Antigravity workspace plugins (`_agents/plugins/`). `antigravity-meta` is a gitignored copy of `skills/plugins/ai-tools-knowledge` made by `just agent-compat-sync`. Used separately from `.agents/` (see `_agents/README.md`)
-  - [.agents/rules/](.agents/rules/) — Workspace Rules read by Antigravity, generated from `AGENTS.md` by the `tools/agents-rules` CLI (see `.agents/README.md`). Do not edit by hand
+  - [.agents/rules/](.agents/rules/) — Workspace Rules read by Antigravity, generated from `AGENTS.md` by the `tools/coding-agent/agents-rules` CLI (see `.agents/README.md`). Do not edit by hand
 
 <!-- END: ai-tools-section -->
 
@@ -104,7 +104,7 @@ The following five are separate repositories; the umbrella only holds their comm
 - `.links.yaml` / `.umbrella-root` — Junction declarations (placed at each repository root and created with `just links-sync`; the Junctions themselves are not committed) and the marker for the umbrella root. See [repo-layout](maintenance/docs/repo-layout.md) for details.
 - `lefthook.yml` — Git hooks configuration that runs on commit, etc. (various regeneration/formatting/secretlint on `pre-commit`, commitlint on `commit-msg`). The submodule side is `maintenance/lefthook/submodule.yml`.
 - `mise.toml` — Tool version management via [mise](https://mise.jdx.dev/) (pins node / pnpm / terraform / uv for this repository).
-- `pyproject.toml` — Root definition of the uv workspace (manages Python packages such as `tools/aim` together).
+- `pyproject.toml` — Root definition of the uv workspace (manages Python packages such as `tools/llm/aim` together).
 - `pnpm-workspace.yaml` / `package.json` / `pnpm-lock.yaml` — Root definition of the pnpm workspace (`site/skills-site`, `workflow/cline-wrapper`, `workflow/copilot-wrapper`) and its lockfile.
 - `.prettierrc.json` / `.prettierignore` — Formatting settings.
 - `commitlint.config.js` — Lint settings for commit messages ([Conventional Commits](https://www.conventionalcommits.org/), `@commitlint/config-conventional`).

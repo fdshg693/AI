@@ -511,7 +511,7 @@
     {
       "path": "tools/_plugin/my-tools/skills/aim-lib",
       "name": "aim-lib",
-      "description": "`tools/aim` のグローバルインストール済み Python 実装をライブラリとして使い、OpenRouter 経由で AI モデルへ単発リクエストを送る方法を説明する。Python コードからプロンプトを送信したい、モデル略記を解決したい、応答本文を取り出したい場合に使う。CLI コマンドを実行する場合は `aim-cli` を使う。"
+      "description": "`tools/llm/aim` のグローバルインストール済み Python 実装をライブラリとして使い、OpenRouter 経由で AI モデルへ単発リクエストを送る方法を説明する。Python コードからプロンプトを送信したい、モデル略記を解決したい、応答本文を取り出したい場合に使う。CLI コマンドを実行する場合は `aim-cli` を使う。"
     },
     {
       "path": "tools/_plugin/my-tools/skills/aim2-cli",
@@ -591,7 +591,7 @@
     {
       "path": "tools/_plugin/my-tools/skills/tav-lib",
       "name": "tav-lib",
-      "description": "`tools/tav-cli` のグローバルインストール済み Python 実装をライブラリとして使い、Tavily 経由で Web 検索・URL 本文抽出・サイトマップ・クロール・リサーチを行う方法を説明する。Python コードから Tavily API を呼び出したい、`--detail` プリセットを適用した結果を取り出したい場合に使う。CLI コマンドを実行する場合は `tav-cli` を使う。"
+      "description": "`tools/web-research/tav-cli` のグローバルインストール済み Python 実装をライブラリとして使い、Tavily 経由で Web 検索・URL 本文抽出・サイトマップ・クロール・リサーチを行う方法を説明する。Python コードから Tavily API を呼び出したい、`--detail` プリセットを適用した結果を取り出したい場合に使う。CLI コマンドを実行する場合は `tav-cli` を使う。"
     },
     {
       "path": "tools/_plugin/my-tools/skills/textgraph",

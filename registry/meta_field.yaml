@@ -45,7 +45,7 @@ fields:
     description: "事前にインストールが要る外部ツール"
     format: "インストール手段のカンマ区切り"
     default: "none"
-    example: "uv tool install --editable tools/aim"
+    example: "uv tool install --editable tools/llm/aim"
 
   dependencies:
     description: "スキル内スクリプトが使うライブラリ依存と、このリポジトリ外の外部コマンド（gh, git, uv, python 等）"
@@ -63,7 +63,7 @@ fields:
     description: "このリポジトリの自作ツール（repo-tools.yaml 登録済み）への依存。無くても動く任意利用のツールも含め、任意かどうかは本文に書く。外部コマンドは dependencies、エージェントの組み込みツール（WebFetch 等）は書かない。maintenance/plugin/** だけは「そのメタスキルが説明するファイル」の意味で使う"
     format: "repo-tools.yaml のキー、または登録済みパス（リポジトリルートから）のカンマ区切り"
     default: "none"
-    example: "tools/aim"
+    example: "tools/llm/aim"
 
   tag:
     description: "トピック横断でスキルを検索するためのタグ（AIの自動起動判断には使われない）"

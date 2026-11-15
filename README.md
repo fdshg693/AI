@@ -46,7 +46,7 @@ pull のあとは `just sub-init`。サブモジュールの中でコミット�
 
 - **Cline**
   - [.cline/](.cline/) — Cline 用設定。`.cline/skills/` は `skills/plugins/ai-tools-knowledge` から `just agent-compat-sync` で作る gitignore 済みのコピー（手編集しない）
-  - [.clinerules/](.clinerules/) — Cline が読むルールファイルの出力先。`AGENTS.md` から `tools/agents-rules` CLI（`agents-rules -t cline`）で生成する。未生成なら存在しない。手編集しない
+  - [.clinerules/](.clinerules/) — Cline が読むルールファイルの出力先。`AGENTS.md` から `tools/coding-agent/agents-rules` CLI（`agents-rules -t cline`）で生成する。未生成なら存在しない。手編集しない
 
 - **Kilo Code**
   - [.kilo/](.kilo/) — Kilo Code（CLI/TUI/VS Code拡張）の設定。`.kilo/skills/` は `skills/plugins/ai-tools-knowledge` から `just agent-compat-sync` で作る gitignore 済みのコピー。`.kilo/plugin/` は agent-tooling のフック配置先
@@ -62,7 +62,7 @@ pull のあとは `just sub-init`。サブモジュールの中でコミット�
 
 - **Antigravity**
   - [_agents/](_agents/) — Antigravity のワークスペースプラグイン置き場（`_agents/plugins/`）。`antigravity-meta` は `skills/plugins/ai-tools-knowledge` から `just agent-compat-sync` で作る gitignore 済みのコピー。`.agents/` と使い分ける（`_agents/README.md` 参照）
-  - [.agents/rules/](.agents/rules/) — Antigravity が読むワークスペース Rules。`AGENTS.md` から `tools/agents-rules` CLI で生成する（`.agents/README.md` 参照）。手編集しない
+  - [.agents/rules/](.agents/rules/) — Antigravity が読むワークスペース Rules。`AGENTS.md` から `tools/coding-agent/agents-rules` CLI で生成する（`.agents/README.md` 参照）。手編集しない
 
 <!-- END: ai-tools-section -->
 
@@ -104,7 +104,7 @@ pull のあとは `just sub-init`。サブモジュールの中でコミット�
 - `.links.yaml` / `.umbrella-root` — Junction の宣言（各リポジトリのルートに置き、`just links-sync` で作る。Junction 自体はコミットしない）と、アンブレラのルートの目印。詳細は [repo-layout](maintenance/docs/repo-layout.md)。
 - `lefthook.yml` — コミット時などに走る Git hooks の設定（`pre-commit` での各種再生成・整形・secretlint、`commit-msg` での commitlint）。サブモジュール側は `maintenance/lefthook/submodule.yml`。
 - `mise.toml` — [mise](https://mise.jdx.dev/) によるツールバージョン管理（node / pnpm / terraform / uv をこのリポジトリ用にpin）。
-- `pyproject.toml` — uv workspace のルート定義（`tools/aim` 等、Python パッケージ群をまとめて管理）。
+- `pyproject.toml` — uv workspace のルート定義（`tools/llm/aim` 等、Python パッケージ群をまとめて管理）。
 - `pnpm-workspace.yaml` / `package.json` / `pnpm-lock.yaml` — pnpm workspace のルート定義（`site/skills-site`, `workflow/cline-wrapper`, `workflow/copilot-wrapper`）とロックファイル。
 - `.prettierrc.json` / `.prettierignore` — フォーマット設定。
 - `commitlint.config.js` — コミットメッセージのlint設定（[Conventional Commits](https://www.conventionalcommits.org/)、`@commitlint/config-conventional`）。

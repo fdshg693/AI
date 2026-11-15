@@ -18,16 +18,18 @@ status: stable
 - **local**（`*-local` レシピ）: リポジトリを clone 済みの開発者向け。エディタブルインストール（`uv tool install --editable`、`pip install -e` の代替）なので、ソースを編集すれば即座に反映される。
 - **git**（`*-git` レシピ）: リポジトリを clone せずに手軽に入れたい場合向け。`uv tool install "git+<repo_url>#subdirectory=..."` でGitHub上のソースを直接インストールする。エディタブルではないため、更新を取り込むには同じコマンドを再実行する。`docs\integrations\justfile` 内の `repo_url` を実際のリポジトリURLに置き換えてから使うこと。
 
+> 2026-11 の再編で一部の CLI が 1 段のカテゴリフォルダへ移った（`tools/aim` → `tools/llm/aim`、`tools/tav-cli` → `tools/web-research/tav-cli`、`tools/agents-rules` → `tools/coding-agent/agents-rules` など。対応は [registry/repo-tools.yaml](../../registry/repo-tools.yaml) の `path`）。旧パスで editable インストールした人は、新しいパスで `uv tool install --editable tools/<category>/<name> --force` を実行して入れ直す必要がある（旧パスのインストールはソースが見つからず壊れる）。`*-git` レシピは新しいパスに更新済みなので再実行すればよい。タグでピン留めするときの `subdirectory=` は、そのタグの時点での置き場所に合わせる（再編前に打たれたタグは旧パス、再編後のタグは新パス）。
+
 ## 1. aim CLI
 
-- `tools\aim\README.md` を参照。
+- `tools\llm\aim\README.md` を参照。
 - インストール: リポジトリルートから `just -f docs/integrations/justfile aim-local`（clone済み）または `just -f docs/integrations/justfile aim-git`（clone不要）
 
 ## 2. tav-cli
 
-- `tools\tav-cli\README.md` を参照。Tavily SDK を利用する検索・抽出・サイトマップ・クロール・Research 用の `tav` CLI ラッパーです。
+- `tools\web-research\tav-cli\README.md` を参照。Tavily SDK を利用する検索・抽出・サイトマップ・クロール・Research 用の `tav` CLI ラッパーです。
 - インストール: リポジトリルートから `just -f docs/integrations/justfile tavily-local`（clone済み）または `just -f docs/integrations/justfile tavily-git`（clone不要）
-- 実行前に `tools\tav-cli\.env` へ `TAVILY_API_KEY` を設定するか、環境変数に設定してください。
+- 実行前に `tools\web-research\tav-cli\.env` へ `TAVILY_API_KEY` を設定するか、環境変数に設定してください。
 
 インストール後は、例えば次のように実行します。
 
@@ -61,7 +63,7 @@ tav search "Microsoft Fabric overview" --topic msfabric_overview
 
 ## 5. agents-rules
 
-- [tools/agents-rules/README.md](../../tools/agents-rules/README.md) を参照。
+- [tools/coding-agent/agents-rules/README.md](../../tools/coding-agent/agents-rules/README.md) を参照。
 - インストール: リポジトリルートから `just -f docs/integrations/justfile agents-rules-local`（clone済み）または `just -f docs/integrations/justfile agents-rules-git`（clone不要）。
 
 ## 6. Cline プラグイン
@@ -75,16 +77,16 @@ tav search "Microsoft Fabric overview" --topic msfabric_overview
 - タグ命名規則: `<pyprojectのnameフィールド>-v<version>`（例: `aim-cli-v0.1.0`）
 - 対象パッケージの正本はアンブレラの `registry/repo-tools.yaml` の `release: true` なエントリ（`tool-release.yml` の `discover` ジョブがアンブレラの main から動的に読む。詳細は [repo-tools-config](../../maintenance/docs/repo-tools-config.md) 参照）。以下の表は現状把握用の参考情報（8つ。ワークスペース内の兄弟パッケージに依存しないもののみ）
 
-  | パッケージ名   | ディレクトリ      |
-  | -------------- | ----------------- |
-  | `aim-cli`      | `tools/aim`       |
-  | `grepapp-cli`  | `tools/grepapp`   |
-  | `tav-cli`      | `tools/tav-cli`   |
-  | `mslearn-cli`  | `tools/mslearn`   |
-  | `awsdocs-cli`  | `tools/awsdocs`   |
-  | `gdevdocs-cli` | `tools/gdevdocs`  |
-  | `ctx7-cli`     | `tools/ctx7`      |
-  | `textgraph`    | `tools/textgraph` |
+  | パッケージ名   | ディレクトリ                  |
+  | -------------- | ----------------------------- |
+  | `aim-cli`      | `tools/llm/aim`               |
+  | `grepapp-cli`  | `tools/web-research/grepapp`  |
+  | `tav-cli`      | `tools/web-research/tav-cli`  |
+  | `mslearn-cli`  | `tools/web-research/mslearn`  |
+  | `awsdocs-cli`  | `tools/web-research/awsdocs`  |
+  | `gdevdocs-cli` | `tools/web-research/gdevdocs` |
+  | `ctx7-cli`     | `tools/web-research/ctx7`     |
+  | `textgraph`    | `tools/textgraph`             |
 
 - `my-agents` は対象外。`[tool.uv.sources]` で workspace 内の兄弟パッケージ（`mslearn-cli`・`tav-cli`）を参照しているが、この解決は `uv build` が生成する wheel には反映されず、workspace 外で単体インストールすると壊れるため（依存パッケージ名が PyPI 上に存在せずインストールエラーになる）。なお依存名が PyPI 上の無関係なパッケージと一致すると、エラーなくインストールされて実行時に `ModuleNotFoundError` で壊れる（dependency confusion。例: `aim-cli` は [Aim](https://aimstack.io/) という別パッケージに誤解決される）。このため `justfile` にも `my-agents` 向けの `-git` レシピは意図的に追加していない。
 

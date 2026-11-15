@@ -40,7 +40,7 @@ status: stable
 
 いずれも `maintenance/scripts/plugin_meta/generate/generate_*.py` にあり、`from plugin_meta.util.ai_tools_config import REPO_ROOT, load_tool` で設定を読み、対象ファイルを**丸ごと再生成**（マージではない）する。
 
-`AGENTS.md` から派生する `.clinerules/*.md`・`.github/instructions/*.instructions.md`・`.agents/rules/*.md` は、ここ（`maintenance/scripts`・lefthook）では生成しない。`AGENTS.md` を1つ変えるたびに大量の生成差分がコミットに混ざるのを避けるため、[tools/agents-rules](../../tools/agents-rules/README.md) CLI に切り出して手動実行にした（出力先は引き続き `ai-tools.yaml` の `rules_from_agents_md` / `instructions_from_agents_md` を読む）。
+`AGENTS.md` から派生する `.clinerules/*.md`・`.github/instructions/*.instructions.md`・`.agents/rules/*.md` は、ここ（`maintenance/scripts`・lefthook）では生成しない。`AGENTS.md` を1つ変えるたびに大量の生成差分がコミットに混ざるのを避けるため、[tools/coding-agent/agents-rules](../../tools/coding-agent/agents-rules/README.md) CLI に切り出して手動実行にした（出力先は引き続き `ai-tools.yaml` の `rules_from_agents_md` / `instructions_from_agents_md` を読む）。
 
 補足で `site/skills-site/scripts/source-registry.mjs` も `ai-tools.yaml` から公開対象を導出する（詳細は`.claude/rules/skill-publication.md`参照）。
 

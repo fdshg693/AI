@@ -29,7 +29,9 @@ from skill.util.skill_meta_field import ensure_meta_field
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
 AIM_COMMAND = "aim"
-AIM_INSTALL_HINT = "先に `uv tool install --reinstall --editable tools/aim` を実行してください。"
+AIM_INSTALL_HINT = (
+    "先に `uv tool install --reinstall --editable tools/llm/aim` を実行してください。"
+)
 
 META_FIELDS = (
     "status",

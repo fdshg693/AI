@@ -27,21 +27,21 @@ status: draft
 
 他ツールへの届け方（マーケットプレイスの `sources`、gitignore 済みの `workspace_copies`）は [ai-tools-config](./ai-tools-config.md)。生成コピー（`.cline/skills/` 等）は Junction ではなく実ディレクトリで、目印 `.agent-compat-copy` によって走査から外す。
 
-スクリプトを同梱して `tools/` のインストールが要らないスキルは汎用側（例: `skills/plugins/web-lookup`、`skills/plugins/doc-tools`）。CLI 本体は `tools/<name>` の平坦配置のまま（`registry/repo-tools.yaml` の `path` 契約）。
+スクリプトを同梱して `tools/` のインストールが要らないスキルは汎用側（例: `skills/plugins/web-lookup`、`skills/plugins/doc-tools`）。CLI 本体は `tools/<name>` か 1 段のカテゴリ `tools/<category>/<name>`（`llm/`・`coding-agent/`・`web-research/`・`openrouter/`。振り分けは [tools-directory-layout](./tools-directory-layout.md)）に置き、`registry/repo-tools.yaml` の `path` をその実際の置き場所に合わせる。
 
 ## サブモジュール
 
-| パス            | リポジトリ                                                              | 中身                                                |
-| --------------- | ----------------------------------------------------------------------- | --------------------------------------------------- |
-| `skills/`       | [fdshg693/AI-skills](https://github.com/fdshg693/AI-skills)             | 汎用スキルのプラグイン（`plugins/<plugin>/`）       |
-| `tools/`        | [fdshg693/AI-tools](https://github.com/fdshg693/AI-tools)               | CLI 群（`<name>/` の平坦配置）と `_plugin/my-tools` |
-| `agent-compat/` | [fdshg693/AI-agent-compat](https://github.com/fdshg693/AI-agent-compat) | `agent-tooling/`・`formats/`・`docs/differences/`   |
-| `site/`         | [fdshg693/AI-site](https://github.com/fdshg693/AI-site)                 | `skills-site/`・`tools-site/`                       |
-| `workflow/`     | [fdshg693/AI-workflow](https://github.com/fdshg693/AI-workflow)         | `<tool>-wrapper/`・`sandbox/`・`schedule/`          |
+| パス            | リポジトリ                                                              | 中身                                                             |
+| --------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `skills/`       | [fdshg693/AI-skills](https://github.com/fdshg693/AI-skills)             | 汎用スキルのプラグイン（`plugins/<plugin>/`）                    |
+| `tools/`        | [fdshg693/AI-tools](https://github.com/fdshg693/AI-tools)               | CLI 群（`<name>/` か `<category>/<name>/`）と `_plugin/my-tools` |
+| `agent-compat/` | [fdshg693/AI-agent-compat](https://github.com/fdshg693/AI-agent-compat) | `agent-tooling/`・`formats/`・`docs/differences/`                |
+| `site/`         | [fdshg693/AI-site](https://github.com/fdshg693/AI-site)                 | `skills-site/`・`tools-site/`                                    |
+| `workflow/`     | [fdshg693/AI-workflow](https://github.com/fdshg693/AI-workflow)         | `<tool>-wrapper/`・`sandbox/`・`schedule/`                       |
 
 `workflow/` の「ワークフロー」は、`registry/repo-workflows.yaml`（skill-tools の目的別スキル手順カタログ）・`.github/workflows/`（GitHub Actions）・Claude Code の Workflow ツールとは別物。
 
-`maintenance/`・`registry/`・`docs/`・`plans/` とツール設定フォルダ（`.claude/` 等）はアンブレラに残る。パスはどこでもアンブレラのルート相対で書く（`tools/aim`、`skills/plugins/coding`）。サブモジュールの中の相対パスにするのは、そのリポジトリだけで完結する記述（各リポジトリの README など）に限る。
+`maintenance/`・`registry/`・`docs/`・`plans/` とツール設定フォルダ（`.claude/` 等）はアンブレラに残る。パスはどこでもアンブレラのルート相対で書く（`tools/llm/aim`、`skills/plugins/coding`）。サブモジュールの中の相対パスにするのは、そのリポジトリだけで完結する記述（各リポジトリの README など）に限る。
 
 ### 生成物の所有権
 

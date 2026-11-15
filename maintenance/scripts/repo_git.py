@@ -1,6 +1,6 @@
 """Git helpers that see the umbrella and its checked-out submodules as one tree.
 
-The pre-commit tasks address files by umbrella-relative paths (``tools/aim/...``,
+The pre-commit tasks address files by umbrella-relative paths (``tools/llm/aim/...``,
 ``skills/plugins/...``). After the submodule split those files live in separate
 repositories, so ``git diff --cached`` / ``git show`` / ``git add`` must run in
 the repository that owns the path. A commit made inside a submodule runs the

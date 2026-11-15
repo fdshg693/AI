@@ -10,7 +10,7 @@
 # registered tool depends on it / it depends on another registered tool.
 # Do not list maintenance/scripts/** (repo-maintenance scripts) or experimental /
 # one-off scripts that neither skills nor other tools reference
-# (e.g. tools/ai-usage).
+# (e.g. tools/coding-agent/ai-usage).
 #
 # maintenance/scripts/skill/check/check_skill_repo_tools.py cross-checks every
 # non-excluded SKILL.md's requires_repo_tools/requires_install against the
@@ -28,7 +28,7 @@
 #
 # Each entry may have description: a repo-relative locator
 # `<path>[#<dotted key>]` pointing at that tool's one-line summary, e.g.
-# tools/aim/pyproject.toml#project.description. The path is relative to this
+# tools/llm/aim/pyproject.toml#project.description. The path is relative to this
 # file (the same base as `install`). TOML / JSON / YAML targets require the
 # `#key`; any other target (README.md, ...) is read as plain text, using its
 # first heading line (after skipping YAML frontmatter). The summary source is
@@ -55,38 +55,38 @@
 
 tools:
   aim:
-    path: tools/aim
-    install: "uv tool install --editable tools/aim"
-    description: tools/aim/README.md
+    path: tools/llm/aim
+    install: "uv tool install --editable tools/llm/aim"
+    description: tools/llm/aim/README.md
     release: true
   aim2:
-    path: tools/aim2
-    install: "cd tools/aim2 && pnpm add -g ."
-    description: tools/aim2/package.json#description
+    path: tools/llm/aim2
+    install: "cd tools/llm/aim2 && pnpm add -g ."
+    description: tools/llm/aim2/package.json#description
   grepapp:
-    path: tools/grepapp
-    install: "uv tool install --editable tools/grepapp"
-    description: tools/grepapp/pyproject.toml#project.description
+    path: tools/web-research/grepapp
+    install: "uv tool install --editable tools/web-research/grepapp"
+    description: tools/web-research/grepapp/pyproject.toml#project.description
     release: true
   mslearn:
-    path: tools/mslearn
-    install: "uv tool install --editable tools/mslearn"
-    description: tools/mslearn/pyproject.toml#project.description
+    path: tools/web-research/mslearn
+    install: "uv tool install --editable tools/web-research/mslearn"
+    description: tools/web-research/mslearn/pyproject.toml#project.description
     release: true
   awsdocs:
-    path: tools/awsdocs
-    install: "uv tool install --editable tools/awsdocs"
-    description: tools/awsdocs/pyproject.toml#project.description
+    path: tools/web-research/awsdocs
+    install: "uv tool install --editable tools/web-research/awsdocs"
+    description: tools/web-research/awsdocs/pyproject.toml#project.description
     release: true
   gdevdocs:
-    path: tools/gdevdocs
-    install: "uv tool install --editable tools/gdevdocs"
-    description: tools/gdevdocs/pyproject.toml#project.description
+    path: tools/web-research/gdevdocs
+    install: "uv tool install --editable tools/web-research/gdevdocs"
+    description: tools/web-research/gdevdocs/pyproject.toml#project.description
     release: true
   tav:
-    path: tools/tav-cli
-    install: "uv tool install --editable tools/tav-cli"
-    description: tools/tav-cli/pyproject.toml#project.description
+    path: tools/web-research/tav-cli
+    install: "uv tool install --editable tools/web-research/tav-cli"
+    description: tools/web-research/tav-cli/pyproject.toml#project.description
     release: true
   textgraph:
     path: tools/textgraph
@@ -98,22 +98,22 @@ tools:
     install: "uv tool install --editable tools/vscode-profiles"
     description: tools/vscode-profiles/pyproject.toml#project.description
   agents-rules:
-    path: tools/agents-rules
-    install: "uv tool install --editable tools/agents-rules"
-    description: tools/agents-rules/pyproject.toml#project.description
+    path: tools/coding-agent/agents-rules
+    install: "uv tool install --editable tools/coding-agent/agents-rules"
+    description: tools/coding-agent/agents-rules/pyproject.toml#project.description
   ctx7:
-    path: tools/ctx7
-    install: "uv tool install --editable tools/ctx7"
-    description: tools/ctx7/pyproject.toml#project.description
+    path: tools/web-research/ctx7
+    install: "uv tool install --editable tools/web-research/ctx7"
+    description: tools/web-research/ctx7/pyproject.toml#project.description
     release: true
   pyinspect:
     path: tools/pyinspect
     install: "uv tool install --editable tools/pyinspect"
     description: tools/pyinspect/pyproject.toml#project.description
   my-agents:
-    path: tools/my-agents
-    install: "uv tool install --editable tools/my-agents"
-    description: tools/my-agents/pyproject.toml#project.description
+    path: tools/llm/my-agents
+    install: "uv tool install --editable tools/llm/my-agents"
+    description: tools/llm/my-agents/pyproject.toml#project.description
     requires_tools:
       mslearn: library
       tav: library
