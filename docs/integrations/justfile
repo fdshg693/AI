@@ -34,10 +34,6 @@ skill-tools-local:
 skill-tools-git:
     uv tool install --force "git+{{repo_url}}#subdirectory=skill-tools"; if ($LASTEXITCODE -eq 0) { skill-tools config init } else { exit $LASTEXITCODE }
 
-# Install the ona-run CLI (tools/ona-run) as an editable global tool via uv, from a local clone. See tools/ona-run/README.md for the `ona` CLI login prerequisite.
-ona-run-local:
-    uv tool install --editable ../../tools/ona-run
-
 # Install the textgraph CLI (tools/textgraph) as an editable global tool via uv, from a local clone. See tools/textgraph/README.md.
 textgraph-local:
     uv tool install --editable ../../tools/textgraph

@@ -1,7 +1,7 @@
 ---
 type: Setup Guide
 title: このリポジトリのCLIツールのインストール方法
-description: Explains how to install this repository's own CLI tools (aim, tav-cli, skill-tools, textgraph, ona-run, agents-rules) via docs/integrations/justfile's *-local (editable, for a cloned checkout) and *-git (uv tool install from a git URL, no clone needed) recipe pairs, plus how release:true packages are pinned with a git tag. Use when a skill or script fails because a prerequisite CLI isn't installed, or when deciding whether to install editable-local vs git-remote vs a pinned tag.
+description: Explains how to install this repository's own CLI tools (aim, tav-cli, skill-tools, textgraph, agents-rules) via docs/integrations/justfile's *-local (editable, for a cloned checkout) and *-git (uv tool install from a git URL, no clone needed) recipe pairs, plus how release:true packages are pinned with a git tag. Use when a skill or script fails because a prerequisite CLI isn't installed, or when deciding whether to install editable-local vs git-remote vs a pinned tag.
 tags: [tools]
 generated: { by: reference_agent/claude-sonnet-5, at: 2026-08-09T15:58:38Z }
 status: stable
@@ -59,17 +59,12 @@ tav search "Microsoft Fabric overview" --topic msfabric_overview
 - 詳細は [tools/textgraph/README.md](../../tools/textgraph/README.md) を参照。
 - インストール: リポジトリルートから `just -f docs/integrations/justfile textgraph-local`（clone済み）または `just -f docs/integrations/justfile textgraph-git`（clone不要）。
 
-## 5. ona-run
-
-- `tools\ona-run\README.md` を参照。前提として `ona` CLI へのログインが必要。
-- インストール: リポジトリルートから `just -f docs/integrations/justfile ona-run-local`（clone済み。git レシピは無い）。
-
-## 6. agents-rules
+## 5. agents-rules
 
 - [tools/agents-rules/README.md](../../tools/agents-rules/README.md) を参照。
 - インストール: リポジトリルートから `just -f docs/integrations/justfile agents-rules-local`（clone済み）または `just -f docs/integrations/justfile agents-rules-git`（clone不要）。
 
-## 7. Cline プラグイン
+## 6. Cline プラグイン
 
 `cline-personal-info` は Cline 向けプラグインの導入で、CLI の `uv tool install` とは別手順。詳細と Windows での既知の不具合は [cline](cline.md) を参照。リポジトリルートから `just -f docs/integrations/justfile cline-personal-info`。
 

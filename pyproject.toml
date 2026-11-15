@@ -24,7 +24,6 @@ members = [
     "tools/grepapp",
     "tools/ai-usage",
     "workflow/schedule/ai-schedule",
-    "tools/ona-run",
     "tools/openrouter/model-select",
     "tools/openrouter/model-list",
     "skills/plugins/cc-knowledge/skills/writing-skill-web",
