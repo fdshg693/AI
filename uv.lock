@@ -1433,7 +1433,7 @@ wheels = [
 
 [[package]]
 name = "mslearn-cli"
-version = "0.1.7"
+version = "0.1.8"
 source = { editable = "tools/web-research/mslearn" }
 dependencies = [
     { name = "fastmcp" },
@@ -2481,7 +2481,7 @@ wheels = [
 
 [[package]]
 name = "tav-cli"
-version = "3.2.10"
+version = "3.2.11"
 source = { editable = "tools/web-research/tav-cli" }
 dependencies = [
     { name = "tavily-python" },
