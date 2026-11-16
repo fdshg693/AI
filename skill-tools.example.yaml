@@ -1,0 +1,27 @@
+# Sample of this repository's project skill-tools config (skills installed into this checkout).
+#
+# Only this sample is committed. To use it:
+#   cp skill-tools.example.yaml skill-tools.yaml
+#   skill-tools install-skills self          # the skill-tools-cli companion skill
+#   skill-tools install-skills <skill-id>    # more skills (`skill-tools search` / `list-skills`)
+# skill-tools reads a skill-tools.yaml in the current directory and merges it on top of the
+# global config (%APPDATA%/skill-tools/skill-tools.yaml), so list only what differs here.
+#
+# Installed skills are copied into .claude/skills/ (gitignored) and recorded in
+# .skill-tools/manifest.json (gitignored). There is no declarative list of skills yet:
+# re-run install-skills after a fresh clone. `skill-tools update-skills` refreshes them.
+#
+# Hooks are configured separately in .claude/skill-tools.hooks.yaml (`just hooks-install`
+# passes it with --config, so this file does not affect them). Do not add a hooks: block here.
+#
+# Relative paths are resolved against this file's directory.
+
+# The skill catalog is this checkout itself.
+source:
+  type: local
+  path: .
+
+# Install into Claude Code only (.claude/skills/).
+targets:
+  claude:
+    destination: .claude/skills

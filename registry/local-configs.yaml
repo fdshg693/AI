@@ -23,6 +23,9 @@ local_configs:
   - path: .mcp.json
     example: .mcp.json.example
     reason: Claude Code project MCP servers; may get machine-specific edits.
+  - path: skill-tools.yaml
+    example: skill-tools.example.yaml
+    reason: Project skill-tools config for skills installed into this checkout.
   - path: .vscode/settings.json
     example: .vscode/settings.example.jsonc
     reason: Per-machine VS Code workspace settings.
