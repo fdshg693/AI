@@ -10,13 +10,13 @@
 
 | やりたいこと                                                                        | 使うスキル                                                                 |
 | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| 単発で1モデルに1プロンプトを投げる（永続化不要）                                    | `aim-cli`（CLI）/ `aim-lib`（Pythonから呼ぶ場合）                          |
+| 単発で1モデルに1プロンプトを投げる（永続化不要）                                    | `aim-cli`（CLI）/ `tools/llm/aim/docs/library.md`（Pythonから呼ぶ場合）    |
 | 複数ファイル/ディレクトリへプロンプトを並列に投げ、都度結果だけ欲しい（永続化不要） | `aim-cli`（`--parallel` で `--prompt` を複数。`@path` でファイル取り込み） |
 | 定義済みのLangchainエージェント（YAML）を呼びたい/新規に作りたい                    | `my-agents`                                                                |
 
 ## 手順
 
-1. 対象がPythonコードからの呼び出しか、CLIからの呼び出しかで`aim-lib`か`aim-cli`かを分岐する。
+1. 対象がPythonコードからの呼び出しなら`tools/llm/aim/docs/library.md`、CLIからなら`aim-cli`を読む。
 2. 既存のエージェント定義を再利用したいだけなら`my-agents`を優先し、`aim-*`系を組み合わせて自作しない。
 
 ## スキルの場所
@@ -24,7 +24,6 @@
 | スキル      | パス                                               |
 | ----------- | -------------------------------------------------- |
 | `aim-cli`   | `tools/_plugin/my-tools/skills/aim-cli/SKILL.md`   |
-| `aim-lib`   | `tools/_plugin/my-tools/skills/aim-lib/SKILL.md`   |
 | `my-agents` | `tools/_plugin/my-tools/skills/my-agents/SKILL.md` |
 
 ## この流れで足りないとき
