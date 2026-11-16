@@ -13,7 +13,7 @@ status: stable
 
 ## 役割分担
 
-- **`aim`**（[tools/_plugin/my-tools/skills/aim-cli](../../tools/_plugin/my-tools/skills/aim-cli/SKILL.md)） — systemプロンプトもマルチターンも扱わない単発CLI。`--prompt`内の`@path`でファイル/ディレクトリ内容を取り込む。`--parallel`で複数`--prompt`を並列に投げ、プロンプトごとの応答を返す（ステートレス、1回きり。例: ms-digestが`mslearn`の大量検索結果を並列にAI抽出する）。略記のSSOTは`tools/llm/aim/models.json`（`aim --list-models`で確認）。モデル選択は`mini-m3`を基本線に、簡単すぎるタスクは`gpt-120b`、`mini-m3`で不十分なら`glm-5.2`/`gpt-luna`へエスカレーションする（判断基準は当該スキル参照）
+- **`aim`**（[tools/_plugin/my-tools/skills/aim-cli](../../tools/_plugin/my-tools/skills/aim-cli/SKILL.md)） — systemプロンプトもマルチターンも扱わない単発CLI。`--prompt`内の`@path`でファイル/ディレクトリ内容を取り込む。`--parallel`で複数`--prompt`を並列に投げ、プロンプトごとの応答を返す（ステートレス、1回きり。例: `ms-learn`スキルの`digest.md`が`mslearn`の大量検索結果を並列にAI抽出する）。略記のSSOTは`tools/llm/aim/models.json`（`aim --list-models`で確認）。モデル選択は`mini-m3`を基本線に、簡単すぎるタスクは`gpt-120b`、`mini-m3`で不十分なら`glm-5.2`/`gpt-luna`へエスカレーションする（判断基準は当該スキル参照）
 
 ## このリポジトリ自身も実際に使っている
 

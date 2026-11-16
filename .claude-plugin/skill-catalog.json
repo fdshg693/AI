@@ -581,14 +581,9 @@
       "description": "未着手issue検索・issue作成・ステータス更新（担当者割当込み）・ラベル絞り込み/付与/更新・コメント追加/一覧取得/削除・issue詳細取得の各操作を提供する`linear-cli` CLIツールの使い方を説明する。Linear上のissueをタスクキューとして検索・claim・完了報告したい場合、トラッキング用issueの存在確認・作成・コメントによる占有状況管理をしたい場合、およびラベルでの絞り込み・issue descriptionの詳細取得をしたい場合に使う。issueの削除・複数team横断の一括操作は対象外。"
     },
     {
-      "path": "tools/_plugin/my-tools/skills/ms-digest",
-      "name": "ms-digest",
-      "description": "Microsoft Learn/Azure公式ドキュメントを`mslearn`で検索した結果ファイルのうち、自分で1件ずつ読む代わりに`aim --parallel`で並列にAI抽出させたいものをまとめて処理し、関連する内容だけを報告させるCLI連携スキル。(a) 結果件数が多くタイトルだけでは関連性を判断しづらい場合(目安5件以上)に全件を渡して関連するものだけ絞り込ませたいとき、(b) `index.md`から読みたいファイルを選んだ後、その中に文字数が大きいファイルが複数あり個別Readせずまとめて抽出させたいとき、のいずれかで使う。1ファイルだけを抽出したい場合は`aim-cli`を直接使えばよい。"
-    },
-    {
       "path": "tools/_plugin/my-tools/skills/ms-learn",
       "name": "ms-learn",
-      "description": "Search and fetch official Microsoft/Azure documentation (and code samples) via a self-built fastmcp CLI wrapper around the official Microsoft Learn MCP server (https://learn.microsoft.com/api/mcp). Use when you need Microsoft/Azure/.NET/M365 docs, API references, or official code samples — semantic search, full-page fetch, or code-sample lookup by language."
+      "description": "Search and fetch official Microsoft/Azure documentation (and code samples) via a self-built fastmcp CLI wrapper around the official Microsoft Learn MCP server (https://learn.microsoft.com/api/mcp), and extract relevant parts from many result files in parallel via `aim --parallel`. Use when you need Microsoft/Azure/.NET/M365 docs, API references, or official code samples — semantic search, full-page fetch, or code-sample lookup by language."
     },
     {
       "path": "tools/_plugin/my-tools/skills/my-agents",
@@ -613,12 +608,7 @@
     {
       "path": "tools/_plugin/my-tools/skills/tav-cli",
       "name": "tav-cli",
-      "description": "Guides multi-step Tavily research with this project's `tav` command, including web-wide search, multiple URLs, site maps/crawls, and topic-based result accumulation. Use when a task needs more than one known URL or a reusable research workspace; use `tav-lit` to extract one already-known URL."
-    },
-    {
-      "path": "tools/_plugin/my-tools/skills/tav-digest",
-      "name": "tav-digest",
-      "description": "tav`で`--topic`指定して収集した`pages/`(extract/crawl/search-extract/map-extractの取得本文)のうち、自分で1件ずつ読む代わりに`aim --parallel`で並列にAI抽出させたいものをまとめて処理し、関連する内容だけを報告させるCLI連携スキル。(a) `pages/index.json`のエントリ数が多くタイトルだけでは関連性を判断しづらい場合(目安5件以上)に全件を渡して関連するものだけ絞り込ませたいとき、(b) `index.json`から読みたいファイルを選んだ後、その中に`char_count`が大きいファイルが複数あり個別Readせずまとめて抽出させたいとき、のいずれかで使う。1ファイルだけを抽出したい場合は`aim-cli`を直接使えばよい。discovery(`search/`・`map/`)やreport(`research/`)はこのスキルの対象外(集約1ファイル、または成功時のみの単一レポートなのでそのまま読めば足りる)。"
+      "description": "Guides multi-step Tavily research with this project's `tav` command, including web-wide search, multiple URLs, site maps/crawls, topic-based result accumulation, and parallel AI extraction of many collected pages via `aim --parallel`. Use when a task needs more than one known URL or a reusable research workspace; use `tav-lit` to extract one already-known URL."
     },
     {
       "path": "tools/_plugin/my-tools/skills/tav-lib",
