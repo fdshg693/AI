@@ -1,6 +1,6 @@
 ---
 type: Plan Step
-status: done
+status: implementing-done
 ---
 
 # Step 3: ブラウザ操作スキル群を新プラグインと my-tools へ

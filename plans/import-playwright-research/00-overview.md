@@ -1,6 +1,6 @@
 ---
 type: Plan
-status: implementing-in-progress
+status: implementing-done
 ---
 
 ## 実装ステータス
@@ -9,7 +9,7 @@ status: implementing-in-progress
 - [x] [02-browser-tools.md](02-browser-tools.md) — `pwq`・`pwdo`・テストサイトを `tools/browser/` へ
 - [x] [03-browser-skills.md](03-browser-skills.md) — ブラウザ操作スキル群を新プラグインと my-tools へ
 - [x] [04-playwright-app.md](04-playwright-app.md) — playwright-app を `workflow/playwright-app/` へ
-- [ ] [05-overlap-and-verify.md](05-overlap-and-verify.md) — 既存スキルとの重複の差分取り込みと全体検証
+- [x] [05-overlap-and-verify.md](05-overlap-and-verify.md) — 既存スキルとの重複の差分取り込みと全体検証
 
 # Playwright 研究クローンから再利用可能な仕組みを取り込む - 概要
 

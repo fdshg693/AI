@@ -1,6 +1,6 @@
 ---
 type: Plan Step
-status: done
+status: implementing-done
 ---
 
 # Step 4: playwright-app を `workflow/playwright-app/` へ

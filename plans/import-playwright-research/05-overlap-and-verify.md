@@ -1,6 +1,6 @@
 ---
 type: Plan Step
-status: ready
+status: implementing-done
 ---
 
 # Step 5: 既存スキルとの重複の差分取り込みと全体検証
@@ -51,3 +51,4 @@ status: ready
 ## 実行中に判明した変更
 
 - 2026-11-15（Step 1）: 重複 4 本の差分を確定（取り込みは web-lookup `tav.md` の 2 点のみ）、検査の許可リストを具体化。根拠は [progress/01-research-results.md](progress/01-research-results.md) の 9。
+- 2026-11-16（Step 5）: 検査で `workflow/playwright-app/docs/roadmap/01-vertical-slice.md` のリンク切れ 2 件（04 の直し漏れ）を見つけて直した。完了記録は [progress/99-completion.md](progress/99-completion.md)。
