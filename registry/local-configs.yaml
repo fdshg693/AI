@@ -41,6 +41,9 @@ local_configs:
   - path: skills/plugins/browser/skills/sharing-browser-with-user/.env
     example: skills/plugins/browser/skills/sharing-browser-with-user/.env.example
     reason: Optional per-machine browser profile paths (BROWSER_PROFILES_ROOT / _META).
+  - path: workflow/playwright-app/.env
+    example: workflow/playwright-app/.env.example
+    reason: OPENAI_API_KEY (and optional AI_MODEL) for playwright-app.
 
 deny_patterns:
   - "**/.env"

@@ -1,6 +1,6 @@
 ---
 type: Plan Step
-status: ready
+status: done
 ---
 
 # Step 4: playwright-app を `workflow/playwright-app/` へ
@@ -73,3 +73,7 @@ status: ready
 ## 実行中に判明した変更
 
 - 2026-11-15（Step 1）: `.claude/plan/` は持ち込まず `big_plans/` だけ `docs/roadmap/` へ、`SPEC.md` 不在、`.gitignore` 破損、`.env` の固定パス化、`package = false` で載ることを反映。根拠は [progress/01-research-results.md](progress/01-research-results.md) の 1・8。
+- 2026-11-16（Step 4 実施）: Windows で動かすためにコードを 2 点直した。(a) `playwright-cli`・`npx` を `shutil.which` の解決済みパスで起動（`.cmd` シムは素の名前では `subprocess` から起動できない）。(b) `subprocess.run` を `encoding="utf-8", errors="replace"` に（`text=True` だと cp932 で復号に失敗し stdout が `None` になって `CliExecutor.execute` が `TypeError`）。どちらも `cli_executor.py`・`runner.py`。
+- 2026-11-16: `tests/generated/` は `.gitkeep` だけ追跡する（無いと `just cost` が `not found` で失敗するため）。
+- 2026-11-16: クローン側の `scripts/temp/`（サーバー経由のスモークテスト。クローンでも gitignore）は持ち込まず、`docs/session-server.md` の言及を「持ち込んでいない」に書き換えた。`SPEC.md N章` は roadmap・NEXT では「元設計書（未収録）N章」とし、AGENTS.md の「崩してはいけない前提」を設計の正とした。
+- 2026-11-16 確認: `uv sync`・`pnpm install` 成功、`just server` 起動（`/openapi.json` 応答）、`just cost`（0 件で正常終了）、クローンで生成済みの `.spec.ts` 1 本を一時的に置いて `just test` が通過（課金なし。ブラウザは `playwright install --only-shell chromium`）、`CliExecutor` で open・snapshot・`ALLOWED_DOMAINS` による遮断を確認。`slice` の実 AI 実行は未実施（課金のため）。
