@@ -15,6 +15,7 @@ just branch-work <端末ごとの作業ブランチ名> && just branch-switch --
 just agent-compat-sync
 cp .claude/skill-tools.hooks.example.yaml .claude/skill-tools.hooks.yaml  # 必要なら hooks.install を編集
 just hooks-install && just sub-agent-hooks-install
+cp skill-tools.example.yaml skill-tools.yaml && skill-tools sync-skills  # 任意。skill-tools CLI が必要
 ```
 
 - `lefthook install`／`just sub-hooks-install` — アンブレラと各サブモジュールに Git hooks を入れる
@@ -22,6 +23,7 @@ just hooks-install && just sub-agent-hooks-install
 - `just branch-work <name> && just branch-switch --create` — この端末の作業ブランチ名（`windows` など）を git config に記録し、全リポジトリをそのブランチにする（[branch-and-pr-workflow](maintenance/docs/branch-and-pr-workflow.md#作業ブランチ名を設定する)）
 - `just agent-compat-sync` — Cline・Kilo Code・Antigravity 向けのスキルのコピーを作る
 - `cp .claude/skill-tools.hooks.example.yaml ...`／`just hooks-install`／`just sub-agent-hooks-install` — エージェントフックをアンブレラと各サブモジュールに入れる。入れるフックは gitignore したローカルの設定（`hooks.install`）で選び、git にはサンプルだけがある。サブモジュールはそれぞれの `.claude/` で同じようにコピーしたものだけが対象（[hook-distribution](maintenance/docs/hook-distribution.md)）
+- `cp skill-tools.example.yaml skill-tools.yaml && skill-tools sync-skills` — このリポジトリの作業で使うスキル（一覧は `install_skills`）を `.claude/skills/` に入れる（gitignore 済み）。`skill-tools` CLI（[tools/skill-tools](tools/skill-tools/README.md)）が必要
 - ローカル設定は example だけをコミットしている。必要に応じて `.codex/config.example.toml` → `.codex/config.toml`、`.mcp.json.example` → `.mcp.json`、`tools/llm/aim2/models.json.example` → `tools/llm/aim2/models.json` をコピーする（pull で実体が消えたときも同じ）
 
 pull のあとは `just sub-init`。サブモジュールの中でコミットしてからアンブレラでポインタを更新する 2 段階の手順は [repo-layout](maintenance/docs/repo-layout.md#サブモジュール) を参照。
