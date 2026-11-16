@@ -212,6 +212,28 @@
       "description": "Use when creating, editing, reviewing, or troubleshooting GitHub Copilot instruction files, including `.github/copilot-instructions.md`, `.github/instructions/**/*.instructions.md`, and `AGENTS.md`, for VS Code, GitHub.com cloud agent, Copilot code review, or Copilot CLI. Covers host and scope selection, Markdown/frontmatter, path globs, concise repository guidance, and verification. Do not use for `.prompt.md` prompt files or Agent Skills unless the task is specifically about choosing between those mechanisms."
     }
   ],
+  "skills/plugins/browser": [
+    {
+      "path": "skills/plugins/browser/skills/authoring-playwright-agents",
+      "name": "authoring-playwright-agents",
+      "description": "Authors and reviews Playwright-specialised agent definitions, grounded in a local snapshot of microsoft/playwright. Use when writing or reviewing an `*.agent.md`, a `.claude/agents/*.md`, or a prompt that drives Playwright; when asked about `npx playwright init-agents`, the official planner / generator / healer agents, or the `playwright-test` MCP tools (`planner_*`, `generator_*`, `test_*`, `browser_*`)."
+    },
+    {
+      "path": "skills/plugins/browser/skills/searching-playwright-docs",
+      "name": "searching-playwright-docs",
+      "description": "Searches Playwright's official documentation sources (docs/src/**/*.md — the source of truth for the public API and every playwright.dev guide) from a local snapshot, instead of answering from memory. Use when asked what a Playwright API method/option/event does or when it was added, how to do something in Playwright (auth, fixtures, locators, network mocking, tracing, CI, reporters, emulation, components …), which languages support a feature, or to quote/cite the official docs; also when writing Playwright code or skills that must match the documented API."
+    },
+    {
+      "path": "skills/plugins/browser/skills/sharing-browser-with-user",
+      "name": "sharing-browser-with-user",
+      "description": "Opens a real, visible (headed) browser that the agent drives while the USER performs the login themselves in that same window — for sites behind a sign-in, MFA, SSO, CAPTCHA or a consent screen. The session is kept in a persistent profile so the login survives across runs and across sessions. Use when a task needs a logged-in site, when the user says \"I'll log in myself\" / \"use my account\" / \"don't touch my password\", when a previously working automation starts hitting a login wall, or when asked to watch what the browser is doing. For browser work that needs no sign-in, use using-playwright-cli instead."
+    },
+    {
+      "path": "skills/plugins/browser/skills/using-playwright-cli",
+      "name": "using-playwright-cli",
+      "description": "Drives a browser from the shell with `playwright-cli` (`npx playwright cli`), grounded in a local snapshot of the skill microsoft/playwright itself ships. Use when asked to open / navigate / click / fill / snapshot a page, take screenshots or PDFs, mock requests, record a trace or video, manage browser sessions, cookies or storage state, or run and debug Playwright tests from the command line; when first exploring an unfamiliar site (robots.txt / sitemap recon before opening a browser); when turning a browser procedure into a script; also when asked what `playwright-cli install --skills` installs."
+    }
+  ],
   "skills/plugins/cc-knowledge": [
     {
       "path": "skills/plugins/cc-knowledge/skills/claude-agent-sdk",
@@ -514,11 +536,6 @@
       "description": "OpenRouter経由でAIモデルを単発呼び出しする`aim` CLIツールの使い方を説明する。プロンプトをAIモデルに投げて応答を得たい、プロンプト内の`@path`でファイルやディレクトリの内容を取り込みたい、複数ファイルやスキルフォルダへ同じ質問（要約・バグ指摘など）を`--parallel`で一括したい、利用可能なモデル一覧を確認したい、タスクの難易度に応じてどのモデルを使うか選定したい場合に使う。"
     },
     {
-      "path": "tools/_plugin/my-tools/skills/aim-lib",
-      "name": "aim-lib",
-      "description": "`tools/llm/aim` のグローバルインストール済み Python 実装をライブラリとして使い、OpenRouter 経由で AI モデルへ単発リクエストを送る方法を説明する。Python コードからプロンプトを送信したい、モデル略記を解決したい、応答本文を取り出したい場合に使う。CLI コマンドを実行する場合は `aim-cli` を使う。"
-    },
-    {
       "path": "tools/_plugin/my-tools/skills/aim2-cli",
       "name": "aim2-cli",
       "description": "複数プロバイダ（OpenAI, Anthropic, Google Gemini, OpenRouter, Ollama等）に直接対応したAIモデルCLIツール`aim2`の使い方を説明する。プロンプトをAIモデルに投げて応答を得たい、`--session-id`（互換`--thread-id`）でローカル会話継続したい、プロンプト内の`@path`でファイルやディレクトリの内容を取り込みたい、複数プロンプトを`--parallel`で一括並列実行したい、利用可能なモデル一覧を確認したい場合に使う。"
@@ -527,6 +544,11 @@
       "path": "tools/_plugin/my-tools/skills/aws-docs",
       "name": "aws-docs",
       "description": "Search and fetch official AWS documentation (docs.aws.amazon.com, AWS Blog, What's New, re:Post Knowledge Center, CDK/CloudFormation references) and check regional availability via the self-built `awsdocs` CLI, a fastmcp wrapper around the official AWS Knowledge MCP Server (https://knowledge-mcp.global.api.aws). Use when you need AWS service docs, API/SDK/CLI references, troubleshooting articles, recent AWS launches, or whether a service/API/CFN resource is available in a region. Do not use for general web research (use `tav-cli`), Microsoft/Azure docs (use `ms-learn`), or running AWS APIs."
+    },
+    {
+      "path": "tools/_plugin/my-tools/skills/browser-context-tools",
+      "name": "browser-context-tools",
+      "description": "Keeps browser work with `playwright-cli` from flooding the conversation by using the `pwq` wrapper (summarises / filters `snapshot` and `eval` output, 3–30% of the raw size) and the `pwdo` delegator (hands one stretch of browser steps to a cheap model and returns a short report plus a recovered script). Use when exploring an unfamiliar or large page and the raw snapshot would be big, when a browser stretch would take three or more snapshots and could be delegated, or when a `pwdo` run came back blocked by a login wall. Requires `pwq` / `pwdo` on PATH; without them use the using-playwright-cli skill alone."
     },
     {
       "path": "tools/_plugin/my-tools/skills/gdev-docs",
@@ -554,14 +576,9 @@
       "description": "未着手issue検索・issue作成・ステータス更新（担当者割当込み）・ラベル絞り込み/付与/更新・コメント追加/一覧取得/削除・issue詳細取得の各操作を提供する`linear-cli` CLIツールの使い方を説明する。Linear上のissueをタスクキューとして検索・claim・完了報告したい場合、トラッキング用issueの存在確認・作成・コメントによる占有状況管理をしたい場合、およびラベルでの絞り込み・issue descriptionの詳細取得をしたい場合に使う。issueの削除・複数team横断の一括操作は対象外。"
     },
     {
-      "path": "tools/_plugin/my-tools/skills/ms-digest",
-      "name": "ms-digest",
-      "description": "Microsoft Learn/Azure公式ドキュメントを`mslearn`で検索した結果ファイルのうち、自分で1件ずつ読む代わりに`aim --parallel`で並列にAI抽出させたいものをまとめて処理し、関連する内容だけを報告させるCLI連携スキル。(a) 結果件数が多くタイトルだけでは関連性を判断しづらい場合(目安5件以上)に全件を渡して関連するものだけ絞り込ませたいとき、(b) `index.md`から読みたいファイルを選んだ後、その中に文字数が大きいファイルが複数あり個別Readせずまとめて抽出させたいとき、のいずれかで使う。1ファイルだけを抽出したい場合は`aim-cli`を直接使えばよい。"
-    },
-    {
       "path": "tools/_plugin/my-tools/skills/ms-learn",
       "name": "ms-learn",
-      "description": "Search and fetch official Microsoft/Azure documentation (and code samples) via a self-built fastmcp CLI wrapper around the official Microsoft Learn MCP server (https://learn.microsoft.com/api/mcp). Use when you need Microsoft/Azure/.NET/M365 docs, API references, or official code samples — semantic search, full-page fetch, or code-sample lookup by language."
+      "description": "Search and fetch official Microsoft/Azure documentation (and code samples) via a self-built fastmcp CLI wrapper around the official Microsoft Learn MCP server (https://learn.microsoft.com/api/mcp), and extract relevant parts from many result files in parallel via `aim --parallel`. Use when you need Microsoft/Azure/.NET/M365 docs, API references, or official code samples — semantic search, full-page fetch, or code-sample lookup by language."
     },
     {
       "path": "tools/_plugin/my-tools/skills/my-agents",
@@ -586,17 +603,7 @@
     {
       "path": "tools/_plugin/my-tools/skills/tav-cli",
       "name": "tav-cli",
-      "description": "Guides multi-step Tavily research with this project's `tav` command, including web-wide search, multiple URLs, site maps/crawls, and topic-based result accumulation. Use when a task needs more than one known URL or a reusable research workspace; use `tav-lit` to extract one already-known URL."
-    },
-    {
-      "path": "tools/_plugin/my-tools/skills/tav-digest",
-      "name": "tav-digest",
-      "description": "tav`で`--topic`指定して収集した`pages/`(extract/crawl/search-extract/map-extractの取得本文)のうち、自分で1件ずつ読む代わりに`aim --parallel`で並列にAI抽出させたいものをまとめて処理し、関連する内容だけを報告させるCLI連携スキル。(a) `pages/index.json`のエントリ数が多くタイトルだけでは関連性を判断しづらい場合(目安5件以上)に全件を渡して関連するものだけ絞り込ませたいとき、(b) `index.json`から読みたいファイルを選んだ後、その中に`char_count`が大きいファイルが複数あり個別Readせずまとめて抽出させたいとき、のいずれかで使う。1ファイルだけを抽出したい場合は`aim-cli`を直接使えばよい。discovery(`search/`・`map/`)やreport(`research/`)はこのスキルの対象外(集約1ファイル、または成功時のみの単一レポートなのでそのまま読めば足りる)。"
-    },
-    {
-      "path": "tools/_plugin/my-tools/skills/tav-lib",
-      "name": "tav-lib",
-      "description": "`tools/web-research/tav-cli` のグローバルインストール済み Python 実装をライブラリとして使い、Tavily 経由で Web 検索・URL 本文抽出・サイトマップ・クロール・リサーチを行う方法を説明する。Python コードから Tavily API を呼び出したい、`--detail` プリセットを適用した結果を取り出したい場合に使う。CLI コマンドを実行する場合は `tav-cli` を使う。"
+      "description": "Guides multi-step Tavily research with this project's `tav` command, including web-wide search, multiple URLs, site maps/crawls, topic-based result accumulation, and parallel AI extraction of many collected pages via `aim --parallel`. Use when a task needs more than one known URL or a reusable research workspace; use `tav-lit` to extract one already-known URL."
     },
     {
       "path": "tools/_plugin/my-tools/skills/textgraph",

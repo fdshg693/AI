@@ -16,3 +16,10 @@
 
 # plans の凍結スナップショット（読み取り専用。編集しない）
 plans/**/snapshot/
+
+# templates のスターター定義。frontmatter の [a, b] を 1 行で読むパーサ（starter/check_starters.py）があり、折り返すと壊れる
+templates/starter/*/STARTER.md
+# templates の生成物（gen_schema_doc.py・build_dashboard.py・practice.py refresh が書く。整形すると --check や再生成と食い違う）
+templates/**/docs/vault-schema.md
+templates/**/vault/scopes/*/dashboard.md
+templates/core/practice-review/references/index.md

@@ -16,3 +16,6 @@
 [submodule "infra"]
 	path = infra
 	url = https://github.com/fdshg693/AI-infra.git
+[submodule "templates"]
+	path = templates
+	url = https://github.com/fdshg693/AI-templates.git

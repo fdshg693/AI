@@ -23,6 +23,9 @@ local_configs:
   - path: .mcp.json
     example: .mcp.json.example
     reason: Claude Code project MCP servers; may get machine-specific edits.
+  - path: skill-tools.yaml
+    example: skill-tools.example.yaml
+    reason: Project skill-tools config for skills installed into this checkout.
   - path: .vscode/settings.json
     example: .vscode/settings.example.jsonc
     reason: Per-machine VS Code workspace settings.
@@ -32,6 +35,18 @@ local_configs:
   - path: tools/llm/aim2/models.json
     example: tools/llm/aim2/models.json.example
     reason: Per-machine model list for aim2.
+  - path: tools/browser/pwq/models.json
+    example: tools/browser/pwq/models.json.example
+    reason: Per-machine model list for pwq.
+  - path: tools/browser/pwdo/models.json
+    example: tools/browser/pwdo/models.json.example
+    reason: Per-machine model list for pwdo.
+  - path: skills/plugins/browser/skills/sharing-browser-with-user/.env
+    example: skills/plugins/browser/skills/sharing-browser-with-user/.env.example
+    reason: Optional per-machine browser profile paths (BROWSER_PROFILES_ROOT / _META).
+  - path: workflow/playwright-app/.env
+    example: workflow/playwright-app/.env.example
+    reason: OPENAI_API_KEY (and optional AI_MODEL) for playwright-app.
 
 deny_patterns:
   - "**/.env"

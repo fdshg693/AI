@@ -14,10 +14,10 @@ workflows:
         skill: tools/_plugin/my-tools/skills/ms-learn/SKILL.md
         handoff: Read selected result files or fetch the relevant official page.
       - id: synthesize-many-sources
-        skill: tools/_plugin/my-tools/skills/ms-digest/SKILL.md
+        skill: tools/_plugin/my-tools/skills/ms-learn/SKILL.md
         optional: true
         choice: result-processing
-        when: Several result files need relevance filtering or parallel extraction.
+        when: Several result files need relevance filtering or parallel extraction (follow the skill's digest.md).
         handoff: Summarize only relevant findings and retain source URLs.
       - id: extract-one-source
         skill: tools/_plugin/my-tools/skills/aim-cli/SKILL.md
@@ -34,10 +34,10 @@ workflows:
         skill: tools/_plugin/my-tools/skills/tav-cli/SKILL.md
         handoff: Inspect the collected result index and select source pages.
       - id: synthesize-many-sources
-        skill: tools/_plugin/my-tools/skills/tav-digest/SKILL.md
+        skill: tools/_plugin/my-tools/skills/tav-cli/SKILL.md
         optional: true
         choice: result-processing
-        when: Several source pages need relevance filtering or parallel extraction.
+        when: Several source pages need relevance filtering or parallel extraction (follow the skill's digest.md).
         handoff: Report relevant findings with source URLs from the page index.
       - id: extract-one-source
         skill: tools/_plugin/my-tools/skills/aim-cli/SKILL.md

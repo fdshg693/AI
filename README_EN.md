@@ -4,7 +4,7 @@ A personal research/experiment repository about AI coding tool configurations an
 
 ## Getting the repository
 
-`skills/`, `tools/`, `agent-compat/`, `site/`, `workflow/`, and `infra/` are submodules ([AI-skills](https://github.com/fdshg693/AI-skills), [AI-tools](https://github.com/fdshg693/AI-tools), [AI-agent-compat](https://github.com/fdshg693/AI-agent-compat), [AI-site](https://github.com/fdshg693/AI-site), [AI-workflow](https://github.com/fdshg693/AI-workflow), [AI-infra](https://github.com/fdshg693/AI-infra)). Clone with the submodules.
+`skills/`, `tools/`, `agent-compat/`, `site/`, `workflow/`, `infra/`, and `templates/` are submodules ([AI-skills](https://github.com/fdshg693/AI-skills), [AI-tools](https://github.com/fdshg693/AI-tools), [AI-agent-compat](https://github.com/fdshg693/AI-agent-compat), [AI-site](https://github.com/fdshg693/AI-site), [AI-workflow](https://github.com/fdshg693/AI-workflow), [AI-infra](https://github.com/fdshg693/AI-infra), [AI-templates](https://github.com/fdshg693/AI-templates)). Clone with the submodules.
 
 ```sh
 git clone --recurse-submodules https://github.com/fdshg693/AI.git
@@ -69,7 +69,7 @@ Skill bodies live in one place only, as Claude Code plugins (`skills/plugins/`, 
 
 ### Submodules
 
-The following six are separate repositories; the umbrella only holds their commit pointers. When you change files inside one, commit inside the submodule first, then update the pointer in the umbrella ([repo-layout "Submodules"](maintenance/docs/repo-layout.md#サブモジュール)). You can work by opening just the submodule folder, but generation, checks, and workspaces live in the umbrella, so clone and use it from the umbrella.
+The following seven are separate repositories; the umbrella only holds their commit pointers. When you change files inside one, commit inside the submodule first, then update the pointer in the umbrella ([repo-layout "Submodules"](maintenance/docs/repo-layout.md#サブモジュール)). You can work by opening just the submodule folder, but generation, checks, and workspaces live in the umbrella, so clone and use it from the umbrella.
 
 - [skills/](skills/) ([AI-skills](https://github.com/fdshg693/AI-skills)) — Claude Code plugins that do not depend on tools (`skills/plugins/<name>`). Knowledge skills about other AI tools are also kept here as Claude Code skills, in [skills/plugins/ai-tools-knowledge/](skills/plugins/ai-tools-knowledge/)
 - [tools/](tools/) ([AI-tools](https://github.com/fdshg693/AI-tools)) — CLIs (one directory per tool) and the plugin of usage skills that assume them, [tools/\_plugin/my-tools/](tools/_plugin/my-tools/). The role index is [tools/README.md](tools/README.md)
@@ -79,6 +79,7 @@ The following six are separate repositories; the umbrella only holds their commi
   - [site/tools-site/](site/tools-site/) — VitePress site of install and usage notes for [repo-tools.yaml](registry/repo-tools.yaml) entries with `release: true` (GitHub Pages). [site/tools-site/README.md](site/tools-site/README.md)
 - [workflow/](workflow/) ([AI-workflow](https://github.com/fdshg693/AI-workflow)) — Customizable workflows that go beyond plain CLI use: CLI wrappers for AI coding tools (`claude-wrapper`, etc.), the issue-driven Docker sandbox [workflow/sandbox/](workflow/sandbox/), and scheduled runs in [workflow/schedule/](workflow/schedule/). Not listed in `repo-tools.yaml`. [workflow/README.md](workflow/README.md)
 - [infra/](infra/) ([AI-infra](https://github.com/fdshg693/AI-infra)) — Infrastructure definitions and ops scripts that are not tools: the OpenTelemetry log stack for AI coding tools in [infra/ai-logs/](infra/ai-logs/README.md). The public site's Bicep lives separately in [site/skills-site/infra/](site/skills-site/infra/). [infra/README.md](infra/README.md)
+- [templates/](templates/) ([AI-templates](https://github.com/fdshg693/AI-templates)) — Repository-operation templates for working with AI agents: the templates to copy in [templates/core/](templates/core/) (plan workflow, ADRs, knowledge vault, etc., each with its lint) and fictional repositories showing them applied in [templates/starter/](templates/starter/). Not listed in the marketplace or `ai-tools.yaml`. [templates/README.md](templates/README.md)
 
 ### Repository operations (umbrella itself)
 
@@ -101,7 +102,7 @@ The following six are separate repositories; the umbrella only holds their commi
 
 ## Other
 
-- `.gitmodules` — Declares the six submodules above. Managed with `just sub-init` / `sub-sync` / `sub-status`. `just branch-*` creates, switches, pushes and deletes one working branch across the umbrella and every submodule (see repo-layout).
+- `.gitmodules` — Declares the seven submodules above. Managed with `just sub-init` / `sub-sync` / `sub-status`. `just branch-*` creates, switches, pushes and deletes one working branch across the umbrella and every submodule (see repo-layout).
 - `.links.yaml` / `.umbrella-root` — Junction declarations (placed at each repository root and created with `just links-sync`; the Junctions themselves are not committed) and the marker for the umbrella root. See [repo-layout](maintenance/docs/repo-layout.md) for details.
 - `lefthook.yml` — Git hooks configuration that runs on commit, etc. (various regeneration/formatting/secretlint on `pre-commit`, commitlint on `commit-msg`). The submodule side is `maintenance/lefthook/submodule.yml`.
 - `mise.toml` — Tool version management via [mise](https://mise.jdx.dev/) (pins node / pnpm / terraform / uv for this repository).

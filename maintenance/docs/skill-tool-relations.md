@@ -21,11 +21,11 @@ flowchart LR
   SA -->|requires_repo_tools| TX[Tool X]
 ```
 
-| 方向            | 宣言場所                   | 辿り方                                                                                                 | 例                                  |
-| --------------- | -------------------------- | ------------------------------------------------------------------------------------------------------ | ----------------------------------- |
-| スキル → スキル | `meta.requires_skills`     | そのスキルの frontmatter を読む                                                                        | `tav-digest` → `tav-cli`, `aim-cli` |
-| スキル → ツール | `meta.requires_repo_tools` | 同上。値は [`repo-tools.yaml`](../../registry/repo-tools.yaml) のキーまたは `path`                     | `aim-cli` → `aim`                   |
-| ツール → スキル | （宣言なし、逆引き）       | 全 `SKILL.md` の `requires_repo_tools` / `requires_install` をスキャンし、当該ツールを指すものを集める | `aim` ← `aim-cli`, `aim-lib`        |
+| 方向            | 宣言場所                   | 辿り方                                                                                                 | 例                    |
+| --------------- | -------------------------- | ------------------------------------------------------------------------------------------------------ | --------------------- |
+| スキル → スキル | `meta.requires_skills`     | そのスキルの frontmatter を読む                                                                        | `tav-cli` → `aim-cli` |
+| スキル → ツール | `meta.requires_repo_tools` | 同上。値は [`repo-tools.yaml`](../../registry/repo-tools.yaml) のキーまたは `path`                     | `aim-cli` → `aim`     |
+| ツール → スキル | （宣言なし、逆引き）       | 全 `SKILL.md` の `requires_repo_tools` / `requires_install` をスキャンし、当該ツールを指すものを集める | `aim` ← `aim-cli`     |
 
 ツール→スキルの逆引きは、辺を二重に持たなくてよい。スキル側の `requires_repo_tools`（およびツール名がそちらに無いときの `requires_install`）が唯一の正向で、逆は索引である。コンパニオンスキル（使い方スキル）とその他の消費者の区別は [tool-companion-skills](./tool-companion-skills.md) の置き場所・責務で人間が判断する。ツール側に「これが使い方スキル」と書くフィールドは必須にしない。
 
@@ -41,7 +41,7 @@ flowchart LR
 スキル経由で補うのも不十分である。
 
 - `my-agents` スキルの `requires_repo_tools` は `tools/llm/my-agents, tools/web-research/mslearn` であり、同じく依存する `tav` は現れない。ツール同士のライブラリ依存はスキルメタに現れていない
-- `tav-digest` / `ms-digest` は自前のソースを持たないオーケストレーションスキルで `requires_repo_tools: none`。`aim` を変えても、ツール逆引きではこれらのスキルに届かない（スキル→スキルの `requires_skills` を辿れば届く）
+- `tav-cli` / `ms-learn` スキルは `digest.md` で `aim --parallel` を使い、`requires_repo_tools` に `aim` を、`requires_skills` に `aim-cli` を宣言している。ツール逆引きでもスキル→スキルでも届くが、`tav` と `aim`（`mslearn` と `aim`）のツール同士に依存は無い
 - 2つのツールが同じスキルから参照されていても、それらが互いに依存していることにはならない
 
 **ツール同士の関係はスキルグラフから推論しない。ツール側に正向の辺を置く。**
@@ -138,21 +138,21 @@ tools:
 
 ### やらないこと
 
-- スキルの `requires_skills` だけを見て「これらのツールは互いに依存している」とみなす（digest スキルが複数ツールを組むだけのことがある）
+- スキルの `requires_skills` だけを見て「これらのツールは互いに依存している」とみなす（`digest.md` のように1つのスキルが複数ツールを組むだけのことがある）
 - ツール側の辺を各 `SKILL.md` にコピーする（ドリフトする）
 - すべての `tools/` 配下ディレクトリを機械的に `requires_tools` で全結合する
 
 ## 既存の実例
 
-| 上流              | 下流                              | `kind`                  | 辿り方                                                                                                                           |
-| ----------------- | --------------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `mslearn` / `tav` | `my-agents`                       | `library`               | `repo-tools.yaml` の `requires_tools`（実体は `tools/llm/my-agents/pyproject.toml` の workspace 依存）。スキルメタからは取れない |
-| `aim`             | `aim-cli` / `aim-lib` スキル      | （ツール→スキル逆引き） | `requires_repo_tools: aim` / `tools/llm/aim`                                                                                     |
-| `aim-cli` スキル  | `tav-digest` / `ms-digest` スキル | （スキル→スキル）       | 各スキルの `requires_skills`                                                                                                     |
-| `tav`             | `tav-cli` / `tav-lib` スキル      | （ツール→スキル逆引き） | `requires_repo_tools`                                                                                                            |
-| `tav-cli` スキル  | `tav-digest` / `tav-lit` スキル   | （スキル→スキル）       | `requires_skills`。`tav-lit` は実行時に `tav` へ依存しないので、ツール→ツールの辺は張らない                                      |
+| 上流              | 下流                          | `kind`                  | 辿り方                                                                                                                           |
+| ----------------- | ----------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `mslearn` / `tav` | `my-agents`                   | `library`               | `repo-tools.yaml` の `requires_tools`（実体は `tools/llm/my-agents/pyproject.toml` の workspace 依存）。スキルメタからは取れない |
+| `aim`             | `aim-cli` スキル              | （ツール→スキル逆引き） | `requires_repo_tools: aim` / `tools/llm/aim`                                                                                     |
+| `aim-cli` スキル  | `tav-cli` / `ms-learn` スキル | （スキル→スキル）       | 各スキルの `requires_skills`（`digest.md` が `aim --parallel` を使う）                                                           |
+| `tav`             | `tav-cli` スキル              | （ツール→スキル逆引き） | `requires_repo_tools`                                                                                                            |
+| `tav-cli` スキル  | `tav-lit` スキル              | （スキル→スキル）       | `requires_skills`。`tav-lit` は実行時に `tav` へ依存しないので、ツール→ツールの辺は張らない                                      |
 
-`tav-digest` はツールではない。`tav` と `aim` のツール同士に辺は無い。`aim` の CLI 契約を変えたときに digest スキルへ届ける経路は、`aim` →（逆引き）→ `aim-cli` スキル →（逆引き）→ `tav-digest` スキル、という **ツール→スキル→スキル** である。ツール→ツールを足しても、この経路は残す。
+`tav-cli` スキルの `digest.md` はツールではない。`tav` と `aim` のツール同士に辺は無い。`aim` の CLI 契約を変えたときに `digest.md` を持つスキルへ届ける経路は、`aim` →（逆引き）→ `tav-cli` スキル（`requires_repo_tools`）、および `aim` →（逆引き）→ `aim-cli` スキル →（逆引き）→ `tav-cli` スキル、という **ツール→スキル（→スキル）** である。ツール→ツールを足しても、この経路は残す。
 
 ## 実装済みの最小セット
 

@@ -4,7 +4,7 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 
 ## 取得
 
-`skills/`・`tools/`・`agent-compat/`・`site/`・`workflow/`・`infra/` はサブモジュール（[AI-skills](https://github.com/fdshg693/AI-skills)・[AI-tools](https://github.com/fdshg693/AI-tools)・[AI-agent-compat](https://github.com/fdshg693/AI-agent-compat)・[AI-site](https://github.com/fdshg693/AI-site)・[AI-workflow](https://github.com/fdshg693/AI-workflow)・[AI-infra](https://github.com/fdshg693/AI-infra)）。サブモジュールごと clone する。
+`skills/`・`tools/`・`agent-compat/`・`site/`・`workflow/`・`infra/`・`templates/` はサブモジュール（[AI-skills](https://github.com/fdshg693/AI-skills)・[AI-tools](https://github.com/fdshg693/AI-tools)・[AI-agent-compat](https://github.com/fdshg693/AI-agent-compat)・[AI-site](https://github.com/fdshg693/AI-site)・[AI-workflow](https://github.com/fdshg693/AI-workflow)・[AI-infra](https://github.com/fdshg693/AI-infra)・[AI-templates](https://github.com/fdshg693/AI-templates)）。サブモジュールごと clone する。
 
 ```sh
 git clone --recurse-submodules https://github.com/fdshg693/AI.git
@@ -15,6 +15,7 @@ just branch-work <端末ごとの作業ブランチ名> && just branch-switch --
 just agent-compat-sync
 cp .claude/skill-tools.hooks.example.yaml .claude/skill-tools.hooks.yaml  # 必要なら hooks.install を編集
 just hooks-install && just sub-agent-hooks-install
+cp skill-tools.example.yaml skill-tools.yaml && skill-tools sync-skills  # 任意。skill-tools CLI が必要
 ```
 
 - `lefthook install`／`just sub-hooks-install` — アンブレラと各サブモジュールに Git hooks を入れる
@@ -22,6 +23,7 @@ just hooks-install && just sub-agent-hooks-install
 - `just branch-work <name> && just branch-switch --create` — この端末の作業ブランチ名（`windows` など）を git config に記録し、全リポジトリをそのブランチにする（[branch-and-pr-workflow](maintenance/docs/branch-and-pr-workflow.md#作業ブランチ名を設定する)）
 - `just agent-compat-sync` — Cline・Kilo Code・Antigravity 向けのスキルのコピーを作る
 - `cp .claude/skill-tools.hooks.example.yaml ...`／`just hooks-install`／`just sub-agent-hooks-install` — エージェントフックをアンブレラと各サブモジュールに入れる。入れるフックは gitignore したローカルの設定（`hooks.install`）で選び、git にはサンプルだけがある。サブモジュールはそれぞれの `.claude/` で同じようにコピーしたものだけが対象（[hook-distribution](maintenance/docs/hook-distribution.md)）
+- `cp skill-tools.example.yaml skill-tools.yaml && skill-tools sync-skills` — このリポジトリの作業で使うスキル（一覧は `install_skills`）を `.claude/skills/` に入れる（gitignore 済み）。`skill-tools` CLI（[tools/skill-tools](tools/skill-tools/README.md)）が必要
 - ローカル設定は example だけをコミットしている。必要に応じて `.codex/config.example.toml` → `.codex/config.toml`、`.mcp.json.example` → `.mcp.json`、`tools/llm/aim2/models.json.example` → `tools/llm/aim2/models.json` をコピーする（pull で実体が消えたときも同じ）
 
 pull のあとは `just sub-init`。サブモジュールの中でコミットしてからアンブレラでポインタを更新する 2 段階の手順は [repo-layout](maintenance/docs/repo-layout.md#サブモジュール) を参照。
@@ -69,7 +71,7 @@ pull のあとは `just sub-init`。サブモジュールの中でコミット�
 
 ### サブモジュール
 
-次の 6 つは別リポジトリで、アンブレラはコミットのポインタだけを持つ。中のファイルを変えたら、サブモジュールの中でコミットしてからアンブレラでポインタを更新する（[repo-layout の「サブモジュール」](maintenance/docs/repo-layout.md#サブモジュール)）。サブモジュールのフォルダだけを開いても作業できるが、生成・検査・ワークスペースはアンブレラにあるので、アンブレラから clone して使う。
+次の 7 つは別リポジトリで、アンブレラはコミットのポインタだけを持つ。中のファイルを変えたら、サブモジュールの中でコミットしてからアンブレラでポインタを更新する（[repo-layout の「サブモジュール」](maintenance/docs/repo-layout.md#サブモジュール)）。サブモジュールのフォルダだけを開いても作業できるが、生成・検査・ワークスペースはアンブレラにあるので、アンブレラから clone して使う。
 
 - [skills/](skills/)（[AI-skills](https://github.com/fdshg693/AI-skills)） — tools に依存しない Claude Code 用プラグイン群（`skills/plugins/<name>`）。他の AI ツールについての知識スキルも Claude Code スキルとして [skills/plugins/ai-tools-knowledge/](skills/plugins/ai-tools-knowledge/) に置く
 - [tools/](tools/)（[AI-tools](https://github.com/fdshg693/AI-tools)） — CLI 群（1 ツール 1 ディレクトリ）と、それらを前提にした使い方スキルのプラグイン [tools/\_plugin/my-tools/](tools/_plugin/my-tools/)。役割ごとの索引は [tools/README.md](tools/README.md)
@@ -79,6 +81,7 @@ pull のあとは `just sub-init`。サブモジュールの中でコミット�
   - [site/tools-site/](site/tools-site/) — [repo-tools.yaml](registry/repo-tools.yaml) の `release: true` ツールのインストール/使い方をまとめた VitePress サイト（GitHub Pages）。[site/tools-site/README.md](site/tools-site/README.md)
 - [workflow/](workflow/)（[AI-workflow](https://github.com/fdshg693/AI-workflow)） — 単なる CLI 利用を超えた、手元でカスタマイズして使うワークフロー。AI コーディングツールの CLI ラッパー（`claude-wrapper` 等）、ISSUE 駆動の Docker サンドボックス [workflow/sandbox/](workflow/sandbox/)、定期実行の [workflow/schedule/](workflow/schedule/)。`repo-tools.yaml` には載せない。[workflow/README.md](workflow/README.md)
 - [infra/](infra/)（[AI-infra](https://github.com/fdshg693/AI-infra)） — ツールではないインフラの定義と運用スクリプト。AI コーディングツールの OpenTelemetry ログ基盤 [infra/ai-logs/](infra/ai-logs/README.md)。公開サイトの Bicep は [site/skills-site/infra/](site/skills-site/infra/) にあり別物。[infra/README.md](infra/README.md)
+- [templates/](templates/)（[AI-templates](https://github.com/fdshg693/AI-templates)） — AI エージェントと一緒に使うリポジトリ運用のテンプレート集。コピーして使うテンプレート本体 [templates/core/](templates/core/)（プラン運用・ADR・知識ボールト等と、それぞれの lint）と、導入後の状態を示す架空リポジトリ [templates/starter/](templates/starter/)。マーケットプレイス・`ai-tools.yaml` には載せない。[templates/README.md](templates/README.md)
 
 ### リポジトリ運用（アンブレラ本体）
 
@@ -101,7 +104,7 @@ pull のあとは `just sub-init`。サブモジュールの中でコミット�
 
 ## その他
 
-- `.gitmodules` — 上記 6 つのサブモジュールの宣言。`just sub-init`／`sub-sync`／`sub-status` で扱う。全リポジトリで同じ名前の作業ブランチを作る・切り替える・push・削除するのは `just branch-*`（[repo-layout](maintenance/docs/repo-layout.md#作業ブランチアンブレラとサブモジュールで揃える)）。
+- `.gitmodules` — 上記 7 つのサブモジュールの宣言。`just sub-init`／`sub-sync`／`sub-status` で扱う。全リポジトリで同じ名前の作業ブランチを作る・切り替える・push・削除するのは `just branch-*`（[repo-layout](maintenance/docs/repo-layout.md#作業ブランチアンブレラとサブモジュールで揃える)）。
 - `.links.yaml` / `.umbrella-root` — Junction の宣言（各リポジトリのルートに置き、`just links-sync` で作る。Junction 自体はコミットしない）と、アンブレラのルートの目印。詳細は [repo-layout](maintenance/docs/repo-layout.md)。
 - `lefthook.yml` — コミット時などに走る Git hooks の設定（`pre-commit` での各種再生成・整形・secretlint、`commit-msg` での commitlint）。サブモジュール側は `maintenance/lefthook/submodule.yml`。
 - `mise.toml` — [mise](https://mise.jdx.dev/) によるツールバージョン管理（node / pnpm / terraform / uv をこのリポジトリ用にpin）。
