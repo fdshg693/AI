@@ -47,6 +47,9 @@ tools:
       - path: skills/plugins/ai-tools-knowledge
         kind: plugin
         skills_layout: subdir
+      - path: skills/plugins/browser
+        kind: plugin
+        skills_layout: subdir
       - path: skills/plugins/cicd
         kind: plugin
         skills_layout: subdir

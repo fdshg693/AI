@@ -212,6 +212,28 @@
       "description": "Use when creating, editing, reviewing, or troubleshooting GitHub Copilot instruction files, including `.github/copilot-instructions.md`, `.github/instructions/**/*.instructions.md`, and `AGENTS.md`, for VS Code, GitHub.com cloud agent, Copilot code review, or Copilot CLI. Covers host and scope selection, Markdown/frontmatter, path globs, concise repository guidance, and verification. Do not use for `.prompt.md` prompt files or Agent Skills unless the task is specifically about choosing between those mechanisms."
     }
   ],
+  "skills/plugins/browser": [
+    {
+      "path": "skills/plugins/browser/skills/authoring-playwright-agents",
+      "name": "authoring-playwright-agents",
+      "description": "Authors and reviews Playwright-specialised agent definitions, grounded in a local snapshot of microsoft/playwright. Use when writing or reviewing an `*.agent.md`, a `.claude/agents/*.md`, or a prompt that drives Playwright; when asked about `npx playwright init-agents`, the official planner / generator / healer agents, or the `playwright-test` MCP tools (`planner_*`, `generator_*`, `test_*`, `browser_*`)."
+    },
+    {
+      "path": "skills/plugins/browser/skills/searching-playwright-docs",
+      "name": "searching-playwright-docs",
+      "description": "Searches Playwright's official documentation sources (docs/src/**/*.md — the source of truth for the public API and every playwright.dev guide) from a local snapshot, instead of answering from memory. Use when asked what a Playwright API method/option/event does or when it was added, how to do something in Playwright (auth, fixtures, locators, network mocking, tracing, CI, reporters, emulation, components …), which languages support a feature, or to quote/cite the official docs; also when writing Playwright code or skills that must match the documented API."
+    },
+    {
+      "path": "skills/plugins/browser/skills/sharing-browser-with-user",
+      "name": "sharing-browser-with-user",
+      "description": "Opens a real, visible (headed) browser that the agent drives while the USER performs the login themselves in that same window — for sites behind a sign-in, MFA, SSO, CAPTCHA or a consent screen. The session is kept in a persistent profile so the login survives across runs and across sessions. Use when a task needs a logged-in site, when the user says \"I'll log in myself\" / \"use my account\" / \"don't touch my password\", when a previously working automation starts hitting a login wall, or when asked to watch what the browser is doing. For browser work that needs no sign-in, use using-playwright-cli instead."
+    },
+    {
+      "path": "skills/plugins/browser/skills/using-playwright-cli",
+      "name": "using-playwright-cli",
+      "description": "Drives a browser from the shell with `playwright-cli` (`npx playwright cli`), grounded in a local snapshot of the skill microsoft/playwright itself ships. Use when asked to open / navigate / click / fill / snapshot a page, take screenshots or PDFs, mock requests, record a trace or video, manage browser sessions, cookies or storage state, or run and debug Playwright tests from the command line; when first exploring an unfamiliar site (robots.txt / sitemap recon before opening a browser); when turning a browser procedure into a script; also when asked what `playwright-cli install --skills` installs."
+    }
+  ],
   "skills/plugins/cc-knowledge": [
     {
       "path": "skills/plugins/cc-knowledge/skills/claude-agent-sdk",
@@ -527,6 +549,11 @@
       "path": "tools/_plugin/my-tools/skills/aws-docs",
       "name": "aws-docs",
       "description": "Search and fetch official AWS documentation (docs.aws.amazon.com, AWS Blog, What's New, re:Post Knowledge Center, CDK/CloudFormation references) and check regional availability via the self-built `awsdocs` CLI, a fastmcp wrapper around the official AWS Knowledge MCP Server (https://knowledge-mcp.global.api.aws). Use when you need AWS service docs, API/SDK/CLI references, troubleshooting articles, recent AWS launches, or whether a service/API/CFN resource is available in a region. Do not use for general web research (use `tav-cli`), Microsoft/Azure docs (use `ms-learn`), or running AWS APIs."
+    },
+    {
+      "path": "tools/_plugin/my-tools/skills/browser-context-tools",
+      "name": "browser-context-tools",
+      "description": "Keeps browser work with `playwright-cli` from flooding the conversation by using the `pwq` wrapper (summarises / filters `snapshot` and `eval` output, 3–30% of the raw size) and the `pwdo` delegator (hands one stretch of browser steps to a cheap model and returns a short report plus a recovered script). Use when exploring an unfamiliar or large page and the raw snapshot would be big, when a browser stretch would take three or more snapshots and could be delegated, or when a `pwdo` run came back blocked by a login wall. Requires `pwq` / `pwdo` on PATH; without them use the using-playwright-cli skill alone."
     },
     {
       "path": "tools/_plugin/my-tools/skills/gdev-docs",

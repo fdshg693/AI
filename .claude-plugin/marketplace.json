@@ -21,6 +21,17 @@
       "strict": true
     },
     {
+      "name": "browser",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/fdshg693/AI-skills.git",
+        "path": "plugins/browser"
+      },
+      "description": "Browser automation with playwright-cli: driving pages, site recon, handing logins to the user, and Playwright docs / agent definitions grounded in upstream snapshots",
+      "version": "0.1.0",
+      "strict": true
+    },
+    {
       "name": "cicd",
       "source": {
         "source": "git-subdir",

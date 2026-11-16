@@ -19,6 +19,7 @@ status: stable
   - `coding-agent/` — AIコーディングエージェントの運用に関わるツール（`agents-rules`・`ai-usage`）
   - `web-research/` — Web・公式ドキュメント・公開コードを調べるツール（`awsdocs`・`grepapp`・`gdevdocs`・`mslearn`・`tav-cli`・`ctx7`）
   - `openrouter/` — OpenRouterのモデル一覧・選定の補助（`model-list`・`model-select`）。モデルを呼び出すのではないので`llm/`とは分ける
+  - `browser/` — `playwright-cli`によるブラウザ操作を補助するツールと、その実測用のローカルテストサイト（`pwq`・`pwdo`・`test-sites`）。`test-sites`はCLIではないので`repo-tools.yaml`に載せない
 - どのカテゴリにも当てはまらないCLIは`tools/<name>`に置く（`skill-tools`・`textgraph`・`pyinspect`等）。同じ性質のツールが複数そろったら新しいカテゴリを作ってよい。そのときは本節に1行足す
 - Pythonパッケージ化が不要なディレクトリもある。すべてを無理に`uv`ワークスペースへ載せる必要はない（判断基準は[uv-workspace](./uv-workspace.md)参照）
 - AI の SDK/CLI を組み合わせて手元でカスタマイズして使うワークフロー（CLI ラッパー、サンドボックス、定期実行など）は`tools/`ではなく`workflow/`サブモジュールに置く（[repo-layout](./repo-layout.md#置き場所の判定基準)）
@@ -33,7 +34,7 @@ status: stable
 ## 各ツールディレクトリの最低限の構成
 
 - `README.md` — 人間向け。何をするツールか、セットアップ（APIキー等）、使い方、ファイル構成
-- `AGENTS.md` — 中身は`@./README.md`の1行のみ
+- `AGENTS.md` — 中身は`@./README.md`の1行のみ。例外として、壊してはいけない実装規約を持つツールは`@./README.md`の後に規約本文を書いてよい（`tools/llm/my-agents`・`tools/browser/pwq`・`tools/browser/pwdo`・`tools/browser/test-sites`）
 - `CLAUDE.md` — 中身は`@./AGENTS.md`の1行のみ
 
 この`CLAUDE.md → AGENTS.md → README.md`という参照チェーンは、リポジトリルート自体の`CLAUDE.md → AGENTS.md → README.md`と同じ形。同じ説明文を複数箇所に重複させず、人間が読むREADME.mdをそのままAIツールへの指示としても使い回す。新しいツールを追加したら、このチェーンを必ず用意する。

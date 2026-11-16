@@ -59,3 +59,8 @@ fb/
 # ローカル設定の実体は共有しない（example をコミットし、clone 後にコピーする）
 .codex/config.toml
 .mcp.json
+
+# playwright-cli / pwq / pwdo のセッション・ストア（認証情報を含みうる）と Playwright の実行時産物
+.playwright-cli/
+test-results/
+playwright-report/

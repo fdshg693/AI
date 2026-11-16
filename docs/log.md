@@ -2,6 +2,7 @@
 
 ## 2026-11-15
 
+- **Creation**: `docs/topics/browser-automation/` — Playwright 研究クローン（`plans/import-playwright-research/`）から、`pwq`・`pwdo`・ブラウザ操作スキルの根拠になった実測ノート 5 本（`delegation`・`site-recon`・`script-cli-roundtrip`・`scripted-automation`・`browser-handoff`）を移し、OKF frontmatter と `index.md` を付けた。完了プランへのリンクは「持ち込んでいない」注記に、スキル内のファイルへのリンクはスキル名での参照に置き換えた。`index.md` のセクションに追加した。
 - **Update**: `docs/integrations/claude-code.md` — 2026-11 再編の旧→新プラグイン名の対応表と節見出しを消し、`ai-tools-knowledge` の説明だけをインストール手順の末尾に残した。`index.md` の `maintenance/docs` の行から「`docs/repo-wide/` から移動」の注記を消した。
 
 ## 2026-11-10

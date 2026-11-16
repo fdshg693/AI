@@ -32,6 +32,15 @@ local_configs:
   - path: tools/llm/aim2/models.json
     example: tools/llm/aim2/models.json.example
     reason: Per-machine model list for aim2.
+  - path: tools/browser/pwq/models.json
+    example: tools/browser/pwq/models.json.example
+    reason: Per-machine model list for pwq.
+  - path: tools/browser/pwdo/models.json
+    example: tools/browser/pwdo/models.json.example
+    reason: Per-machine model list for pwdo.
+  - path: skills/plugins/browser/skills/sharing-browser-with-user/.env
+    example: skills/plugins/browser/skills/sharing-browser-with-user/.env.example
+    reason: Optional per-machine browser profile paths (BROWSER_PROFILES_ROOT / _META).
 
 deny_patterns:
   - "**/.env"

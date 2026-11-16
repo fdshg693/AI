@@ -59,6 +59,16 @@ tools:
     path: tools/llm/aim2
     install: "cd tools/llm/aim2 && pnpm add -g ."
     description: tools/llm/aim2/package.json#description
+  pwq:
+    path: tools/browser/pwq
+    install: "cd tools/browser/pwq && pnpm add -g ."
+    description: tools/browser/pwq/package.json#description
+  pwdo:
+    path: tools/browser/pwdo
+    install: "cd tools/browser/pwdo && pnpm add -g ."
+    description: tools/browser/pwdo/package.json#description
+    requires_tools:
+      pwq: subprocess
   grepapp:
     path: tools/web-research/grepapp
     install: "uv tool install --editable tools/web-research/grepapp"

@@ -32,6 +32,10 @@ skills-site-validate:
 skills-site-test:
     pnpm --filter ai-skill-catalog-site run test
 
+# tools/browser/test-sites のテストサイトを http://localhost:8080 で配信する（Ctrl+C で停止）
+test-sites *args:
+    uv run --no-project tools/browser/test-sites/serve.py {{args}}
+
 infra-validate:
     az bicep build --file "{{infra_dir}}/main.bicep" --stdout > $null
 
