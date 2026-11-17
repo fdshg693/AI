@@ -558,7 +558,7 @@
     {
       "path": "skills/plugins/web-lookup/skills/web-lookup",
       "name": "web-lookup",
-      "description": "Looks up current web information via a bundled CLI covering grep.app (real GitHub code), Microsoft Learn (official Microsoft/Azure docs), AWS Knowledge MCP (official AWS docs, Blog, re:Post), Tavily (general web), and Context7 (library APIs). Use when you need Microsoft/Azure or AWS official docs, current library/framework API references, real-world public GitHub code examples, or general web research, and the plugin must run without installing tools/ CLIs."
+      "description": "Looks up current web information via a bundled CLI covering grep.app (real GitHub code), Microsoft Learn (official Microsoft/Azure docs), AWS Knowledge MCP (official AWS docs, Blog, re:Post), local page fetch with main-content extraction (known URLs), Tavily (general web search), and Context7 (library APIs). Use when you need Microsoft/Azure or AWS official docs, current library/framework API references, real-world public GitHub code examples, the full text of a known web page, or general web research, and the plugin must run without installing tools/ CLIs."
     }
   ],
   "tools/_plugin/my-tools": [
