@@ -1,6 +1,6 @@
 ---
 type: Plan Step
-status: planning-breakdown
+status: implementing-done
 ---
 
 # Step 4: agent-logs CLI の実装
@@ -91,3 +91,9 @@ status: planning-breakdown
 ## 実行中に判明した変更
 
 - 2026-11-17（Step2 完了時）: SQLite の開き方、Antigravity のフォールバック、正規化スキーマ、トークンの重複除去、複数系統の扱い、パス・時刻の正規化、秘密情報の除外一覧、Codex の zstd を決定事項に反映した。重複していた「SQLite フィクスチャ」の行を 1 つにした。
+- 2026-11-17（Step4 完了時）: 共通部分・Claude アダプタはメイン、残り 5 アダプタはサブエージェント 5 体へ並列委任。テスト 40 件、ruff クリーン。実機（Codex 以外）で全ツール `stats` が約 10 秒（2,931 セッション）、警告なし。Antigravity の DB は前後で `-wal`/`-shm` の変化なしを確認。
+  - 実装で足した決定: ルート解決に `AGENT_LOGS_HOME`・`AGENT_LOGS_APPDATA` を追加（テストを密閉するため。ツール別 `AGENT_LOGS_<TOOL>_DIR` より手前の全体置き換え）。SQLite フィクスチャは `<name>.db.sql` を `conftest.py` が組み立てる。`show` にも `--tool` を付けた。`stats --by` に `month`・`source` を追加。
+  - トークンの意味を揃えた: `tokens_in` はキャッシュ読み出しを含まない。Codex（`input_tokens − cached_input_tokens`）と Cline SDK（`inputTokens` が `cacheReadTokens` を含むと実データで判明）は差し引く。Kilo の `tokens_out` は reasoning を含む。
+  - Cline のセッション合計は「`metadata.usage` を優先」を改め、`metadata.usage` と metrics 合計の大きい方にした（再開したセッションで `metadata.usage` が最後の実行分だけになる例が 2 件）。
+  - `.gitignore`: `logs/` 規則を削除（`/logs/` でもこのフォルダ自体に掛かり、Antigravity のフィクスチャは途中に `logs/` を含む）。`*.log`・`*.sqlite3` は影響なし。
+  - **知識スキルへの差し戻し候補（未反映。Step5 か別作業で `skills` 側を直す）**: Cursor — `meta.json` の無い CLI チャット（`store.db` だけ）が 152 中 15、`composerHeaders` に `name` が無い行、タグの無い transcript。Cline — 上記 `metadata.usage` と `inputTokens` の包含関係。Kilo — 仕様に無いインデックス・列（`workspace_id` 等）、`tokens.output` は reasoning を含まない。Antigravity — `antigravity-ide` に `conversation_summaries.db` が無い、transcript は 2026-10-29 より前にも旧ルートに 553 件ある、tool result のステップ種別が `GENERIC` 以外にも多数、`title` は大半が空で `preview` が実質の題、token/model は一部の `PLANNER_RESPONSE` にしか無い。Codex — `input_tokens` がキャッシュを含むか、`token_usage_record` と `token_count` の関係が仕様で不明（実データ無し）。

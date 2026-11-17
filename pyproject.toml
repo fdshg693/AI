@@ -33,6 +33,7 @@ members = [
     "tools/vscode-profiles",
     "tools/coding-agent/agents-rules",
     "agent-compat/hooks/agent-tooling",
+    "agent-compat/logs/agent-logs",
 ]
 
 [dependency-groups]
