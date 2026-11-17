@@ -34,6 +34,8 @@ members = [
     "tools/coding-agent/agents-rules",
     "agent-compat/hooks/agent-tooling",
     "agent-compat/logs/agent-logs",
+    "mcps/dynamic_prompt",
+    "mcps/memo",
 ]
 
 [dependency-groups]
