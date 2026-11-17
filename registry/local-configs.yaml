@@ -47,6 +47,15 @@ local_configs:
   - path: workflow/playwright-app/.env
     example: workflow/playwright-app/.env.example
     reason: OPENAI_API_KEY (and optional AI_MODEL) for playwright-app.
+  - path: mcps/dynamic_prompt/.env
+    example: mcps/dynamic_prompt/.env.example
+    reason: dynamic_prompt runtime settings (DB backend, GCS/Firestore, OAuth) for local runs.
+  - path: mcps/memo/.env
+    example: mcps/memo/.env.example
+    reason: memo settings (OPENAI_API_KEY for embeddings, admin-tool toggle).
+  - path: mcps/dynamic_prompt/infra/terraform/terraform.tfvars
+    example: mcps/dynamic_prompt/infra/terraform/terraform.tfvars.example
+    reason: GCP project ID and deploy variables; also read by the infra justfile.
 
 deny_patterns:
   - "**/.env"

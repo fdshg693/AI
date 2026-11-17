@@ -1,33 +1,34 @@
 ---
 type: Repo Convention
 title: リポジトリ構成とJunctionの規約
-description: "Explains which submodules this umbrella has (skills / tools / agent-compat / site / workflow / infra / templates), which repository owns which generated file, how to clone, open a submodule alone in Claude Code (skill junctions, `_umbrella/` folders, per-submodule hooks), commit in a submodule and then update the pointer, and how this repository declares directory junctions in a committed `.links.yaml` instead of committing them, how `just links-sync` / `links-check` / `links-clean` create, verify and remove them (registering each in the owning repo's info/exclude first), which junctions are forbidden (pointing at an ancestor, into another junction, overlapping, outside the umbrella), why scanners must not walk into junctions, and the checkout hazard when a commit tracks files at a junction path. Use when cloning, opening a submodule folder alone, committing inside a submodule, updating a submodule pointer, adding a junction, when `links-check` or the post-checkout warning fires, before checking out an old commit, or when writing code that walks the repository tree."
+description: "Explains which submodules this umbrella has (skills / tools / agent-compat / site / workflow / infra / templates / mcps), which repository owns which generated file, how to clone, open a submodule alone in Claude Code (skill junctions, `_umbrella/` folders, per-submodule hooks), commit in a submodule and then update the pointer, and how this repository declares directory junctions in a committed `.links.yaml` instead of committing them, how `just links-sync` / `links-check` / `links-clean` create, verify and remove them (registering each in the owning repo's info/exclude first), which junctions are forbidden (pointing at an ancestor, into another junction, overlapping, outside the umbrella), why scanners must not walk into junctions, and the checkout hazard when a commit tracks files at a junction path. Use when cloning, opening a submodule folder alone, committing inside a submodule, updating a submodule pointer, adding a junction, when `links-check` or the post-checkout warning fires, before checking out an old commit, or when writing code that walks the repository tree."
 tags: [repo-wide]
 status: draft
 ---
 
 # リポジトリ構成とJunctionの規約
 
-このリポジトリは、アンブレラ（ルート、`fdshg693/AI`）と 7 つのサブモジュールから成る（再編の経緯は完了後に削除したプラン `plans/repo-restructure/` に残る。git 履歴で参照する）。サブモジュール単体のフォルダを Claude Code で開けるように、上位や兄弟のフォルダを **Windows の Junction** で参照する。本ドキュメントは置き場所の判定基準、サブモジュールの運用、Junction の宣言・作成・禁止事項を定める。
+このリポジトリは、アンブレラ（ルート、`fdshg693/AI`）と 8 つのサブモジュールから成る（再編の経緯は完了後に削除したプラン `plans/repo-restructure/` に残る。git 履歴で参照する）。サブモジュール単体のフォルダを Claude Code で開けるように、上位や兄弟のフォルダを **Windows の Junction** で参照する。本ドキュメントは置き場所の判定基準、サブモジュールの運用、Junction の宣言・作成・禁止事項を定める。
 
 ## 置き場所の判定基準
 
 新しいスキル・スクリプト・文書は、次の順に当てはめて置き場所を決める（2026-11 の再編で決めた基準）。
 
-| 区分                    | 判定                                                                                                                                                                        | 置き場所                                                        |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| リポジトリ都合          | このリポジトリの保守にしか意味がない（生成器、pre-commit、メンテ手順のスキル、規約文書）                                                                                    | `maintenance/plugin`・`maintenance/scripts`・`maintenance/docs` |
-| SSOT                    | 複数の生成物・検査が読む手編集の yaml                                                                                                                                       | `registry/`                                                     |
-| tools 付属スキル        | 本文が `tools/<name>` の CLI のインストールを必須にしている（`meta.requires_repo_tools` の値だけで決めない）                                                                | `tools/_plugin/my-tools/skills/`                                |
-| agent-compat 付属スキル | 本文が `agent-compat/<hooks\|logs>/<name>` の CLI のインストールを必須にしている                                                                                            | `agent-compat/_plugin/agent-compat-tools/skills/`               |
-| 汎用スキル              | 上のどれでもない Claude Code スキル。CLI を任意で使うだけ（無くても動く）ならここ                                                                                           | `skills/plugins/<plugin>/skills/`                               |
-| 他 AI ツールの知識      | Codex・Copilot 等の使い方を説明するスキル（中身は普通の SKILL.md）                                                                                                          | `skills/plugins/ai-tools-knowledge/`                            |
-| マルチ AI 対応の仕組み  | 複数の AI ツールへ同じものを届ける仕組み（フック・コンテキスト注入）。スキルの実体は置かない（付属スキルの `_plugin/` だけは例外）                                          | `agent-compat/hooks/agent-tooling/`                             |
-| AI ツールのログ         | 各 AI ツールがローカルに残すログを読むツール。形式の正本は知識スキル                                                                                                        | `agent-compat/logs/<name>/`                                     |
-| ツール固有書式の見本    | そのツールの書式でしか書けないファイル（plugin manifest、rules の frontmatter 等）                                                                                          | `agent-compat/formats/<tool>/`                                  |
-| ワークフロー            | AI の SDK/CLI を組み合わせ、手元でカスタマイズして使う実行フロー（SDK ラッパー、ISSUE 駆動・定期実行のエージェント起動など）。付属スキルが無く `repo-tools.yaml` に載せない | `workflow/<name>/`                                              |
-| インフラ定義            | IaC・Docker 構成・運用スクリプトなど、ツールではないインフラの定義。ただし公開サイト自身のインフラ（Bicep）は `site/skills-site/infra/`                                     | `infra/<name>/`                                                 |
-| 運用テンプレート        | AI エージェントと使うリポジトリ運用のテンプレート（他のリポジトリへコピーして使う雛形と lint）。スキルでもツールでもなく、マーケットプレイス・`ai-tools.yaml` に載せない    | `templates/core/<name>/`                                        |
+| 区分                    | 判定                                                                                                                                                                                     | 置き場所                                                        |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| リポジトリ都合          | このリポジトリの保守にしか意味がない（生成器、pre-commit、メンテ手順のスキル、規約文書）                                                                                                 | `maintenance/plugin`・`maintenance/scripts`・`maintenance/docs` |
+| SSOT                    | 複数の生成物・検査が読む手編集の yaml                                                                                                                                                    | `registry/`                                                     |
+| tools 付属スキル        | 本文が `tools/<name>` の CLI のインストールを必須にしている（`meta.requires_repo_tools` の値だけで決めない）                                                                             | `tools/_plugin/my-tools/skills/`                                |
+| agent-compat 付属スキル | 本文が `agent-compat/<hooks\|logs>/<name>` の CLI のインストールを必須にしている                                                                                                         | `agent-compat/_plugin/agent-compat-tools/skills/`               |
+| 汎用スキル              | 上のどれでもない Claude Code スキル。CLI を任意で使うだけ（無くても動く）ならここ                                                                                                        | `skills/plugins/<plugin>/skills/`                               |
+| 他 AI ツールの知識      | Codex・Copilot 等の使い方を説明するスキル（中身は普通の SKILL.md）                                                                                                                       | `skills/plugins/ai-tools-knowledge/`                            |
+| マルチ AI 対応の仕組み  | 複数の AI ツールへ同じものを届ける仕組み（フック・コンテキスト注入）。スキルの実体は置かない（付属スキルの `_plugin/` だけは例外）                                                       | `agent-compat/hooks/agent-tooling/`                             |
+| AI ツールのログ         | 各 AI ツールがローカルに残すログを読むツール。形式の正本は知識スキル                                                                                                                     | `agent-compat/logs/<name>/`                                     |
+| ツール固有書式の見本    | そのツールの書式でしか書けないファイル（plugin manifest、rules の frontmatter 等）                                                                                                       | `agent-compat/formats/<tool>/`                                  |
+| ワークフロー            | AI の SDK/CLI を組み合わせ、手元でカスタマイズして使う実行フロー（SDK ラッパー、ISSUE 駆動・定期実行のエージェント起動など）。付属スキルが無く `repo-tools.yaml` に載せない              | `workflow/<name>/`                                              |
+| インフラ定義            | IaC・Docker 構成・運用スクリプトなど、ツールではないインフラの定義。ただし公開サイト自身のインフラ（Bicep）は `site/skills-site/infra/`                                                  | `infra/<name>/`                                                 |
+| 運用テンプレート        | AI エージェントと使うリポジトリ運用のテンプレート（他のリポジトリへコピーして使う雛形と lint）。スキルでもツールでもなく、マーケットプレイス・`ai-tools.yaml` に載せない                 | `templates/core/<name>/`                                        |
+| MCP サーバー            | FastMCP 等で作り、AI ツールから接続して使うサーバー。サーバー固有の IaC（Docker・Terraform 等）もサーバーと一緒に置く。マーケットプレイス・`ai-tools.yaml`・`repo-tools.yaml` に載せない | `mcps/<name>/`                                                  |
 
 他ツールへの届け方（マーケットプレイスの `sources`、gitignore 済みの `workspace_copies`）は [ai-tools-config](./ai-tools-config.md)。生成コピー（`.cline/skills/` 等）は Junction ではなく実ディレクトリで、目印 `.agent-compat-copy` によって走査から外す。
 
@@ -44,6 +45,7 @@ status: draft
 | `workflow/`     | [fdshg693/AI-workflow](https://github.com/fdshg693/AI-workflow)         | `<tool>-wrapper/`・`sandbox/`・`schedule/`                                                                |
 | `infra/`        | [fdshg693/AI-infra](https://github.com/fdshg693/AI-infra)               | `ai-logs/`（インフラ定義と運用スクリプト）                                                                |
 | `templates/`    | [fdshg693/AI-templates](https://github.com/fdshg693/AI-templates)       | `core/<name>/`（テンプレート本体）・`starter/`（適用例）                                                  |
+| `mcps/`         | [fdshg693/AI-mcps](https://github.com/fdshg693/AI-mcps)                 | `<name>/`（MCP サーバー。各々が uv workspace のメンバー）                                                 |
 
 `workflow/` の「ワークフロー」は、`registry/repo-workflows.yaml`（skill-tools の目的別スキル手順カタログ）・`.github/workflows/`（GitHub Actions）・Claude Code の Workflow ツールとは別物。
 
