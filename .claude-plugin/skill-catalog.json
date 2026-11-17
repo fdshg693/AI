@@ -1,5 +1,12 @@
 {
   "_generated_by": "maintenance/scripts/plugin_meta/generate/generate_skill_catalog.py (DO NOT EDIT MANUALLY)",
+  "agent-compat/_plugin/agent-compat-tools": [
+    {
+      "path": "agent-compat/_plugin/agent-compat-tools/skills/agent-logs-cli",
+      "name": "agent-logs-cli",
+      "description": "AI コーディングツール（Claude Code・Cursor・Cline・Kilo Code・Antigravity・Codex）がこの PC に残すローカルログを、ツールをまたいで一覧・検索・集計する `agent-logs` CLI の使い方を説明する。「前にどのツールで何をしたか探したい」「過去のセッションで特定のコマンドやファイル名が出た箇所を横断検索したい」「ツール別・モデル別・日別のセッション数やトークンを集計したい」「どのツールのログがどこにあるか確かめたい」ときに使う。個々のツールのログ形式そのものを知りたいときは各ツールの `*-logs` 知識スキル（Claude Code は claude-logs-investigate）を使う。"
+    }
+  ],
   "skills/plugins/ai-tools-knowledge": [
     {
       "path": "skills/plugins/ai-tools-knowledge/skills/agy-cli-docs",

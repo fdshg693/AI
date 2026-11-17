@@ -1,5 +1,5 @@
-# SSOT for first-class CLI tools under tools/: tools that a SKILL.md may
-# declare (meta.requires_repo_tools / meta.requires_install) and/or that
+# SSOT for first-class CLI tools under tools/ (and agent-compat/<hooks|logs>/):
+# tools that a SKILL.md may declare (meta.requires_repo_tools / meta.requires_install) and/or that
 # participate in tool-to-tool edges (requires_tools).
 #
 # Register a tool if at least one skill references it, or if another
@@ -135,3 +135,7 @@ tools:
     path: tools/skill-tools
     install: "uv tool install --editable tools/skill-tools"
     description: tools/skill-tools/pyproject.toml#project.description
+  agent-logs:
+    path: agent-compat/logs/agent-logs
+    install: "uv tool install --editable agent-compat/logs/agent-logs"
+    description: agent-compat/logs/agent-logs/pyproject.toml#project.description

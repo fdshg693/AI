@@ -1,5 +1,6 @@
 """Fail if a SKILL.md's requires_repo_tools/requires_install mentions a
-tools/-rooted path that isn't registered (or is stale) in repo-tools.yaml.
+tools/- or agent-compat/-rooted path that isn't registered (or is stale) in
+repo-tools.yaml.
 
 maintenance/plugin/** is excluded: its SKILL.md files reuse requires_repo_tools to mean
 "files this meta-skill documents" rather than "CLI dependency" (see
@@ -26,7 +27,11 @@ from skill.util.skill_frontmatter import find_skill_md_files, read_frontmatter
 REPO_ROOT = Path(__file__).resolve().parents[4]
 EXCLUDED_PREFIXES = ("maintenance/plugin/", "maintenance/scripts/")
 FIELDS = ("requires_repo_tools", "requires_install")
-TOOLS_PATH_PATTERN = re.compile(r"tools/[\w.-]+(?:/[\w.-]+)?")
+# tools/<group>/<name> or agent-compat/<hooks|logs|...>/<name>. The lookbehind keeps
+# "tools/..." from matching inside a longer segment (e.g. "my-tools/...").
+TOOLS_PATH_PATTERN = re.compile(
+    r"(?<![\w.-])(?:agent-compat/[\w.-]+/[\w.-]+|tools/[\w.-]+(?:/[\w.-]+)?)"
+)
 
 
 def find_unregistered_tool_paths(

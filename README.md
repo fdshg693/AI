@@ -39,12 +39,13 @@ pull のあとは `just sub-init`。サブモジュールの中でコミット�
 ### AIツールごとの設定・プラグインルート
 
 各 AI コーディングツール向けの設定フォルダとプラグイン実体フォルダの対応。  
-スキルの実体は Claude Code プラグイン（`skills/plugins/`・`tools/_plugin/`）に 1 か所だけ置く。他ツールのフォルダにあるのはマーケットプレイス定義か、`just agent-compat-sync` で作る gitignore 済みのコピー。
+スキルの実体は Claude Code プラグイン（`skills/plugins/`・`tools/_plugin/`・`agent-compat/_plugin/`）に 1 か所だけ置く。他ツールのフォルダにあるのはマーケットプレイス定義か、`just agent-compat-sync` で作る gitignore 済みのコピー。
 
 - **Claude Code**
   - [.claude/](.claude/) — このリポジトリ自体を Claude Code で開発するための設定（rules, workflows 等。hooks/ は skill-tools による自己インストール先）
   - [skills/plugins/](skills/plugins/) — Claude Code 用プラグイン本体
   - [tools/_plugin/](tools/_plugin/) — tools/ の CLI に付属する Claude Code プラグイン（`my-tools`。CLI 前提の使い方スキル）
+  - [agent-compat/_plugin/](agent-compat/_plugin/) — agent-compat/ の CLI に付属する Claude Code プラグイン（`agent-compat-tools`。`agent-logs` などの使い方スキル）
   - [.claude-plugin/](.claude-plugin/) — 上記プラグイン群をまとめるマーケットプレイス定義（`marketplace.json`）と skill カタログ（`skill-catalog.json`）
 
 - **Cline**

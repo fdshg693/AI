@@ -151,6 +151,17 @@
       "description": "Skill to use custom tools made by me",
       "version": "0.1.0",
       "strict": true
+    },
+    {
+      "name": "agent-compat-tools",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/fdshg693/AI-agent-compat.git",
+        "path": "_plugin/agent-compat-tools"
+      },
+      "description": "Usage skills for the agent-compat CLIs (agent-logs: search and stats over local AI coding agent logs)",
+      "version": "0.1.0",
+      "strict": true
     }
   ]
 }

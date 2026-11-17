@@ -21,7 +21,7 @@ status: stable
 
 ## 置き場所
 
-使い方スキルは`maintenance/plugin/skills/`ではなく、Claude Codeプラグイン配下（例: `tools/_plugin/my-tools/skills/<tool-name>/`）に置き、`ai-tools.yaml`へ通常のスキルとして登録する（[ai-tools-config](./ai-tools-config.md)参照）。対象ツール自体がこのリポジトリ外でも使えるものである以上、スキルもマーケットプレイス・skills-siteの配布対象にする。`maintenance/plugin/`直下には置かない。
+使い方スキルは`maintenance/plugin/skills/`ではなく、Claude Codeプラグイン配下（`tools/`のCLIなら`tools/_plugin/my-tools/skills/<tool-name>/`、`agent-compat/`のCLI（`agent-logs`など）なら`agent-compat/_plugin/agent-compat-tools/skills/<tool-name>/`）に置き、`ai-tools.yaml`へ通常のスキルとして登録する（[ai-tools-config](./ai-tools-config.md)参照）。対象ツール自体がこのリポジトリ外でも使えるものである以上、スキルもマーケットプレイス・skills-siteの配布対象にする。`maintenance/plugin/`直下には置かない。
 
 ## 責務の境界: セットアップは扱わない
 

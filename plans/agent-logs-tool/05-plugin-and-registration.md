@@ -1,6 +1,6 @@
 ---
 type: Plan Step
-status: planning-breakdown
+status: implementing-done
 ---
 
 # Step 5: 使い方スキルのプラグインと SSOT 登録
@@ -70,3 +70,9 @@ status: planning-breakdown
 
 - **実行主体**: メインエージェント。
 - **TODO化**: (1) プラグインとスキル本体、(2) SSOT 登録と生成器・検査の対応（生成結果の diff を確認）、(3) 規約文書・`.links.yaml` 更新と `just links-sync`。最後に `uv run plans/lint_plans.py plans`、各 pre-commit を通し、別ディレクトリから `agent-logs sources` が動くこと（`uv tool install --editable`）を確認する。
+
+## 実行記録
+
+- 2026-11-17（Step5 完了時）: 計画どおり。完了記録は [progress/99-completion.md](progress/99-completion.md)。
+  - 決め打ちの対応: `generate_readme_tools_section.py` の導入文、`check_skill_repo_tools.py` の `TOOLS_PATH_PATTERN`（`agent-compat/<dir>/<name>` を対象に足し、`my-tools/` のような長い語の途中で `tools/` に当たらないよう後読みを付けた）、`precommit` の検査 glob に `agent-compat/**/pyproject.toml`。`plugin_source.py`・skill-tools・skills-site は `ai-tools.yaml`／サブモジュール表から汎用に解決しており変更不要。
+  - `claude-logs-investigate` の「何をしたいか」表に横断検索の行（`agent-logs-cli` への導線）を足し、1.0.4 へ。
