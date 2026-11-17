@@ -75,7 +75,7 @@ pull のあとは `just sub-init`。サブモジュールの中でコミット�
 
 - [skills/](skills/)（[AI-skills](https://github.com/fdshg693/AI-skills)） — tools に依存しない Claude Code 用プラグイン群（`skills/plugins/<name>`）。他の AI ツールについての知識スキルも Claude Code スキルとして [skills/plugins/ai-tools-knowledge/](skills/plugins/ai-tools-knowledge/) に置く
 - [tools/](tools/)（[AI-tools](https://github.com/fdshg693/AI-tools)） — CLI 群（1 ツール 1 ディレクトリ）と、それらを前提にした使い方スキルのプラグイン [tools/\_plugin/my-tools/](tools/_plugin/my-tools/)。役割ごとの索引は [tools/README.md](tools/README.md)
-- [agent-compat/](agent-compat/)（[AI-agent-compat](https://github.com/fdshg693/AI-agent-compat)） — Claude Code 以外の AI ツールで使うための仕組み。フックとコンテキスト注入の [agent-tooling/](agent-compat/agent-tooling/)、ツール固有書式のサンプル [formats/](agent-compat/formats/)、Claude Code との書き方の相違点 [docs/differences/](agent-compat/docs/differences/index.md)
+- [agent-compat/](agent-compat/)（[AI-agent-compat](https://github.com/fdshg693/AI-agent-compat)） — Claude Code 以外の AI ツールで使うための仕組み。フックとコンテキスト注入の [agent-tooling/](agent-compat/hooks/agent-tooling/)、ツール固有書式のサンプル [formats/](agent-compat/formats/)、Claude Code との書き方の相違点 [docs/differences/](agent-compat/docs/differences/index.md)
 - [site/](site/)（[AI-site](https://github.com/fdshg693/AI-site)） — 公開サイト
   - [site/skills-site/](site/skills-site/) — 登録済みのスキルを横断収集する Astro の静的サイト（Azure Static Web Apps）。公開するのはスキルの本文・メタデータ・配布 ZIP だけ。手順は [site/skills-site/AGENTS.md](site/skills-site/AGENTS.md)
   - [site/tools-site/](site/tools-site/) — [repo-tools.yaml](registry/repo-tools.yaml) の `release: true` ツールのインストール/使い方をまとめた VitePress サイト（GitHub Pages）。[site/tools-site/README.md](site/tools-site/README.md)

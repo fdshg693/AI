@@ -21,7 +21,7 @@ status: draft
 | tools 付属スキル       | 本文が `tools/<name>` の CLI のインストールを必須にしている（`meta.requires_repo_tools` の値だけで決めない）                                                                | `tools/_plugin/my-tools/skills/`                                |
 | 汎用スキル             | 上のどれでもない Claude Code スキル。CLI を任意で使うだけ（無くても動く）ならここ                                                                                           | `skills/plugins/<plugin>/skills/`                               |
 | 他 AI ツールの知識     | Codex・Copilot 等の使い方を説明するスキル（中身は普通の SKILL.md）                                                                                                          | `skills/plugins/ai-tools-knowledge/`                            |
-| マルチ AI 対応の仕組み | 複数の AI ツールへ同じものを届ける仕組み（フック・コンテキスト注入）。スキルの実体は置かない                                                                                | `agent-compat/agent-tooling/`                                   |
+| マルチ AI 対応の仕組み | 複数の AI ツールへ同じものを届ける仕組み（フック・コンテキスト注入）。スキルの実体は置かない                                                                                | `agent-compat/hooks/agent-tooling/`                             |
 | ツール固有書式の見本   | そのツールの書式でしか書けないファイル（plugin manifest、rules の frontmatter 等）                                                                                          | `agent-compat/formats/<tool>/`                                  |
 | ワークフロー           | AI の SDK/CLI を組み合わせ、手元でカスタマイズして使う実行フロー（SDK ラッパー、ISSUE 駆動・定期実行のエージェント起動など）。付属スキルが無く `repo-tools.yaml` に載せない | `workflow/<name>/`                                              |
 | インフラ定義           | IaC・Docker 構成・運用スクリプトなど、ツールではないインフラの定義。ただし公開サイト自身のインフラ（Bicep）は `site/skills-site/infra/`                                     | `infra/<name>/`                                                 |
@@ -37,7 +37,7 @@ status: draft
 | --------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------------- |
 | `skills/`       | [fdshg693/AI-skills](https://github.com/fdshg693/AI-skills)             | 汎用スキルのプラグイン（`plugins/<plugin>/`）                    |
 | `tools/`        | [fdshg693/AI-tools](https://github.com/fdshg693/AI-tools)               | CLI 群（`<name>/` か `<category>/<name>/`）と `_plugin/my-tools` |
-| `agent-compat/` | [fdshg693/AI-agent-compat](https://github.com/fdshg693/AI-agent-compat) | `agent-tooling/`・`formats/`・`docs/differences/`                |
+| `agent-compat/` | [fdshg693/AI-agent-compat](https://github.com/fdshg693/AI-agent-compat) | `hooks/agent-tooling/`・`formats/`・`docs/differences/`          |
 | `site/`         | [fdshg693/AI-site](https://github.com/fdshg693/AI-site)                 | `skills-site/`・`tools-site/`                                    |
 | `workflow/`     | [fdshg693/AI-workflow](https://github.com/fdshg693/AI-workflow)         | `<tool>-wrapper/`・`sandbox/`・`schedule/`                       |
 | `infra/`        | [fdshg693/AI-infra](https://github.com/fdshg693/AI-infra)               | `ai-logs/`（インフラ定義と運用スクリプト）                       |

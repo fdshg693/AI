@@ -45,7 +45,7 @@ pre-commit:
             # pre-commit (maintenance/lefthook/submodule.yml) regenerates on them.
             glob:
               - ".claude/rules/**"
-            run: just --justfile agent-compat/agent-tooling/justfile generate
+            run: just --justfile agent-compat/hooks/agent-tooling/justfile generate
             stage_fixed: true
           - name: compile gh-aw workflows
             glob: ".github/workflows/*.md"

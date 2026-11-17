@@ -2,8 +2,8 @@
 
 ここは **フックのインストール先** であり、正本ではない。`AGENTS.md` / `CLAUDE.md` 以外は gitignore 済み。
 
-- フックの正本は `agent-tooling/agent_tooling/hooks/`（scenario ごとの `hook.yaml` とアダプタ）。ここにあるスクリプトを直接編集しない。
-- 変更の流れ: agent-tooling 側を編集 → `just --justfile agent-tooling/justfile generate` → リポジトリ直下で `just hooks-update`。
+- フックの正本は `agent-compat/hooks/agent-tooling/agent_tooling/hooks/`（scenario ごとの `hook.yaml` とアダプタ）。ここにあるスクリプトを直接編集しない。
+- 変更の流れ: agent-tooling 側を編集 → `just --justfile agent-compat/hooks/agent-tooling/justfile generate` → リポジトリ直下で `just hooks-update`。
 - 初回（クローン直後）は `.claude/skill-tools.hooks.example.yaml` を `.claude/skill-tools.hooks.yaml`（gitignore）にコピーし、`hooks.install` で入れるフックを選んでから `just hooks-install`（`skill-tools hooks sync`）。一覧を変えたら再実行すると、足したフックが入り、外したフックが消える。
 - 登録（`.claude/settings.json` の `hooks`）は skill-tools が manifest（`.skill-tools/manifest.json`）で追跡し、自分が追加したエントリだけを書き換える。`settings.json` のフックエントリを手で編集すると drift として update/remove が止まる。
 - `.env`（`HOOK_LOG` 等のトグル）、`logs/`、`state/`、`config/` はフックが配置先基準で読み書きするローカル状態。skill-tools は触らない。
