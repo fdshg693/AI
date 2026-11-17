@@ -6,7 +6,7 @@ status: implementing-in-progress
 ## 実装ステータス
 
 - [x] [01-move-agent-tooling-to-hooks.md](01-move-agent-tooling-to-hooks.md) — `agent-compat/agent-tooling/` を `agent-compat/hooks/agent-tooling/` へ移し、全参照を更新
-- [ ] [02-research-log-formats.md](02-research-log-formats.md) — 各 AI コーディングツールのローカルログの所在・形式を調査（実データ＋公式ドキュメント）
+- [x] [02-research-log-formats.md](02-research-log-formats.md) — 各 AI コーディングツールのローカルログの所在・形式を調査（実データ＋公式ドキュメント）
 - [ ] [03-knowledge-skills-log-specs.md](03-knowledge-skills-log-specs.md) — ログ仕様を知識スキル（`ai-tools-knowledge`・`cc-knowledge`）に書く
 - [ ] [04-agent-logs-cli.md](04-agent-logs-cli.md) — 検索・集計・集約 CLI `agent-logs` を `agent-compat/logs/agent-logs/` に実装
 - [ ] [05-plugin-and-registration.md](05-plugin-and-registration.md) — `agent-compat/_plugin/` に使い方スキルのプラグインを作り、各 SSOT に登録
