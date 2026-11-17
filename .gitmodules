@@ -19,3 +19,6 @@
 [submodule "templates"]
 	path = templates
 	url = https://github.com/fdshg693/AI-templates.git
+[submodule "mcps"]
+	path = mcps
+	url = https://github.com/fdshg693/AI-mcps.git
