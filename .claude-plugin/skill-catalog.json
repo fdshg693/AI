@@ -12,6 +12,11 @@
       "description": "Use when answering questions about Google Antigravity — the agentic coding platform, Antigravity 2.0, IDE, CLI, SDK, agent skills, rules, workflows, plugins, hooks, MCP servers, subagents, sandbox, permissions, artifacts, pricing, and use cases. Grounds answers in the latest official documentation from antigravity.google (llms.txt index plus per-page raw Markdown) instead of training-data memory, which may be stale."
     },
     {
+      "path": "skills/plugins/ai-tools-knowledge/skills/antigravity-logs",
+      "name": "antigravity-logs",
+      "description": "Google Antigravity（IDE・CLI agy）がローカルに残す会話ログの所在と形式を説明する。 3 つのルート（~/.gemini/antigravity・antigravity-cli・antigravity-ide）、索引の conversation_summaries.db、本文の brain/<id>/.system_generated/logs/transcript_full.jsonl、 会話ごとの protobuf を収めた conversations/<id>.db を扱う。「Antigravity の過去の会話を探したい」 「トークンを集計したい」「会話履歴の保存先を知りたい」「ログの読み方や SQLite の安全な開き方を知りたい」 ときに使う。Antigravity の一般的な機能の質問には antigravity-docs、CLI の使い方には agy-cli-docs を使う。"
+    },
+    {
       "path": "skills/plugins/ai-tools-knowledge/skills/antigravity-memory",
       "name": "antigravity-memory",
       "description": "Guides placement and authoring of persistent Agent context in Google Antigravity — GEMINI.md, AGENTS.md, workspace Rules (.agents/rules), global Rules (~/.gemini/GEMINI.md), and Workflows. Use when deciding what belongs in each mechanism, explaining how/when Antigravity reads these files (including what is and isn't officially documented about nested directories and reload timing), or troubleshooting why a rule isn't applied. Not for Agent Skills (use antigravity-skills) or general Antigravity features (use antigravity-docs)."
@@ -40,6 +45,11 @@
       "path": "skills/plugins/ai-tools-knowledge/skills/cline-docs",
       "name": "cline-docs",
       "description": "Answer questions about Cline using the latest official documentation at docs.cline.bot. Use for Cline IDE/CLI/SDK features, skills, rules, workflows, configuration, API, providers, MCP, plugins, enterprise features, or troubleshooting when current documented behavior matters."
+    },
+    {
+      "path": "skills/plugins/ai-tools-knowledge/skills/cline-logs",
+      "name": "cline-logs",
+      "description": "Cline（VS Code 拡張・Cline CLI）のローカルに残るタスク・セッション履歴の所在と形式を説明する。 SDK セッション形式（~/.cline/data/sessions/<sid>/ の JSON と索引 data/db/sessions.db、CLINE_DATA_DIR で上書き可）と、 レガシーのタスク形式（VS Code globalStorage の saoudrizwan.claude-dev/tasks/<id>/ と旧 CLI の ~/.cline/data/tasks/）の 2 系統について、レコード構造・トークンとコストの位置・プロジェクトとの対応・安全な読み方・読まない秘密ファイルを扱う。 「Cline の過去のタスクを探したい」「Cline のトークン・コストを集計したい」「Cline の履歴の保存先を知りたい」 「ui_messages.json や sessions.db の中身を読みたい」ときに使う。Cline の機能全般は cline-docs を使う。"
     },
     {
       "path": "skills/plugins/ai-tools-knowledge/skills/cline-memory",
@@ -85,6 +95,11 @@
       "path": "skills/plugins/ai-tools-knowledge/skills/codex-hooks",
       "name": "codex-hooks",
       "description": "Use when creating, editing, reviewing, or debugging OpenAI Codex hooks (hooks.json, or inline [hooks] tables in config.toml) — choosing events (PreToolUse, PermissionRequest, PostToolUse, SessionStart, SessionEnd, UserPromptSubmit, Stop, SubagentStart/SubagentStop, PreCompact/PostCompact), writing matcher regexes, command vs mcp_tool handlers, the JSON input/output contract (permissionDecision, decision/reason, continue, additionalContext, hookSpecificOutput), exit codes, async/background hooks, hook trust review via `/hooks`, plugin-bundled hooks, and managed hooks in requirements.toml. Do not use this skill for general config.toml/mcp_servers/sandbox/rules settings beyond hooks (use codex-settings), CLI flags (use codex-cli-docs), general Codex specification questions (use codex-docs), or Claude Code hooks (use writing-hooks — event names and schema differ)."
+    },
+    {
+      "path": "skills/plugins/ai-tools-knowledge/skills/codex-logs",
+      "name": "codex-logs",
+      "description": "OpenAI Codex（CLI・IDE 拡張・app-server）のローカルに残るセッションログ （~/.codex/sessions の rollout-*.jsonl、archived_sessions、history.jsonl、 state_5.sqlite の threads 索引）の所在とレコード形式を説明する。「Codex の過去の セッションを探したい」「Codex のトークン使用量を集計したい」「rollout ファイルの 形式・圧縮（.jsonl.zst）を知りたい」「セッションとプロジェクトを対応付けたい」 ときに使う。Codex の機能全般・設定は対象外（codex-docs を使う）。"
     },
     {
       "path": "skills/plugins/ai-tools-knowledge/skills/codex-memory",
@@ -137,6 +152,11 @@
       "description": "Use when answering questions about Cursor (the AI code editor) — features, settings, Agent mode, Plan mode, rules, skills, subagents, hooks, MCP, cloud agents, models & pricing, integrations, etc. Grounds answers in the latest official docs (cursor.com/docs) instead of training-data memory, which may be stale."
     },
     {
+      "path": "skills/plugins/ai-tools-knowledge/skills/cursor-logs",
+      "name": "cursor-logs",
+      "description": "Cursor（IDE と CLI の cursor-agent/agent）のローカルに残るチャット・エージェント会話ログ （projects/*/agent-transcripts の JSONL、CLI の chats/store.db、IDE の state.vscdb）の 所在・保存系統・レコード構造・プロジェクトとの対応・安全な読み方・秘密情報の扱いを説明する。 「Cursor の過去の会話を探したい」「Cursor のログを集計・解析したい」「Cursor の会話履歴が どこに保存されるか知りたい」「transcript に時刻やモデルが無い理由を知りたい」ときに使う。 ルールやエージェント機能など Cursor の機能全般は対象外（cursor-docs を使う）。"
+    },
+    {
       "path": "skills/plugins/ai-tools-knowledge/skills/cursor-memory",
       "name": "cursor-memory",
       "description": "Guides placement and authoring of Cursor persistent Agent guidance — project rules (.cursor/rules/*.mdc), AGENTS.md, CLAUDE.md, User Rules, and Team Rules. Use when deciding what belongs in each mechanism, writing or editing rule files, configuring alwaysApply/globs/description, setting up nested AGENTS.md, migrating from .cursorrules, or troubleshooting why a rule is not applied. Not for Agent Skills (use cursor-skill-use) or general Cursor features (use cursor-docs)."
@@ -185,6 +205,11 @@
       "path": "skills/plugins/ai-tools-knowledge/skills/kilo-code-docs",
       "name": "kilo-code-docs",
       "description": "Use when answering questions about Kilo Code (kilo.ai) — the open-source AI coding agent available as a VS Code/JetBrains extension and a CLI/TUI, including its modes (Orchestrator/Code/Architect/Debug/Ask), AI providers (BYOK), MCP integration, settings, KiloClaw (cloud agent gateway), pricing/credits, and troubleshooting. Grounds answers in the latest official docs (kilo.ai/docs) instead of training-data memory, which may be stale."
+    },
+    {
+      "path": "skills/plugins/ai-tools-knowledge/skills/kilo-logs",
+      "name": "kilo-logs",
+      "description": "Kilo Code（CLI/TUI・VS Code 拡張、opencode 由来の v7 系）がローカルに残すセッション履歴（~/.local/share/kilo/kilo.db の session/message/part/project 表）の所在・スキーマ・読み取り時の注意と、読んではいけない秘密情報の表を説明する。「Kilo の過去のセッションを探したい」「Kilo のトークン・コストを集計したい」「kilo.db の中身を知りたい」ときに使う。Kilo の一般的な機能・設定は kilo-code-docs を使う。"
     },
     {
       "path": "skills/plugins/ai-tools-knowledge/skills/kilo-memory-guide",
@@ -273,7 +298,7 @@
     {
       "path": "skills/plugins/cc-knowledge/skills/claude-logs-investigate",
       "name": "claude-logs-investigate",
-      "description": "Claude Code自体(CLIツール)の動作ログ・デバッグ情報・テレメトリを調査する、または新たに記録する仕組みを仕込む際に使う。セッショントランスクリプトやシェルスナップショットなど既存ログの場所と見方に加え、デバッグフラグ・スラッシュコマンドでの原因切り分け、hookを使った独自ログの仕込み、OpenTelemetryによるテレメトリ送信設定までを扱う。「Claude Codeのログを見たい/調べたい」「なぜ設定やhook、MCPが効かないか調査したい」「ツール呼び出し履歴を記録したい」「テレメトリ/OTelを設定したい」といった要求で使う。"
+      "description": "Claude Code自体(CLIツール)の動作ログ・デバッグ情報・テレメトリを調査する、または新たに記録する仕組みを仕込む際に使う。セッショントランスクリプトやシェルスナップショットなど既存ログの場所と見方（ローカルログのファイル形式を含む）に加え、デバッグフラグ・スラッシュコマンドでの原因切り分け、hookを使った独自ログの仕込み、OpenTelemetryによるテレメトリ送信設定までを扱う。「Claude Codeのログを見たい/調べたい」「なぜ設定やhook、MCPが効かないか調査したい」「ツール呼び出し履歴を記録したい」「テレメトリ/OTelを設定したい」といった要求で使う。"
     },
     {
       "path": "skills/plugins/cc-knowledge/skills/claude-mechanisms",

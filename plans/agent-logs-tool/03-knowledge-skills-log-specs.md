@@ -1,6 +1,6 @@
 ---
 type: Plan Step
-status: planning-breakdown
+status: implementing-done
 ---
 
 # Step 3: ログ仕様の知識スキル
@@ -72,3 +72,4 @@ status: planning-breakdown
 ## 実行中に判明した変更
 
 - 2026-11-17（Step2 完了時）: 調査結果を受けて、共通の章立て、Cursor 3 系統・Cline 2 系統の書き分け、Kilo の旧形式を Cline レガシーへリンクすること、Antigravity を構造まで書くこと、`cursor-logs`・`antigravity-logs` に `format.md` を足すことを決定事項と触るファイルに反映した。
+- 2026-11-17（Step3 完了時）: 6 本を作成（skills `f5d5421`）。`cline-logs`・`codex-logs` は 350 行未満に収まったため `format.md` を作らなかった。`ai-tools.yaml` の `workspace_copies` は既存の `cline-*`・`kilo-*`・`antigravity-*` パターンで新スキルを拾うため変更不要。`kilo-logs` から `cline-logs` へは相対リンクではなくスキル名と節名で参照する（`.kilo/skills/` のコピーに `cline-logs` が入らないため）。
