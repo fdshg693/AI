@@ -3125,7 +3125,7 @@ wheels = [
 
 [[package]]
 name = "vscode-profiles"
-version = "0.1.0"
+version = "0.1.7"
 source = { editable = "tools/vscode-profiles" }
 
 [package.dev-dependencies]
