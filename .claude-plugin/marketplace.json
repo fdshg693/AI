@@ -16,7 +16,7 @@
         "url": "https://github.com/fdshg693/AI-skills.git",
         "path": "plugins/ai-tools-knowledge"
       },
-      "description": "Knowledge skills about other AI coding tools (Codex, GitHub Copilot, Cursor, Antigravity, Cline, Kilo Code): docs, CLIs, SDKs, memory, skills and plugins",
+      "description": "Knowledge skills about other AI coding tools (Codex, GitHub Copilot, Cursor, Antigravity, Cline, Kilo Code): docs, CLIs, SDKs, memory, skills and plugins; plus the ChatGPT, Gemini and Claude chat apps",
       "version": "0.1.0",
       "strict": true
     },
