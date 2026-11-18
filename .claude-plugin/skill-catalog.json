@@ -16,7 +16,7 @@
     {
       "path": "skills/plugins/ai-tools-knowledge/skills/ai-chat-apps",
       "name": "ai-chat-apps",
-      "description": "Use when answering questions about the consumer chat apps ChatGPT (chatgpt.com), Gemini (gemini.google.com) and Claude (claude.ai) — features, settings, how-to steps, plan limits and availability, or how equivalent features map across the three (projects/notebooks, custom GPTs/Gems/skills/plugins, connectors/apps/custom MCP, memory, deep research, canvas/artifacts, agents). Grounds answers in the official help centers and release notes instead of training-data memory, which goes stale quickly here (features are renamed and retired often). Not for the OpenAI, Gemini or Claude APIs, Claude Code, Codex or Gemini CLI."
+      "description": "Use when answering questions about the consumer chat apps ChatGPT (chatgpt.com), Gemini (gemini.google.com) and Claude (claude.ai), including their Windows/macOS desktop apps — features, settings, how-to steps, plan limits and availability, or how equivalent features map across the three (projects/notebooks, custom GPTs/Gems/skills/plugins, connectors/apps/custom MCP, memory, deep research, canvas/artifacts, agents). Grounds answers in the official help centers and release notes instead of training-data memory, which goes stale quickly here (features are renamed and retired often). Not for the OpenAI, Gemini or Claude APIs, Claude Code, Codex or Gemini CLI."
     },
     {
       "path": "skills/plugins/ai-tools-knowledge/skills/antigravity-docs",
