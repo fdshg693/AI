@@ -524,16 +524,6 @@
       "description": "Use when answering questions about LiteLLM SDK or LiteLLM Proxy/Gateway documentation — routing and load balancing, providers and model configuration, authentication, budgets, guardrails, observability, pass-through endpoints, or API usage. Grounds answers in current official pages under docs.litellm.ai/docs instead of training-data memory, which may be stale."
     },
     {
-      "path": "skills/plugins/topics/skills/ona-cli-docs",
-      "name": "ona-cli-docs",
-      "description": "Use when constructing or explaining raw Ona official CLI (`ona` command) invocations -- e.g. a hand-built `ona environment exec`/`ona environment ssh` line, or a question about `ona login`/personal access tokens, environment/automation subcommands, or CLI configuration. Grounds answers in a curated excerpt of ona.com's official docs (via the ona-docs skill's cached llms.txt) instead of training-data memory, which may be stale or reference the pre-rename \"Gitpod\" CLI."
-    },
-    {
-      "path": "skills/plugins/topics/skills/ona-docs",
-      "name": "ona-docs",
-      "description": "Use when answering questions about Ona (ona.com, formerly Gitpod) — the platform for background agents (autonomous AI software engineers that plan, code, test, and open PRs in isolated cloud environments), Automations (trigger-based workflows), Ona environments/Dev Containers, Veto (kernel-level agent security), multi-SCM support (GitHub/GitLab/Bitbucket/Azure DevOps), IDE integrations, the REST API, or company info (leadership, customers, pricing, comparisons to other coding-agent platforms). Grounds answers in the latest official content from ona.com and ona.com/docs instead of training-data memory, which may be stale or still reference \"Gitpod\"."
-    },
-    {
       "path": "skills/plugins/topics/skills/openrouter-docs",
       "name": "openrouter-docs",
       "description": "Use when answering questions about OpenRouter (openrouter.ai) — the unified API for routing requests across many LLM providers/models, its Agent SDK, Client SDKs (TypeScript/Python/Go), REST API reference, model routing/variants (:nitro, :online, :thinking, etc.), plugins, guardrails, presets, workspaces, pricing/BYOK, or integrating OpenRouter with coding agents (Claude Code, Cursor, Codex CLI, etc.). Grounds answers in the latest official docs (openrouter.ai/docs) instead of training-data memory, which may be stale."

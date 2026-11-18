@@ -1,8 +1,7 @@
 FROM mcr.microsoft.com/devcontainers/base:2.0.4-noble
 
 # Node.js + pnpm (versions match mise.toml at the repo root), installed system-wide
-# so they're available without shell activation (needed for non-interactive exec,
-# e.g. `ona environment exec`).
+# so they're available without shell activation (needed for non-interactive exec).
 RUN curl -fsSL https://deb.nodesource.com/setup_26.x | bash - \
 	&& apt-get install -y --no-install-recommends nodejs \
 	&& rm -rf /var/lib/apt/lists/* \
