@@ -56,6 +56,12 @@ local_configs:
   - path: mcps/dynamic_prompt/infra/terraform/terraform.tfvars
     example: mcps/dynamic_prompt/infra/terraform/terraform.tfvars.example
     reason: GCP project ID and deploy variables; also read by the infra justfile.
+  - path: infra/ai-logs/terraform/terraform.tfvars
+    example: infra/ai-logs/terraform/terraform.tfvars.example
+    reason: Sakura Cloud API key/secret and SSH public key for the ai-logs VM.
+  - path: infra/ai-logs/terraform/archive/terraform.tfvars
+    example: infra/ai-logs/terraform/archive/terraform.tfvars.example
+    reason: Azure subscription ID and storage account name for the ai-logs Blob archive.
 
 deny_patterns:
   - "**/.env"
