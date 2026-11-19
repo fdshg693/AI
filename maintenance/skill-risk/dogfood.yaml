@@ -27,4 +27,9 @@
 #     fix: skills@abc1234
 version: 1
 
-entries: {}
+entries:
+  skills/plugins/cc-knowledge/skills/claude-code-openai-gateway/SKILL.md:
+    date: 2026-11-19
+    verdict: fixed
+    fb: 20261119-020024-fb.md
+    fix: skills@23feda0
