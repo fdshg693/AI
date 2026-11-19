@@ -4,22 +4,25 @@ A personal research/experiment repository about AI coding tool configurations an
 
 ## Getting the repository
 
-`skills/`, `tools/`, `agent-compat/`, `site/`, and `workflow/` are submodules ([AI-skills](https://github.com/fdshg693/AI-skills), [AI-tools](https://github.com/fdshg693/AI-tools), [AI-agent-compat](https://github.com/fdshg693/AI-agent-compat), [AI-site](https://github.com/fdshg693/AI-site), [AI-workflow](https://github.com/fdshg693/AI-workflow)). Clone with the submodules.
+`skills/`, `tools/`, `agent-compat/`, `site/`, `workflow/`, `infra/`, `templates/`, and `mcps/` are submodules ([AI-skills](https://github.com/fdshg693/AI-skills), [AI-tools](https://github.com/fdshg693/AI-tools), [AI-agent-compat](https://github.com/fdshg693/AI-agent-compat), [AI-site](https://github.com/fdshg693/AI-site), [AI-workflow](https://github.com/fdshg693/AI-workflow), [AI-infra](https://github.com/fdshg693/AI-infra), [AI-templates](https://github.com/fdshg693/AI-templates), [AI-mcps](https://github.com/fdshg693/AI-mcps)). Clone with the submodules.
 
 ```sh
 git clone --recurse-submodules https://github.com/fdshg693/AI.git
 cd AI
 lefthook install && just sub-hooks-install
 just links-sync
+just branch-work <this-machine's-branch> && just branch-switch --create
 just agent-compat-sync
+cp .claude/skill-tools.hooks.example.yaml .claude/skill-tools.hooks.yaml  # edit hooks.install if needed
 just hooks-install && just sub-agent-hooks-install
 ```
 
 - `lefthook install` / `just sub-hooks-install` — Install Git hooks in the umbrella and in each submodule
 - `just links-sync` — Create the Junctions declared in `.links.yaml` ([repo-layout](maintenance/docs/repo-layout.md))
+- `just branch-work <name> && just branch-switch --create` — Record this machine's working branch name (e.g. `windows`) in git config and put every repository on it ([branch-and-pr-workflow](maintenance/docs/branch-and-pr-workflow.md))
 - `just agent-compat-sync` — Create the skill copies for Cline, Kilo Code, and Antigravity
-- `just hooks-install` / `just sub-agent-hooks-install` — Install the agent hooks in the umbrella and in each submodule ([hook-distribution](maintenance/docs/hook-distribution.md))
-- Local config files are committed only as examples. Copy `.codex/config.example.toml` → `.codex/config.toml`, `.mcp.json.example` → `.mcp.json`, and `tools/aim2/models.json.example` → `tools/aim2/models.json` as needed (also when a pull removed the real file)
+- `cp .claude/skill-tools.hooks.example.yaml ...` / `just hooks-install` / `just sub-agent-hooks-install` — Install the agent hooks in the umbrella and in each submodule. Pick the hooks in the gitignored local config (`hooks.install`); git only has the sample. A submodule is included only after you copy its sample the same way under its `.claude/` ([hook-distribution](maintenance/docs/hook-distribution.md))
+- Local config files are committed only as examples. Copy `.codex/config.example.toml` → `.codex/config.toml`, `.mcp.json.example` → `.mcp.json`, and `tools/llm/aim2/models.json.example` → `tools/llm/aim2/models.json` as needed (also when a pull removed the real file)
 
 After a pull, run `just sub-init`. For the two-step flow (commit inside the submodule, then update the pointer in the umbrella), see [repo-layout](maintenance/docs/repo-layout.md#サブモジュール).
 
@@ -44,7 +47,7 @@ Skill bodies live in one place only, as Claude Code plugins (`skills/plugins/`, 
 
 - **Cline**
   - [.cline/](.cline/) — Cline settings. `.cline/skills/` is a gitignored copy of `skills/plugins/ai-tools-knowledge` made by `just agent-compat-sync` (do not edit by hand)
-  - [.clinerules/](.clinerules/) — Output folder for the rule files Cline reads, generated from `AGENTS.md` by the `tools/agents-rules` CLI (`agents-rules -t cline`). Absent until generated. Do not edit by hand
+  - `.clinerules/` — Output folder for the rule files Cline reads, generated from `AGENTS.md` by the `tools/coding-agent/agents-rules` CLI (`agents-rules -t cline`). Absent until generated. Do not edit by hand
 
 - **Kilo Code**
   - [.kilo/](.kilo/) — Kilo Code (CLI/TUI/VS Code extension) settings. `.kilo/skills/` is a gitignored copy of `skills/plugins/ai-tools-knowledge` made by `just agent-compat-sync`. `.kilo/plugin/` is where agent-tooling installs its hooks
@@ -60,21 +63,24 @@ Skill bodies live in one place only, as Claude Code plugins (`skills/plugins/`, 
 
 - **Antigravity**
   - [_agents/](_agents/) — Antigravity workspace plugins (`_agents/plugins/`). `antigravity-meta` is a gitignored copy of `skills/plugins/ai-tools-knowledge` made by `just agent-compat-sync`. Used separately from `.agents/` (see `_agents/README.md`)
-  - [.agents/rules/](.agents/rules/) — Workspace Rules read by Antigravity, generated from `AGENTS.md` by the `tools/agents-rules` CLI (see `.agents/README.md`). Do not edit by hand
+  - `.agents/rules/` — Workspace Rules read by Antigravity, generated from `AGENTS.md` by the `tools/coding-agent/agents-rules` CLI (see `.agents/README.md`). Do not edit by hand
 
 <!-- END: ai-tools-section -->
 
 ### Submodules
 
-The following five are separate repositories; the umbrella only holds their commit pointers. When you change files inside one, commit inside the submodule first, then update the pointer in the umbrella ([repo-layout "Submodules"](maintenance/docs/repo-layout.md#サブモジュール)). You can work by opening just the submodule folder, but generation, checks, and workspaces live in the umbrella, so clone and use it from the umbrella.
+The following eight are separate repositories; the umbrella only holds their commit pointers. When you change files inside one, commit inside the submodule first, then update the pointer in the umbrella ([repo-layout "Submodules"](maintenance/docs/repo-layout.md#サブモジュール)). You can work by opening just the submodule folder, but generation, checks, and workspaces live in the umbrella, so clone and use it from the umbrella.
 
 - [skills/](skills/) ([AI-skills](https://github.com/fdshg693/AI-skills)) — Claude Code plugins that do not depend on tools (`skills/plugins/<name>`). Knowledge skills about other AI tools are also kept here as Claude Code skills, in [skills/plugins/ai-tools-knowledge/](skills/plugins/ai-tools-knowledge/)
 - [tools/](tools/) ([AI-tools](https://github.com/fdshg693/AI-tools)) — CLIs (one directory per tool) and the plugin of usage skills that assume them, [tools/\_plugin/my-tools/](tools/_plugin/my-tools/). The role index is [tools/README.md](tools/README.md)
-- [agent-compat/](agent-compat/) ([AI-agent-compat](https://github.com/fdshg693/AI-agent-compat)) — Support for AI tools other than Claude Code: hooks and context injection in [agent-tooling/](agent-compat/agent-tooling/), tool-specific format samples in [formats/](agent-compat/formats/), and differences in authoring from Claude Code in [docs/differences/](agent-compat/docs/differences/index.md)
+- [agent-compat/](agent-compat/) ([AI-agent-compat](https://github.com/fdshg693/AI-agent-compat)) — Support for AI tools other than Claude Code: hooks and context injection in [agent-tooling/](agent-compat/hooks/agent-tooling/), tool-specific format samples in [formats/](agent-compat/formats/), and differences in authoring from Claude Code in [docs/differences/](agent-compat/docs/differences/index.md)
 - [site/](site/) ([AI-site](https://github.com/fdshg693/AI-site)) — Public sites
   - [site/skills-site/](site/skills-site/) — Astro static site that collects registered skills across tools (Azure Static Web Apps). It publishes only skill bodies, metadata, and distribution ZIPs. Steps are in [site/skills-site/AGENTS.md](site/skills-site/AGENTS.md)
   - [site/tools-site/](site/tools-site/) — VitePress site of install and usage notes for [repo-tools.yaml](registry/repo-tools.yaml) entries with `release: true` (GitHub Pages). [site/tools-site/README.md](site/tools-site/README.md)
 - [workflow/](workflow/) ([AI-workflow](https://github.com/fdshg693/AI-workflow)) — Customizable workflows that go beyond plain CLI use: CLI wrappers for AI coding tools (`claude-wrapper`, etc.), the issue-driven Docker sandbox [workflow/sandbox/](workflow/sandbox/), and scheduled runs in [workflow/schedule/](workflow/schedule/). Not listed in `repo-tools.yaml`. [workflow/README.md](workflow/README.md)
+- [infra/](infra/) ([AI-infra](https://github.com/fdshg693/AI-infra)) — Infrastructure definitions and ops scripts that are not tools: the OpenTelemetry log stack for AI coding tools in [infra/ai-logs/](infra/ai-logs/README.md). The public site's Bicep lives separately in [site/skills-site/infra/](site/skills-site/infra/). [infra/README.md](infra/README.md)
+- [templates/](templates/) ([AI-templates](https://github.com/fdshg693/AI-templates)) — Repository-operation templates for working with AI agents: the templates to copy in [templates/core/](templates/core/) (plan workflow, ADRs, knowledge vault, etc., each with its lint) and fictional repositories showing them applied in [templates/starter/](templates/starter/). Not listed in the marketplace or `ai-tools.yaml`. [templates/README.md](templates/README.md)
+- [mcps/](mcps/) ([AI-mcps](https://github.com/fdshg693/AI-mcps)) — MCP servers built with [FastMCP](https://gofastmcp.com): [mcps/dynamic_prompt/](mcps/dynamic_prompt/) for foreign-language learning (with its Cloud Run deployment definitions) and [mcps/memo/](mcps/memo/) for note management. Each server is a member of the umbrella's uv workspace. Not listed in the marketplace or `ai-tools.yaml`. [mcps/README.md](mcps/README.md)
 
 ### Repository operations (umbrella itself)
 
@@ -97,12 +103,11 @@ The following five are separate repositories; the umbrella only holds their comm
 
 ## Other
 
-- The 2026-11 restructure changed plugin locations and some plugin names (`meta` → `cc-knowledge`, `my-tools-no-install` → `web-lookup` / `doc-tools`, and others). A mapping table for existing users is in [docs/integrations/claude-code.md](docs/integrations/claude-code.md).
-- `.gitmodules` — Declares the five submodules above. Managed with `just sub-init` / `sub-sync` / `sub-status`. `just branch-*` creates, switches, pushes and deletes one working branch across the umbrella and every submodule (see repo-layout).
+- `.gitmodules` — Declares the eight submodules above. Managed with `just sub-init` / `sub-sync` / `sub-status`. `just branch-*` creates, switches, pushes and deletes one working branch across the umbrella and every submodule (see repo-layout).
 - `.links.yaml` / `.umbrella-root` — Junction declarations (placed at each repository root and created with `just links-sync`; the Junctions themselves are not committed) and the marker for the umbrella root. See [repo-layout](maintenance/docs/repo-layout.md) for details.
 - `lefthook.yml` — Git hooks configuration that runs on commit, etc. (various regeneration/formatting/secretlint on `pre-commit`, commitlint on `commit-msg`). The submodule side is `maintenance/lefthook/submodule.yml`.
 - `mise.toml` — Tool version management via [mise](https://mise.jdx.dev/) (pins node / pnpm / terraform / uv for this repository).
-- `pyproject.toml` — Root definition of the uv workspace (manages Python packages such as `tools/aim` together).
+- `pyproject.toml` — Root definition of the uv workspace (manages Python packages such as `tools/llm/aim` together).
 - `pnpm-workspace.yaml` / `package.json` / `pnpm-lock.yaml` — Root definition of the pnpm workspace (`site/skills-site`, `workflow/cline-wrapper`, `workflow/copilot-wrapper`) and its lockfile.
 - `.prettierrc.json` / `.prettierignore` — Formatting settings.
 - `commitlint.config.js` — Lint settings for commit messages ([Conventional Commits](https://www.conventionalcommits.org/), `@commitlint/config-conventional`).

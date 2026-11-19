@@ -6,6 +6,9 @@ test*.json
 # task-tracker: このマシン固有のセッションIDと作業スクラッチのため非公開
 tasks/
 
+# フックの選択は端末ごと。共有するのはサンプル skill-tools.hooks.example.yaml だけ
+skill-tools.hooks.yaml
+
 # hooks/ は skill-tools の自己インストール先（正本は agent-tooling）。案内の AGENTS.md / CLAUDE.md だけ共有する
 hooks/*
 !hooks/AGENTS.md

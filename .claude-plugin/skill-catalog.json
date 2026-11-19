@@ -1,5 +1,12 @@
 {
   "_generated_by": "maintenance/scripts/plugin_meta/generate/generate_skill_catalog.py (DO NOT EDIT MANUALLY)",
+  "agent-compat/_plugin/agent-compat-tools": [
+    {
+      "path": "agent-compat/_plugin/agent-compat-tools/skills/agent-logs-cli",
+      "name": "agent-logs-cli",
+      "description": "AI コーディングツール（Claude Code・Cursor・Cline・Kilo Code・Antigravity・Codex）がこの PC に残すローカルログを、ツールをまたいで一覧・検索・集計する `agent-logs` CLI の使い方を説明する。「前にどのツールで何をしたか探したい」「過去のセッションで特定のコマンドやファイル名が出た箇所を横断検索したい」「ツール別・モデル別・日別のセッション数やトークンを集計したい」「どのツールのログがどこにあるか確かめたい」ときに使う。個々のツールのログ形式そのものを知りたいときは各ツールの `*-logs` 知識スキル（Claude Code は claude-logs-investigate）を使う。"
+    }
+  ],
   "skills/plugins/ai-tools-knowledge": [
     {
       "path": "skills/plugins/ai-tools-knowledge/skills/agy-cli-docs",
@@ -7,9 +14,19 @@
       "description": "Use when answering questions about the `agy` command's CLI interface — options, flags, and subcommands (e.g. -p/--print, --model, --mode, --sandbox, agent, models, plugin/plugins, install, update, changelog). Grounds answers in the CLI's own `agy --help` output instead of training-data memory, which may be stale. For Antigravity feature/settings concepts documented on the official site (skills, rules, plugins, hooks, sandbox, permissions), use antigravity-docs instead."
     },
     {
+      "path": "skills/plugins/ai-tools-knowledge/skills/ai-chat-apps",
+      "name": "ai-chat-apps",
+      "description": "Use when answering questions about the consumer chat apps ChatGPT (chatgpt.com), Gemini (gemini.google.com) and Claude (claude.ai), including their Windows/macOS desktop apps — features, settings, how-to steps, plan limits and availability, or how equivalent features map across the three (projects/notebooks, custom GPTs/Gems/skills/plugins, connectors/apps/custom MCP, memory, deep research, canvas/artifacts, agents). Grounds answers in the official help centers and release notes instead of training-data memory, which goes stale quickly here (features are renamed and retired often). Not for the OpenAI, Gemini or Claude APIs, Claude Code, Codex or Gemini CLI."
+    },
+    {
       "path": "skills/plugins/ai-tools-knowledge/skills/antigravity-docs",
       "name": "antigravity-docs",
       "description": "Use when answering questions about Google Antigravity — the agentic coding platform, Antigravity 2.0, IDE, CLI, SDK, agent skills, rules, workflows, plugins, hooks, MCP servers, subagents, sandbox, permissions, artifacts, pricing, and use cases. Grounds answers in the latest official documentation from antigravity.google (llms.txt index plus per-page raw Markdown) instead of training-data memory, which may be stale."
+    },
+    {
+      "path": "skills/plugins/ai-tools-knowledge/skills/antigravity-logs",
+      "name": "antigravity-logs",
+      "description": "Google Antigravity（IDE・CLI agy）がローカルに残す会話ログの所在と形式を説明する。 3 つのルート（~/.gemini/antigravity・antigravity-cli・antigravity-ide）、索引の conversation_summaries.db、本文の brain/<id>/.system_generated/logs/transcript_full.jsonl、 会話ごとの protobuf を収めた conversations/<id>.db を扱う。「Antigravity の過去の会話を探したい」 「トークンを集計したい」「会話履歴の保存先を知りたい」「ログの読み方や SQLite の安全な開き方を知りたい」 ときに使う。Antigravity の一般的な機能の質問には antigravity-docs、CLI の使い方には agy-cli-docs を使う。"
     },
     {
       "path": "skills/plugins/ai-tools-knowledge/skills/antigravity-memory",
@@ -40,6 +57,11 @@
       "path": "skills/plugins/ai-tools-knowledge/skills/cline-docs",
       "name": "cline-docs",
       "description": "Answer questions about Cline using the latest official documentation at docs.cline.bot. Use for Cline IDE/CLI/SDK features, skills, rules, workflows, configuration, API, providers, MCP, plugins, enterprise features, or troubleshooting when current documented behavior matters."
+    },
+    {
+      "path": "skills/plugins/ai-tools-knowledge/skills/cline-logs",
+      "name": "cline-logs",
+      "description": "Cline（VS Code 拡張・Cline CLI）のローカルに残るタスク・セッション履歴の所在と形式を説明する。 SDK セッション形式（~/.cline/data/sessions/<sid>/ の JSON と索引 data/db/sessions.db、CLINE_DATA_DIR で上書き可）と、 レガシーのタスク形式（VS Code globalStorage の saoudrizwan.claude-dev/tasks/<id>/ と旧 CLI の ~/.cline/data/tasks/）の 2 系統について、レコード構造・トークンとコストの位置・プロジェクトとの対応・安全な読み方・読まない秘密ファイルを扱う。 「Cline の過去のタスクを探したい」「Cline のトークン・コストを集計したい」「Cline の履歴の保存先を知りたい」 「ui_messages.json や sessions.db の中身を読みたい」ときに使う。Cline の機能全般は cline-docs を使う。"
     },
     {
       "path": "skills/plugins/ai-tools-knowledge/skills/cline-memory",
@@ -85,6 +107,11 @@
       "path": "skills/plugins/ai-tools-knowledge/skills/codex-hooks",
       "name": "codex-hooks",
       "description": "Use when creating, editing, reviewing, or debugging OpenAI Codex hooks (hooks.json, or inline [hooks] tables in config.toml) — choosing events (PreToolUse, PermissionRequest, PostToolUse, SessionStart, SessionEnd, UserPromptSubmit, Stop, SubagentStart/SubagentStop, PreCompact/PostCompact), writing matcher regexes, command vs mcp_tool handlers, the JSON input/output contract (permissionDecision, decision/reason, continue, additionalContext, hookSpecificOutput), exit codes, async/background hooks, hook trust review via `/hooks`, plugin-bundled hooks, and managed hooks in requirements.toml. Do not use this skill for general config.toml/mcp_servers/sandbox/rules settings beyond hooks (use codex-settings), CLI flags (use codex-cli-docs), general Codex specification questions (use codex-docs), or Claude Code hooks (use writing-hooks — event names and schema differ)."
+    },
+    {
+      "path": "skills/plugins/ai-tools-knowledge/skills/codex-logs",
+      "name": "codex-logs",
+      "description": "OpenAI Codex（CLI・IDE 拡張・app-server）のローカルに残るセッションログ （~/.codex/sessions の rollout-*.jsonl、archived_sessions、history.jsonl、 state_5.sqlite の threads 索引）の所在とレコード形式を説明する。「Codex の過去の セッションを探したい」「Codex のトークン使用量を集計したい」「rollout ファイルの 形式・圧縮（.jsonl.zst）を知りたい」「セッションとプロジェクトを対応付けたい」 ときに使う。Codex の機能全般・設定は対象外（codex-docs を使う）。"
     },
     {
       "path": "skills/plugins/ai-tools-knowledge/skills/codex-memory",
@@ -137,6 +164,11 @@
       "description": "Use when answering questions about Cursor (the AI code editor) — features, settings, Agent mode, Plan mode, rules, skills, subagents, hooks, MCP, cloud agents, models & pricing, integrations, etc. Grounds answers in the latest official docs (cursor.com/docs) instead of training-data memory, which may be stale."
     },
     {
+      "path": "skills/plugins/ai-tools-knowledge/skills/cursor-logs",
+      "name": "cursor-logs",
+      "description": "Cursor（IDE と CLI の cursor-agent/agent）のローカルに残るチャット・エージェント会話ログ （projects/*/agent-transcripts の JSONL、CLI の chats/store.db、IDE の state.vscdb）の 所在・保存系統・レコード構造・プロジェクトとの対応・安全な読み方・秘密情報の扱いを説明する。 「Cursor の過去の会話を探したい」「Cursor のログを集計・解析したい」「Cursor の会話履歴が どこに保存されるか知りたい」「transcript に時刻やモデルが無い理由を知りたい」ときに使う。 ルールやエージェント機能など Cursor の機能全般は対象外（cursor-docs を使う）。"
+    },
+    {
       "path": "skills/plugins/ai-tools-knowledge/skills/cursor-memory",
       "name": "cursor-memory",
       "description": "Guides placement and authoring of Cursor persistent Agent guidance — project rules (.cursor/rules/*.mdc), AGENTS.md, CLAUDE.md, User Rules, and Team Rules. Use when deciding what belongs in each mechanism, writing or editing rule files, configuring alwaysApply/globs/description, setting up nested AGENTS.md, migrating from .cursorrules, or troubleshooting why a rule is not applied. Not for Agent Skills (use cursor-skill-use) or general Cursor features (use cursor-docs)."
@@ -187,6 +219,11 @@
       "description": "Use when answering questions about Kilo Code (kilo.ai) — the open-source AI coding agent available as a VS Code/JetBrains extension and a CLI/TUI, including its modes (Orchestrator/Code/Architect/Debug/Ask), AI providers (BYOK), MCP integration, settings, KiloClaw (cloud agent gateway), pricing/credits, and troubleshooting. Grounds answers in the latest official docs (kilo.ai/docs) instead of training-data memory, which may be stale."
     },
     {
+      "path": "skills/plugins/ai-tools-knowledge/skills/kilo-logs",
+      "name": "kilo-logs",
+      "description": "Kilo Code（CLI/TUI・VS Code 拡張、opencode 由来の v7 系）がローカルに残すセッション履歴（~/.local/share/kilo/kilo.db の session/message/part/project 表）の所在・スキーマ・読み取り時の注意と、読んではいけない秘密情報の表を説明する。「Kilo の過去のセッションを探したい」「Kilo のトークン・コストを集計したい」「kilo.db の中身を知りたい」ときに使う。Kilo の一般的な機能・設定は kilo-code-docs を使う。"
+    },
+    {
       "path": "skills/plugins/ai-tools-knowledge/skills/kilo-memory-guide",
       "name": "kilo-memory-guide",
       "description": "Kilo Code（kilo.ai、CLI/TUI/VS Code拡張）のAIコンテキスト・指示を設計・整理するための実践スキル。AGENTS.md、Custom Instructions/Rules、エージェント固有prompt、コンテキスト制御、設定の優先順位や適用範囲を選ぶときに使う。"
@@ -210,6 +247,28 @@
       "path": "skills/plugins/ai-tools-knowledge/skills/writing-copilot-instructions",
       "name": "writing-copilot-instructions",
       "description": "Use when creating, editing, reviewing, or troubleshooting GitHub Copilot instruction files, including `.github/copilot-instructions.md`, `.github/instructions/**/*.instructions.md`, and `AGENTS.md`, for VS Code, GitHub.com cloud agent, Copilot code review, or Copilot CLI. Covers host and scope selection, Markdown/frontmatter, path globs, concise repository guidance, and verification. Do not use for `.prompt.md` prompt files or Agent Skills unless the task is specifically about choosing between those mechanisms."
+    }
+  ],
+  "skills/plugins/browser": [
+    {
+      "path": "skills/plugins/browser/skills/authoring-playwright-agents",
+      "name": "authoring-playwright-agents",
+      "description": "Authors and reviews Playwright-specialised agent definitions, grounded in a local snapshot of microsoft/playwright. Use when writing or reviewing an `*.agent.md`, a `.claude/agents/*.md`, or a prompt that drives Playwright; when asked about `npx playwright init-agents`, the official planner / generator / healer agents, or the `playwright-test` MCP tools (`planner_*`, `generator_*`, `test_*`, `browser_*`)."
+    },
+    {
+      "path": "skills/plugins/browser/skills/searching-playwright-docs",
+      "name": "searching-playwright-docs",
+      "description": "Searches Playwright's official documentation sources (docs/src/**/*.md — the source of truth for the public API and every playwright.dev guide) from a local snapshot, instead of answering from memory. Use when asked what a Playwright API method/option/event does or when it was added, how to do something in Playwright (auth, fixtures, locators, network mocking, tracing, CI, reporters, emulation, components …), which languages support a feature, or to quote/cite the official docs; also when writing Playwright code or skills that must match the documented API."
+    },
+    {
+      "path": "skills/plugins/browser/skills/sharing-browser-with-user",
+      "name": "sharing-browser-with-user",
+      "description": "Opens a real, visible (headed) browser that the agent drives while the USER performs the login themselves in that same window — for sites behind a sign-in, MFA, SSO, CAPTCHA or a consent screen. The session is kept in a persistent profile so the login survives across runs and across sessions. Use when a task needs a logged-in site, when the user says \"I'll log in myself\" / \"use my account\" / \"don't touch my password\", when a previously working automation starts hitting a login wall, or when asked to watch what the browser is doing. For browser work that needs no sign-in, use using-playwright-cli instead."
+    },
+    {
+      "path": "skills/plugins/browser/skills/using-playwright-cli",
+      "name": "using-playwright-cli",
+      "description": "Drives a browser from the shell with `playwright-cli` (`npx playwright cli`), grounded in a local snapshot of the skill microsoft/playwright itself ships. Use when asked to open / navigate / click / fill / snapshot a page, take screenshots or PDFs, mock requests, record a trace or video, manage browser sessions, cookies or storage state, or run and debug Playwright tests from the command line; when first exploring an unfamiliar site (robots.txt / sitemap recon before opening a browser); when turning a browser procedure into a script; also when asked what `playwright-cli install --skills` installs."
     }
   ],
   "skills/plugins/cc-knowledge": [
@@ -251,7 +310,7 @@
     {
       "path": "skills/plugins/cc-knowledge/skills/claude-logs-investigate",
       "name": "claude-logs-investigate",
-      "description": "Claude Code自体(CLIツール)の動作ログ・デバッグ情報・テレメトリを調査する、または新たに記録する仕組みを仕込む際に使う。セッショントランスクリプトやシェルスナップショットなど既存ログの場所と見方に加え、デバッグフラグ・スラッシュコマンドでの原因切り分け、hookを使った独自ログの仕込み、OpenTelemetryによるテレメトリ送信設定までを扱う。「Claude Codeのログを見たい/調べたい」「なぜ設定やhook、MCPが効かないか調査したい」「ツール呼び出し履歴を記録したい」「テレメトリ/OTelを設定したい」といった要求で使う。"
+      "description": "Claude Code自体(CLIツール)の動作ログ・デバッグ情報・テレメトリを調査する、または新たに記録する仕組みを仕込む際に使う。セッショントランスクリプトやシェルスナップショットなど既存ログの場所と見方（ローカルログのファイル形式を含む）に加え、デバッグフラグ・スラッシュコマンドでの原因切り分け、hookを使った独自ログの仕込み、OpenTelemetryによるテレメトリ送信設定までを扱う。「Claude Codeのログを見たい/調べたい」「なぜ設定やhook、MCPが効かないか調査したい」「ツール呼び出し履歴を記録したい」「テレメトリ/OTelを設定したい」といった要求で使う。"
     },
     {
       "path": "skills/plugins/cc-knowledge/skills/claude-mechanisms",
@@ -338,6 +397,11 @@
       "description": "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements, and design before implementation, and ends after writing the approved spec."
     },
     {
+      "path": "skills/plugins/coding/skills/gh-pr",
+      "name": "gh-pr",
+      "description": "gh で現在のブランチのPRを作成・状態確認・マージし、GitHub Actions の run の一覧・詳細取得・手動実行・追跡を行う。Actions の失敗原因の調査は cicd プラグインの diagnosing-actions を使う。"
+    },
+    {
       "path": "skills/plugins/coding/skills/merge-proposal",
       "name": "merge-proposal",
       "description": "現在のブランチに別ブランチを取り込む(マージする)前に、git merge-tree で作業ツリーを触らずにマージを試算し、(1)コンフリクト解消案、(2)取り込み内容のレビューと修正案、(3)取り込みを受けて現在のブランチが行うべき追従修正、の3つの提案ファイルを出力する。どれを行うかはユーザーが絞れる(例としてコンフリクト解消案だけ)。提案までで止まり、実際のmerge/rebase・コンフリクト解消の適用・コミットなど、その後のマージ作業は扱わない。「mainを取り込む前にコンフリクトを確認して」「developをマージしたら何が起きるか見て」「mainの変更を取り込む提案を出して」「コンフリクト解消案だけ出して」のような依頼に使う。"
@@ -346,11 +410,6 @@
       "path": "skills/plugins/coding/skills/okf-spec",
       "name": "okf-spec",
       "description": "Use when finding, reading, authoring, or answering questions about Open Knowledge Format (OKF) bundles or concept documents — a markdown+YAML-frontmatter convention (GoogleCloudPlatform/knowledge-catalog) for knowledge that AI agents write and consume. Grounds answers in a periodically re-fetched snapshot of the official spec instead of training-data memory, which may be stale or predate v0.2's provenance/trust/lifecycle/attestation fields."
-    },
-    {
-      "path": "skills/plugins/coding/skills/pr-check",
-      "name": "pr-check",
-      "description": "PRの作成・状態確認・レビュー依頼・GitHub Actions操作を行う"
     },
     {
       "path": "skills/plugins/coding/skills/proposing-flow",
@@ -465,16 +524,6 @@
       "description": "Use when answering questions about LiteLLM SDK or LiteLLM Proxy/Gateway documentation — routing and load balancing, providers and model configuration, authentication, budgets, guardrails, observability, pass-through endpoints, or API usage. Grounds answers in current official pages under docs.litellm.ai/docs instead of training-data memory, which may be stale."
     },
     {
-      "path": "skills/plugins/topics/skills/ona-cli-docs",
-      "name": "ona-cli-docs",
-      "description": "Use when constructing or explaining raw Ona official CLI (`ona` command) invocations -- e.g. `ona-run`'s `--command` needs a hand-built `ona environment exec`/`ona environment ssh` line, or a question is about `ona login`/personal access tokens, environment/automation subcommands, or CLI configuration. Grounds answers in a curated excerpt of ona.com's official docs (via the ona-docs skill's cached llms.txt) instead of training-data memory, which may be stale or reference the pre-rename \"Gitpod\" CLI."
-    },
-    {
-      "path": "skills/plugins/topics/skills/ona-docs",
-      "name": "ona-docs",
-      "description": "Use when answering questions about Ona (ona.com, formerly Gitpod) — the platform for background agents (autonomous AI software engineers that plan, code, test, and open PRs in isolated cloud environments), Automations (trigger-based workflows), Ona environments/Dev Containers, Veto (kernel-level agent security), multi-SCM support (GitHub/GitLab/Bitbucket/Azure DevOps), IDE integrations, the REST API, or company info (leadership, customers, pricing, comparisons to other coding-agent platforms). Grounds answers in the latest official content from ona.com and ona.com/docs instead of training-data memory, which may be stale or still reference \"Gitpod\"."
-    },
-    {
       "path": "skills/plugins/topics/skills/openrouter-docs",
       "name": "openrouter-docs",
       "description": "Use when answering questions about OpenRouter (openrouter.ai) — the unified API for routing requests across many LLM providers/models, its Agent SDK, Client SDKs (TypeScript/Python/Go), REST API reference, model routing/variants (:nitro, :online, :thinking, etc.), plugins, guardrails, presets, workspaces, pricing/BYOK, or integrating OpenRouter with coding agents (Claude Code, Cursor, Codex CLI, etc.). Grounds answers in the latest official docs (openrouter.ai/docs) instead of training-data memory, which may be stale."
@@ -504,7 +553,7 @@
     {
       "path": "skills/plugins/web-lookup/skills/web-lookup",
       "name": "web-lookup",
-      "description": "Looks up current web information via a bundled CLI covering grep.app (real GitHub code), Microsoft Learn (official Microsoft/Azure docs), AWS Knowledge MCP (official AWS docs, Blog, re:Post), Tavily (general web), and Context7 (library APIs). Use when you need Microsoft/Azure or AWS official docs, current library/framework API references, real-world public GitHub code examples, or general web research, and the plugin must run without installing tools/ CLIs."
+      "description": "Looks up current web information via a bundled CLI covering grep.app (real GitHub code), Microsoft Learn (official Microsoft/Azure docs), AWS Knowledge MCP (official AWS docs, Blog, re:Post), local page fetch with main-content extraction (known URLs), Tavily (general web search), and Context7 (library APIs). Use when you need Microsoft/Azure or AWS official docs, current library/framework API references, real-world public GitHub code examples, the full text of a known web page, or general web research, and the plugin must run without installing tools/ CLIs."
     }
   ],
   "tools/_plugin/my-tools": [
@@ -512,11 +561,6 @@
       "path": "tools/_plugin/my-tools/skills/aim-cli",
       "name": "aim-cli",
       "description": "OpenRouter経由でAIモデルを単発呼び出しする`aim` CLIツールの使い方を説明する。プロンプトをAIモデルに投げて応答を得たい、プロンプト内の`@path`でファイルやディレクトリの内容を取り込みたい、複数ファイルやスキルフォルダへ同じ質問（要約・バグ指摘など）を`--parallel`で一括したい、利用可能なモデル一覧を確認したい、タスクの難易度に応じてどのモデルを使うか選定したい場合に使う。"
-    },
-    {
-      "path": "tools/_plugin/my-tools/skills/aim-lib",
-      "name": "aim-lib",
-      "description": "`tools/aim` のグローバルインストール済み Python 実装をライブラリとして使い、OpenRouter 経由で AI モデルへ単発リクエストを送る方法を説明する。Python コードからプロンプトを送信したい、モデル略記を解決したい、応答本文を取り出したい場合に使う。CLI コマンドを実行する場合は `aim-cli` を使う。"
     },
     {
       "path": "tools/_plugin/my-tools/skills/aim2-cli",
@@ -527,6 +571,11 @@
       "path": "tools/_plugin/my-tools/skills/aws-docs",
       "name": "aws-docs",
       "description": "Search and fetch official AWS documentation (docs.aws.amazon.com, AWS Blog, What's New, re:Post Knowledge Center, CDK/CloudFormation references) and check regional availability via the self-built `awsdocs` CLI, a fastmcp wrapper around the official AWS Knowledge MCP Server (https://knowledge-mcp.global.api.aws). Use when you need AWS service docs, API/SDK/CLI references, troubleshooting articles, recent AWS launches, or whether a service/API/CFN resource is available in a region. Do not use for general web research (use `tav-cli`), Microsoft/Azure docs (use `ms-learn`), or running AWS APIs."
+    },
+    {
+      "path": "tools/_plugin/my-tools/skills/browser-context-tools",
+      "name": "browser-context-tools",
+      "description": "Keeps browser work with `playwright-cli` from flooding the conversation by using the `pwq` wrapper (summarises / filters `snapshot` and `eval` output, 3–30% of the raw size) and the `pwdo` delegator (hands one stretch of browser steps to a cheap model and returns a short report plus a recovered script). Use when exploring an unfamiliar or large page and the raw snapshot would be big, when a browser stretch would take three or more snapshots and could be delegated, or when a `pwdo` run came back blocked by a login wall. Requires `pwq` / `pwdo` on PATH; without them use the using-playwright-cli skill alone."
     },
     {
       "path": "tools/_plugin/my-tools/skills/gdev-docs",
@@ -554,24 +603,14 @@
       "description": "未着手issue検索・issue作成・ステータス更新（担当者割当込み）・ラベル絞り込み/付与/更新・コメント追加/一覧取得/削除・issue詳細取得の各操作を提供する`linear-cli` CLIツールの使い方を説明する。Linear上のissueをタスクキューとして検索・claim・完了報告したい場合、トラッキング用issueの存在確認・作成・コメントによる占有状況管理をしたい場合、およびラベルでの絞り込み・issue descriptionの詳細取得をしたい場合に使う。issueの削除・複数team横断の一括操作は対象外。"
     },
     {
-      "path": "tools/_plugin/my-tools/skills/ms-digest",
-      "name": "ms-digest",
-      "description": "Microsoft Learn/Azure公式ドキュメントを`mslearn`で検索した結果ファイルのうち、自分で1件ずつ読む代わりに`aim --parallel`で並列にAI抽出させたいものをまとめて処理し、関連する内容だけを報告させるCLI連携スキル。(a) 結果件数が多くタイトルだけでは関連性を判断しづらい場合(目安5件以上)に全件を渡して関連するものだけ絞り込ませたいとき、(b) `index.md`から読みたいファイルを選んだ後、その中に文字数が大きいファイルが複数あり個別Readせずまとめて抽出させたいとき、のいずれかで使う。1ファイルだけを抽出したい場合は`aim-cli`を直接使えばよい。"
-    },
-    {
       "path": "tools/_plugin/my-tools/skills/ms-learn",
       "name": "ms-learn",
-      "description": "Search and fetch official Microsoft/Azure documentation (and code samples) via a self-built fastmcp CLI wrapper around the official Microsoft Learn MCP server (https://learn.microsoft.com/api/mcp). Use when you need Microsoft/Azure/.NET/M365 docs, API references, or official code samples — semantic search, full-page fetch, or code-sample lookup by language."
+      "description": "Search and fetch official Microsoft/Azure documentation (and code samples) via a self-built fastmcp CLI wrapper around the official Microsoft Learn MCP server (https://learn.microsoft.com/api/mcp), and extract relevant parts from many result files in parallel via `aim --parallel`. Use when you need Microsoft/Azure/.NET/M365 docs, API references, or official code samples — semantic search, full-page fetch, or code-sample lookup by language."
     },
     {
       "path": "tools/_plugin/my-tools/skills/my-agents",
       "name": "my-agents",
       "description": "YAML定義のLangchainエージェントを実行・一覧表示・新規作成する `my-agents` CLIの使い方を説明する。カスタムエージェントにプロンプトを投げて答えさせたい、既存のエージェント設定YAMLを確認したい、使えるツールを確認した上で新しいエージェント設定YAMLを作りたい場合に使う。"
-    },
-    {
-      "path": "tools/_plugin/my-tools/skills/ona-run",
-      "name": "ona-run",
-      "description": "リポジトリURL（またはOnaプロジェクトID）とタスク内容を指定してOnaの環境（コンテナ）を作成・起動し、その中でAIエージェントCLI等のタスクを実行して完了後に停止する`ona-run` CLIツールの使い方を説明する。`--agent`/`--command`の選び方、`--cleanup`モードの選び方、終了コード・stderrマーカーの意味を判断したい場合に使う。"
     },
     {
       "path": "tools/_plugin/my-tools/skills/parallel-agent-worktree",
@@ -591,22 +630,12 @@
     {
       "path": "tools/_plugin/my-tools/skills/tav-cli",
       "name": "tav-cli",
-      "description": "Guides multi-step Tavily research with this project's `tav` command, including web-wide search, multiple URLs, site maps/crawls, and topic-based result accumulation. Use when a task needs more than one known URL or a reusable research workspace; use `tav-lit` to extract one already-known URL."
-    },
-    {
-      "path": "tools/_plugin/my-tools/skills/tav-digest",
-      "name": "tav-digest",
-      "description": "tav`で`--topic`指定して収集した`pages/`(extract/crawl/search-extract/map-extractの取得本文)のうち、自分で1件ずつ読む代わりに`aim --parallel`で並列にAI抽出させたいものをまとめて処理し、関連する内容だけを報告させるCLI連携スキル。(a) `pages/index.json`のエントリ数が多くタイトルだけでは関連性を判断しづらい場合(目安5件以上)に全件を渡して関連するものだけ絞り込ませたいとき、(b) `index.json`から読みたいファイルを選んだ後、その中に`char_count`が大きいファイルが複数あり個別Readせずまとめて抽出させたいとき、のいずれかで使う。1ファイルだけを抽出したい場合は`aim-cli`を直接使えばよい。discovery(`search/`・`map/`)やreport(`research/`)はこのスキルの対象外(集約1ファイル、または成功時のみの単一レポートなのでそのまま読めば足りる)。"
-    },
-    {
-      "path": "tools/_plugin/my-tools/skills/tav-lib",
-      "name": "tav-lib",
-      "description": "`tools/tav-cli` のグローバルインストール済み Python 実装をライブラリとして使い、Tavily 経由で Web 検索・URL 本文抽出・サイトマップ・クロール・リサーチを行う方法を説明する。Python コードから Tavily API を呼び出したい、`--detail` プリセットを適用した結果を取り出したい場合に使う。CLI コマンドを実行する場合は `tav-cli` を使う。"
+      "description": "Guides multi-step Tavily research with this project's `tav` command, including web-wide search, multiple URLs, site maps/crawls, topic-based result accumulation, and parallel AI extraction of many collected pages via `aim --parallel`. Use when a task needs more than one known URL or a reusable research workspace; use `tav-lit` to extract one already-known URL."
     },
     {
       "path": "tools/_plugin/my-tools/skills/textgraph",
       "name": "textgraph",
-      "description": "Explains when to use the `textgraph` CLI for local file-link graphs in text files. Use when deciding among status, impact, and check, when editing Markdown or SKILL.md and needing inbound references, when choosing whether `fix --apply` is safe, when choosing `check --scripts` for script-comment links, or when falling back to grep for YAML or imports."
+      "description": "Explains when to use the `textgraph` CLI for local file-link graphs in text files. Use when deciding among status, impact, and check, when editing Markdown or SKILL.md and needing inbound references, when moving files and comparing link breakage before and after with `check --baseline`, when choosing whether `fix --apply` is safe, when choosing `check --scripts` for script-comment links, or when falling back to grep for YAML or imports."
     },
     {
       "path": "tools/_plugin/my-tools/skills/use-context",

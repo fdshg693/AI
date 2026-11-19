@@ -4,22 +4,27 @@ AIコーディングツールの設定・ツールに関する個人の調査・
 
 ## 取得
 
-`skills/`・`tools/`・`agent-compat/`・`site/`・`workflow/` はサブモジュール（[AI-skills](https://github.com/fdshg693/AI-skills)・[AI-tools](https://github.com/fdshg693/AI-tools)・[AI-agent-compat](https://github.com/fdshg693/AI-agent-compat)・[AI-site](https://github.com/fdshg693/AI-site)・[AI-workflow](https://github.com/fdshg693/AI-workflow)）。サブモジュールごと clone する。
+`skills/`・`tools/`・`agent-compat/`・`site/`・`workflow/`・`infra/`・`templates/`・`mcps/` はサブモジュール（[AI-skills](https://github.com/fdshg693/AI-skills)・[AI-tools](https://github.com/fdshg693/AI-tools)・[AI-agent-compat](https://github.com/fdshg693/AI-agent-compat)・[AI-site](https://github.com/fdshg693/AI-site)・[AI-workflow](https://github.com/fdshg693/AI-workflow)・[AI-infra](https://github.com/fdshg693/AI-infra)・[AI-templates](https://github.com/fdshg693/AI-templates)・[AI-mcps](https://github.com/fdshg693/AI-mcps)）。サブモジュールごと clone する。
 
 ```sh
 git clone --recurse-submodules https://github.com/fdshg693/AI.git
 cd AI
 lefthook install && just sub-hooks-install
 just links-sync
+just branch-work <端末ごとの作業ブランチ名> && just branch-switch --create
 just agent-compat-sync
+cp .claude/skill-tools.hooks.example.yaml .claude/skill-tools.hooks.yaml  # 必要なら hooks.install を編集
 just hooks-install && just sub-agent-hooks-install
+cp skill-tools.example.yaml skill-tools.yaml && skill-tools sync-skills  # 任意。skill-tools CLI が必要
 ```
 
 - `lefthook install`／`just sub-hooks-install` — アンブレラと各サブモジュールに Git hooks を入れる
 - `just links-sync` — `.links.yaml` で宣言した Junction を作る（[repo-layout](maintenance/docs/repo-layout.md)）
+- `just branch-work <name> && just branch-switch --create` — この端末の作業ブランチ名（`windows` など）を git config に記録し、全リポジトリをそのブランチにする（[branch-and-pr-workflow](maintenance/docs/branch-and-pr-workflow.md#作業ブランチ名を設定する)）
 - `just agent-compat-sync` — Cline・Kilo Code・Antigravity 向けのスキルのコピーを作る
-- `just hooks-install`／`just sub-agent-hooks-install` — エージェントフックをアンブレラと各サブモジュールに入れる（[hook-distribution](maintenance/docs/hook-distribution.md)）
-- ローカル設定は example だけをコミットしている。必要に応じて `.codex/config.example.toml` → `.codex/config.toml`、`.mcp.json.example` → `.mcp.json`、`tools/aim2/models.json.example` → `tools/aim2/models.json` をコピーする（pull で実体が消えたときも同じ）
+- `cp .claude/skill-tools.hooks.example.yaml ...`／`just hooks-install`／`just sub-agent-hooks-install` — エージェントフックをアンブレラと各サブモジュールに入れる。入れるフックは gitignore したローカルの設定（`hooks.install`）で選び、git にはサンプルだけがある。サブモジュールはそれぞれの `.claude/` で同じようにコピーしたものだけが対象（[hook-distribution](maintenance/docs/hook-distribution.md)）
+- `cp skill-tools.example.yaml skill-tools.yaml && skill-tools sync-skills` — このリポジトリの作業で使うスキル（一覧は `install_skills`）を `.claude/skills/` に入れる（gitignore 済み）。`skill-tools` CLI（[tools/skill-tools](tools/skill-tools/README.md)）が必要
+- ローカル設定は example だけをコミットしている。必要に応じて `.codex/config.example.toml` → `.codex/config.toml`、`.mcp.json.example` → `.mcp.json`、`tools/llm/aim2/models.json.example` → `tools/llm/aim2/models.json` をコピーする（pull で実体が消えたときも同じ）
 
 pull のあとは `just sub-init`。サブモジュールの中でコミットしてからアンブレラでポインタを更新する 2 段階の手順は [repo-layout](maintenance/docs/repo-layout.md#サブモジュール) を参照。
 
@@ -34,17 +39,18 @@ pull のあとは `just sub-init`。サブモジュールの中でコミット�
 ### AIツールごとの設定・プラグインルート
 
 各 AI コーディングツール向けの設定フォルダとプラグイン実体フォルダの対応。  
-スキルの実体は Claude Code プラグイン（`skills/plugins/`・`tools/_plugin/`）に 1 か所だけ置く。他ツールのフォルダにあるのはマーケットプレイス定義か、`just agent-compat-sync` で作る gitignore 済みのコピー。
+スキルの実体は Claude Code プラグイン（`skills/plugins/`・`tools/_plugin/`・`agent-compat/_plugin/`）に 1 か所だけ置く。他ツールのフォルダにあるのはマーケットプレイス定義か、`just agent-compat-sync` で作る gitignore 済みのコピー。
 
 - **Claude Code**
   - [.claude/](.claude/) — このリポジトリ自体を Claude Code で開発するための設定（rules, workflows 等。hooks/ は skill-tools による自己インストール先）
   - [skills/plugins/](skills/plugins/) — Claude Code 用プラグイン本体
   - [tools/_plugin/](tools/_plugin/) — tools/ の CLI に付属する Claude Code プラグイン（`my-tools`。CLI 前提の使い方スキル）
+  - [agent-compat/_plugin/](agent-compat/_plugin/) — agent-compat/ の CLI に付属する Claude Code プラグイン（`agent-compat-tools`。`agent-logs` などの使い方スキル）
   - [.claude-plugin/](.claude-plugin/) — 上記プラグイン群をまとめるマーケットプレイス定義（`marketplace.json`）と skill カタログ（`skill-catalog.json`）
 
 - **Cline**
   - [.cline/](.cline/) — Cline 用設定。`.cline/skills/` は `skills/plugins/ai-tools-knowledge` から `just agent-compat-sync` で作る gitignore 済みのコピー（手編集しない）
-  - [.clinerules/](.clinerules/) — Cline が読むルールファイルの出力先。`AGENTS.md` から `tools/agents-rules` CLI（`agents-rules -t cline`）で生成する。未生成なら存在しない。手編集しない
+  - `.clinerules/` — Cline が読むルールファイルの出力先。`AGENTS.md` から `tools/coding-agent/agents-rules` CLI（`agents-rules -t cline`）で生成する。未生成なら存在しない。手編集しない
 
 - **Kilo Code**
   - [.kilo/](.kilo/) — Kilo Code（CLI/TUI/VS Code拡張）の設定。`.kilo/skills/` は `skills/plugins/ai-tools-knowledge` から `just agent-compat-sync` で作る gitignore 済みのコピー。`.kilo/plugin/` は agent-tooling のフック配置先
@@ -60,21 +66,24 @@ pull のあとは `just sub-init`。サブモジュールの中でコミット�
 
 - **Antigravity**
   - [_agents/](_agents/) — Antigravity のワークスペースプラグイン置き場（`_agents/plugins/`）。`antigravity-meta` は `skills/plugins/ai-tools-knowledge` から `just agent-compat-sync` で作る gitignore 済みのコピー。`.agents/` と使い分ける（`_agents/README.md` 参照）
-  - [.agents/rules/](.agents/rules/) — Antigravity が読むワークスペース Rules。`AGENTS.md` から `tools/agents-rules` CLI で生成する（`.agents/README.md` 参照）。手編集しない
+  - `.agents/rules/` — Antigravity が読むワークスペース Rules。`AGENTS.md` から `tools/coding-agent/agents-rules` CLI で生成する（`.agents/README.md` 参照）。手編集しない
 
 <!-- END: ai-tools-section -->
 
 ### サブモジュール
 
-次の 5 つは別リポジトリで、アンブレラはコミットのポインタだけを持つ。中のファイルを変えたら、サブモジュールの中でコミットしてからアンブレラでポインタを更新する（[repo-layout の「サブモジュール」](maintenance/docs/repo-layout.md#サブモジュール)）。サブモジュールのフォルダだけを開いても作業できるが、生成・検査・ワークスペースはアンブレラにあるので、アンブレラから clone して使う。
+次の 8 つは別リポジトリで、アンブレラはコミットのポインタだけを持つ。中のファイルを変えたら、サブモジュールの中でコミットしてからアンブレラでポインタを更新する（[repo-layout の「サブモジュール」](maintenance/docs/repo-layout.md#サブモジュール)）。サブモジュールのフォルダだけを開いても作業できるが、生成・検査・ワークスペースはアンブレラにあるので、アンブレラから clone して使う。
 
 - [skills/](skills/)（[AI-skills](https://github.com/fdshg693/AI-skills)） — tools に依存しない Claude Code 用プラグイン群（`skills/plugins/<name>`）。他の AI ツールについての知識スキルも Claude Code スキルとして [skills/plugins/ai-tools-knowledge/](skills/plugins/ai-tools-knowledge/) に置く
 - [tools/](tools/)（[AI-tools](https://github.com/fdshg693/AI-tools)） — CLI 群（1 ツール 1 ディレクトリ）と、それらを前提にした使い方スキルのプラグイン [tools/\_plugin/my-tools/](tools/_plugin/my-tools/)。役割ごとの索引は [tools/README.md](tools/README.md)
-- [agent-compat/](agent-compat/)（[AI-agent-compat](https://github.com/fdshg693/AI-agent-compat)） — Claude Code 以外の AI ツールで使うための仕組み。フックとコンテキスト注入の [agent-tooling/](agent-compat/agent-tooling/)、ツール固有書式のサンプル [formats/](agent-compat/formats/)、Claude Code との書き方の相違点 [docs/differences/](agent-compat/docs/differences/index.md)
+- [agent-compat/](agent-compat/)（[AI-agent-compat](https://github.com/fdshg693/AI-agent-compat)） — Claude Code 以外の AI ツールで使うための仕組み。フックとコンテキスト注入の [agent-tooling/](agent-compat/hooks/agent-tooling/)、ツール固有書式のサンプル [formats/](agent-compat/formats/)、Claude Code との書き方の相違点 [docs/differences/](agent-compat/docs/differences/index.md)
 - [site/](site/)（[AI-site](https://github.com/fdshg693/AI-site)） — 公開サイト
   - [site/skills-site/](site/skills-site/) — 登録済みのスキルを横断収集する Astro の静的サイト（Azure Static Web Apps）。公開するのはスキルの本文・メタデータ・配布 ZIP だけ。手順は [site/skills-site/AGENTS.md](site/skills-site/AGENTS.md)
   - [site/tools-site/](site/tools-site/) — [repo-tools.yaml](registry/repo-tools.yaml) の `release: true` ツールのインストール/使い方をまとめた VitePress サイト（GitHub Pages）。[site/tools-site/README.md](site/tools-site/README.md)
 - [workflow/](workflow/)（[AI-workflow](https://github.com/fdshg693/AI-workflow)） — 単なる CLI 利用を超えた、手元でカスタマイズして使うワークフロー。AI コーディングツールの CLI ラッパー（`claude-wrapper` 等）、ISSUE 駆動の Docker サンドボックス [workflow/sandbox/](workflow/sandbox/)、定期実行の [workflow/schedule/](workflow/schedule/)。`repo-tools.yaml` には載せない。[workflow/README.md](workflow/README.md)
+- [infra/](infra/)（[AI-infra](https://github.com/fdshg693/AI-infra)） — ツールではないインフラの定義と運用スクリプト。AI コーディングツールの OpenTelemetry ログ基盤 [infra/ai-logs/](infra/ai-logs/README.md)。公開サイトの Bicep は [site/skills-site/infra/](site/skills-site/infra/) にあり別物。[infra/README.md](infra/README.md)
+- [templates/](templates/)（[AI-templates](https://github.com/fdshg693/AI-templates)） — AI エージェントと一緒に使うリポジトリ運用のテンプレート集。コピーして使うテンプレート本体 [templates/core/](templates/core/)（プラン運用・ADR・知識ボールト等と、それぞれの lint）と、導入後の状態を示す架空リポジトリ [templates/starter/](templates/starter/)。マーケットプレイス・`ai-tools.yaml` には載せない。[templates/README.md](templates/README.md)
+- [mcps/](mcps/)（[AI-mcps](https://github.com/fdshg693/AI-mcps)） — [FastMCP](https://gofastmcp.com) で作った MCP サーバー。外国語学習の [mcps/dynamic_prompt/](mcps/dynamic_prompt/)（Cloud Run へのデプロイ定義を同梱）とメモ管理の [mcps/memo/](mcps/memo/)。各サーバーはアンブレラの uv workspace のメンバー。マーケットプレイス・`ai-tools.yaml` には載せない。[mcps/README.md](mcps/README.md)
 
 ### リポジトリ運用（アンブレラ本体）
 
@@ -97,12 +106,11 @@ pull のあとは `just sub-init`。サブモジュールの中でコミット�
 
 ## その他
 
-- 2026-11 の再編でプラグインの置き場所と一部のプラグイン名（`meta` → `cc-knowledge`、`my-tools-no-install` → `web-lookup`／`doc-tools` ほか）が変わった。インストール済みの利用者向けの対応表は [docs/integrations/claude-code.md](docs/integrations/claude-code.md) にある。
-- `.gitmodules` — 上記 5 つのサブモジュールの宣言。`just sub-init`／`sub-sync`／`sub-status` で扱う。全リポジトリで同じ名前の作業ブランチを作る・切り替える・push・削除するのは `just branch-*`（[repo-layout](maintenance/docs/repo-layout.md#作業ブランチアンブレラとサブモジュールで揃える)）。
+- `.gitmodules` — 上記 8 つのサブモジュールの宣言。`just sub-init`／`sub-sync`／`sub-status` で扱う。全リポジトリで同じ名前の作業ブランチを作る・切り替える・push・削除するのは `just branch-*`（[repo-layout](maintenance/docs/repo-layout.md#作業ブランチアンブレラとサブモジュールで揃える)）。
 - `.links.yaml` / `.umbrella-root` — Junction の宣言（各リポジトリのルートに置き、`just links-sync` で作る。Junction 自体はコミットしない）と、アンブレラのルートの目印。詳細は [repo-layout](maintenance/docs/repo-layout.md)。
 - `lefthook.yml` — コミット時などに走る Git hooks の設定（`pre-commit` での各種再生成・整形・secretlint、`commit-msg` での commitlint）。サブモジュール側は `maintenance/lefthook/submodule.yml`。
 - `mise.toml` — [mise](https://mise.jdx.dev/) によるツールバージョン管理（node / pnpm / terraform / uv をこのリポジトリ用にpin）。
-- `pyproject.toml` — uv workspace のルート定義（`tools/aim` 等、Python パッケージ群をまとめて管理）。
+- `pyproject.toml` — uv workspace のルート定義（`tools/llm/aim` 等、Python パッケージ群をまとめて管理）。
 - `pnpm-workspace.yaml` / `package.json` / `pnpm-lock.yaml` — pnpm workspace のルート定義（`site/skills-site`, `workflow/cline-wrapper`, `workflow/copilot-wrapper`）とロックファイル。
 - `.prettierrc.json` / `.prettierignore` — フォーマット設定。
 - `commitlint.config.js` — コミットメッセージのlint設定（[Conventional Commits](https://www.conventionalcommits.org/)、`@commitlint/config-conventional`）。

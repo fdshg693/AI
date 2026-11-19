@@ -6,5 +6,6 @@
 - [plugin/](plugin/README.md) — このリポジトリ専用の保守スキルを含むプラグイン
 - [scripts/](scripts/) — カタログ生成、検査、Junction 管理などの保守スクリプト
 - [lefthook/](lefthook/) — サブモジュール向け Git hook 設定
+- [skill-risk/](skill-risk/) — スキルの危うさランキングの手編集入力（変化しやすさの規則 `volatility.yaml`、ドッグフーディング台帳 `dogfood.yaml`）
 
 配置と所有範囲の詳細は [repo-layout](docs/repo-layout.md) を参照。

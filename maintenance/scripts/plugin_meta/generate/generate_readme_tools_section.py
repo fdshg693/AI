@@ -29,7 +29,7 @@ DISPLAY_NAMES = {
 
 SECTION_INTRO = (
     "各 AI コーディングツール向けの設定フォルダとプラグイン実体フォルダの対応。  \n"
-    "スキルの実体は Claude Code プラグイン（`skills/plugins/`・`tools/_plugin/`）に 1 か所だけ置く。"
+    "スキルの実体は Claude Code プラグイン（`skills/plugins/`・`tools/_plugin/`・`agent-compat/_plugin/`）に 1 か所だけ置く。"
     "他ツールのフォルダにあるのはマーケットプレイス定義か、`just agent-compat-sync` で作る gitignore 済みのコピー。"
 )
 
@@ -39,7 +39,13 @@ def build_tool_block(tool_key: str, tool: dict[str, Any]) -> list[str]:
     for entries in tool["readme"].values():
         for entry in entries:
             path = entry["path"]
-            lines.append(f"  - [{path}/]({path}/) — {entry['description']}")
+            link = entry.get("link", True)
+            if not isinstance(link, bool):
+                sys.exit(
+                    f"ai-tools.yaml: {tool_key} readme entry {path!r}: link must be a bool, got {link!r}"
+                )
+            label = f"[{path}/]({path}/)" if link else f"`{path}/`"
+            lines.append(f"  - {label} — {entry['description']}")
     return lines
 
 

@@ -10,21 +10,21 @@ repo_url := "https://github.com/fdshg693/AI-tools.git"
 default:
     @just --list
 
-# Install aim CLI (tools/aim) as an editable global tool via uv, from a local clone. See tools/aim/README.md for API key setup.
+# Install aim CLI (tools/llm/aim) as an editable global tool via uv, from a local clone. See tools/llm/aim/README.md for API key setup.
 aim-local:
-    uv tool install --reinstall --editable ../../tools/aim
+    uv tool install --reinstall --editable ../../tools/llm/aim
 
 # Install aim CLI directly from GitHub, no local clone required. Not editable: re-run this to pick up updates.
 aim-git:
-    uv tool install "git+{{repo_url}}#subdirectory=aim"
+    uv tool install "git+{{repo_url}}#subdirectory=llm/aim"
 
 # Install the tav-cli wrappers as the `tav` CLI, editable, via uv, from a local clone. See docs/integrations/cli-tools.md.
 tavily-local:
-    uv tool install --editable ../../tools/tav-cli
+    uv tool install --editable ../../tools/web-research/tav-cli
 
 # Install the tav-cli wrappers directly from GitHub, no local clone required. Not editable: re-run this to pick up updates.
 tavily-git:
-    uv tool install "git+{{repo_url}}#subdirectory=tav-cli"
+    uv tool install "git+{{repo_url}}#subdirectory=web-research/tav-cli"
 
 # Install skill-tools from a local clone as an editable global CLI.
 skill-tools-local:
@@ -34,10 +34,6 @@ skill-tools-local:
 skill-tools-git:
     uv tool install --force "git+{{repo_url}}#subdirectory=skill-tools"; if ($LASTEXITCODE -eq 0) { skill-tools config init } else { exit $LASTEXITCODE }
 
-# Install the ona-run CLI (tools/ona-run) as an editable global tool via uv, from a local clone. See tools/ona-run/README.md for the `ona` CLI login prerequisite.
-ona-run-local:
-    uv tool install --editable ../../tools/ona-run
-
 # Install the textgraph CLI (tools/textgraph) as an editable global tool via uv, from a local clone. See tools/textgraph/README.md.
 textgraph-local:
     uv tool install --editable ../../tools/textgraph
@@ -46,13 +42,13 @@ textgraph-local:
 textgraph-git:
     uv tool install "git+{{repo_url}}#subdirectory=textgraph"
 
-# Install the agents-rules CLI (tools/agents-rules) as an editable global tool via uv, from a local clone. See tools/agents-rules/README.md.
+# Install the agents-rules CLI (tools/coding-agent/agents-rules) as an editable global tool via uv, from a local clone. See tools/coding-agent/agents-rules/README.md.
 agents-rules-local:
-    uv tool install --editable ../../tools/agents-rules
+    uv tool install --editable ../../tools/coding-agent/agents-rules
 
 # Install the agents-rules CLI directly from GitHub, no local clone required. Not editable: re-run this to pick up updates.
 agents-rules-git:
-    uv tool install "git+{{repo_url}}#subdirectory=agents-rules"
+    uv tool install "git+{{repo_url}}#subdirectory=coding-agent/agents-rules"
 
 # Install the cline-personal-info plugin (workflow/cline-wrapper, agent-compat/formats/cline/personal-info) globally for Cline SDK/CLI.
 # Shells out to Git Bash to dodge a PowerShell/cmd "uv_spawn 'npm'" ENOENT bug — see docs/integrations/cline.md.

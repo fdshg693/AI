@@ -6,7 +6,7 @@
 # 同梱: scripts/commit.py — git commit をフック付きで実行し、lefthook生ログの代わりに
 # 成功/失敗ジョブと直し方だけを返す。生の git commit は使わない。
 name: committing
-description: Makes a git commit in this repository under lefthook pre-commit/commit-msg via a bundled wrapper that returns only passed/failed jobs and remediations (not lefthook's full execution log), including the two-step commit for files inside a submodule (skills/, tools/, agent-compat/, site/, workflow/) followed by the umbrella pointer update. Use when the user asks to commit, when lefthook or commitlint rejects a commit, when deciding what to stage versus leave to hooks, or when a commit includes a SKILL.md or tools/ CLI that lefthook cannot fully sync.
+description: Makes a git commit in this repository under lefthook pre-commit/commit-msg via a bundled wrapper that returns only passed/failed jobs and remediations (not lefthook's full execution log), including the two-step commit for files inside a submodule (skills/, tools/, agent-compat/, site/, workflow/, infra/, templates/, mcps/) followed by the umbrella pointer update. Use when the user asks to commit, when lefthook or commitlint rejects a commit, when deciding what to stage versus leave to hooks, or when a commit includes a SKILL.md or tools/ CLI that lefthook cannot fully sync.
 meta:
   tag: []
   requires_repo_tools: lefthook.yml
@@ -17,7 +17,7 @@ meta:
   requires_skills: changing-skills-and-tools
   status: experimental
   description: このリポジトリ固有のgit commit手順（lefthook前提、要約ラッパー同梱、スキル/ツール変更時の下流確認）
-  version: 1.1.10
+  version: 1.1.15
 ---
 
 # このリポジトリでのコミット
@@ -28,7 +28,7 @@ meta:
 
 ## 手順
 
-0. **作業ブランチにいることを確かめる** — `main`への直接コミットは`pre-commit`がブロックする（アンブレラと全サブモジュール）。`git branch --show-current`が`main`なら、ユーザーに確認してから`just branch-new <name>`か`just branch-switch <name>`で全リポジトリを作業ブランチへ移す。ブロックを`LEFTHOOK_EXCLUDE`や`--no-verify`で外さない。
+0. **作業ブランチにいることを確かめる** — `main`への直接コミットは`pre-commit`がブロックする（アンブレラと全サブモジュール）。`git branch --show-current`が`main`なら、ユーザーに確認してから`just branch-switch`（名前を省くとアンブレラの`umbrella.workBranch`。未設定なら`just branch-work`で何も出ないので、ユーザーに名前を聞いて`just branch-work <name>`）で全リポジトリを作業ブランチへ移す。ブロックを`LEFTHOOK_EXCLUDE`や`--no-verify`で外さない。
 1. **現状を読む** — 次を並列で取る。自分が覚えていない変更はステージしない（[AGENTS.md](../../../../AGENTS.md)）。
    - `git status`
    - `git diff` と `git diff --staged`
@@ -37,7 +37,7 @@ meta:
    - `.env` / `credentials.json` 等の秘密
    - `temp/` や作業メモ、自分以外のエージェントが残した無関係な差分
    - 「DO NOT EDIT MANUALLY」の生成物を手で直しただけの差分（次のコミットでlefthookが上書きする）
-3. **任意でステージ済みのコンテキスト候補を確認する** — `uv run --project agent-compat/agent-tooling agent-context-check --staged` を実行し、表示された対象の`AGENTS.md` / Claude Ruleを読み直す。これは更新要求や失敗条件ではなく、実装がルールから逸脱していないかを判断するための入口である。Git indexの状態やルールの内容を確認できない場合は、候補の有無だけで変更を決めない。
+3. **任意でステージ済みのコンテキスト候補を確認する** — `uv run --project agent-compat/hooks/agent-tooling agent-context-check --staged` を実行し、表示された対象の`AGENTS.md` / Claude Ruleを読み直す。これは更新要求や失敗条件ではなく、実装がルールから逸脱していないかを判断するための入口である。Git indexの状態やルールの内容を確認できない場合は、候補の有無だけで変更を決めない。
 4. **スキルまたは `tools/` CLI を含むなら下流を確認する** — lefthook の再生成・整形・辺の整合では、下流スキルの使い方や下流ツールの契約は直らない。`skill-tool-impact` は lefthook に繋いでいない（[skill-tool-relations](../../../docs/skill-tool-relations.md)）。
    - ステージ済みから対象を取る。`**/SKILL.md` はそのパス。`tools/` 配下は `repo-tools.yaml` のキーまたは登録済みパス。スクリプトに git 差分から推定するモードは無い
    - 対象ごとに [changing-skills-and-tools](../changing-skills-and-tools/SKILL.md) の手順に従う。チェックリストはここに複製しない
@@ -58,9 +58,9 @@ meta:
 
 ## サブモジュールの中を変えたとき
 
-`skills/`・`tools/`・`agent-compat/`・`site/`・`workflow/` はサブモジュール（[repo-layout](../../../docs/repo-layout.md#サブモジュール)）。中のファイルはアンブレラからはコミットできない。次の 2 段階に分ける。
+`skills/`・`tools/`・`agent-compat/`・`site/`・`workflow/`・`infra/`・`templates/`・`mcps/` はサブモジュール（[repo-layout](../../../docs/repo-layout.md#サブモジュール)）。中のファイルはアンブレラからはコミットできない。次の 2 段階に分ける。
 
-1. **サブモジュールでコミットする** — そのフォルダへ移り、上の手順 1〜8 をそのリポジトリで行う。detached HEAD なら先に `just branch-switch <作業ブランチ>`（アンブレラと同じ名前のブランチ）。ラッパーは `python ../maintenance/plugin/skills/committing/scripts/commit.py -m "..."`。フックは `maintenance/lefthook/submodule.yml` から来る（未導入なら `just sub-hooks-install`）。
+1. **サブモジュールでコミットする** — そのフォルダへ移り、上の手順 1〜8 をそのリポジトリで行う。detached HEAD なら先に `just branch-switch`（`umbrella.workBranch` の名前。アンブレラと同じ名前のブランチ）。ラッパーは `python ../maintenance/plugin/skills/committing/scripts/commit.py -m "..."`。フックは `maintenance/lefthook/submodule.yml` から来る（未導入なら `just sub-hooks-install`）。
 2. **アンブレラでポインタを更新する** — アンブレラのルートで `git status` を見る。サブモジュールのパス（`M skills` 等）と、手順 1 のフックが再生成したアンブレラ側の生成物（`.claude-plugin/marketplace.json`・`skill-catalog.json` 等）だけをステージしてラッパーでコミットする。件名は `chore(repo): update <submodule> pointer` か、変更の意味が分かる件名にする。
 
 アンブレラ側のファイル（`registry/`・`maintenance/` 等）も同じ変更に含まれるなら、手順 2 のコミットに一緒に入れる。push する場合は、ユーザーの指示があってから、サブモジュールを先に push する。

@@ -23,15 +23,45 @@ local_configs:
   - path: .mcp.json
     example: .mcp.json.example
     reason: Claude Code project MCP servers; may get machine-specific edits.
+  - path: skill-tools.yaml
+    example: skill-tools.example.yaml
+    reason: Project skill-tools config for skills installed into this checkout.
   - path: .vscode/settings.json
     example: .vscode/settings.example.jsonc
     reason: Per-machine VS Code workspace settings.
-  - path: tools/aim/models.json
-    example: tools/aim/models.json.example
+  - path: tools/llm/aim/models.json
+    example: tools/llm/aim/models.json.example
     reason: Per-machine model list for aim.
-  - path: tools/aim2/models.json
-    example: tools/aim2/models.json.example
+  - path: tools/llm/aim2/models.json
+    example: tools/llm/aim2/models.json.example
     reason: Per-machine model list for aim2.
+  - path: tools/browser/pwq/models.json
+    example: tools/browser/pwq/models.json.example
+    reason: Per-machine model list for pwq.
+  - path: tools/browser/pwdo/models.json
+    example: tools/browser/pwdo/models.json.example
+    reason: Per-machine model list for pwdo.
+  - path: skills/plugins/browser/skills/sharing-browser-with-user/.env
+    example: skills/plugins/browser/skills/sharing-browser-with-user/.env.example
+    reason: Optional per-machine browser profile paths (BROWSER_PROFILES_ROOT / _META).
+  - path: workflow/playwright-app/.env
+    example: workflow/playwright-app/.env.example
+    reason: OPENAI_API_KEY (and optional AI_MODEL) for playwright-app.
+  - path: mcps/dynamic_prompt/.env
+    example: mcps/dynamic_prompt/.env.example
+    reason: dynamic_prompt runtime settings (DB backend, GCS/Firestore, OAuth) for local runs.
+  - path: mcps/memo/.env
+    example: mcps/memo/.env.example
+    reason: memo settings (OPENAI_API_KEY for embeddings, admin-tool toggle).
+  - path: mcps/dynamic_prompt/infra/terraform/terraform.tfvars
+    example: mcps/dynamic_prompt/infra/terraform/terraform.tfvars.example
+    reason: GCP project ID and deploy variables; also read by the infra justfile.
+  - path: infra/ai-logs/terraform/terraform.tfvars
+    example: infra/ai-logs/terraform/terraform.tfvars.example
+    reason: Sakura Cloud API key/secret and SSH public key for the ai-logs VM.
+  - path: infra/ai-logs/terraform/archive/terraform.tfvars
+    example: infra/ai-logs/terraform/archive/terraform.tfvars.example
+    reason: Azure subscription ID and storage account name for the ai-logs Blob archive.
 
 deny_patterns:
   - "**/.env"

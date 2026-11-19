@@ -15,7 +15,7 @@
 #   - skills_layout: "subdir" if SKILL.md folders live under <path>/skills, or
 #     "direct" if SKILL.md folders are immediate children of <path> itself
 # A skill root may be listed under one tool only (skill-tools rejects duplicates).
-# Skill bodies live once under skills/ or tools/_plugin/ as Claude Code plugins;
+# Skill bodies live once under skills/, tools/_plugin/ or agent-compat/_plugin/ as Claude Code plugins;
 # other tools reach them through:
 #   - marketplace.sources: plugin dirs listed in that tool's marketplace. Each
 #     dir carries the tool's own manifest (.codex-plugin/plugin.json, root
@@ -41,10 +41,15 @@ tools:
           description: "Claude Code 用プラグイン本体"
         - path: tools/_plugin
           description: "tools/ の CLI に付属する Claude Code プラグイン（`my-tools`。CLI 前提の使い方スキル）"
+        - path: agent-compat/_plugin
+          description: "agent-compat/ の CLI に付属する Claude Code プラグイン（`agent-compat-tools`。`agent-logs` などの使い方スキル）"
         - path: .claude-plugin
           description: "上記プラグイン群をまとめるマーケットプレイス定義（`marketplace.json`）と skill カタログ（`skill-catalog.json`）"
     plugins:
       - path: skills/plugins/ai-tools-knowledge
+        kind: plugin
+        skills_layout: subdir
+      - path: skills/plugins/browser
         kind: plugin
         skills_layout: subdir
       - path: skills/plugins/cicd
@@ -80,6 +85,9 @@ tools:
       - path: tools/_plugin/my-tools
         kind: plugin
         skills_layout: subdir
+      - path: agent-compat/_plugin/agent-compat-tools
+        kind: plugin
+        skills_layout: subdir
     marketplace:
       output_path: .claude-plugin/marketplace.json
       name: seiwan-marketplace
@@ -98,7 +106,8 @@ tools:
         - path: .cline
           description: "Cline 用設定。`.cline/skills/` は `skills/plugins/ai-tools-knowledge` から `just agent-compat-sync` で作る gitignore 済みのコピー（手編集しない）"
         - path: .clinerules
-          description: "Cline が読むルールファイルの出力先。`AGENTS.md` から `tools/agents-rules` CLI（`agents-rules -t cline`）で生成する。未生成なら存在しない。手編集しない"
+          link: false # 未生成なら存在しないのでリンクにしない
+          description: "Cline が読むルールファイルの出力先。`AGENTS.md` から `tools/coding-agent/agents-rules` CLI（`agents-rules -t cline`）で生成する。未生成なら存在しない。手編集しない"
     plugins: []
     workspace_copies:
       - from: skills/plugins/ai-tools-knowledge/skills
@@ -171,7 +180,8 @@ tools:
         - path: _agents
           description: "Antigravity のワークスペースプラグイン置き場（`_agents/plugins/`）。`antigravity-meta` は `skills/plugins/ai-tools-knowledge` から `just agent-compat-sync` で作る gitignore 済みのコピー。`.agents/` と使い分ける（`_agents/README.md` 参照）"
         - path: .agents/rules
-          description: "Antigravity が読むワークスペース Rules。`AGENTS.md` から `tools/agents-rules` CLI で生成する（`.agents/README.md` 参照）。手編集しない"
+          link: false # 未生成なら存在しないのでリンクにしない
+          description: "Antigravity が読むワークスペース Rules。`AGENTS.md` から `tools/coding-agent/agents-rules` CLI で生成する（`.agents/README.md` 参照）。手編集しない"
     plugins: []
     workspace_copies:
       - from: skills/plugins/ai-tools-knowledge/skills

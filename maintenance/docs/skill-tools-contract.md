@@ -71,7 +71,7 @@ skills-site と同じ除外設定を skill-tools も尊重する。`exclude.sour
 
 - `path` は実在するツールフォルダであること。
 - `install` はリポジトリルートで実行されるコマンド文字列（`uv tool install --editable tools/...` 等）。リポジトリ相対パスを使うため、`install-tools` は local source でのみ動く。
-- `description` は概要の取得元 locator（例: `tools/aim/pyproject.toml#project.description`）。壊れていると `list-tools` がエラーで止まる。
+- `description` は概要の取得元 locator（例: `tools/llm/aim/pyproject.toml#project.description`）。壊れていると `list-tools` がエラーで止まる。
 
 登録ルールと整合チェックは [repo-tools-config](./repo-tools-config.md)、概要・版数のSSOTは [tool-conventions](./tool-conventions.md) を参照。
 
@@ -83,7 +83,7 @@ skills-site と同じ除外設定を skill-tools も尊重する。`exclude.sour
 
 ### 6. `repo-hooks.yaml` と `catalog.json` — エージェントフック
 
-`hooks` サブコマンドは`registry/repo-hooks.yaml`（`version: 1` と `catalog`）が指すフックカタログを読む。カタログは `agent-compat/agent-tooling/agent_tooling/hooks/generated/catalog.json` で、agent-tooling のビルドが各 `scenarios/<id>/hook.yaml` と生成ファイル一覧から作る（手編集しない）。流れと設計判断は [hook-distribution](./hook-distribution.md)。
+`hooks` サブコマンドは`registry/repo-hooks.yaml`（`version: 1` と `catalog`）が指すフックカタログを読む。カタログは `agent-compat/hooks/agent-tooling/agent_tooling/hooks/generated/catalog.json` で、agent-tooling のビルドが各 `scenarios/<id>/hook.yaml` と生成ファイル一覧から作る（手編集しない）。流れと設計判断は [hook-distribution](./hook-distribution.md)。
 
 - `repo-hooks.yaml` の `catalog` はこのファイル相対、カタログ内のパスはカタログのディレクトリ相対。カタログが参照するファイルはすべてコミット済みの生成物であること（GitHub source はツリー上のファイルしか取れない）。
 - `repo-hooks.yaml` が無い source は「フック0件」でエラーにしない。形式違反・参照切れは終了コード `2`。

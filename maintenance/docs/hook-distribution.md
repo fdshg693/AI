@@ -1,7 +1,7 @@
 ---
 type: Design Decision
 title: エージェントフックの正本・生成・配布
-description: "Explains how this repository's AI-agent hooks flow from a single source (agent-compat/agent-tooling/agent_tooling/hooks/ scenarios with per-hook hook.yaml, Claude-only hooks included) through a build that inlines each hook into one self-contained file and aggregates generated/catalog.json, to distribution by `skill-tools hooks install/installed/update/remove` via the root repo-hooks.yaml, and how this repository self-installs its own hooks with `just hooks-install` instead of the retired .claude/scripts/hooks_manager.py. Use when adding or changing a hook, when wondering where a hook's source or registration lives, when .claude/hooks or a settings.json hooks entry looks stale, or when another project wants to install hooks from this repo."
+description: "Explains how this repository's AI-agent hooks flow from a single source (agent-compat/hooks/agent-tooling/agent_tooling/hooks/ scenarios with per-hook hook.yaml, Claude-only hooks included) through a build that inlines each hook into one self-contained file and aggregates generated/catalog.json, to distribution by `skill-tools hooks install/installed/update/remove` via the root repo-hooks.yaml, and how this repository self-installs its own hooks with `just hooks-install` instead of the retired .claude/scripts/hooks_manager.py. Use when adding or changing a hook, when wondering where a hook's source or registration lives, when .claude/hooks or a settings.json hooks entry looks stale, or when another project wants to install hooks from this repo."
 tags: [maintenance, hooks, tools]
 generated: { by: reference_agent/claude-opus-5-5, at: 2026-09-27T00:00:00Z }
 status: stable
@@ -12,12 +12,12 @@ status: stable
 ## 全体の流れ
 
 ```text
-agent-compat/agent-tooling/agent_tooling/hooks/scenarios/<id>/hook.yaml   ← 登録イベント・matcher・配布可否・依存（正本）
-agent-compat/agent-tooling/agent_tooling/adapters/<agent>/<id>.py         ← 本体（Claude 専用フックの共通処理は adapters/claude/common/）
-        │  just --justfile agent-compat/agent-tooling/justfile generate（lefthook も入力変更で再生成）
+agent-compat/hooks/agent-tooling/agent_tooling/hooks/scenarios/<id>/hook.yaml   ← 登録イベント・matcher・配布可否・依存（正本）
+agent-compat/hooks/agent-tooling/agent_tooling/adapters/<agent>/<id>.py         ← 本体（Claude 専用フックの共通処理は adapters/claude/common/）
+        │  just --justfile agent-compat/hooks/agent-tooling/justfile generate（lefthook も入力変更で再生成）
         ▼
-agent-compat/agent-tooling/agent_tooling/hooks/generated/<agent>/<id>.*   ← 相対 import をインライン化した単一ファイル（コミットする生成物）
-agent-compat/agent-tooling/agent_tooling/hooks/generated/catalog.json     ← 全 hook.yaml とファイル一覧の集約
+agent-compat/hooks/agent-tooling/agent_tooling/hooks/generated/<agent>/<id>.*   ← 相対 import をインライン化した単一ファイル（コミットする生成物）
+agent-compat/hooks/agent-tooling/agent_tooling/hooks/generated/catalog.json     ← 全 hook.yaml とファイル一覧の集約
         │  registry/repo-hooks.yamlがカタログの所在を指す
         ▼
 skill-tools hooks list / install / installed / update / remove
@@ -32,7 +32,7 @@ skill-tools hooks list / install / installed / update / remove
 
 | 決定                                                                                                                                                                                                                                                                                                                                                                                                 | 理由                                                                                                                                                                                                                                    |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| フックの正本は `agent-compat/agent-tooling/agent_tooling/hooks/` に一本化し、Claude 専用フック（旧 `.claude/hooks/*.py`）も scenario として置く。配布物は `generated/` だけ                                                                                                                                                                                                                          | 生成→配布の経路を1本にし、skill-tools が読む場所を1箇所にする。共通ヘルパーはビルド時にインライン化されるので配布物に `_lib` が要らない                                                                                                 |
+| フックの正本は `agent-compat/hooks/agent-tooling/agent_tooling/hooks/` に一本化し、Claude 専用フック（旧 `.claude/hooks/*.py`）も scenario として置く。配布物は `generated/` だけ                                                                                                                                                                                                                    | 生成→配布の経路を1本にし、skill-tools が読む場所を1箇所にする。共通ヘルパーはビルド時にインライン化されるので配布物に `_lib` が要らない                                                                                                 |
 | メタデータは scenario ごとの `hook.yaml` に置き、ビルドが `generated/catalog.json` に集約する。docstring の `<hooks>` 契約は廃止                                                                                                                                                                                                                                                                     | Python を import せずに読めるデータにし、skill-tools が agent-tooling の内部構造に依存しないようにする。二重管理を避ける                                                                                                                |
 | `registry/repo-hooks.yaml` はカタログの所在だけを書く                                                                                                                                                                                                                                                                                                                                                | `repo-tools.yaml` / `repo-workflows.yaml` と同じ「直下の SSOT を入口にする」入力契約に揃える。GitHub source でも2ファイルの取得で一覧できる                                                                                             |
 | CLI は `skill-tools hooks <list\|install\|installed\|update\|remove>`                                                                                                                                                                                                                                                                                                                                | スキル用 `install` と選択子・オプションの意味が違うので、`workflow` と同じくグループ化する                                                                                                                                              |
@@ -47,9 +47,10 @@ skill-tools hooks list / install / installed / update / remove
 
 `.claude/scripts/hooks_manager.py` / `hooks.yml` / sync・reflect は廃止した。このリポジトリも外部プロジェクトと同じ skill-tools 経路でフックを入れる（ドッグフーディング）。
 
-- クローン直後に一度、リポジトリ直下で `just hooks-install`。agent-tooling 側を変えたら `generate` のあと `just hooks-update`。確認は `just hooks-installed`
-- 入れるフックと対象エージェントはルート `justfile` の `hooks-install` レシピが列挙する
-- skill-tools の設定は `.claude/skill-tools.hooks.yaml` を `--config` で明示し、ルートに `skill-tools.yaml` は置かない。CWD の `skill-tools.yaml` は自動マージされ、直下で打つ全コマンドの source/index を変えてしまうため
+- 入れるフックは端末ごとに選ぶ。git が管理するのはサンプル `.claude/skill-tools.hooks.example.yaml`（推奨のフック一覧つき）だけで、クローンした人はそれを `.claude/skill-tools.hooks.yaml`（gitignore）にコピーし、`hooks.install.<agent>` を必要に応じて編集する
+- そのあとリポジトリ直下で `just hooks-install`。中身は `skill-tools hooks sync` で、一覧にあって未導入のフックを入れ、一覧から外したフックを消す。一覧を変えたら再実行する。ローカルの設定ファイルが無ければ、サンプルのコピーを案内して止まる。agent-tooling 側を変えたら `generate` のあと `just hooks-update`。確認は `just hooks-installed`
+- サブモジュールも同じ形（各 `.claude/skill-tools.hooks.example.yaml` → `just sub-agent-hooks-install`。ローカルの設定が無いサブモジュールは飛ばす）。[repo-layout](./repo-layout.md#サブモジュールを単体で開く)
+- ローカルの設定は `--config` で明示し、ルートに `skill-tools.yaml` は置かない。CWD の `skill-tools.yaml` は自動マージされ、直下で打つ全コマンドの source/index を変えてしまうため
 - skill-tools はグローバル版ではなく `uv run --project tools/skill-tools` のリポジトリ同梱版を使う（版ずれ防止）
 - 成果物（`.claude/hooks/` の配置物、`.skill-tools/`、登録ファイルの変更）はすべて gitignore。`.claude/hooks/` には「インストール先であり正本ではない」旨の `AGENTS.md` だけを残す
 - Claude の登録先は `.claude/settings.json`。このリポジトリでは `.claude/.gitignore` の `*settings.json` で既に共有されていないため `settings.local.json` に分けない（外部利用者は `settings_file: local` を選べる）
@@ -70,14 +71,14 @@ uv run --project tools/skill-tools skill-tools hooks installed --global
 - 同じフックをプロジェクトとグローバルの両方に入れない（二重に発火し、skill-tools は検出しない）。`stop_alert` と `notify` は Claude の Stop で重なり、Kilo の `stop_alert` と `notify` も重なるので、どちらか一方にする
 - `~/.claude/settings.json` は実行中の Claude Code も書き換える。競合すると skill-tools は何も書かずに終了コード `4` で止まるので、Claude Code を閉じてやり直す
 - Codex は `hooks.json` を変えたら `/hooks` で再信頼する
-- macOS の通知ヘルパーはエージェントごとに `just --justfile agent-compat/agent-tooling/justfile notify-helper-mac <claude|codex|kilo>` でビルドし、初回だけ表示される `authorize` コマンドで通知を許可する
+- macOS の通知ヘルパーはエージェントごとに `just --justfile agent-compat/hooks/agent-tooling/justfile notify-helper-mac <claude|codex|kilo>` でビルドし、初回だけ表示される `authorize` コマンドで通知を許可する
 - グローバル設定を別の仕組み（例: dotfiles をミラーする同期スクリプト）でも管理しているなら、skill-tools で入れたあとに配置物と登録ファイルをそちらへ書き戻す。書き戻さないと、次の同期で消える
 
 ## フックを足す・変えるとき
 
-1. `scenarios/<id>/hook.yaml` と `adapters/<agent>/<id>.py` を書き、`build/build.py` の `ENTRIES` に登録する（書き方・ビルド契約は [agent-compat/agent-tooling/agent_tooling/hooks/AGENTS.md](../../agent-compat/agent-tooling/agent_tooling/hooks/AGENTS.md)）
-2. `just --justfile agent-compat/agent-tooling/justfile generate` → `test`
-3. このリポジトリで使うなら `just hooks-install`（新規 id はルート `justfile` のレシピにも足す）/ `just hooks-update`
+1. `scenarios/<id>/hook.yaml` と `adapters/<agent>/<id>.py` を書き、`build/build.py` の `ENTRIES` に登録する（書き方・ビルド契約は [agent-compat/hooks/agent-tooling/agent_tooling/hooks/AGENTS.md](../../agent-compat/hooks/agent-tooling/agent_tooling/hooks/AGENTS.md)）
+2. `just --justfile agent-compat/hooks/agent-tooling/justfile generate` → `test`
+3. このリポジトリで使うなら、新規 id は `.claude/skill-tools.hooks.yaml` の `hooks.install` に足して `just hooks-install`、既存フックの変更は `just hooks-update`。推奨にするならサンプル `.claude/skill-tools.hooks.example.yaml` にも足す
 4. スキルがそのフックを前提にするなら、`SKILL.md` の `meta.requires_hooks` に hook id を書く（[skill-meta-fields](./skill-meta-fields.md)）
 
 `.claude/hooks/` や各ツールの登録 JSON を直接編集しない。skill-tools は手編集を drift として検出し、update/remove を止める。
@@ -87,4 +88,4 @@ uv run --project tools/skill-tools skill-tools hooks installed --global
 - [skill-tools-contract](./skill-tools-contract.md) — `repo-hooks.yaml` / `catalog.json` を含む skill-tools の入力契約
 - [repo-ssot-pattern](./repo-ssot-pattern.md) — 直下 SSOT + 生成の方針
 - `tools/skill-tools/README.md` — `hooks` サブコマンドの挙動・配置先既定・トランザクション
-- `agent-compat/agent-tooling/agent_tooling/hooks/generated/README.md` — `catalog.json` の形式
+- `agent-compat/hooks/agent-tooling/agent_tooling/hooks/generated/README.md` — `catalog.json` の形式

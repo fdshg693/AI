@@ -5,7 +5,7 @@
 - Codex は `.agents\plugins\marketplace.json` のマーケットプレイスから、`skills/plugins/ai-tools-knowledge`（`.codex-plugin/plugin.json` を同梱）を読み込む
 - Antigravity は `.agents\plugins` でなく `_agents\plugins` にプラグインを配置
 - `.agents\rules\*.md` は Antigravity のワークスペース Rules。リポジトリ各所の `AGENTS.md` から
-  [tools/agents-rules](../tools/agents-rules/README.md) CLI（`agents-rules -t antigravity`）で生成する。
+  [tools/coding-agent/agents-rules](../tools/coding-agent/agents-rules/README.md) CLI（`agents-rules -t antigravity`）で生成する。
   lefthookでは自動実行しないため、必要なときに手動で再生成する。手編集しない。ルート直下のAGENTS.mdは
   `trigger: always_on`、それ以外は対象ディレクトリにスコープした`trigger: glob`で生成される。
   frontmatterキー名の根拠は

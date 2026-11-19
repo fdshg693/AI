@@ -1,0 +1,46 @@
+# Sample of this repository's project skill-tools config (skills installed into this checkout).
+#
+# Only this sample is committed. To use it:
+#   cp skill-tools.example.yaml skill-tools.yaml
+#   skill-tools sync-skills --dry-run        # check what install_skills below would change
+#   skill-tools sync-skills                  # install the listed skills
+# Edit install_skills in your copy to add or drop skills (`skill-tools search` / `list-skills`
+# to find them), then run sync-skills again.
+# skill-tools reads a skill-tools.yaml in the current directory and merges it on top of the
+# global config (%APPDATA%/skill-tools/skill-tools.yaml), so list only what differs here.
+#
+# Installed skills are copied into .claude/skills/ (gitignored) and recorded in
+# .skill-tools/manifest.json (gitignored). sync-skills installs listed skills that are
+# missing and removes managed skills that are no longer listed; it does not refresh
+# skills that are already installed — `skill-tools update-skills` does that.
+#
+# Hooks are configured separately in .claude/skill-tools.hooks.yaml (`just hooks-install`
+# passes it with --config, so this file does not affect them). Do not add a hooks: block here.
+#
+# Relative paths are resolved against this file's directory.
+
+# The skill catalog is this checkout itself.
+source:
+  type: local
+  path: .
+
+# Install into Claude Code only (.claude/skills/).
+targets:
+  claude:
+    destination: .claude/skills
+
+# Skills that `skill-tools sync-skills` keeps installed in this checkout
+# (canonical ID, unique name, or self). This list replaces any install_skills in the
+# global config.
+install_skills:
+  - self # tools/_plugin/my-tools/skills/skill-tools-cli/SKILL.md
+  - skills/plugins/cc-knowledge/skills/writing-skill/SKILL.md
+  - skills/plugins/cc-knowledge/skills/writing-hooks/SKILL.md
+  - skills/plugins/cc-knowledge/skills/writing-rules/SKILL.md
+  - skills/plugins/cc-knowledge/skills/writing-plugins/SKILL.md
+  - skills/plugins/cc-knowledge/skills/claude-settings/SKILL.md
+  - skills/plugins/topics/skills/codegraph-docs/SKILL.md
+  - skills/plugins/coding/skills/gh-pr/SKILL.md
+  - skills/plugins/coding/skills/systematic-debugging/SKILL.md
+  - skills/plugins/coding/skills/review/SKILL.md
+  - skills/plugins/coding/skills/okf-spec/SKILL.md

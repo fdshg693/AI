@@ -32,6 +32,10 @@ skills-site-validate:
 skills-site-test:
     pnpm --filter ai-skill-catalog-site run test
 
+# tools/browser/test-sites のテストサイトを http://localhost:8080 で配信する（Ctrl+C で停止）
+test-sites *args:
+    uv run --no-project tools/browser/test-sites/serve.py {{args}}
+
 infra-validate:
     az bicep build --file "{{infra_dir}}/main.bicep" --stdout > $null
 
@@ -49,14 +53,14 @@ azure-url:
 
 # Self-install this repository's hooks with the bundled skill-tools.
 # Sources live in agent-tooling; installed copies are gitignored. See .claude/hooks/AGENTS.md.
+# Which hooks to install is a per-machine choice: copy .claude/skill-tools.hooks.example.yaml to
+# the gitignored .claude/skill-tools.hooks.yaml and edit hooks.install. hooks-install runs
+# `skill-tools hooks sync`, so it also removes managed hooks dropped from that list.
 hooks_cli := "uv run --project tools/skill-tools skill-tools hooks"
 hooks_config := ".claude/skill-tools.hooks.yaml"
-claude_hooks := "agent_sessions long_run_collector long_run_statement_collector stop_alert task_tracker_session"
 
 hooks-install *flags:
-    {{hooks_cli}} install --config {{hooks_config}} --agent claude {{claude_hooks}} {{flags}}
-    {{hooks_cli}} install --config {{hooks_config}} --agent codex nested_agents_md scoped_rules agent_sessions {{flags}}
-    {{hooks_cli}} install --config {{hooks_config}} --agent kilo agent_sessions {{flags}}
+    {{hooks_cli}} sync --config {{ if path_exists(hooks_config) == "true" { hooks_config } else { error(hooks_config + " is missing. Copy .claude/skill-tools.hooks.example.yaml to it and edit hooks.install first") } }} {{flags}}
 
 hooks-update *flags:
     {{hooks_cli}} update --config {{hooks_config}} {{flags}}
@@ -82,7 +86,7 @@ links-check *args:
 links-clean *args:
     just --justfile maintenance/scripts/justfile links-clean {{args}}
 
-# --- submodules (skills / tools / agent-compat / site / workflow). See maintenance/docs/repo-layout.md ---
+# --- submodules (skills / tools / agent-compat / site / workflow / infra / templates / mcps). See maintenance/docs/repo-layout.md ---
 
 # Clone/checkout every submodule at the commit the umbrella records (run after clone and pull)
 sub-init:
@@ -101,14 +105,15 @@ sub-sync:
 sub-hooks-install:
     git submodule foreach lefthook install
 
-# Install the umbrella's Claude Code hooks into every submodule, so a session opened in the
-# submodule alone runs them too (config: <submodule>/.claude/skill-tools.hooks.yaml; the
-# installed files are gitignored there). Pass --overwrite to reinstall.
+# Install agent hooks into every submodule, so a session opened in the submodule alone runs
+# them too. Each submodule chooses its own hooks in the gitignored
+# <submodule>/.claude/skill-tools.hooks.yaml (copy .claude/skill-tools.hooks.example.yaml there);
+# a submodule without it is skipped. Runs `skill-tools hooks sync` like hooks-install.
 sub-agent-hooks-install *flags:
-    git submodule foreach 'uv run --project "$toplevel/tools/skill-tools" skill-tools hooks install --config .claude/skill-tools.hooks.yaml --agent claude {{claude_hooks}} {{flags}}'
+    git submodule foreach 'if [ -f .claude/skill-tools.hooks.yaml ]; then uv run --project "$toplevel/tools/skill-tools" skill-tools hooks sync --config .claude/skill-tools.hooks.yaml {{flags}}; else echo skip: no .claude/skill-tools.hooks.yaml, copy .claude/skill-tools.hooks.example.yaml there; fi'
 
 sub-agent-hooks-update *flags:
-    git submodule foreach 'uv run --project "$toplevel/tools/skill-tools" skill-tools hooks update --config .claude/skill-tools.hooks.yaml {{flags}}'
+    git submodule foreach 'if [ -f .claude/skill-tools.hooks.yaml ]; then uv run --project "$toplevel/tools/skill-tools" skill-tools hooks update --config .claude/skill-tools.hooks.yaml {{flags}}; else echo skip: no .claude/skill-tools.hooks.yaml; fi'
 
 # --- branches: the same branch name across the umbrella and every submodule ---
 # Umbrella branches never create/switch/delete submodule branches; these do it in one step.
@@ -122,13 +127,17 @@ branch-status *args:
 branch-list *args:
     just --justfile maintenance/scripts/justfile branch-list {{args}}
 
-# Create a branch and switch to it everywhere (--from BASE)
-branch-new name *args:
-    just --justfile maintenance/scripts/justfile branch-new {{name}} {{args}}
+# Show or set this machine/worktree's working branch name (umbrella.workBranch, not committed)
+branch-work *args:
+    just --justfile maintenance/scripts/justfile branch-work {{args}}
 
-# Switch everywhere, tracking origin/<name> when only the remote has it (--create, --no-fetch)
-branch-switch name *args:
-    just --justfile maintenance/scripts/justfile branch-switch {{name}} {{args}}
+# Create a branch and switch to it everywhere; name defaults to the working branch (--from BASE)
+branch-new *args:
+    just --justfile maintenance/scripts/justfile branch-new {{args}}
+
+# Switch everywhere, tracking origin/<name>; name defaults to the working branch (--create, --no-fetch)
+branch-switch *args:
+    just --justfile maintenance/scripts/justfile branch-switch {{args}}
 
 # Delete a branch wherever it exists; refuses main and unmerged branches (--force, --remote)
 branch-delete name *args:

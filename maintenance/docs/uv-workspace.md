@@ -35,7 +35,7 @@ status: stable
 
 ## メンバーの対象は`tools/`だけではない
 
-現在のメンバーは`tools/aim`、`tools/tav-cli`、`tools/skill-tools`（`skill-tools`パッケージ）等の`tools/`配下に加え、`skills/plugins/cc-knowledge/skills/writing-skill-web`（同梱スクリプトが本格的な依存を持つスキル）も含む。「独自の`pyproject.toml`を持ち、単発スクリプト以上の実体を持つディレクトリ」であれば`tools/`外でもメンバー候補になる。
+現在のメンバーは`tools/llm/aim`、`tools/web-research/tav-cli`、`tools/skill-tools`（`skill-tools`パッケージ）等の`tools/`配下に加え、`skills/plugins/cc-knowledge/skills/writing-skill-web`（同梱スクリプトが本格的な依存を持つスキル）も含む。「独自の`pyproject.toml`を持ち、単発スクリプト以上の実体を持つディレクトリ」であれば`tools/`外でもメンバー候補になる。
 
 ## pytestの`--import-mode=importlib`
 

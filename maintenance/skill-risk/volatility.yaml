@@ -1,0 +1,67 @@
+# How easily a skill's subject matter changes (input to the skill risk ranking).
+#
+# Read by maintenance/scripts/skill/query/rank_skill_risk.py only. Hand-edited.
+# Not a registry/ SSOT: a single maintenance script reads it, so it lives with
+# the ledger in maintenance/skill-risk/ (see maintenance/docs/repo-layout.md,
+# "置き場所の判定基準"). Not in SKILL.md meta: adding a field there would bump
+# meta.version of every skill.
+#
+# Resolution for a skill's canonical ID (umbrella-relative .../SKILL.md path):
+#   1. overrides: exact canonical ID match.
+#   2. rules: longest `prefix` that the canonical ID starts with.
+#   3. otherwise `default`, and the ranking reports "no rule" so a new plugin
+#      gets noticed.
+#
+# Levels:
+#   high   — the subject is an external tool / service spec or API.
+#   medium — the subject is this repository's own tools or layout (also caught
+#            by "dependency changed since last edit").
+#   low    — universal procedures and examples.
+version: 1
+
+levels: [high, medium, low]
+
+default: medium
+
+rules:
+  # high: external tools / services
+  - prefix: skills/plugins/ai-tools-knowledge/
+    level: high
+  - prefix: skills/plugins/cc-knowledge/
+    level: high
+  - prefix: skills/plugins/topics/
+    level: high
+  - prefix: skills/plugins/web-lookup/
+    level: high
+  - prefix: skills/plugins/browser/
+    level: high
+  # medium: own tools and repository layout
+  - prefix: tools/_plugin/my-tools/
+    level: medium
+  - prefix: agent-compat/_plugin/agent-compat-tools/
+    level: medium
+  - prefix: maintenance/plugin/
+    level: medium
+  - prefix: skills/plugins/cicd/
+    level: medium
+  - prefix: skills/plugins/doc-tools/
+    level: medium
+  - prefix: skills/plugins/others/
+    level: medium
+  # low: universal procedures and examples
+  - prefix: skills/plugins/coding/
+    level: low
+  - prefix: skills/plugins/subagents/
+    level: low
+  - prefix: skills/plugins/no-code/
+    level: low
+  - prefix: skills/plugins/special/
+    level: low
+
+overrides:
+  skills/plugins/coding/skills/gh-pr/SKILL.md:
+    level: medium
+    reason: Depends on the gh CLI's commands and flags.
+  skills/plugins/topics/skills/writing-mermaid-diagrams/SKILL.md:
+    level: low
+    reason: General diagram-writing guidance, not tied to a service's docs.

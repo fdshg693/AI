@@ -5,7 +5,9 @@ job (~1s of process startup each, ~15 jobs). This runs the same modules
 in-process instead, in a fixed dependency order:
 
     fix   — SKILL.md meta defaults -> generated catalogs/marketplaces -> tool
-            manifest version bumps (all write files; lefthook re-stages them)
+    fix   — SKILL.md meta defaults -> generated catalogs/marketplaces -> tool
+            manifest version bumps -> maintenance/docs/index.md list (all write
+            files; lefthook re-stages them)
     check — read-only checks (SKILL.md version bump, repo-tools consistency,
             local config files tracked/ignored)
 
@@ -109,6 +111,12 @@ FIX_TASKS = (
         ),
     ),
     Task("tool-version-bump", "release.bump_tool_versions", ("tools/**",), call="list"),
+    Task(
+        "maintenance-docs-index",
+        "okf_docs.generate_maintenance_docs_index",
+        ("maintenance/docs/*.md",),
+        call="list",
+    ),
 )
 
 CHECK_TASKS = (
@@ -126,6 +134,7 @@ CHECK_TASKS = (
             "registry/repo-tools.yaml",
             "tools/**/pyproject.toml",
             "tools/**/package.json",
+            "agent-compat/**/pyproject.toml",
         ),
         call="argv",
     ),
@@ -137,6 +146,7 @@ CHECK_TASKS = (
             "registry/repo-tools.yaml",
             "tools/**/pyproject.toml",
             "tools/**/package.json",
+            "agent-compat/**/pyproject.toml",
         ),
         call="argv",
     ),

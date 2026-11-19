@@ -40,7 +40,7 @@ status: stable
 | インストールして使うCLIで、APIキーなど秘密情報だけを読む                                                               | 新規はレイヤー設定のグローバル設定＋環境変数を推奨。既存の固定パス`.env`は、次に手を入れるときに移行する | 非editableインストールではインストール先に`.env`を置けない                                        |
 | スキル同梱スクリプト、インストールしないスクリプト                                                                     | 固定パスの`.env`（下記「固定パスの`.env`」節）                                                           | スクリプトの位置が常に分かり、設定は秘密情報だけで足りる                                          |
 
-参照実装は`tools/tav-cli/tav_core/environment.py`（レイヤー設定）と`tools/aim/aim_cli.py`（固定パス`.env`）。
+参照実装は`tools/web-research/tav-cli/tav_core/environment.py`（レイヤー設定）と`tools/llm/aim/aim_cli.py`（固定パス`.env`）。
 
 ## レイヤー設定（インストールするCLI）
 
@@ -95,12 +95,12 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 # 単一モジュールCLI / スキル同梱スクリプト: エントリポイントと同階層
-# 例: tools/aim/aim_cli.py -> tools/aim/.env
+# 例: tools/llm/aim/aim_cli.py -> tools/llm/aim/.env
 #     skills/.../extract_page.py -> そのスクリプト隣の.env
 ENV_PATH = Path(__file__).resolve().parent / ".env"
 
 # パッケージ化したツール: ツールディレクトリ直下
-# 例: tools/tav-cli/tav_core/environment.py -> tools/tav-cli/.env
+# 例: tools/web-research/tav-cli/tav_core/environment.py -> tools/web-research/tav-cli/.env
 # ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
 ```
 
@@ -127,20 +127,20 @@ Python以外（`process.loadEnvFile`、自前のKEY=VALUEパーサ等）でも�
 
 必須キーを読んだ結果が空なら、終了コード非0（または例外）で止める。メッセージには次を**すべて**含める。
 
-| 含める情報                           | 例                                                               |
-| ------------------------------------ | ---------------------------------------------------------------- |
-| 足りないキー名                       | `OPENROUTER_API_KEY`                                             |
-| プロセス環境の状態                   | 未設定 / 空で設定されている                                      |
-| 探した設定ファイル・`.env`の絶対パス | `C:\Users\me\.config\tav\config.toml` / `C:\C\ai\tools\aim\.env` |
-| そのファイルの状態                   | ファイルが無い / あるがキーが無い / あるがキーが空               |
-| （レイヤー設定）読まない場所の注記   | プロジェクト設定からは`api_key`を読まない                        |
+| 含める情報                           | 例                                                                   |
+| ------------------------------------ | -------------------------------------------------------------------- |
+| 足りないキー名                       | `OPENROUTER_API_KEY`                                                 |
+| プロセス環境の状態                   | 未設定 / 空で設定されている                                          |
+| 探した設定ファイル・`.env`の絶対パス | `C:\Users\me\.config\tav\config.toml` / `C:\C\ai\tools\llm\aim\.env` |
+| そのファイルの状態                   | ファイルが無い / あるがキーが無い / あるがキーが空                   |
+| （レイヤー設定）読まない場所の注記   | プロジェクト設定からは`api_key`を読まない                            |
 
 固定パス`.env`の例:
 
 ```text
 OPENROUTER_API_KEY が解決できません。
 環境変数 OPENROUTER_API_KEY は未設定です。
-想定した .env は C:\C\ai\tools\aim\.env ですが、ファイルがありません。
+想定した .env は C:\C\ai\tools\llm\aim\.env ですが、ファイルがありません。
 ```
 
 レイヤー設定の例:
@@ -227,6 +227,7 @@ maintenance/scripts/release/bump_tool_versions.py
 ### ルール
 
 - 判定はフォルダ単位。`tools/<name>/README.md`だけの変更でも、そのツールのpatchは上がる
+- バンプはコミットごとに起きる。1つの改善を複数コミットに分けると、その数だけpatchが上がる（例: 7コミットで0.1.0→0.1.7）。「作業の最後に1回だけ上げる」計画はこのフックと合わないので、プランでは版数を固定せず「フック任せ」と書く
 - ただし **すでにHEADと異なるversionが入っている** 場合は、自動バンプしない。手動minor/majorや、同コミットで明示したversion変更を尊重する
 - 新しいマニフェストを追加したコミットや、初めて`version`を入れたコミットでも、初期versionだけで止める
 - 再ステージは`stage_fixed`任せではなく、スクリプトが更新したマニフェストを`git add`する

@@ -4,8 +4,11 @@ packages:
   - "site/tools-site"
   - "workflow/cline-wrapper"
   - "workflow/copilot-wrapper"
+  - "workflow/playwright-app"
   - "tools/linear-cli"
-  - "tools/aim2"
+  - "tools/llm/aim2"
+  - "tools/browser/pwq"
+  - "tools/browser/pwdo"
 allowBuilds:
   esbuild: true
   koffi: true

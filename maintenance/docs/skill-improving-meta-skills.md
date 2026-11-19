@@ -24,6 +24,7 @@ Claude Codeの `skills/plugins/cc-knowledge/skills/` 配下には、スキルの
 - [skills/plugins/cc-knowledge/skills/writing-skill](../../skills/plugins/cc-knowledge/skills/writing-skill/SKILL.md)（+ `writing-skill-complex`） — 新規作成・編集・評価。あらゆる`SKILL.md`が満たすべきチェックリストの一次情報源
 - [maintenance/plugin/skills/skill-maintenance](../plugin/skills/skill-maintenance/SKILL.md) — Claude CLI/Claude Code公式ドキュメントのスナップショットを更新し、意味のある差分を検出して依存スキルへ伝播させる
 - `audit-skills`（Workflow） — 多数のスキルを一括でベストプラクティス採点する
+- [maintenance/plugin/skills/skill-dogfooding](../plugin/skills/skill-dogfooding/SKILL.md) — 危うさランキングで選んだ 1 スキルを実際に使って確かめ、直す（仕組みは[skill-risk-maintenance](./skill-risk-maintenance.md)）
 
 ## 他ツールにも同種のメタスキルがある
 
@@ -34,7 +35,7 @@ Cline（`cline-skill-writer`）、Codex（`codex-skill-authoring`）、Copilot�
 新しいリポジトリメンテナンス知識を書くとき、次の順で判断する。
 
 1. **既存の `maintenance/docs/` ドキュメントに統合できるか** — 新しい内容が既存docの主題の延長・補足であれば、新規docを作らず既存docに追記する。ドキュメント数が増えるほど関連性が見えにくくなる。
-2. **独立した新規docが妥当か** — 既存docのどれにも属さない新しい主題（新しい設計判断、新しい規約領域）であれば、`maintenance/docs/<name>.md` として新規作成する。OKF frontmatter（`type`/`title`/`description`/`tags`/`generated`）を必ず付ける。作成後は `maintenance/docs/index.md` と `maintenance/plugin/skills/meta/` のキーワード表にも反映する。
+2. **独立した新規docが妥当か** — 既存docのどれにも属さない新しい主題（新しい設計判断、新しい規約領域）であれば、`maintenance/docs/<name>.md` として新規作成する。OKF frontmatter（`type`/`title`/`description`/`tags`/`generated`）を必ず付ける。作成後は `maintenance/plugin/skills/meta/` のキーワード表にも反映する（`maintenance/docs/index.md` の一覧は frontmatter の `description` から pre-commit で生成されるので手で足さない）。
 3. **`maintenance/plugin/skills/meta/` スキルの拡張が必要か** — ルーティングのキーワード表に新しい選択肢を追加するだけであれば、`maintenance/plugin/skills/meta/SKILL.md` の「選び方」セクションを編集する。スキルの動的コンテキスト注入（`!command`）やfrontmatter機構（`allowed-tools`等）を前提とする内容であれば、docsではなくスキルとして書くべき可能性があるが、その判断は慎重に — docs化できる内容はdocs化する方が二重管理を防げる。
 
 ## メタ的な知識自体もベストプラクティスに従う
