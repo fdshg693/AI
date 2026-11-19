@@ -29,7 +29,7 @@ DISPLAY_NAMES = {
 
 SECTION_INTRO = (
     "各 AI コーディングツール向けの設定フォルダとプラグイン実体フォルダの対応。  \n"
-    "スキルの実体は Claude Code プラグイン（`skills/plugins/`・`tools/_plugin/`）に 1 か所だけ置く。"
+    "スキルの実体は Claude Code プラグイン（`skills/plugins/`・`tools/_plugin/`・`agent-compat/_plugin/`）に 1 か所だけ置く。"
     "他ツールのフォルダにあるのはマーケットプレイス定義か、`just agent-compat-sync` で作る gitignore 済みのコピー。"
 )
 

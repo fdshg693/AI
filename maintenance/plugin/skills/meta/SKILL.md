@@ -13,7 +13,7 @@ meta:
   requires_skills: none
   status: experimental
   description: no description
-  version: 1.1.12
+  version: 1.1.13
 ---
 
 !`python ${CLAUDE_SKILL_DIR}/scripts/list_repo_meta_docs.py`
@@ -41,6 +41,7 @@ meta:
    - スキルをClaude Code以外（Cline/Codex/Copilot等）へポートすべきか → `claude-code-first-skills`
    - GitHub Actionsのリリース・デプロイ・issue/PR自動化の仕組み → `gh-actions-lifecycle`
    - このリポジトリの GitHub 設定（Actions シークレット、workflow 権限、Pages の Source） → `configuring-github`スキル（ワークフローの動きは`gh-actions-lifecycle`）
+   - どのスキルを次に直すべきか、スキルが壊れていないか実際に使って確かめたい（ドッグフーディング）、`skill-risk`の出力の読み方 → `skill-risk-maintenance`（周回の手順は`skill-dogfooding`スキル）
    - 新しいメンテナンスガイダンスをmaintenance/docs/の新規docにするか既存docに統合するかの判断 → `skill-improving-meta-skills`
    - このリポジトリの地図・どこに何があるか → `exploring-this-repo`スキル（索引に載るコードと載らない docs/スキルの振り分け）
    - 新しいスキル・スクリプト・文書の置き場所、サブモジュールの運用、Junction（`.links.yaml`） → `repo-layout`

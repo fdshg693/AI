@@ -16,7 +16,7 @@
         "url": "https://github.com/fdshg693/AI-skills.git",
         "path": "plugins/ai-tools-knowledge"
       },
-      "description": "Knowledge skills about other AI coding tools (Codex, GitHub Copilot, Cursor, Antigravity, Cline, Kilo Code): docs, CLIs, SDKs, memory, skills and plugins",
+      "description": "Knowledge skills about other AI coding tools (Codex, GitHub Copilot, Cursor, Antigravity, Cline, Kilo Code): docs, CLIs, SDKs, memory, skills and plugins; plus the ChatGPT, Gemini and Claude chat apps",
       "version": "0.1.0",
       "strict": true
     },
@@ -138,7 +138,7 @@
         "path": "plugins/web-lookup"
       },
       "description": "Web research skills that bundle their own scripts (no tools/ install needed)",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "strict": true
     },
     {
@@ -149,6 +149,17 @@
         "path": "_plugin/my-tools"
       },
       "description": "Skill to use custom tools made by me",
+      "version": "0.1.0",
+      "strict": true
+    },
+    {
+      "name": "agent-compat-tools",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/fdshg693/AI-agent-compat.git",
+        "path": "_plugin/agent-compat-tools"
+      },
+      "description": "Usage skills for the agent-compat CLIs (agent-logs: search and stats over local AI coding agent logs)",
       "version": "0.1.0",
       "strict": true
     }

@@ -24,6 +24,7 @@ Claude Codeの `skills/plugins/cc-knowledge/skills/` 配下には、スキルの
 - [skills/plugins/cc-knowledge/skills/writing-skill](../../skills/plugins/cc-knowledge/skills/writing-skill/SKILL.md)（+ `writing-skill-complex`） — 新規作成・編集・評価。あらゆる`SKILL.md`が満たすべきチェックリストの一次情報源
 - [maintenance/plugin/skills/skill-maintenance](../plugin/skills/skill-maintenance/SKILL.md) — Claude CLI/Claude Code公式ドキュメントのスナップショットを更新し、意味のある差分を検出して依存スキルへ伝播させる
 - `audit-skills`（Workflow） — 多数のスキルを一括でベストプラクティス採点する
+- [maintenance/plugin/skills/skill-dogfooding](../plugin/skills/skill-dogfooding/SKILL.md) — 危うさランキングで選んだ 1 スキルを実際に使って確かめ、直す（仕組みは[skill-risk-maintenance](./skill-risk-maintenance.md)）
 
 ## 他ツールにも同種のメタスキルがある
 

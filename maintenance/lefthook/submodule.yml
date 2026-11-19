@@ -1,4 +1,4 @@
-# Shared git hooks for the submodules (skills / tools / agent-compat / site / workflow / infra / templates).
+# Shared git hooks for the submodules (skills / tools / agent-compat / site / workflow / infra / templates / mcps).
 # Each submodule's lefthook.yml only has `extends: [../maintenance/lefthook/submodule.yml]`;
 # in a standalone clone (no umbrella) the extends target is missing and lefthook
 # silently runs nothing. Install with `just sub-hooks-install` from the umbrella.
@@ -30,12 +30,12 @@ pre-commit:
           - name: regenerate hook generated files
             # only matches inside agent-compat
             glob:
-              - "agent-tooling/agent_tooling/core/**"
-              - "agent-tooling/agent_tooling/hooks/common/**"
-              - "agent-tooling/agent_tooling/hooks/scenarios/**"
-              - "agent-tooling/agent_tooling/adapters/**"
-              - "agent-tooling/agent_tooling/hooks/build/**"
-            run: just --justfile agent-tooling/justfile generate
+              - "hooks/agent-tooling/agent_tooling/core/**"
+              - "hooks/agent-tooling/agent_tooling/hooks/common/**"
+              - "hooks/agent-tooling/agent_tooling/hooks/scenarios/**"
+              - "hooks/agent-tooling/agent_tooling/adapters/**"
+              - "hooks/agent-tooling/agent_tooling/hooks/build/**"
+            run: just --justfile hooks/agent-tooling/justfile generate
             stage_fixed: true
     - name: format
       group:
