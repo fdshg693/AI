@@ -33,6 +33,11 @@ entries:
     verdict: fixed
     fb: 20261119-032120-fb.md
     fix: skills@58696b9
+  skills/plugins/ai-tools-knowledge/skills/vscode-copilot-docs/SKILL.md:
+    date: 2026-11-19
+    verdict: fixed
+    fb: 20261119-032638-fb.md
+    fix: skills@006d4b4
   skills/plugins/cc-knowledge/skills/claude-code-openai-gateway/SKILL.md:
     date: 2026-11-19
     verdict: fixed
