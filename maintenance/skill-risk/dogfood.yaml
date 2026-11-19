@@ -1,0 +1,30 @@
+# Skill dogfooding ledger (input to the skill risk ranking).
+#
+# One entry per skill holding only the latest dogfooding run; history is in git.
+# Keys are canonical IDs (umbrella-relative .../SKILL.md paths, as skill-tools
+# uses them), kept in sorted order to reduce merge conflicts between concurrent
+# sessions. Written by the skill-dogfooding cycle; read by
+# maintenance/scripts/skill/query/rank_skill_risk.py.
+#
+# The narrative (what happened) lives in `skill-tools --fb`; this file keeps
+# only short structured data. Skills that `--fb` cannot resolve (not in the
+# catalog, e.g. maintenance/plugin/) use `note` instead of `fb`.
+#
+# Fields:
+#   date:    YYYY-MM-DD of the latest dogfooding run (required)
+#   verdict: ok | needs-fix | fixed (required)
+#   fb:      file name under tools/skill-tools/fb/skills/<skill-name>/ (optional)
+#   note:    one-line summary when `fb` is unavailable (optional)
+#   fix:     improving commit as "<repo>@<short-hash>", repo being umbrella or a
+#            submodule path such as skills (optional; with verdict: fixed)
+#
+# Example:
+# entries:
+#   skills/plugins/topics/skills/linear-docs/SKILL.md:
+#     date: 2026-11-20
+#     verdict: fixed
+#     fb: 20261120-100000-fb.md
+#     fix: skills@abc1234
+version: 1
+
+entries: {}

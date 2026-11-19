@@ -9,7 +9,7 @@
 - `skill/` — `SKILL.md`そのもの（frontmatterの`meta:`ブロック）を扱うスクリプト。マーケットプレイス登録の有無に関わらずリポジトリ全体を走査する
   - `set/` — フィールドを補完・変更する（`set_skill_versions.py`, `set_skill_descriptions.py`, `bump_skill_versions.py`, `skill_meta_field_fill.py`）
   - `check/` — lefthook等から呼ばれる検査のみのスクリプト（`check_skill_version_bump.py`, `check_skill_repo_tools.py`, `check_repo_tool_relations.py`）。env検査はここに混ぜない
-  - `query/` — 関係グラフなど、書き換えない列挙・照会（`list_skill_tool_impact.py`）。justレシピのみ。lefthookには繋がない
+  - `query/` — 関係グラフなど、書き換えない列挙・照会（`list_skill_tool_impact.py`、`rank_skill_risk.py`）。justレシピのみ。lefthookには繋がない
   - `util/` — 上記が共有するヘルパー（frontmatter読み書き、`meta_field.yaml`ローダ、`repo-tools.yaml`ローダ、workspace 依存読み取り、スキル↔ツールグラフ等）。新規消費者は`set/`・`check/`・`query/`に限る
 - `check/` — SKILL.md以外の検査（`check_tool_env_loading.py`：`find_dotenv` / `usecwd=True` / パス無し`load_dotenv()`はjustレシピのみでlefthookに繋がない。`scan_staged_secrets.py`はlefthookのsecretlintジョブから呼ばれ、Windowsのargv長制限を避けるためにgitのステージ済み一覧を分割して渡す。`check_local_configs.py`は`registry/local-configs.yaml`を読み、全リポジトリの index に対してローカル設定ファイルの追跡・gitignore・example を検査する。`precommit check`の task としてlefthookとCIから呼ばれる。justレシピ`local-configs-check`）
 - `plugin_meta/` — `ai-tools.yaml`（SSOT）を起点に、プラグイン・マーケットプレイス・スキルカタログなどの集約メタ情報を生成するスクリプト

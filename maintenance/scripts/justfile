@@ -113,6 +113,12 @@ skill-version-bump *paths:
 skill-tool-impact *targets:
     mise exec -- uv run python -m skill.query.list_skill_tool_impact {{ targets }}
 
+# Rank skills by risk (staleness, volatility, changed deps, dogfooding, fb) to
+# pick the next one to dogfood. Read-only; not wired into lefthook.
+# Pass --top N (0 = all), --json, --include-deprecated.
+skill-risk *args:
+    mise exec -- uv run python -m skill.query.rank_skill_risk {{ args }}
+
 # --- release: manifest version bumps for repo-tools.yaml registered tools ---
 
 # Bump patch version in the package manifest for any repo-tools.yaml registered
