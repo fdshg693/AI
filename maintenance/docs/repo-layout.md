@@ -75,16 +75,16 @@ just hooks-install && just sub-agent-hooks-install  # エージェントフッ�
 
 アンブレラでブランチを切っても、サブモジュールのブランチは変わらない（アンブレラが持つのは commit のポインタだけ）。複数の端末で作業するときは、同じ名前のブランチを全リポジトリに切る。`just branch-*` がアンブレラと全サブモジュールでまとめて行う（実体は [`maintenance/scripts/branches/`](../scripts/branches/)）。
 
-| レシピ                                           | 動作                                                                                                                      |
-| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
-| `just branch-status`                             | 各リポジトリのブランチ・upstream との差・未コミット数・ポインタの状態                                                     |
-| `just branch-list`                               | ローカルブランチを、どのリポジトリにあるか付きで一覧                                                                      |
-| `just branch-work [name]`                        | この端末（worktree）の作業ブランチ名を表示する。`name` を渡すと設定する（下記）                                           |
-| `just branch-new [name] [--from BASE]`           | 全リポジトリで作って切り替える。`name` を省くと作業ブランチ名                                                             |
-| `just branch-switch [name] [--create]`           | 全リポジトリで切り替える。ローカルに無くても `origin/<name>` があれば追跡ブランチを作る（別の端末で作ったブランチを拾う） |
-| `just branch-push`                               | 今のブランチを upstream 付きで push。サブモジュールを先にし、失敗したらアンブレラは push しない                           |
-| `just branch-pull`                               | 今のブランチを upstream から fast-forward。`sub-sync` と違って `main` に戻さない                                          |
-| `just branch-delete <name> [--remote] [--force]` | ある所だけ削除。`main`・`master`・既定ブランチ、今いるブランチ、未マージのブランチ（`--force` なし）は断る                |
+| レシピ                                           | 動作                                                                                                                                                                                    |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `just branch-status`                             | 各リポジトリのブランチ・upstream との差・未コミット数・ポインタの状態                                                                                                                   |
+| `just branch-list`                               | ローカルブランチを、どのリポジトリにあるか付きで一覧                                                                                                                                    |
+| `just branch-work [name]`                        | この端末（worktree）の作業ブランチ名を表示する。`name` を渡すと設定する（下記）                                                                                                         |
+| `just branch-new [name] [--from BASE]`           | 全リポジトリで作って切り替える。`name` を省くと作業ブランチ名                                                                                                                           |
+| `just branch-switch [name] [--create]`           | 全リポジトリで切り替える。ローカルに無くても `origin/<name>` があれば追跡ブランチを作る（別の端末で作ったブランチを拾う）                                                               |
+| `just branch-push`                               | 今のブランチを upstream 付きで push。サブモジュールを先にし、失敗したらアンブレラは push しない。detached HEAD のサブモジュールは、ポインタが変わらず origin にある commit ならスキップ |
+| `just branch-pull`                               | 今のブランチを upstream から fast-forward。`sub-sync` と違って `main` に戻さない                                                                                                        |
+| `just branch-delete <name> [--remote] [--force]` | ある所だけ削除。`main`・`master`・既定ブランチ、今いるブランチ、未マージのブランチ（`--force` なし）は断る                                                                              |
 
 - どのレシピも `--only <submodule>...` で対象のサブモジュールを絞れる（アンブレラは常に含む）。
 - 作業ブランチ名は、アンブレラの worktree 単位の git config `umbrella.workBranch` に置く（`just branch-work <name>` が `extensions.worktreeConfig` を有効にして `git config --worktree` で書く）。コミットされないので端末・worktree ごとに違う名前を持てる。サブモジュールには置かず、アンブレラの値を全リポジトリに当てはめる。設定すると `branch-new`・`branch-switch` が名前を省略でき、`branch-status` が作業ブランチにいないリポジトリに `(not <name>)` を付ける。
