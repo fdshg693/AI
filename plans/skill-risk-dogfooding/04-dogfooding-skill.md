@@ -1,6 +1,6 @@
 ---
 type: Plan Step
-status: planning-breakdown
+status: implementing-done
 ---
 
 # Step4: 選ぶ → ドッグフーディング → 改善を回すメンテスキルと導線
@@ -72,3 +72,9 @@ status: planning-breakdown
 
 - 2026-11-19（Step1）: ドッグフーディングを `claude -p --plugin-dir` で行う方式に変え、「起動は未確認」の代替手順を削除した。動的コンテキストの速度見込みを追記した。
 - 2026-11-19（Step2）: 台帳が `maintenance/skill-risk/dogfood.yaml` に決まり、判定値を `ok` / `needs-fix` / `fixed` にした。
+- 2026-11-19（Step4 実行）: `skill-dogfooding` スキル、同梱の `scripts/run_dogfood.py`（隔離 `claude -p` を走らせて要約だけ返す）・`scripts/record_dogfood.py`（台帳の 1 エントリを書く）、`maintenance/docs/skill-risk-maintenance.md`（新規 doc）を追加し、`meta` スキルの選び方と `skill-improving-meta-skills.md` から辿れるようにした。
+  - 渡すツールと外部への書き込みの止め方: `--permission-mode dontAsk` ＋ 読み取り系だけの既定許可リスト（シナリオごとに `--allow` で足す）＋ push・PR・Issue・`gh api`・クラウド CLI を常に拒否する `--disallowedTools`。`--setting-sources ""` だけではアカウントの MCP コネクタが入るので `--strict-mcp-config` も付ける。
+  - スキルの動的コンテキスト（`` !`...` ``）も許可の対象。許可しないとスキルは起動しても中身が空で進む（`linear-docs` で確認）。
+  - 計画外の修正: Claude Code 2.1.326 は `name` にスラッシュを含むマニフェストを拒否し、`--plugin-dir maintenance/plugin` が何も読み込まなかった（Step1 の確認時とは挙動が変わった）。`maintenance/plugin/.claude-plugin/plugin.json` の `name` を `maintenance` にした。`run_dogfood.py` は `plugin_errors` を出すようにした。
+  - `--allow "Bash(uv run:*)"` で走らせた `linear-docs` のスクリプトが、スキルの中の `output/llms.txt` を書き換えた（作業ディレクトリは scratch でも絶対パスで書く）。戻したうえで、シナリオごとに `git status` を見て戻す手順をスキルに足した。
+  - 1 周目: ランキング 1 位の `claude-code-openai-gateway` を sonnet・スキル名なしの 2 シナリオで試し、両方で自動起動を確認。`setup.md` の alias（`gpt-5.6-luna`）が `gateway/` 一式（`gpt-5-mini`）と食い違い迷うことが分かり、`setup.md` をそろえた（`skills@23feda0`）。再実行で指摘が消えた。台帳は `fixed`。費用は 3 回で約 $0.35。

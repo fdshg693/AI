@@ -1,6 +1,6 @@
 ---
 type: Plan
-status: implementing-in-progress
+status: implementing-done
 ---
 
 ## 実装ステータス
@@ -8,7 +8,7 @@ status: implementing-in-progress
 - [x] [01-research-signals.md](01-research-signals.md) — 危うさの判断に使える既存シグナルの調査
 - [x] [02-risk-inputs.md](02-risk-inputs.md) — 変化しやすさの宣言とドッグフーディング台帳の器を作る
 - [x] [03-rank-skill-risk.md](03-rank-skill-risk.md) — スキルの危うさランキングを出す照会スクリプト
-- [ ] [04-dogfooding-skill.md](04-dogfooding-skill.md) — 選ぶ→ドッグフーディング→改善を回すメンテスキルと導線
+- [x] [04-dogfooding-skill.md](04-dogfooding-skill.md) — 選ぶ→ドッグフーディング→改善を回すメンテスキルと導線
 
 # 全体スキルメンテの仕組み（危うさランキング → ドッグフーディング → 改善） 実装プラン - 概要
 
@@ -49,7 +49,6 @@ status: implementing-in-progress
 ## 未決事項
 
 - 点数の重み付け。最初は単純な合成（変化しやすさ × 経過日数 + 依存先の変化 + 未ドッグフーディング + 未対応 fb）で始め、Step3 の後にユーザーに上位を見せて直す。今は履歴が 9 日分しかなく、経過日数の差が小さいことに注意する。
-- ドッグフーディングでスキルの手順を最後まで試すときに渡すツールと、外部への書き込みの止め方（`--disallowedTools`・`--permission-mode` の組み合わせ）。Step4 で決める。
 - 定期実行（`workflow/schedule/`）は本プランの対象外とし、手動起動だけにする。
 
 ## Step1 で決めたこと
@@ -68,8 +67,8 @@ status: implementing-in-progress
 - 変化しやすさの規則と上書き: `maintenance/skill-risk/volatility.yaml`（Step2 で作成済み）
 - ドッグフーディング台帳: `maintenance/skill-risk/dogfood.yaml`（Step2 で空の器を作成済み）
 - `maintenance/scripts/skill/query/rank_skill_risk.py` とそのテスト（`maintenance/scripts/tests/`）
-- `maintenance/plugin/skills/skill-dogfooding/SKILL.md`（必要なら `scripts/`）
-- 仕組みの説明（`maintenance/docs/skill-improving-meta-skills.md` への追記か、新規 `maintenance/docs/skill-risk-maintenance.md`）
+- `maintenance/plugin/skills/skill-dogfooding/SKILL.md` と `scripts/run_dogfood.py`・`scripts/record_dogfood.py`
+- 仕組みの説明: `maintenance/docs/skill-risk-maintenance.md`（新規。`skill-improving-meta-skills.md` からは 1 行で辿る）
 
 ### 変更
 
@@ -77,6 +76,8 @@ status: implementing-in-progress
 - `maintenance/scripts/skill/AGENTS.md`（`query/` の一覧）
 - `maintenance/plugin/skills/meta/SKILL.md`（選び方の表）
 - `maintenance/README.md`（サブフォルダの一覧に `skill-risk/` を追加。Step2 で済み）
+- `maintenance/plugin/.claude-plugin/plugin.json`（`name` を `maintenance` に。Step4 で判明）
+- `maintenance/docs/skill-improving-meta-skills.md`（メタスキル一覧に 1 行）
 
 ## ルール更新ポイント
 
@@ -94,3 +95,4 @@ status: implementing-in-progress
 - 2026-11-19（Step1）: 履歴の扱い・一括コミットの除外・対象範囲・ドッグフーディングの起動方法・利用頻度を決定事項に追加し、「未決事項」を残りだけにした。詳細は [01-research-signals.md](01-research-signals.md) の調査結果。
 - 2026-11-19（Step2）: 規則と台帳の置き場所を `maintenance/skill-risk/volatility.yaml`・`maintenance/skill-risk/dogfood.yaml` に確定し、決定事項・ファイル一覧・ルール更新ポイントから `registry/`・`maintenance/state/` の分岐を消した。
 - 2026-11-19（Step3）: ランキングを実装した（`just --justfile maintenance/scripts/justfile skill-risk`）。計画に無かった加点として、台帳の判定 `needs-fix` を足した。経過日数は最後の変更と最後のドッグフーディングの新しい方から数える。重みの初期値は [03-rank-skill-risk.md](03-rank-skill-risk.md) の「実行中に判明した変更」にある。上位 10 件をユーザーが確認し、重みは初期値のままで了承された。
+- 2026-11-19（Step4）: ドッグフーディングの権限は `dontAsk` ＋ 読み取り系の既定許可 ＋ 外部書き込みの常時拒否に決め、未決事項から外した。`maintenance/plugin` のマニフェスト名がスラッシュを含み `--plugin-dir` で読み込めなくなっていたので `maintenance` に直した。1 周目は `claude-code-openai-gateway` を直して台帳を `fixed` にした。詳細は [04-dogfooding-skill.md](04-dogfooding-skill.md) の「実行中に判明した変更」。
